@@ -68,10 +68,11 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/rv_available_devices"
+                    <ListView
+                        android:id="@+id/lv_available_devices"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
+
                 </LinearLayout>
 
             </FrameLayout>
