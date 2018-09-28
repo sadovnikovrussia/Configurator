@@ -51,15 +51,11 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <ListView
-                        android:id="@+id/lv_paired_devices"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_paired_devices"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/sw_bluetooth">
+                        android:layout_height="match_parent" />
 
-                    </ListView>
                 </LinearLayout>
 
                 <LinearLayout
@@ -68,8 +64,8 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <ListView
-                        android:id="@+id/lv_available_devices"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_available_devices"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
