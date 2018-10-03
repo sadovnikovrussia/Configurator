@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".BluetoothFragment">
+    tools:context=".view.BluetoothFragment">
 
     <Switch
         android:id="@+id/sw_bluetooth"
@@ -22,57 +22,46 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TabHost
-        android:layout_width="0dp"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sw_bluetooth">
+        app:layout_constraintTop_toBottomOf="@+id/sw_bluetooth"
+        app:layout_constraintVertical_bias="0.159">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Left" />
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Center" />
 
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    </android.support.design.widget.TabLayout>
 
-                <LinearLayout
-                    android:id="@+id/Подключенные"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/rv_paired_devices"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_paired_devices"
+        android:layout_width="174dp"
+        android:layout_height="207dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="304dp" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/Доступные"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/rv_available_devices"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                </LinearLayout>
-
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_available_devices"
+        android:layout_width="196dp"
+        android:layout_height="122dp"
+        tools:layout_editor_absoluteX="188dp"
+        tools:layout_editor_absoluteY="304dp" />
 
 </android.support.constraint.ConstraintLayout>

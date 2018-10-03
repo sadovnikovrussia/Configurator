@@ -1,20 +1,22 @@
-package tech.sadovnikov.configurator;
+package tech.sadovnikov.configurator.view;
 
 
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.support.v4.app.Fragment;
+
+import tech.sadovnikov.configurator.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ConfigBuoyFragment extends Fragment {
+public class ConfigMainFragment extends Fragment {
 
 
-    public ConfigBuoyFragment() {
+    public ConfigMainFragment() {
         // Required empty public constructor
     }
 
@@ -23,7 +25,7 @@ public class ConfigBuoyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_config_buoy, container, false);
+        return inflater.inflate(R.layout.fragment_config_main, container, false);
     }
 
 }

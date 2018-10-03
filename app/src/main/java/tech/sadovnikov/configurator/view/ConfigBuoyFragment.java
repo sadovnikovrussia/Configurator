@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator;
+package tech.sadovnikov.configurator.view;
 
 
 import android.os.Bundle;
@@ -7,14 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import tech.sadovnikov.configurator.R;
+
 
 /**
- * Фрагмент для отображения конфигурации устройства
+ * A simple {@link Fragment} subclass.
  */
-public class ConfigurationFragment extends Fragment {
+public class ConfigBuoyFragment extends Fragment {
 
 
-    public ConfigurationFragment() {
+    public ConfigBuoyFragment() {
         // Required empty public constructor
     }
 
@@ -23,7 +25,7 @@ public class ConfigurationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_configuration, container, false);
+        return inflater.inflate(R.layout.fragment_config_buoy, container, false);
     }
 
 }

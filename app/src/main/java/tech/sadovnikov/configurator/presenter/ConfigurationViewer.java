@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator;
+package tech.sadovnikov.configurator.presenter;
 
 /**
  * Класс, предназначенный для отображения параметров, считанных из устройства

@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator;
+package tech.sadovnikov.configurator.presenter;
 
 /**
  * Класс, отвечающий за отправку команд (установка и считывание параметров из устройства)
