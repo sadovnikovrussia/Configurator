@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator;
+package tech.sadovnikov.configurator.model;
 
 /**
  * Класс, представляющий конфигурацию устройства (хранение текущих параметров устройства)
