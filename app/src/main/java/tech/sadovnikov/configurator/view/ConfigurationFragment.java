@@ -13,6 +13,7 @@ import tech.sadovnikov.configurator.R;
  */
 public class ConfigurationFragment extends Fragment {
 
+    private static final String TAG = "ConfigurationFragment";
 
     public ConfigurationFragment() {
         // Required empty public constructor

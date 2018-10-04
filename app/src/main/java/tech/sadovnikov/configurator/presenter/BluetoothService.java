@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -49,6 +47,10 @@ public class BluetoothService {
         bluetoothAdapter.disable();
     }
 
+    public boolean isEnabled() {
+        return bluetoothAdapter.isEnabled();
+    }
+
     // Получение списка спаренных устройств
     static public ArrayList<BluetoothDevice> getBondedDevices() {
         Set<BluetoothDevice> mBondedDevices = bluetoothAdapter.getBondedDevices();
@@ -63,6 +65,13 @@ public class BluetoothService {
 //        Log.d(TAG, "onConnecting to: " + device.getName());
 //        onConnecting(device);
 //    }
+
+    public void connectTo(String address) {
+        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
+        Log.d(TAG, "onConnecting to: " + device.getName());
+        onConnecting(device);
+    }
+
 
     private synchronized void onConnecting(BluetoothDevice device) {
         Log.d(TAG, "Connecting to: " + device);
@@ -103,8 +112,17 @@ public class BluetoothService {
         mConnectedThread.start();
     }
 
+    public void closeAllConnections() {
+        try {
+            mConnectThread.mSocket.close();
+            mConnectedThread.mmSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private class ConnectThread extends Thread {
-        private BluetoothSocket mSocket;
+        BluetoothSocket mSocket;
         BluetoothDevice mDevice;
 
         ConnectThread(BluetoothDevice device) {
@@ -164,7 +182,7 @@ public class BluetoothService {
     }
 
     private class ConnectedThread extends Thread {
-        private final BluetoothSocket mmSocket;
+        final BluetoothSocket mmSocket;
         private final BufferedReader readerSerial;
         private final PrintWriter writerSerial;
 
@@ -227,7 +245,7 @@ public class BluetoothService {
         }
     }
 
-    void sendData(String data) {
+    public void sendData(String data) {
         if (mConnectedThread != null) {
             mConnectedThread.write(data);
         }

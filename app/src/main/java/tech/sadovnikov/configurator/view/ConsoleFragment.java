@@ -1,10 +1,10 @@
 package tech.sadovnikov.configurator.view;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.method.ScrollingMovementMethod;
@@ -14,34 +14,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import tech.sadovnikov.configurator.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class ConsoleFragment extends android.support.v4.app.Fragment {
+
+public class ConsoleFragment extends Fragment {
 
     private static final String TAG = "ConsoleFragment";
 
+    // UI
     TextView tvLog;
     Button btnSendCommand;
     EditText etCommandLine;
+    Switch swAutoScroll;
+
+    OnConsoleFragmentInteractionListener onConsoleFragmentInteractionListener;
+    private Editable editableText;
 
     public ConsoleFragment() {
         // Required empty public constructor
         Log.v(TAG, "onConstructor");
     }
 
-    interface ConsoleFragmentListener{
-
-        void onClickBtnSendCommand(String line);
-
-    }
-
-    ConsoleFragmentListener consoleFragmentListener;
-
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate");
@@ -58,6 +55,7 @@ public class ConsoleFragment extends android.support.v4.app.Fragment {
     }
 
     private void initUi(View inflate) {
+        swAutoScroll = inflate.findViewById(R.id.sw_auto_scroll);
         tvLog = inflate.findViewById(R.id.tv_log);
         tvLog.setMovementMethod(new ScrollingMovementMethod());
         etCommandLine = inflate.findViewById(R.id.et_command_line);
@@ -67,21 +65,23 @@ public class ConsoleFragment extends android.support.v4.app.Fragment {
             public void onClick(View view) {
                 String command = etCommandLine.getText().toString();
                 if (command.length() != 0) {
-                    //MainActivity.mBluetoothService.sendData(etCommandLine.getText().toString());
-                    consoleFragmentListener.onClickBtnSendCommand(command);
+                    onConsoleFragmentInteractionListener.onBtnSendCommandClick(command);
                 }
             }
         });
         BottomNavigationView navigation = getActivity().findViewById(R.id.navigation);
         navigation.getMenu().getItem(2).setChecked(true);
-
     }
 
     void showLog(String line) {
         if (tvLog != null) {
             tvLog.append(line + "\r\n");
-            Editable editable = tvLog.getEditableText();
-            Selection.setSelection(editable, editable.length());
+            if (swAutoScroll.isChecked()){
+                editableText = tvLog.getEditableText();
+                Selection.setSelection(editableText, editableText.length());
+            } else {
+                tvLog.clearFocus();
+            }
         }
     }
 
@@ -93,12 +93,15 @@ public class ConsoleFragment extends android.support.v4.app.Fragment {
 
     // ---------------------------------------------------------------------------------------------
     // States
-    // ---------------------------------------------------------------------------------------------
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        Log.v(TAG, "onAttach");
-        consoleFragmentListener = (ConsoleFragmentListener) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnConsoleFragmentInteractionListener) {
+            onConsoleFragmentInteractionListener = (OnConsoleFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement onConsoleFragmentInteractionListener");
+        }
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -139,6 +142,14 @@ public class ConsoleFragment extends android.support.v4.app.Fragment {
     public void onDetach() {
         super.onDetach();
         Log.v(TAG, "onDetach");
+        onConsoleFragmentInteractionListener = null;
+    }
+    // ---------------------------------------------------------------------------------------------
+
+    interface OnConsoleFragmentInteractionListener {
+
+        void onBtnSendCommandClick(String line);
+
     }
 
 }

@@ -5,5 +5,7 @@
     <color name="colorAccent">#058ed9</color>
     <color name="stDark">#EC4E20</color>
     <color name="stMain">#F16723</color>
+    <color name="main">#DD000000</color>
+    <color name="added">#89000000</color>
 
 </resources>

@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import tech.sadovnikov.configurator.R;
@@ -25,7 +26,9 @@ import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.presenter.BluetoothService;
 import tech.sadovnikov.configurator.presenter.DataAnalyzer;
 
-public class MainActivity extends AppCompatActivity implements BluetoothFragment.OnBluetoothFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements
+        BluetoothFragment.OnBluetoothFragmentInteractionListener,
+        ConsoleFragment.OnConsoleFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -59,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements BluetoothFragment
         mBluetoothService = new BluetoothService(mUiHandler);
         registerBluetoothBroadcastReceiver();
         initUi();
+        ArrayList<BluetoothDevice> bondedDevices = BluetoothService.getBondedDevices();
+        for (BluetoothDevice device : bondedDevices) {
+            Log.i(TAG, device.getName() + ", " + device.getAddress());
+        }
     }
 
     // Регистрация ресиверов
@@ -134,15 +141,18 @@ public class MainActivity extends AppCompatActivity implements BluetoothFragment
 
     }
 
+    @Override
+    public void onBtnConnectClick() {
+        Log.d(TAG, "onBtnConnectClick");
+        if (mBluetoothService.isEnabled()) {
+            mBluetoothService.connectTo("38:1C:4A:2C:C8:09");
+        }
+    }
 
-//    public void onLvBtItemClicked(int i) {
-//        mBluetoothService.connectTo(i);
-//    }
-
-//    @Override
-//    public void onClickBtnSendCommand(String line) {
-//        mBluetoothService.sendData(line);
-//    }
+    @Override
+    public void onBtnSendCommandClick(String command) {
+        mBluetoothService.sendData(command);
+    }
 
 //    @Override
 //    public void onLvConfigsItemClick(int i) {
@@ -175,7 +185,6 @@ public class MainActivity extends AppCompatActivity implements BluetoothFragment
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Log.d(TAG, "Получили в handle");
             MainActivity activity = (MainActivity) activityWeakReference.get();
             if (activity != null) {
                 Object obj = msg.obj;
@@ -196,7 +205,8 @@ public class MainActivity extends AppCompatActivity implements BluetoothFragment
     }
 
 
-    // Lifecycle -----------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // States
     @Override
     protected void onStart() {
         super.onStart();
@@ -227,6 +237,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothFragment
         super.onDestroy();
         Log.v(TAG, "onDestroy");
         unregisterReceiver(bluetoothBroadcastReceiver);
+        mBluetoothService.closeAllConnections();
     }
     // ---------------------------------------------------------------------------------------------
 
