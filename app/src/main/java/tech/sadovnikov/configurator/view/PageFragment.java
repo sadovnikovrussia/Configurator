@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,8 @@ public class PageFragment extends Fragment {
     private static final String TAG = "PageFragment";
     RecyclerView rvPairedDevices;
     private int mPage;
+
+    BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
     public static PageFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -42,8 +45,21 @@ public class PageFragment extends Fragment {
         rvPairedDevices = view.findViewById(R.id.rv_paired_devices);
         rvPairedDevices.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         Log.d(TAG, BluetoothService.getBondedDevices().toString());
-        rvPairedDevices.setAdapter(new PairedDevicesRvAdapter(BluetoothService.getBondedDevices()));
+        rvPairedDevices.setAdapter(new PairedDevicesRvAdapter(BluetoothService.getBondedDevices(), onBluetoothFragmentInteractionListener));
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.v(TAG, "onAttach");
+        if (context instanceof BluetoothFragment.OnBluetoothFragmentInteractionListener) {
+            onBluetoothFragmentInteractionListener = (BluetoothFragment.OnBluetoothFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnBluetoothFragmentInteractionListener");
+        }
+
     }
 }

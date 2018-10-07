@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator;
 
+import android.bluetooth.BluetoothDevice;
 import android.os.Message;
 
 import tech.sadovnikov.configurator.model.Configuration;
@@ -42,7 +43,7 @@ public interface Contract {
     interface Presenter {
         void onSwitchBtStateChanged();
 
-        void onRvPairedDevicesItemClick();
+        void onPairedDevicesRvItemClick(BluetoothDevice bluetoothDevice);
 
         void onHandleMessage(Message msg);
     }

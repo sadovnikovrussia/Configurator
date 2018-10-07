@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.presenter;
 
+import android.bluetooth.BluetoothDevice;
 import android.os.Message;
 import android.util.Log;
 
@@ -28,8 +29,8 @@ public class Presenter implements Contract.Presenter {
     }
 
     @Override
-    public void onRvPairedDevicesItemClick() {
-
+    public void onPairedDevicesRvItemClick(BluetoothDevice bluetoothDevice) {
+        Log.d(TAG, "Ща будем подключаться к " + bluetoothDevice.getName());
     }
 
     @Override

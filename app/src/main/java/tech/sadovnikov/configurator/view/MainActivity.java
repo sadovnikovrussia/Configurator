@@ -18,15 +18,12 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.presenter.BluetoothService;
-import tech.sadovnikov.configurator.presenter.DataAnalyzer;
 import tech.sadovnikov.configurator.presenter.Presenter;
 
 
@@ -145,8 +142,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onPairedDevicesRvItemClicked(int position) {
-
+    public void onPairedDevicesRvItemClicked(BluetoothDevice bluetoothDevice) {
+        presenter.onPairedDevicesRvItemClick(bluetoothDevice);
     }
 
     @Override

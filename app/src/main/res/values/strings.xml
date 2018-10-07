@@ -124,4 +124,9 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="device_name">Device name</string>
+    <string name="device_adddress">Device adddress</string>
+    <string name="tab">Tab</string>
+    <string name="paired_devices">Подключенные</string>
+    <string name="available_devices">Доступные</string>
 </resources>

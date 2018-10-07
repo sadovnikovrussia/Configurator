@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.view;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Switch;
 
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.view.adapter.DevicesFragmentPagerAdapter;
+import tech.sadovnikov.configurator.view.adapter.PairedDevicesRvAdapter;
 
 
 /**
@@ -77,6 +79,7 @@ public class BluetoothFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.v(TAG, "onAttach");
         if (context instanceof OnBluetoothFragmentInteractionListener) {
             onBluetoothFragmentInteractionListener = (OnBluetoothFragmentInteractionListener) context;
         } else {
@@ -143,13 +146,13 @@ public class BluetoothFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    interface OnBluetoothFragmentInteractionListener {
+    public interface OnBluetoothFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
 
         void onSwitchBtStateChanged(boolean state);
 
-        void onPairedDevicesRvItemClicked(int position);
+        void onPairedDevicesRvItemClicked(BluetoothDevice bluetoothDevice);
 
         void onBtnConnectClick();
 

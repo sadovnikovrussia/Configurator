@@ -8,18 +8,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.view.BluetoothFragment;
 
 public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRvAdapter.BluetoothDeviceViewHolder> {
     private static final String TAG = "RvBtDevicesAdapter";
+
     private ArrayList<BluetoothDevice> bluetoothDevices;
 
-    public PairedDevicesRvAdapter(ArrayList<BluetoothDevice> bluetoothDevices) {
+    private OnPairedDevicesRvItemClickListener onPairedDevicesRvItemClickListener;
+    BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
+
+    public PairedDevicesRvAdapter(ArrayList<BluetoothDevice> bluetoothDevices,
+                                  BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener) {
         // Log.d(TAG, "onConstructor, " + bluetoothDevices.toString());
         this.bluetoothDevices = bluetoothDevices;
+        this.onBluetoothFragmentInteractionListener = onBluetoothFragmentInteractionListener;
+        //this.onPairedDevicesRvItemClickListener = onPairedDevicesRvItemClickListener;
     }
 
     @NonNull
@@ -31,8 +40,16 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BluetoothDeviceViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final BluetoothDeviceViewHolder holder, final int position) {
         // Log.d(TAG, "onBindViewHolder");
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onBindViewHolder.onClick, position = " + String.valueOf(position) + ", " + bluetoothDevices.get(position).getName());
+                onBluetoothFragmentInteractionListener.onPairedDevicesRvItemClicked(bluetoothDevices.get(position));
+                // onPairedDevicesRvItemClickListener.OnPairedDevicesRvItemClick(bluetoothDevices.get(position));
+            }
+        });
         holder.bind(position);
     }
 
@@ -56,6 +73,12 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
             tvDeviceName.setText(bluetoothDevices.get(position).getName());
             tvDeviceAddress.setText(bluetoothDevices.get(position).getAddress());
         }
+    }
+
+    public interface OnPairedDevicesRvItemClickListener {
+
+        void OnPairedDevicesRvItemClick(BluetoothDevice bluetoothDevice);
+
     }
 
 }
