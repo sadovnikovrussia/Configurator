@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +15,7 @@ import android.widget.Button;
 import android.widget.Switch;
 
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.presenter.BluetoothService;
-import tech.sadovnikov.configurator.view.adapter.BluetoothDevicesAdapter;
-import tech.sadovnikov.configurator.view.adapter.MyFragmentPagerAdapter;
+import tech.sadovnikov.configurator.view.adapter.DevicesFragmentPagerAdapter;
 
 
 /**
@@ -30,17 +27,11 @@ import tech.sadovnikov.configurator.view.adapter.MyFragmentPagerAdapter;
  * to handle interaction events.
  */
 public class BluetoothFragment extends Fragment {
-
     private static final String TAG = "BluetoothFragment";
-    String mKeySwitchBt = "SwitchBt";
-
 
     // UI
     Switch switchBt;
     Button btnConnect;
-    RecyclerView rvBtPairedDevices;
-    RecyclerView rvBtAvailableDevices;
-    TabLayout tabLayout;
 
     private OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
@@ -65,18 +56,10 @@ public class BluetoothFragment extends Fragment {
     }
 
     private void initUi(View inflate) {
-        rvBtPairedDevices = inflate.findViewById(R.id.rv_paired_devices);
-        rvBtAvailableDevices = inflate.findViewById(R.id.rv_available_devices);
-        rvBtPairedDevices.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        rvBtAvailableDevices.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        Log.d(TAG, BluetoothService.getBondedDevices().toString());
-        rvBtPairedDevices.setAdapter(new BluetoothDevicesAdapter(BluetoothService.getBondedDevices()));
         switchBt = inflate.findViewById(R.id.sw_bluetooth);
-
+        // Вкладки со спаренными и доступными устройствами
         ViewPager viewPager = inflate.findViewById(R.id.viewPager);
-        viewPager.setAdapter(
-                new MyFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getActivity().getApplicationContext()));
-        // Передаём ViewPager в TabLayout
+        viewPager.setAdapter(new DevicesFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getActivity().getApplicationContext()));
         TabLayout tabLayout = inflate.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -166,7 +149,7 @@ public class BluetoothFragment extends Fragment {
 
         void onSwitchBtStateChanged(boolean state);
 
-        void onRvBtItemClicked(int position);
+        void onPairedDevicesRvItemClicked(int position);
 
         void onBtnConnectClick();
 

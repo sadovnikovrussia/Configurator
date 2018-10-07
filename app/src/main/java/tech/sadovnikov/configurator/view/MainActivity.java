@@ -21,16 +21,24 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.presenter.BluetoothService;
 import tech.sadovnikov.configurator.presenter.DataAnalyzer;
+import tech.sadovnikov.configurator.presenter.Presenter;
+
 
 public class MainActivity extends AppCompatActivity implements
+        Contract.View,
         BluetoothFragment.OnBluetoothFragmentInteractionListener,
+        ConfigurationFragment.OnConfigurationFragmentInteractionListener,
         ConsoleFragment.OnConsoleFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
+
+    Contract.Presenter presenter;
 
     FrameLayout container;
     BottomNavigationView navigation;
@@ -42,30 +50,29 @@ public class MainActivity extends AppCompatActivity implements
     ConfigNavigationFragment configNavigationFragment;
     ConsoleFragment consoleFragment;
 
-    BluetoothService mBluetoothService;
-    Handler mUiHandler;
+    BluetoothService bluetoothService;
+    UiHandler uiHandler;
     BluetoothBroadcastReceiver bluetoothBroadcastReceiver;
 
     public MainActivity() {
         Log.v(TAG, "onConstructor");
     }
 
-    // Приемник изменения состояния Bluetooth от системы
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.v(TAG, "onCreate");
+        presenter = new Presenter(this);
         bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver();
-        mUiHandler = new UiHandler(this);
-        mBluetoothService = new BluetoothService(mUiHandler);
+        uiHandler = new UiHandler(this, presenter);
+        bluetoothService = new BluetoothService(uiHandler);
         registerBluetoothBroadcastReceiver();
         initUi();
-        ArrayList<BluetoothDevice> bondedDevices = BluetoothService.getBondedDevices();
-        for (BluetoothDevice device : bondedDevices) {
-            Log.i(TAG, device.getName() + ", " + device.getAddress());
-        }
+//        ArrayList<BluetoothDevice> bondedDevices = BluetoothService.getBondedDevices();
+//        for (BluetoothDevice device : bondedDevices) {
+//            Log.i(TAG, device.getName() + ", " + device.getAddress());
+//        }
     }
 
     // Регистрация ресиверов
@@ -107,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements
         setFragment(this.bluetoothFragment);
     }
 
+    // Выбор фрагмента
     void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.container, fragment);
@@ -118,11 +126,11 @@ public class MainActivity extends AppCompatActivity implements
 //    @Override
 //    public void onSwitchBtStateChanged(boolean state) {
 //        if (state) {
-//            mBluetoothService.enableBt();
-//            bluetoothFragment.showDevices(mBluetoothService.getBondedDevices());
+//            bluetoothService.enableBt();
+//            bluetoothFragment.showDevices(bluetoothService.getBondedDevices());
 //        } else {
 //            bluetoothFragment.hideDevices();
-//            mBluetoothService.disableBt();
+//            bluetoothService.disableBt();
 //        }
 //    }
 
@@ -137,22 +145,51 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onRvBtItemClicked(int position) {
+    public void onPairedDevicesRvItemClicked(int position) {
+
+    }
+
+    @Override
+    public void onRvConfigTabsItemClick() {
 
     }
 
     @Override
     public void onBtnConnectClick() {
         Log.d(TAG, "onBtnConnectClick");
-        if (mBluetoothService.isEnabled()) {
-            mBluetoothService.connectTo("38:1C:4A:2C:C8:09");
+        if (bluetoothService.isEnabled()) {
+            bluetoothService.connectTo("38:1C:4A:2C:C8:09");
         }
     }
 
     @Override
     public void onBtnSendCommandClick(String command) {
-        mBluetoothService.sendData(command);
+        bluetoothService.sendData(command);
     }
+
+    // ---------------------------------------------------------------------------------------------
+    // Contract.View
+    @Override
+    public void showLog(String line) {
+        consoleFragment.showLog(line);
+    }
+
+    @Override
+    public void showParameter(Parameter parameter) {
+
+    }
+
+    @Override
+    public void showPairedDevices() {
+
+    }
+
+    @Override
+    public void showAvailableDevices() {
+
+    }
+    // ---------------------------------------------------------------------------------------------
+
 
 //    @Override
 //    public void onLvConfigsItemClick(int i) {
@@ -174,12 +211,14 @@ public class MainActivity extends AppCompatActivity implements
 //
 //    }
 
-    static class UiHandler extends Handler {
-
+    public static class UiHandler extends Handler {
         WeakReference<Activity> activityWeakReference;
 
-        UiHandler(Activity activity) {
+        Contract.Presenter presenter;
+
+        UiHandler(Activity activity, Contract.Presenter presenter) {
             activityWeakReference = new WeakReference<>(activity);
+            this.presenter = presenter;
         }
 
         @Override
@@ -187,23 +226,24 @@ public class MainActivity extends AppCompatActivity implements
             super.handleMessage(msg);
             MainActivity activity = (MainActivity) activityWeakReference.get();
             if (activity != null) {
-                Object obj = msg.obj;
-                switch (msg.what) {
-                    // Отправка полученных данных в консоль
-                    case DataAnalyzer.WHAT_MAIN_LOG:
-                        activity.consoleFragment.showLog((String) obj);
-                        break;
-                    // Загрузка данных в LiveData
-                    case DataAnalyzer.WHAT_COMMAND_DATA:
-                        HashMap msgData = (HashMap) obj;
-                        String data = (String) msgData.get(DataAnalyzer.DATA);
-                        String command = (String) msgData.get(DataAnalyzer.PARAMETER_NAME);
-                        break;
-                }
+                presenter.onHandleMessage(msg);
+//                Object obj = msg.obj;
+//                switch (msg.what) {
+//                    // Отправка полученных данных в консоль
+//                    case DataAnalyzer.WHAT_MAIN_LOG:
+//                        activity.consoleFragment.showLog((String) obj);
+//                        break;
+//                    // Загрузка данных в LiveData
+                    //case DataAnalyzer.WHAT_COMMAND_DATA:
+                    //HashMap msgData = (HashMap) obj;
+                    //    String data = (String) msgData.get(DataAnalyzer.DATA);
+                    //    String command = (String) msgData.get(DataAnalyzer.PARAMETER_NAME);
+                    //    break;
+                //}
             }
         }
-    }
 
+    }
 
     // ---------------------------------------------------------------------------------------------
     // States
@@ -237,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onDestroy();
         Log.v(TAG, "onDestroy");
         unregisterReceiver(bluetoothBroadcastReceiver);
-        mBluetoothService.closeAllConnections();
+        bluetoothService.closeAllConnections();
     }
     // ---------------------------------------------------------------------------------------------
 

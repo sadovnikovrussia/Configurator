@@ -9,11 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.presenter.BluetoothService;
-import tech.sadovnikov.configurator.view.adapter.BluetoothDevicesAdapter;
+import tech.sadovnikov.configurator.view.adapter.PairedDevicesRvAdapter;
 
 public class PageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
@@ -40,10 +39,10 @@ public class PageFragment extends Fragment {
                                        Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_paired_devices, container, false);
 
-        rvPairedDevices = view.findViewById(R.id.rv_paired_devices_new);
+        rvPairedDevices = view.findViewById(R.id.rv_paired_devices);
         rvPairedDevices.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         Log.d(TAG, BluetoothService.getBondedDevices().toString());
-        rvPairedDevices.setAdapter(new BluetoothDevicesAdapter(BluetoothService.getBondedDevices()));
+        rvPairedDevices.setAdapter(new PairedDevicesRvAdapter(BluetoothService.getBondedDevices()));
 
         return view;
     }

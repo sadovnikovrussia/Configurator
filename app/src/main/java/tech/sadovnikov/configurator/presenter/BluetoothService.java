@@ -23,7 +23,7 @@ public class BluetoothService {
     private static final java.util.UUID UUID = java.util.UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static final int WHAT_LOG = 10;
 
-    public static BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    private static BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     // Потоки
     private ConnectThread mConnectThread;
@@ -54,8 +54,7 @@ public class BluetoothService {
     // Получение списка спаренных устройств
     static public ArrayList<BluetoothDevice> getBondedDevices() {
         Set<BluetoothDevice> mBondedDevices = bluetoothAdapter.getBondedDevices();
-        ArrayList mDevices = new ArrayList<>(mBondedDevices);
-        return mDevices;
+        return new ArrayList<>(mBondedDevices);
     }
 
 //    void connectTo(int i) {

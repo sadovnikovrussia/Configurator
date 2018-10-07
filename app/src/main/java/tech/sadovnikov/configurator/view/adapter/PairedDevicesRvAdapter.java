@@ -13,34 +13,35 @@ import java.util.ArrayList;
 
 import tech.sadovnikov.configurator.R;
 
-public class BluetoothDevicesAdapter extends RecyclerView.Adapter<BluetoothDevicesAdapter.BluetoothDeviceViewHolder> {
-    private static final String TAG = "BluetoothDevicesAdapter";
+public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRvAdapter.BluetoothDeviceViewHolder> {
+    private static final String TAG = "RvBtDevicesAdapter";
     private ArrayList<BluetoothDevice> bluetoothDevices;
 
-    public BluetoothDevicesAdapter(ArrayList<BluetoothDevice> bluetoothDevices) {
-        Log.d(TAG, "onConstructor, " + bluetoothDevices.toString());
+    public PairedDevicesRvAdapter(ArrayList<BluetoothDevice> bluetoothDevices) {
+        // Log.d(TAG, "onConstructor, " + bluetoothDevices.toString());
         this.bluetoothDevices = bluetoothDevices;
     }
 
     @NonNull
     @Override
     public BluetoothDeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View viewDevice = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bluetooth_device, parent, false);
-        Log.d(TAG, "onCreateViewHolder");
-        return new BluetoothDeviceViewHolder(viewDevice);
+        View deviceView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bluetooth_device, parent, false);
+        // Log.d(TAG, "onCreateBluetoothDeviceViewHolder");
+        return new BluetoothDeviceViewHolder(deviceView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull BluetoothDeviceViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder");
+        // Log.d(TAG, "onBindViewHolder");
         holder.bind(position);
     }
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount: " + bluetoothDevices.size());
+        // Log.d(TAG, "getItemCount: " + bluetoothDevices.size());
         return bluetoothDevices.size();
     }
+
     class BluetoothDeviceViewHolder extends RecyclerView.ViewHolder {
         private TextView tvDeviceName;
         private TextView tvDeviceAddress;
