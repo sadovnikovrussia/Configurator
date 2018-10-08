@@ -10,6 +10,7 @@ import tech.sadovnikov.configurator.model.Parameter;
 public interface Contract {
 
     interface Repository {
+
         // Загрузить (установить) конфигурацию в устройство
         void setConfiguration(Configuration configuration);
 
@@ -28,7 +29,9 @@ public interface Contract {
 
     interface View {
         // Вывести сообщение лога в консоль
-        void showLog(String line);
+        void showLog(String logsMessages);
+
+        void addLogsLine(String line);
 
         // Вывести значение параметра на экран в соответствующий компонент
         void showParameter(Parameter parameter);
@@ -46,5 +49,13 @@ public interface Contract {
         void onPairedDevicesRvItemClick(BluetoothDevice bluetoothDevice);
 
         void onHandleMessage(Message msg);
+
+        void onConsoleFragmentCreateView();
+    }
+
+    interface Log {
+        void addLine(String line);
+
+        String getLogsMessages();
     }
 }

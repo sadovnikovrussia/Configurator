@@ -15,18 +15,18 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.presenter.BluetoothService;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesRvAdapter;
 
-public class PageFragment extends Fragment {
+public class PairedDevicesFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
-    private static final String TAG = "PageFragment";
+    private static final String TAG = "PairedDevicesFragment";
     RecyclerView rvPairedDevices;
     private int mPage;
 
     BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
-    public static PageFragment newInstance(int page) {
+    public static PairedDevicesFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
-        PageFragment fragment = new PageFragment();
+        PairedDevicesFragment fragment = new PairedDevicesFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,12 +44,12 @@ public class PageFragment extends Fragment {
 
         rvPairedDevices = view.findViewById(R.id.rv_paired_devices);
         rvPairedDevices.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        Log.d(TAG, BluetoothService.getBondedDevices().toString());
         rvPairedDevices.setAdapter(new PairedDevicesRvAdapter(BluetoothService.getBondedDevices(), onBluetoothFragmentInteractionListener));
 
         return view;
     }
-
+    // ---------------------------------------------------------------------------------------------
+    // States
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -60,6 +60,54 @@ public class PageFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnBluetoothFragmentInteractionListener");
         }
-
     }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.v(TAG, "onActivityCreated");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.v(TAG, "onStart");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v(TAG, "onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.v(TAG, "onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.v(TAG, "onStop");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.v(TAG, "onDestroyView");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG, "onDestroy");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+    // ---------------------------------------------------------------------------------------------
+
 }

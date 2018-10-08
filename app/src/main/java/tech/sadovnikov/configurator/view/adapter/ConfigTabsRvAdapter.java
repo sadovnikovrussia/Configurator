@@ -18,7 +18,7 @@ public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapte
 
 
     public ConfigTabsRvAdapter(String[] configTabs) {
-        // Log.d(TAG, "onConstructor, " + bluetoothDevices.toString());
+        // Logs.d(TAG, "onConstructor, " + bluetoothDevices.toString());
         this.configTabs = configTabs;
     }
 
@@ -26,19 +26,19 @@ public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapte
     @Override
     public ConfigTabsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View deviceView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_config_tab, parent, false);
-        // Log.d(TAG, "onCreateBluetoothDeviceViewHolder");
+        // Logs.d(TAG, "onCreateBluetoothDeviceViewHolder");
         return new ConfigTabsViewHolder(deviceView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ConfigTabsViewHolder holder, int position) {
-        // Log.d(TAG, "onBindViewHolder");
+        // Logs.d(TAG, "onBindViewHolder");
         holder.bind(position);
     }
 
     @Override
     public int getItemCount() {
-        // Log.d(TAG, "getItemCount: " + bluetoothDevices.size());
+        // Logs.d(TAG, "getItemCount: " + bluetoothDevices.size());
         return configTabs.length;
     }
 

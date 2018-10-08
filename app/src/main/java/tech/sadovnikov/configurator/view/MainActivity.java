@@ -1,13 +1,9 @@
 package tech.sadovnikov.configurator.view;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -16,8 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-
-import java.lang.ref.WeakReference;
 
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
@@ -48,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements
     ConsoleFragment consoleFragment;
 
     BluetoothService bluetoothService;
-    UiHandler uiHandler;
+    //UiHandler uiHandler;
     BluetoothBroadcastReceiver bluetoothBroadcastReceiver;
 
     public MainActivity() {
@@ -62,13 +56,11 @@ public class MainActivity extends AppCompatActivity implements
         Log.v(TAG, "onCreate");
         presenter = new Presenter(this);
         bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver();
-        uiHandler = new UiHandler(this, presenter);
-        bluetoothService = new BluetoothService(uiHandler);
         registerBluetoothBroadcastReceiver();
         initUi();
 //        ArrayList<BluetoothDevice> bondedDevices = BluetoothService.getBondedDevices();
 //        for (BluetoothDevice device : bondedDevices) {
-//            Log.i(TAG, device.getName() + ", " + device.getAddress());
+//            Logs.i(TAG, device.getName() + ", " + device.getAddress());
 //        }
     }
 
@@ -131,11 +123,9 @@ public class MainActivity extends AppCompatActivity implements
 //        }
 //    }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
-    }
-
+    // ---------------------------------------------------------------------------------------------
+    // OnBluetoothFragmentInteractionListener
     @Override
     public void onSwitchBtStateChanged(boolean state) {
 
@@ -145,30 +135,43 @@ public class MainActivity extends AppCompatActivity implements
     public void onPairedDevicesRvItemClicked(BluetoothDevice bluetoothDevice) {
         presenter.onPairedDevicesRvItemClick(bluetoothDevice);
     }
+    // ---------------------------------------------------------------------------------------------
 
+
+    // ---------------------------------------------------------------------------------------------
+    // OnConfigurationFragmentInteractionListener
     @Override
     public void onRvConfigTabsItemClick() {
 
     }
+    // ---------------------------------------------------------------------------------------------
 
-    @Override
-    public void onBtnConnectClick() {
-        Log.d(TAG, "onBtnConnectClick");
-        if (bluetoothService.isEnabled()) {
-            bluetoothService.connectTo("38:1C:4A:2C:C8:09");
-        }
-    }
 
+    // ---------------------------------------------------------------------------------------------
+    // OnConsoleFragmentInteractionListener
     @Override
     public void onBtnSendCommandClick(String command) {
         bluetoothService.sendData(command);
     }
 
+    @Override
+    public void onConsoleFragmentCreateView() {
+        presenter.onConsoleFragmentCreateView();
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+
     // ---------------------------------------------------------------------------------------------
     // Contract.View
     @Override
-    public void showLog(String line) {
-        consoleFragment.showLog(line);
+    public void showLog(String logsMessages) {
+        consoleFragment.showLog(logsMessages);
+    }
+
+    @Override
+    public void addLogsLine(String line) {
+        consoleFragment.addLogsLine(line);
     }
 
     @Override
@@ -187,60 +190,6 @@ public class MainActivity extends AppCompatActivity implements
     }
     // ---------------------------------------------------------------------------------------------
 
-
-//    @Override
-//    public void onLvConfigsItemClick(int i) {
-//
-//        switch (i) {
-//            case 0:
-//                configBuoyFragment = ConfigBuoyFragment.newInstance("103");
-//                setFragment(configBuoyFragment);
-//                break;
-//            case 1:
-//                configMainFragment = new ConfigMainFragment();
-//                setFragment(configMainFragment);
-//                break;
-//            case 2:
-//                configNavigationFragment = new ConfigNavigationFragment();
-//                setFragment(configNavigationFragment);
-//                break;
-//        }
-//
-//    }
-
-    public static class UiHandler extends Handler {
-        WeakReference<Activity> activityWeakReference;
-
-        Contract.Presenter presenter;
-
-        UiHandler(Activity activity, Contract.Presenter presenter) {
-            activityWeakReference = new WeakReference<>(activity);
-            this.presenter = presenter;
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            MainActivity activity = (MainActivity) activityWeakReference.get();
-            if (activity != null) {
-                presenter.onHandleMessage(msg);
-//                Object obj = msg.obj;
-//                switch (msg.what) {
-//                    // Отправка полученных данных в консоль
-//                    case DataAnalyzer.WHAT_MAIN_LOG:
-//                        activity.consoleFragment.showLog((String) obj);
-//                        break;
-//                    // Загрузка данных в LiveData
-                    //case DataAnalyzer.WHAT_COMMAND_DATA:
-                    //HashMap msgData = (HashMap) obj;
-                    //    String data = (String) msgData.get(DataAnalyzer.DATA);
-                    //    String command = (String) msgData.get(DataAnalyzer.PARAMETER_NAME);
-                    //    break;
-                //}
-            }
-        }
-
-    }
 
     // ---------------------------------------------------------------------------------------------
     // States
@@ -274,7 +223,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onDestroy();
         Log.v(TAG, "onDestroy");
         unregisterReceiver(bluetoothBroadcastReceiver);
-        bluetoothService.closeAllConnections();
     }
     // ---------------------------------------------------------------------------------------------
 

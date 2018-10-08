@@ -2,27 +2,23 @@ package tech.sadovnikov.configurator.view;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Switch;
 
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.view.adapter.DevicesFragmentPagerAdapter;
-import tech.sadovnikov.configurator.view.adapter.PairedDevicesRvAdapter;
 
 
 /**
  * Фрагмент для отображения спаренных и доступных bluetooth устройств
- *
+ * <p>
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link OnBluetoothFragmentInteractionListener} interface
@@ -33,7 +29,6 @@ public class BluetoothFragment extends Fragment {
 
     // UI
     Switch switchBt;
-    Button btnConnect;
 
     private OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
@@ -61,17 +56,9 @@ public class BluetoothFragment extends Fragment {
         switchBt = inflate.findViewById(R.id.sw_bluetooth);
         // Вкладки со спаренными и доступными устройствами
         ViewPager viewPager = inflate.findViewById(R.id.viewPager);
-        viewPager.setAdapter(new DevicesFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getActivity().getApplicationContext()));
+        viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
         TabLayout tabLayout = inflate.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-
-        btnConnect = inflate.findViewById(R.id.btn_conn);
-        btnConnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBluetoothFragmentInteractionListener.onBtnConnectClick();
-            }
-        });
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -123,6 +110,7 @@ public class BluetoothFragment extends Fragment {
         super.onDestroyView();
         Log.v(TAG, "onDestroyView");
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -147,14 +135,9 @@ public class BluetoothFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnBluetoothFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-
         void onSwitchBtStateChanged(boolean state);
 
         void onPairedDevicesRvItemClicked(BluetoothDevice bluetoothDevice);
-
-        void onBtnConnectClick();
 
     }
 

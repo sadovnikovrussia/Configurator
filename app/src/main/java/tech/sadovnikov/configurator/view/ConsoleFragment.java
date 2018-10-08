@@ -5,15 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.Selection;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -25,13 +23,13 @@ public class ConsoleFragment extends Fragment {
     private static final String TAG = "ConsoleFragment";
 
     // UI
-    TextView tvLog;
+    TextView tvLogs;
+    ScrollView svLogs;
     Button btnSendCommand;
     EditText etCommandLine;
     Switch swAutoScroll;
 
     OnConsoleFragmentInteractionListener onConsoleFragmentInteractionListener;
-    private Editable editableText;
 
     public ConsoleFragment() {
         // Required empty public constructor
@@ -51,13 +49,15 @@ public class ConsoleFragment extends Fragment {
         // Inflate the layout for this fragment
         View inflate = inflater.inflate(R.layout.fragment_console, container, false);
         initUi(inflate);
+        onConsoleFragmentInteractionListener.onConsoleFragmentCreateView();
         return inflate;
     }
 
     private void initUi(View inflate) {
         swAutoScroll = inflate.findViewById(R.id.sw_auto_scroll);
-        tvLog = inflate.findViewById(R.id.tv_log);
-        tvLog.setMovementMethod(new ScrollingMovementMethod());
+        swAutoScroll.setChecked(true);
+        tvLogs = inflate.findViewById(R.id.tv_logs);
+        svLogs = inflate.findViewById(R.id.sv_logs);
         etCommandLine = inflate.findViewById(R.id.et_command_line);
         btnSendCommand = inflate.findViewById(R.id.btn_send_command);
         btnSendCommand.setOnClickListener(new View.OnClickListener() {
@@ -73,22 +73,32 @@ public class ConsoleFragment extends Fragment {
         navigation.getMenu().getItem(2).setChecked(true);
     }
 
-    void showLog(String line) {
-        if (tvLog != null) {
-            tvLog.append(line + "\r\n");
-            if (swAutoScroll.isChecked()){
-                editableText = tvLog.getEditableText();
-                Selection.setSelection(editableText, editableText.length());
+    void showLog(String logsMessages) {
+        Log.d(TAG, "onShowLog: " + logsMessages);
+        if (tvLogs != null) {
+            tvLogs.setText(logsMessages);
+        }
+    }
+
+    void addLogsLine(String line) {
+        if (tvLogs != null) {
+            tvLogs.append(line + "\r\n");
+            if (swAutoScroll.isChecked()) {
+//                Editable editableText = tvLogs.getEditableText();
+//                tvLogs.setSelected(true);
+//                Selection.setSelection(editableText, editableText.length());
+                svLogs.fullScroll(ScrollView.FOCUS_DOWN);
             } else {
-                tvLog.clearFocus();
+                tvLogs.setSelected(false);
+                // tvLogs.clearFocus();
             }
         }
     }
 
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -149,6 +159,8 @@ public class ConsoleFragment extends Fragment {
     interface OnConsoleFragmentInteractionListener {
 
         void onBtnSendCommandClick(String line);
+
+        void onConsoleFragmentCreateView();
 
     }
 

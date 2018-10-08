@@ -40,19 +40,23 @@ public class DataAnalyzer {
         if (buffer.startsWith(String.valueOf(LOG_SYMBOL))) {
             int indexStartNewMessage = buffer.indexOf(LOG_SYMBOL, 1);
             if (indexStartNewMessage != -1) {
-                String message = buffer.substring(0, indexStartNewMessage);
-                buffer = buffer.substring(indexStartNewMessage);
-                String logLevel = message.substring(1, 2);
-                String logType = message.substring(2, 5);
-                if (logType.equals(CMD) & Integer.valueOf(logLevel) == 1) {
-                    if (message.contains(OK)) {
-                        for (String command : COMMANDS) {
-                            if (message.contains(command.toUpperCase())) {
-                                String data = parseMessage(message);
-                                sendDataToUi(data, command);
+                try {
+                    String message = buffer.substring(0, indexStartNewMessage);
+                    buffer = buffer.substring(indexStartNewMessage);
+                    String logLevel = message.substring(1, 2);
+                    String logType = message.substring(2, 5);
+                    if (logType.equals(CMD) & Integer.valueOf(logLevel) == 1) {
+                        if (message.contains(OK)) {
+                            for (String command : COMMANDS) {
+                                if (message.contains(command.toUpperCase())) {
+                                    String data = parseMessage(message);
+                                    sendDataToUi(data, command);
+                                }
                             }
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         } else buffer = "";

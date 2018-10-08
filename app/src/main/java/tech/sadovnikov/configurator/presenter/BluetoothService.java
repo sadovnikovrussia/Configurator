@@ -33,7 +33,7 @@ public class BluetoothService {
     private Handler mHandler;
     DataAnalyzer dataAnalyzer;
 
-    public BluetoothService(Handler handler) {
+    BluetoothService(Handler handler) {
         Log.v(TAG, "OnConstructor");
         mHandler = handler;
         dataAnalyzer = new DataAnalyzer(mHandler);
@@ -61,14 +61,19 @@ public class BluetoothService {
 //        HashMap<String, String> devAndAddr = mDevices.get(i);
 //        String address = devAndAddr.get("Address");
 //        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
-//        Log.d(TAG, "onConnecting to: " + device.getName());
+//        Logs.d(TAG, "onConnecting to: " + device.getName());
 //        onConnecting(device);
 //    }
 
-    public void connectTo(String address) {
+    void connectTo(String address) {
         BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
         Log.d(TAG, "onConnecting to: " + device.getName());
         onConnecting(device);
+    }
+
+    void connectTo(BluetoothDevice bluetoothDevice) {
+        Log.d(TAG, "onConnecting to: " + bluetoothDevice.getName());
+        onConnecting(bluetoothDevice);
     }
 
 
@@ -217,7 +222,7 @@ public class BluetoothService {
             try {
                 Log.d(TAG, "Пытаемся прочитать из потока");
                 while ((line = readerSerial.readLine()) != null) {
-                    Log.d(TAG, line);
+                    Log.i(TAG, line);
                     dataAnalyzer.analyze(line);
                     //Message message = new Message();
                     //message.obj = line;
