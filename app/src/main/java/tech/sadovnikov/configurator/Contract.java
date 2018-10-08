@@ -39,18 +39,31 @@ public interface Contract {
         // Показать спаренные устройства
         void showPairedDevices();
 
+        // Скрыть все устройства устройства
+        void hideAllDevices();
+
         // Показать доступные устройства
         void showAvailableDevices();
+
+        void setSwitchBtState(boolean state);
     }
 
     interface Presenter {
-        void onSwitchBtStateChanged();
+        void onSwitchBtStateChanged(boolean state);
 
         void onPairedDevicesRvItemClick(BluetoothDevice bluetoothDevice);
 
         void onHandleMessage(Message msg);
 
+        void onBluetoothFragmentCreateView();
+
         void onConsoleFragmentCreateView();
+
+        void onMainActivityCreate();
+
+        void onMainActivityDestroy();
+
+        void onBluetoothFragmentStart();
     }
 
     interface Log {

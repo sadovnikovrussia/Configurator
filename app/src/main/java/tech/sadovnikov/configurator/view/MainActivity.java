@@ -55,25 +55,8 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         Log.v(TAG, "onCreate");
         presenter = new Presenter(this);
-        bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver();
-        registerBluetoothBroadcastReceiver();
         initUi();
-//        ArrayList<BluetoothDevice> bondedDevices = BluetoothService.getBondedDevices();
-//        for (BluetoothDevice device : bondedDevices) {
-//            Logs.i(TAG, device.getName() + ", " + device.getAddress());
-//        }
-    }
-
-    // Регистрация ресиверов
-    private void registerBluetoothBroadcastReceiver() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
-        intentFilter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST);
-        intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-        registerReceiver(bluetoothBroadcastReceiver, intentFilter);
+        presenter.onMainActivityCreate();
     }
 
     private void initUi() {
@@ -112,29 +95,33 @@ public class MainActivity extends AppCompatActivity implements
         fragmentTransaction.commit();
     }
 
-//    @Override
-//    public void onSwitchBtStateChanged(boolean state) {
-//        if (state) {
-//            bluetoothService.enableBt();
-//            bluetoothFragment.showDevices(bluetoothService.getBondedDevices());
-//        } else {
-//            bluetoothFragment.hideDevices();
-//            bluetoothService.disableBt();
-//        }
-//    }
-
+    @Override
+    public void setSwitchBtState(boolean state) {
+        bluetoothFragment.setSwitchBtState(state);
+    }
 
     // ---------------------------------------------------------------------------------------------
     // OnBluetoothFragmentInteractionListener
     @Override
     public void onSwitchBtStateChanged(boolean state) {
-
+        presenter.onSwitchBtStateChanged(state);
     }
 
     @Override
     public void onPairedDevicesRvItemClicked(BluetoothDevice bluetoothDevice) {
         presenter.onPairedDevicesRvItemClick(bluetoothDevice);
     }
+
+    @Override
+    public void onBluetoothFragmentCreateView() {
+        presenter.onBluetoothFragmentCreateView();
+    }
+
+    @Override
+    public void onBluetoothFragmentStart() {
+        presenter.onBluetoothFragmentStart();
+    }
+
     // ---------------------------------------------------------------------------------------------
 
 
@@ -181,7 +168,12 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void showPairedDevices() {
+        bluetoothFragment.showPairedDevices();
+    }
 
+    @Override
+    public void hideAllDevices() {
+        bluetoothFragment.hidePairedDevices();
     }
 
     @Override
@@ -222,7 +214,8 @@ public class MainActivity extends AppCompatActivity implements
     protected void onDestroy() {
         super.onDestroy();
         Log.v(TAG, "onDestroy");
-        unregisterReceiver(bluetoothBroadcastReceiver);
+        presenter.onMainActivityDestroy();
+        // unregisterReceiver(bluetoothBroadcastReceiver);
     }
     // ---------------------------------------------------------------------------------------------
 

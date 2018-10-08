@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import tech.sadovnikov.configurator.R;
@@ -29,6 +30,8 @@ public class BluetoothFragment extends Fragment {
 
     // UI
     Switch switchBt;
+    TabLayout tabLayout;
+    ViewPager viewPager;
 
     private OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
@@ -49,16 +52,39 @@ public class BluetoothFragment extends Fragment {
         Log.v(TAG, "onCreateView");
         final View inflate = inflater.inflate(R.layout.fragment_bluetooth, container, false);
         initUi(inflate);
+        onBluetoothFragmentInteractionListener.onBluetoothFragmentCreateView();
         return inflate;
     }
 
     private void initUi(View inflate) {
         switchBt = inflate.findViewById(R.id.sw_bluetooth);
-        // Вкладки со спаренными и доступными устройствами
-        ViewPager viewPager = inflate.findViewById(R.id.viewPager);
+        switchBt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                onBluetoothFragmentInteractionListener.onSwitchBtStateChanged(isChecked);
+            }
+        });
+        tabLayout = inflate.findViewById(R.id.tabLayout);
+        viewPager = inflate.findViewById(R.id.viewPager);
+
         viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
-        TabLayout tabLayout = inflate.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    public void setSwitchBtState(boolean state) {
+        switchBt.setChecked(state);
+    }
+
+    void showPairedDevices() {
+        viewPager.setVisibility(View.VISIBLE);
+        tabLayout.setVisibility(View.VISIBLE);
+        viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    public void hidePairedDevices() {
+        viewPager.setVisibility(View.INVISIBLE);
+        tabLayout.setVisibility(View.INVISIBLE);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -85,6 +111,7 @@ public class BluetoothFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
+        onBluetoothFragmentInteractionListener.onBluetoothFragmentStart();
     }
 
     @Override
@@ -122,6 +149,8 @@ public class BluetoothFragment extends Fragment {
         super.onDetach();
         onBluetoothFragmentInteractionListener = null;
     }
+
+
     // ---------------------------------------------------------------------------------------------
 
     /**
@@ -138,6 +167,11 @@ public class BluetoothFragment extends Fragment {
         void onSwitchBtStateChanged(boolean state);
 
         void onPairedDevicesRvItemClicked(BluetoothDevice bluetoothDevice);
+
+        void onBluetoothFragmentCreateView();
+
+        void onBluetoothFragmentStart();
+
 
     }
 

@@ -57,14 +57,6 @@ public class BluetoothService {
         return new ArrayList<>(mBondedDevices);
     }
 
-//    void connectTo(int i) {
-//        HashMap<String, String> devAndAddr = mDevices.get(i);
-//        String address = devAndAddr.get("Address");
-//        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
-//        Logs.d(TAG, "onConnecting to: " + device.getName());
-//        onConnecting(device);
-//    }
-
     void connectTo(String address) {
         BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
         Log.d(TAG, "onConnecting to: " + device.getName());

@@ -7,9 +7,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import tech.sadovnikov.configurator.Contract;
+
 public class BluetoothBroadcastReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "BluetoothBrReceiver";
+    private static final String TAG = "BluetoothBroadReceiver";
+
+    Presenter presenter;
+
+    public BluetoothBroadcastReceiver(Presenter presenter) {
+        this.presenter = presenter;
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -41,14 +49,12 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                         // BT включился
                         case BluetoothAdapter.STATE_ON:
                             Log.d(TAG, "BluetoothAdapter.STATE_ON");
-//                            bluetoothFragment.mSwitchBt.setChecked(true);
-//                            bluetoothFragment.showDevices(mBluetoothService.getBondedDevices());
+                            presenter.onBluetoothServiceStateOn();
                             break;
                         // BT выключился
                         case BluetoothAdapter.STATE_OFF:
                             Log.d(TAG, "BluetoothAdapter.STATE_OFF");
-//                            bluetoothFragment.mSwitchBt.setChecked(false);
-//                            bluetoothFragment.hideDevices();
+                            presenter.onBluetoothServiceStateOff();
                             break;
                         // BT включается
                         case BluetoothAdapter.STATE_TURNING_ON:
