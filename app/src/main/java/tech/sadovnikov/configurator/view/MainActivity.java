@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity implements
     Menu menuActionsWithConfiguration;
 
     BluetoothService bluetoothService;
-    //UiHandler uiHandler;
-    BluetoothBroadcastReceiver bluetoothBroadcastReceiver;
 
     public MainActivity() {
         Log.v(TAG, "onConstructor");
@@ -201,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-
     }
 
     @Override

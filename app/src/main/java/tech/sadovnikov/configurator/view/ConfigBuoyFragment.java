@@ -3,6 +3,7 @@ package tech.sadovnikov.configurator.view;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,4 +29,9 @@ public class ConfigBuoyFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_config_buoy, container, false);
     }
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 }
