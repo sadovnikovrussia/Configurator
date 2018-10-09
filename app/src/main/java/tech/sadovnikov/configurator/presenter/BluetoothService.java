@@ -117,6 +117,11 @@ public class BluetoothService {
         }
     }
 
+    boolean startDiscovery() {
+        Log.d(TAG, "startDiscovery");
+        return bluetoothAdapter.startDiscovery();
+    }
+
     private class ConnectThread extends Thread {
         BluetoothSocket mSocket;
         BluetoothDevice mDevice;

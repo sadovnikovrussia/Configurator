@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -32,6 +33,7 @@ public class BluetoothFragment extends Fragment {
     Switch switchBt;
     TabLayout tabLayout;
     ViewPager viewPager;
+    Button btnTest;
 
     private OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
@@ -69,6 +71,13 @@ public class BluetoothFragment extends Fragment {
 
         viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
         tabLayout.setupWithViewPager(viewPager);
+        btnTest = inflate.findViewById(R.id.button);
+        btnTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBluetoothFragmentInteractionListener.startDiscovery();
+            }
+        });
     }
 
     public void setSwitchBtState(boolean state) {
@@ -172,6 +181,7 @@ public class BluetoothFragment extends Fragment {
 
         void onBluetoothFragmentStart();
 
+        void startDiscovery();
 
     }
 

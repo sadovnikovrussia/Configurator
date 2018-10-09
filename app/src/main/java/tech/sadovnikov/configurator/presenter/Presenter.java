@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,8 +14,13 @@ import java.util.HashMap;
 
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Device;
 import tech.sadovnikov.configurator.model.Logs;
+import tech.sadovnikov.configurator.view.BluetoothFragment;
+import tech.sadovnikov.configurator.view.ConfigurationFragment;
+import tech.sadovnikov.configurator.view.ConsoleFragment;
+import tech.sadovnikov.configurator.view.MainActivity;
 
 public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener {
     private static final String TAG = "Presenter";
@@ -23,17 +29,23 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
     private Contract.Repository device;
     private Contract.Log logs;
 
+    private Bundle bundleRepository;
+
     private BluetoothService bluetoothService;
     private BluetoothBroadcastReceiver bluetoothBroadcastReceiver;
+    private UiHandler uiHandler;
+
 
     public Presenter(Contract.View mainActivity) {
         Log.v(TAG, "onConstructor");
         this.mainActivity = mainActivity;
         this.device = Device.getInstance();
         this.logs = Logs.getInstance(this);
-        UiHandler uiHandler = new UiHandler((Activity) mainActivity, this);
+        this.uiHandler = new UiHandler((Activity) mainActivity, this);
         this.bluetoothService = new BluetoothService(uiHandler);
         this.bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver(this);
+        this.bundleRepository = new Bundle();
+        bundleRepository.putSerializable("UiConfiguration", new Configuration());
         registerBluetoothBroadcastReceiver((Context) mainActivity);
     }
 
@@ -98,20 +110,38 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
     }
 
     @Override
-    public void onNavigationItemSelected(MenuItem item) {
+    public void startDiscovery() {
+        bluetoothService.startDiscovery();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigation_bluetooth:
-                break;
+                BluetoothFragment bluetoothFragment = new BluetoothFragment();
+                bluetoothFragment.setArguments(bundleRepository);
+                ((MainActivity) mainActivity).bluetoothFragment = bluetoothFragment;
+                mainActivity.setFragment(bluetoothFragment);
+                return true;
             case R.id.navigation_configuration:
-                break;
+                ConfigurationFragment configurationFragment = new ConfigurationFragment();
+                configurationFragment.setArguments(bundleRepository);
+                mainActivity.setFragment(configurationFragment);
+                return true;
             case R.id.navigation_console:
-                break;
+                ConsoleFragment consoleFragment = new ConsoleFragment();
+                mainActivity.setFragment(consoleFragment);
+                return true;
         }
+        return false;
 
     }
 
     @Override
     public void onMainActivityCreate() {
+        ((MainActivity) mainActivity).bluetoothFragment = new BluetoothFragment();
+        ((MainActivity) mainActivity).bluetoothFragment.setArguments(bundleRepository);
+        mainActivity.setFragment(((MainActivity) mainActivity).bluetoothFragment);
     }
 
     @Override
@@ -132,6 +162,7 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
     void onBluetoothServiceStateOn() {
         mainActivity.setSwitchBtState(bluetoothService.isEnabled());
         mainActivity.showPairedDevices();
+        bluetoothService.startDiscovery();
     }
 
     void onBluetoothServiceStateOff() {

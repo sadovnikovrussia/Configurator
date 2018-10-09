@@ -23,6 +23,7 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (action != null) {
+            Log.w(TAG, action);
             switch (action) {
                 case BluetoothDevice.ACTION_FOUND:
                     Log.d(TAG, "ACTION_FOUND");

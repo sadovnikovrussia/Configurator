@@ -2,6 +2,7 @@ package tech.sadovnikov.configurator;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import tech.sadovnikov.configurator.model.Configuration;
@@ -29,6 +30,9 @@ public interface Contract {
     }
 
     interface View {
+        // Показать (установить фрагмент в MainActivity)
+        void setFragment(Fragment fragment);
+
         // Вывести сообщение лога в консоль
         void showLog(String logsMessages);
 
@@ -66,7 +70,9 @@ public interface Contract {
 
         void onBluetoothFragmentStart();
 
-        void onNavigationItemSelected(MenuItem item);
+        boolean onNavigationItemSelected(MenuItem item);
+
+        void startDiscovery();
     }
 
     interface Log {

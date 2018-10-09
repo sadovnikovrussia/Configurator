@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements
     FrameLayout container;
     BottomNavigationView navigation;
 
-    BluetoothFragment bluetoothFragment;
+    public BluetoothFragment bluetoothFragment;
     ConfigurationFragment configurationFragment;
     ConfigBuoyFragment configBuoyFragment;
     ConfigMainFragment configMainFragment;
@@ -62,36 +62,34 @@ public class MainActivity extends AppCompatActivity implements
 
     private void initUi() {
         container = findViewById(R.id.container);
-        bluetoothFragment = new BluetoothFragment();
-        configurationFragment = new ConfigurationFragment();
-        consoleFragment = new ConsoleFragment();
+        // bluetoothFragment = new BluetoothFragment();
+        // configurationFragment = new ConfigurationFragment();
+        // consoleFragment = new ConsoleFragment();
         //-----------------------------------------------
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                presenter.onNavigationItemSelected(item);
-                switch (item.getItemId()) {
-                    case R.id.navigation_bluetooth:
-                        setFragment(bluetoothFragment);
-                        return true;
-                    case R.id.navigation_configuration:
-                        setFragment(configurationFragment);
-                        return true;
-                    case R.id.navigation_console:
-                        setFragment(consoleFragment);
-                        return true;
-                }
-                return false;
+                return presenter.onNavigationItemSelected(item);
             }
         });
-        setFragment(this.bluetoothFragment);
     }
 
+
     // Выбор фрагмента
-    void setFragment(Fragment fragment) {
+    @Override
+    public void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, fragment);
+        if (fragment instanceof BluetoothFragment) {
+            bluetoothFragment = (BluetoothFragment) fragment;
+            fragmentTransaction.replace(R.id.container, bluetoothFragment);
+        } else if (fragment instanceof ConfigurationFragment) {
+            configurationFragment = (ConfigurationFragment) fragment;
+            fragmentTransaction.replace(R.id.container, configurationFragment);
+        } else if (fragment instanceof ConsoleFragment) {
+            consoleFragment = (ConsoleFragment) fragment;
+            fragmentTransaction.replace(R.id.container, consoleFragment);
+        }
         fragmentTransaction.addToBackStack(null);
         //navigation.setSelectedItemId(fragment.getId());
         fragmentTransaction.commit();
@@ -130,6 +128,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onBluetoothFragmentStart() {
         presenter.onBluetoothFragmentStart();
+    }
+
+    @Override
+    public void startDiscovery() {
+        presenter.startDiscovery();
     }
 
     // ---------------------------------------------------------------------------------------------
