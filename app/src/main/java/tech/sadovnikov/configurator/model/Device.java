@@ -1,5 +1,7 @@
 package tech.sadovnikov.configurator.model;
 
+import java.util.HashMap;
+
 import tech.sadovnikov.configurator.Contract;
 
 /**
@@ -10,7 +12,8 @@ public class Device implements Contract.Repository {
     private static Device instance = new Device();
 
     // Текущая конфигурация устройства
-    private Configuration configuration;
+    // private Configuration configuration;
+    Configuration deviceConfiguration = new Configuration();
 
     // Получение синглтона
     public static Device getInstance() {
@@ -42,6 +45,6 @@ public class Device implements Contract.Repository {
     // Получить текущую конфигурацию устройства (когда уже что-то считано из устройства)
     @Override
     public Configuration getCurrentConfiguration() {
-        return configuration;
+        return deviceConfiguration;
     }
 }

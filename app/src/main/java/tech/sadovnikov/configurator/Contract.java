@@ -2,6 +2,7 @@ package tech.sadovnikov.configurator;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.Message;
+import android.view.MenuItem;
 
 import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Parameter;
@@ -64,6 +65,8 @@ public interface Contract {
         void onMainActivityDestroy();
 
         void onBluetoothFragmentStart();
+
+        void onNavigationItemSelected(MenuItem item);
     }
 
     interface Log {

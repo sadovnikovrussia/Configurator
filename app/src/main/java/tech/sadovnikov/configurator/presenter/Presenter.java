@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.os.Message;
 import android.util.Log;
+import android.view.MenuItem;
 
 import java.util.HashMap;
 
 import tech.sadovnikov.configurator.Contract;
+import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.Device;
 import tech.sadovnikov.configurator.model.Logs;
 
@@ -93,6 +95,19 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
         } else {
             mainActivity.hideAllDevices();
         }
+    }
+
+    @Override
+    public void onNavigationItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.navigation_bluetooth:
+                break;
+            case R.id.navigation_configuration:
+                break;
+            case R.id.navigation_console:
+                break;
+        }
+
     }
 
     @Override

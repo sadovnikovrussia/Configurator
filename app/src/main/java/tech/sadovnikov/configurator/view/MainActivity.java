@@ -10,11 +10,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.presenter.BluetoothService;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements
     ConfigMainFragment configMainFragment;
     ConfigNavigationFragment configNavigationFragment;
     ConsoleFragment consoleFragment;
+    Menu menuActionsWithConfiguration;
 
     BluetoothService bluetoothService;
     //UiHandler uiHandler;
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                presenter.onNavigationItemSelected(item);
                 switch (item.getItemId()) {
                     case R.id.navigation_bluetooth:
                         setFragment(bluetoothFragment);
@@ -99,6 +103,14 @@ public class MainActivity extends AppCompatActivity implements
     public void setSwitchBtState(boolean state) {
         bluetoothFragment.setSwitchBtState(state);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
 
     // ---------------------------------------------------------------------------------------------
     // OnBluetoothFragmentInteractionListener
