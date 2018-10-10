@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.view;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,22 +12,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.presenter.BluetoothService;
+import tech.sadovnikov.configurator.view.adapter.AvailableDevicesRvAdapter;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesRvAdapter;
 
-public class PairedDevicesFragment extends Fragment {
+public class AvailableDevicesFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
-    private static final String TAG = "PairedDevicesFragment";
-    RecyclerView rvPairedDevices;
+    private static final String TAG = "AvailableDeviceFragment";
+
+    RecyclerView rvAvailableDevices;
 
     BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
-    public static PairedDevicesFragment newInstance(int page) {
-        Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
-        PairedDevicesFragment fragment = new PairedDevicesFragment();
-        fragment.setArguments(args);
+    public static AvailableDevicesFragment newInstance() {
+        //Bundle args = new Bundle();
+        //args.putInt(ARG_PAGE, page);
+        AvailableDevicesFragment fragment = new AvailableDevicesFragment();
+        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -38,9 +43,10 @@ public class PairedDevicesFragment extends Fragment {
                                        Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_paired_devices, container, false);
 
-        rvPairedDevices = view.findViewById(R.id.rv_paired_devices);
-        rvPairedDevices.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        rvPairedDevices.setAdapter(new PairedDevicesRvAdapter(BluetoothService.getBondedDevices(), onBluetoothFragmentInteractionListener));
+        rvAvailableDevices = view.findViewById(R.id.rv_paired_devices);
+        // TODO <Узнать, какой контекст подавать в аргумент LL>
+        rvAvailableDevices.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        rvAvailableDevices.setAdapter(new AvailableDevicesRvAdapter(onBluetoothFragmentInteractionListener));
 
         return view;
     }

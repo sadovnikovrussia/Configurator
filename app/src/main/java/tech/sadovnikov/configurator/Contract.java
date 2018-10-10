@@ -5,8 +5,12 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Parameter;
+import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
+import tech.sadovnikov.configurator.view.adapter.AvailableDevicesRvAdapter;
 
 
 public interface Contract {
@@ -48,9 +52,11 @@ public interface Contract {
         void hideAllDevices();
 
         // Показать доступные устройства
-        void showAvailableDevices();
+        void showAvailableDevices(ArrayList<BluetoothDevice> availableBluetoothDevices);
 
         void setSwitchBtState(boolean state);
+
+        void unregisterBluetoothBroadcastReceiver(BluetoothBroadcastReceiver bluetoothBroadcastReceiver);
     }
 
     interface Presenter {
@@ -73,6 +79,13 @@ public interface Contract {
         boolean onNavigationItemSelected(MenuItem item);
 
         void startDiscovery();
+
+        void onDevicesPageSelected(int position);
+
+        void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesRvAdapter.BluetoothDeviceViewHolder holder, int position);
+
+        int onGetItemCountOfAvailableDevicesRvAdapter();
+
     }
 
     interface Log {

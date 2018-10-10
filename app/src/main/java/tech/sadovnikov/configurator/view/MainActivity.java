@@ -1,8 +1,6 @@
 package tech.sadovnikov.configurator.view;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -14,17 +12,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import java.util.ArrayList;
+
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.presenter.BluetoothService;
 import tech.sadovnikov.configurator.presenter.Presenter;
+import tech.sadovnikov.configurator.view.adapter.AvailableDevicesRvAdapter;
 
 
-public class MainActivity extends AppCompatActivity implements
-        Contract.View,
+public class MainActivity extends AppCompatActivity implements Contract.View,
         BluetoothFragment.OnBluetoothFragmentInteractionListener,
         ConfigurationFragment.OnConfigurationFragmentInteractionListener,
         ConsoleFragment.OnConsoleFragmentInteractionListener {
@@ -116,6 +115,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onDevicesPageSelected(int position) {
+        presenter.onDevicesPageSelected(position);
+    }
+
+    @Override
     public void onPairedDevicesRvItemClicked(BluetoothDevice bluetoothDevice) {
         presenter.onPairedDevicesRvItemClick(bluetoothDevice);
     }
@@ -128,6 +132,16 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onBluetoothFragmentStart() {
         presenter.onBluetoothFragmentStart();
+    }
+
+    @Override
+    public void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesRvAdapter.BluetoothDeviceViewHolder holder, int position) {
+        presenter.onBindViewHolderOfAvailableDevicesRvAdapter(holder, position);
+    }
+
+    @Override
+    public int onGetItemCountOfAvailableDevicesRvAdapter() {
+        return presenter.onGetItemCountOfAvailableDevicesRvAdapter();
     }
 
     @Override
@@ -175,9 +189,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void showParameter(Parameter parameter) {
-
-    }
+    public void showParameter(Parameter parameter) {}
 
     @Override
     public void showPairedDevices() {
@@ -190,9 +202,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void showAvailableDevices() {
-
+    public void showAvailableDevices(ArrayList<BluetoothDevice> availableBluetoothDevices) {
+        bluetoothFragment.showAvailableDevices(availableBluetoothDevices);
     }
+
+    @Override
+    public void unregisterBluetoothBroadcastReceiver(BluetoothBroadcastReceiver bluetoothBroadcastReceiver) {
+        unregisterReceiver(bluetoothBroadcastReceiver);
+    }
+
     // ---------------------------------------------------------------------------------------------
 
 

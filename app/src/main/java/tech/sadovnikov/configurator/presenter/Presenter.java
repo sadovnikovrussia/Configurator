@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.presenter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -7,9 +8,11 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import tech.sadovnikov.configurator.Contract;
@@ -21,11 +24,12 @@ import tech.sadovnikov.configurator.view.BluetoothFragment;
 import tech.sadovnikov.configurator.view.ConfigurationFragment;
 import tech.sadovnikov.configurator.view.ConsoleFragment;
 import tech.sadovnikov.configurator.view.MainActivity;
+import tech.sadovnikov.configurator.view.adapter.AvailableDevicesRvAdapter;
 
 public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener {
     private static final String TAG = "Presenter";
 
-    private Contract.View mainActivity;
+    private Contract.View mainView;
     private Contract.Repository device;
     private Contract.Log logs;
 
@@ -35,18 +39,19 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
     private BluetoothBroadcastReceiver bluetoothBroadcastReceiver;
     private UiHandler uiHandler;
 
+    ArrayList<BluetoothDevice> availableBluetoothDevices = new ArrayList<>();
 
-    public Presenter(Contract.View mainActivity) {
+    public Presenter(Contract.View mainView) {
         Log.v(TAG, "onConstructor");
-        this.mainActivity = mainActivity;
+        this.mainView = mainView;
         this.device = Device.getInstance();
         this.logs = Logs.getInstance(this);
-        this.uiHandler = new UiHandler((Activity) mainActivity, this);
+        this.uiHandler = new UiHandler((Activity) mainView, this);
         this.bluetoothService = new BluetoothService(uiHandler);
         this.bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver(this);
         this.bundleRepository = new Bundle();
         bundleRepository.putSerializable("UiConfiguration", new Configuration());
-        registerBluetoothBroadcastReceiver((Context) mainActivity);
+        registerBluetoothBroadcastReceiver((Context) mainView);
     }
 
     // Регистрация ресиверов
@@ -63,6 +68,7 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
 
     @Override
     public void onSwitchBtStateChanged(boolean state) {
+        // Log.d(TAG, "onSwitchBtStateChanged" + String.valueOf(state));
         if (state) {
             bluetoothService.enableBt();
         } else {
@@ -100,17 +106,22 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
 
     @Override
     public void onBluetoothFragmentStart() {
-        mainActivity.setSwitchBtState(bluetoothService.isEnabled());
+        mainView.setSwitchBtState(bluetoothService.isEnabled());
         if (bluetoothService.isEnabled()) {
-            Log.w(TAG, "mainActivity.showPairedDevices()");
-            mainActivity.showPairedDevices();
+            Log.w(TAG, "mainView.showPairedDevices()");
+            mainView.showPairedDevices();
         } else {
-            mainActivity.hideAllDevices();
+            mainView.hideAllDevices();
         }
     }
 
     @Override
     public void startDiscovery() {
+        availableBluetoothDevices.clear();
+        int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
+        ActivityCompat.requestPermissions((MainActivity) mainView,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
         bluetoothService.startDiscovery();
     }
 
@@ -120,17 +131,17 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
             case R.id.navigation_bluetooth:
                 BluetoothFragment bluetoothFragment = new BluetoothFragment();
                 bluetoothFragment.setArguments(bundleRepository);
-                ((MainActivity) mainActivity).bluetoothFragment = bluetoothFragment;
-                mainActivity.setFragment(bluetoothFragment);
+                ((MainActivity) mainView).bluetoothFragment = bluetoothFragment;
+                mainView.setFragment(bluetoothFragment);
                 return true;
             case R.id.navigation_configuration:
                 ConfigurationFragment configurationFragment = new ConfigurationFragment();
                 configurationFragment.setArguments(bundleRepository);
-                mainActivity.setFragment(configurationFragment);
+                mainView.setFragment(configurationFragment);
                 return true;
             case R.id.navigation_console:
                 ConsoleFragment consoleFragment = new ConsoleFragment();
-                mainActivity.setFragment(consoleFragment);
+                mainView.setFragment(consoleFragment);
                 return true;
         }
         return false;
@@ -139,34 +150,59 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
 
     @Override
     public void onMainActivityCreate() {
-        ((MainActivity) mainActivity).bluetoothFragment = new BluetoothFragment();
-        ((MainActivity) mainActivity).bluetoothFragment.setArguments(bundleRepository);
-        mainActivity.setFragment(((MainActivity) mainActivity).bluetoothFragment);
+        ((MainActivity) mainView).bluetoothFragment = new BluetoothFragment();
+        ((MainActivity) mainView).bluetoothFragment.setArguments(bundleRepository);
+        mainView.setFragment(((MainActivity) mainView).bluetoothFragment);
     }
 
     @Override
     public void onMainActivityDestroy() {
-        ((Context) mainActivity).unregisterReceiver(bluetoothBroadcastReceiver);
+        mainView.unregisterBluetoothBroadcastReceiver(bluetoothBroadcastReceiver);
     }
 
     @Override
     public void onConsoleFragmentCreateView() {
-        mainActivity.showLog(logs.getLogsMessages());
+        mainView.showLog(logs.getLogsMessages());
     }
 
     @Override
     public void onAddLogsLineEvent(String line) {
-        mainActivity.addLogsLine(line);
+        mainView.addLogsLine(line);
+    }
+
+    @Override
+    public void onDevicesPageSelected(int position) {
+        if (position == 1) {
+            mainView.showAvailableDevices(availableBluetoothDevices);
+        }
+    }
+
+    @Override
+    public void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesRvAdapter.BluetoothDeviceViewHolder holder, int position) {
+
+    }
+
+    @Override
+    public int onGetItemCountOfAvailableDevicesRvAdapter() {
+        return 0;
     }
 
     void onBluetoothServiceStateOn() {
-        mainActivity.setSwitchBtState(bluetoothService.isEnabled());
-        mainActivity.showPairedDevices();
-        bluetoothService.startDiscovery();
+        mainView.setSwitchBtState(bluetoothService.isEnabled());
+        mainView.showPairedDevices();
+        // bluetoothService.startDiscovery();
     }
 
     void onBluetoothServiceStateOff() {
-        mainActivity.setSwitchBtState(bluetoothService.isEnabled());
-        mainActivity.hideAllDevices();
+        mainView.setSwitchBtState(bluetoothService.isEnabled());
+        mainView.hideAllDevices();
+    }
+
+    void onBluetoothServiceActionFound(BluetoothDevice bluetoothDevice) {
+        String name = bluetoothDevice.getName();
+        String address = bluetoothDevice.getAddress();
+        Log.d(TAG, "onBluetoothServiceActionFound: name = " + name + ", address = " + address);
+        availableBluetoothDevices.add(bluetoothDevice);
+        //mainView.showAvailableDevices(availableBluetoothDevices);
     }
 }

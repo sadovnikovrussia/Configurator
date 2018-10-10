@@ -40,10 +40,12 @@ public class BluetoothService {
     }
 
     void enableBt() {
+        // Log.d(TAG, "enableBt");
         bluetoothAdapter.enable();
     }
 
     void disableBt() {
+        // Log.d(TAG, "disableBt");
         bluetoothAdapter.disable();
     }
 

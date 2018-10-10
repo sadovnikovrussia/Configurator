@@ -28,9 +28,7 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                 case BluetoothDevice.ACTION_FOUND:
                     Log.d(TAG, "ACTION_FOUND");
                     BluetoothDevice d = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    String name = d.getName();
-                    String address = d.getAddress();
-                    Log.d(TAG, "Founded device: name = " + name + ", address = " + address);
+                    presenter.onBluetoothServiceActionFound(d);
                     break;
                 case BluetoothDevice.ACTION_PAIRING_REQUEST:
                     Log.d(TAG, "BluetoothDevice.ACTION_PAIRING_REQUEST");

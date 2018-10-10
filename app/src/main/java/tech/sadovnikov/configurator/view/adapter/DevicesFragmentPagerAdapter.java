@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
+import tech.sadovnikov.configurator.view.AvailableDevicesFragment;
+import tech.sadovnikov.configurator.view.MainActivity;
 import tech.sadovnikov.configurator.view.PairedDevicesFragment;
 
 public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -32,7 +34,7 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
         if (position == 0) {
             return PairedDevicesFragment.newInstance(position + 1);
         } else {
-            return new Fragment();
+            return AvailableDevicesFragment.newInstance();
         }
         //return PairedDevicesFragment.newInstance(position + 1);
     }

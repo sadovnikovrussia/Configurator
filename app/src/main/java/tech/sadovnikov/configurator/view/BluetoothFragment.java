@@ -14,7 +14,10 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import java.util.ArrayList;
+
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.view.adapter.AvailableDevicesRvAdapter;
 import tech.sadovnikov.configurator.view.adapter.DevicesFragmentPagerAdapter;
 
 
@@ -70,6 +73,22 @@ public class BluetoothFragment extends Fragment {
         viewPager = inflate.findViewById(R.id.viewPager);
 
         viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                onBluetoothFragmentInteractionListener.onDevicesPageSelected(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         tabLayout.setupWithViewPager(viewPager);
         btnTest = inflate.findViewById(R.id.button);
         btnTest.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +104,13 @@ public class BluetoothFragment extends Fragment {
     }
 
     void showPairedDevices() {
+        viewPager.setVisibility(View.VISIBLE);
+        tabLayout.setVisibility(View.VISIBLE);
+        viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    public void showAvailableDevices(ArrayList<BluetoothDevice> availableBluetoothDevices) {
         viewPager.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
         viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
@@ -158,8 +184,6 @@ public class BluetoothFragment extends Fragment {
         super.onDetach();
         onBluetoothFragmentInteractionListener = null;
     }
-
-
     // ---------------------------------------------------------------------------------------------
 
     /**
@@ -183,6 +207,11 @@ public class BluetoothFragment extends Fragment {
 
         void startDiscovery();
 
+        void onDevicesPageSelected(int position);
+
+        void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesRvAdapter.BluetoothDeviceViewHolder holder, int position);
+
+        int onGetItemCountOfAvailableDevicesRvAdapter();
     }
 
 
