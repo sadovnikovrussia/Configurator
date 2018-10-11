@@ -17,8 +17,9 @@ import android.widget.Switch;
 import java.util.ArrayList;
 
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.view.adapter.AvailableDevicesRvAdapter;
+import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.DevicesFragmentPagerAdapter;
+import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
 
 /**
@@ -37,6 +38,8 @@ public class BluetoothFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager viewPager;
     Button btnTest;
+
+    DevicesFragmentPagerAdapter devicesFragmentPagerAdapter;
 
     private OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
@@ -71,8 +74,8 @@ public class BluetoothFragment extends Fragment {
         });
         tabLayout = inflate.findViewById(R.id.tabLayout);
         viewPager = inflate.findViewById(R.id.viewPager);
-
-        viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
+        devicesFragmentPagerAdapter = new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext());
+        viewPager.setAdapter(devicesFragmentPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -81,6 +84,7 @@ public class BluetoothFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
+                Log.d(TAG, "onPageSelected: " + String.valueOf(position));
                 onBluetoothFragmentInteractionListener.onDevicesPageSelected(position);
             }
 
@@ -103,18 +107,26 @@ public class BluetoothFragment extends Fragment {
         switchBt.setChecked(state);
     }
 
-    void showPairedDevices() {
+    public void setDevicesVisible() {
         viewPager.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
-        viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
-        tabLayout.setupWithViewPager(viewPager);
     }
 
-    public void showAvailableDevices(ArrayList<BluetoothDevice> availableBluetoothDevices) {
-        viewPager.setVisibility(View.VISIBLE);
-        tabLayout.setVisibility(View.VISIBLE);
-        viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
-        tabLayout.setupWithViewPager(viewPager);
+    void showPairedDevices() {
+        Log.d(TAG, "showPairedDevices");
+        setDevicesVisible();
+        devicesFragmentPagerAdapter.showPairedDevices();
+        //viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
+        //tabLayout.setupWithViewPager(viewPager);
+    }
+
+    public void showAvailableDevices() {
+        Log.d(TAG, "showAvailableDevices()");
+        setDevicesVisible();
+        devicesFragmentPagerAdapter.showAvailableDevices();
+
+        //viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
+        //tabLayout.setupWithViewPager(viewPager);
     }
 
     public void hidePairedDevices() {
@@ -199,7 +211,9 @@ public class BluetoothFragment extends Fragment {
     public interface OnBluetoothFragmentInteractionListener {
         void onSwitchBtStateChanged(boolean state);
 
-        void onPairedDevicesRvItemClicked(BluetoothDevice bluetoothDevice);
+        void onPairedDevicesRvItemClicked(String bluetoothDeviceAddress);
+
+        void onAvailableDevicesRvItemClicked(String bluetoothDeviceAddress);
 
         void onBluetoothFragmentCreateView();
 
@@ -209,9 +223,15 @@ public class BluetoothFragment extends Fragment {
 
         void onDevicesPageSelected(int position);
 
-        void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesRvAdapter.BluetoothDeviceViewHolder holder, int position);
+        void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesItemView holder, int position);
 
         int onGetItemCountOfAvailableDevicesRvAdapter();
+
+        void onBindViewHolderOfPairedDevicesRvAdapter(PairedDevicesItemView holder, int position);
+
+        int onGetItemCountOfPairedDevicesRvAdapter();
+
+        void onAvailableDevicesFragmentStart();
     }
 
 

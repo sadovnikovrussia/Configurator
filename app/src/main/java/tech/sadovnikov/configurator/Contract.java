@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
+import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesRvAdapter;
+import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
 
 public interface Contract {
@@ -34,8 +36,10 @@ public interface Contract {
     }
 
     interface View {
+
         // Показать (установить фрагмент в MainActivity)
-        void setFragment(Fragment fragment);
+        void showFragment(Fragment fragment);
+        void showFragment(String fragment);
 
         // Вывести сообщение лога в консоль
         void showLog(String logsMessages);
@@ -52,29 +56,44 @@ public interface Contract {
         void hideAllDevices();
 
         // Показать доступные устройства
-        void showAvailableDevices(ArrayList<BluetoothDevice> availableBluetoothDevices);
+        void showAvailableDevices();
 
         void setSwitchBtState(boolean state);
 
         void unregisterBluetoothBroadcastReceiver(BluetoothBroadcastReceiver bluetoothBroadcastReceiver);
+
+        void setDevicesVisible();
+
+        void setNavigationPosition(String fragment);
+
+        void showToast(String toast);
     }
 
     interface Presenter {
-        void onSwitchBtStateChanged(boolean state);
-
-        void onPairedDevicesRvItemClick(BluetoothDevice bluetoothDevice);
-
-        void onHandleMessage(Message msg);
-
-        void onBluetoothFragmentCreateView();
-
-        void onConsoleFragmentCreateView();
-
+        // Lifecycle -------------------------------------------------------------------------------
         void onMainActivityCreate();
 
         void onMainActivityDestroy();
 
         void onBluetoothFragmentStart();
+
+        void onBluetoothFragmentCreateView();
+
+        void onAvailableDevicesFragmentStart();
+
+        void OnConfigurationFragmentStart();
+
+        void onConsoleFragmentCreateView();
+
+        void onConsoleFragmentStart();
+
+
+        void onSwitchBtStateChanged(boolean state);
+
+        void onPairedDevicesRvItemClick(String bluetoothDeviceAddress);
+
+        void onHandleMessage(Message msg);
+
 
         boolean onNavigationItemSelected(MenuItem item);
 
@@ -82,9 +101,17 @@ public interface Contract {
 
         void onDevicesPageSelected(int position);
 
-        void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesRvAdapter.BluetoothDeviceViewHolder holder, int position);
+        void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesItemView holder, int position);
 
         int onGetItemCountOfAvailableDevicesRvAdapter();
+
+        void onBindViewHolderOfPairedDevicesRvAdapter(PairedDevicesItemView holder, int position);
+
+        int onGetItemCountOfPairedDevicesRvAdapter();
+
+        void onTvLogsLongClick();
+
+        void onAvailableDevicesRvItemClicked(String bluetoothDeviceAddress);
 
     }
 

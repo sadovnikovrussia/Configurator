@@ -24,6 +24,7 @@ public class AvailableDevicesFragment extends Fragment {
     private static final String TAG = "AvailableDeviceFragment";
 
     RecyclerView rvAvailableDevices;
+    AvailableDevicesRvAdapter availableDevicesRvAdapter;
 
     BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
@@ -44,12 +45,18 @@ public class AvailableDevicesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_paired_devices, container, false);
 
         rvAvailableDevices = view.findViewById(R.id.rv_paired_devices);
+        availableDevicesRvAdapter = new AvailableDevicesRvAdapter(onBluetoothFragmentInteractionListener);
         // TODO <Узнать, какой контекст подавать в аргумент LL>
         rvAvailableDevices.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        rvAvailableDevices.setAdapter(new AvailableDevicesRvAdapter(onBluetoothFragmentInteractionListener));
+        rvAvailableDevices.setAdapter(availableDevicesRvAdapter);
 
         return view;
     }
+
+    public void showAvailableDevices() {
+        availableDevicesRvAdapter.updateAvailableBluetoothDevices();
+    }
+
     // ---------------------------------------------------------------------------------------------
     // States
     @Override
@@ -74,12 +81,14 @@ public class AvailableDevicesFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
+        onBluetoothFragmentInteractionListener.onAvailableDevicesFragmentStart();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.v(TAG, "onResume");
+        // availableDevicesRvAdapter.updateAvailableBluetoothDevices();
     }
 
     @Override

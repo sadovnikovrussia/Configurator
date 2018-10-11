@@ -24,6 +24,7 @@ public class BluetoothService {
     private static final int WHAT_LOG = 10;
 
     private static BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    private ArrayList<BluetoothDevice> availableDevices = new ArrayList<>();
 
     // Потоки
     private ConnectThread mConnectThread;
@@ -57,6 +58,29 @@ public class BluetoothService {
     static public ArrayList<BluetoothDevice> getBondedDevices() {
         Set<BluetoothDevice> mBondedDevices = bluetoothAdapter.getBondedDevices();
         return new ArrayList<>(mBondedDevices);
+    }
+
+    void clearAvailableDevices() {
+        this.availableDevices.clear();
+    }
+
+    void addAvailableDevice (BluetoothDevice bluetoothDevice) {
+        this.availableDevices.add(bluetoothDevice);
+    }
+
+    void setAvailableDevices(ArrayList<BluetoothDevice> availableDevices) {
+        this.availableDevices = availableDevices;
+    }
+
+    ArrayList<BluetoothDevice> getAvailableDevices() {
+        //Log.d(TAG, "getAvailableDevices: " + availableDevices.toString());
+        return availableDevices;
+    }
+
+    ArrayList<BluetoothDevice> getPairedDevices() {
+        ArrayList<BluetoothDevice> pairedDevices = new ArrayList<>(bluetoothAdapter.getBondedDevices());
+        //Log.d(TAG, "getPairedDevices: " + pairedDevices.toString());
+        return pairedDevices;
     }
 
     void connectTo(String address) {
@@ -119,9 +143,13 @@ public class BluetoothService {
         }
     }
 
-    boolean startDiscovery() {
+    void startDiscovery() {
         Log.d(TAG, "startDiscovery");
-        return bluetoothAdapter.startDiscovery();
+        bluetoothAdapter.startDiscovery();
+    }
+
+    void cancelDiscovery() {
+        bluetoothAdapter.cancelDiscovery();
     }
 
     private class ConnectThread extends Thread {

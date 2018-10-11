@@ -1,6 +1,5 @@
 package tech.sadovnikov.configurator.view.adapter;
 
-import android.bluetooth.BluetoothDevice;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.view.BluetoothFragment;
@@ -17,13 +15,10 @@ import tech.sadovnikov.configurator.view.BluetoothFragment;
 public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDevicesRvAdapter.BluetoothDeviceViewHolder> {
     private static final String TAG = "AvailDevicesRvAdapter";
 
-    private ArrayList<BluetoothDevice> availableBluetoothDevices;
-
     private BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
     public AvailableDevicesRvAdapter(BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener) {
-        Log.d(TAG, "onConstructor");
-        this.availableBluetoothDevices = availableBluetoothDevices;
+        Log.i(TAG, "onConstructor");
         this.onBluetoothFragmentInteractionListener = onBluetoothFragmentInteractionListener;
     }
 
@@ -37,33 +32,32 @@ public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDev
 
     @Override
     public void onBindViewHolder(@NonNull final BluetoothDeviceViewHolder holder, final int position) {
-        // Log.d(TAG, "onBindViewHolder");
+        Log.d(TAG, "onBindViewHolder");
         onBluetoothFragmentInteractionListener.onBindViewHolderOfAvailableDevicesRvAdapter(holder, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Log.d(TAG, "onBindViewHolder.onClick, position = " + String.valueOf(position) + ", " + availableBluetoothDevices.get(position).getName());
-                //onBluetoothFragmentInteractionListener.onPairedDevicesRvItemClicked(availableBluetoothDevices.get(position));
+                onBluetoothFragmentInteractionListener.onAvailableDevicesRvItemClicked(String.valueOf(holder.tvDeviceAddress.getText()));
             }
         });
-        //holder.bind(position);
     }
 
     @Override
     public int getItemCount() {
-        // Log.d(TAG, "getItemCount: " + availableBluetoothDevices.size());
-        return onBluetoothFragmentInteractionListener.onGetItemCountOfAvailableDevicesRvAdapter();
+        int count = onBluetoothFragmentInteractionListener.onGetItemCountOfAvailableDevicesRvAdapter();
+        //Log.d(TAG, "getItemCount: " + String.valueOf(count));
+        return count;
     }
 
-    public void updateAvailableBluetoothDevices(ArrayList<BluetoothDevice> availableBluetoothDevices)
+    public void updateAvailableBluetoothDevices()
     {
-        this.availableBluetoothDevices = availableBluetoothDevices;
+        Log.d(TAG, "updateAvailableBluetoothDevices");
         notifyDataSetChanged();
     }
 
     // ViewHolder
-    public class BluetoothDeviceViewHolder extends RecyclerView.ViewHolder {
-        private static final String TAG = "BluetoothDeviceViewHold";
+    public class BluetoothDeviceViewHolder extends RecyclerView.ViewHolder implements AvailableDevicesItemView {
+        private static final String TAG = "AvailDevAdaptViewHolder";
         private TextView tvDeviceName;
         private TextView tvDeviceAddress;
 
@@ -74,10 +68,16 @@ public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDev
             tvDeviceAddress = itemView.findViewById(R.id.tv_device_address);
         }
 
-        void bind(int position) {
-            tvDeviceName.setText(availableBluetoothDevices.get(position).getName());
-            tvDeviceAddress.setText(availableBluetoothDevices.get(position).getAddress());
+        @Override
+        public void setDeviceName(String name) {
+            tvDeviceName.setText(name);
         }
+
+        @Override
+        public void setDeviceAddress(String address) {
+            tvDeviceAddress.setText(address);
+        }
+
     }
 
 }

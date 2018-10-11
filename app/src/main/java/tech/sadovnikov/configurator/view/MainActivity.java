@@ -1,6 +1,9 @@
 package tech.sadovnikov.configurator.view;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -11,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -20,7 +24,8 @@ import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.presenter.BluetoothService;
 import tech.sadovnikov.configurator.presenter.Presenter;
-import tech.sadovnikov.configurator.view.adapter.AvailableDevicesRvAdapter;
+import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
+import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
 
 public class MainActivity extends AppCompatActivity implements Contract.View,
@@ -29,6 +34,10 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         ConsoleFragment.OnConsoleFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
+
+    public static final String BLUETOOTH_FRAGMENT = "BluetoothFragment";
+    public static final String CONFIGURATION_FRAGMENT = "ConfigurationFragment";
+    public static final String CONSOLE_FRAGMENT = "ConsoleFragment";
 
     Contract.Presenter presenter;
 
@@ -61,9 +70,9 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     private void initUi() {
         container = findViewById(R.id.container);
-        // bluetoothFragment = new BluetoothFragment();
-        // configurationFragment = new ConfigurationFragment();
-        // consoleFragment = new ConsoleFragment();
+        bluetoothFragment = new BluetoothFragment();
+        configurationFragment = new ConfigurationFragment();
+        consoleFragment = new ConsoleFragment();
         //-----------------------------------------------
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -77,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     // Выбор фрагмента
     @Override
-    public void setFragment(Fragment fragment) {
+    public void showFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (fragment instanceof BluetoothFragment) {
             bluetoothFragment = (BluetoothFragment) fragment;
@@ -94,6 +103,49 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         fragmentTransaction.commit();
     }
 
+    // Выбор фрагмента
+    @Override
+    public void showFragment(String fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        switch (fragment) {
+            case BLUETOOTH_FRAGMENT:
+                //bluetoothFragment = new BluetoothFragment();
+                fragmentTransaction.replace(R.id.container, bluetoothFragment);
+                navigation.setSelectedItemId(bluetoothFragment.getId());
+                break;
+            case CONFIGURATION_FRAGMENT:
+                //configurationFragment = new ConfigurationFragment();
+                fragmentTransaction.replace(R.id.container, configurationFragment);
+                navigation.setSelectedItemId(configurationFragment.getId());
+                break;
+            case CONSOLE_FRAGMENT:
+                //consoleFragment = new ConsoleFragment();
+                fragmentTransaction.replace(R.id.container, consoleFragment);
+                navigation.setSelectedItemId(consoleFragment.getId());
+                break;
+        }
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void setNavigationPosition(String fragment) {
+        switch (fragment) {
+            case BLUETOOTH_FRAGMENT:
+                //navigation.setSelectedItemId(R.id.navigation_bluetooth);
+                navigation.getMenu().getItem(0).setChecked(true);
+                break;
+            case CONFIGURATION_FRAGMENT:
+                //navigation.setSelectedItemId(R.id.navigation_configuration);
+                navigation.getMenu().getItem(1).setChecked(true);
+                break;
+            case CONSOLE_FRAGMENT:
+                //navigation.setSelectedItemId(R.id.navigation_console);
+                navigation.getMenu().getItem(2).setChecked(true);
+                break;
+        }
+    }
+
     @Override
     public void setSwitchBtState(boolean state) {
         bluetoothFragment.setSwitchBtState(state);
@@ -104,7 +156,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 
 
     // ---------------------------------------------------------------------------------------------
@@ -120,8 +171,13 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public void onPairedDevicesRvItemClicked(BluetoothDevice bluetoothDevice) {
-        presenter.onPairedDevicesRvItemClick(bluetoothDevice);
+    public void onPairedDevicesRvItemClicked(String bluetoothDeviceAddress) {
+        presenter.onPairedDevicesRvItemClick(bluetoothDeviceAddress);
+    }
+
+    @Override
+    public void onAvailableDevicesRvItemClicked(String bluetoothDeviceAddress) {
+        presenter.onAvailableDevicesRvItemClicked(bluetoothDeviceAddress);
     }
 
     @Override
@@ -135,13 +191,28 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesRvAdapter.BluetoothDeviceViewHolder holder, int position) {
+    public void onBindViewHolderOfPairedDevicesRvAdapter(PairedDevicesItemView holder, int position) {
+        presenter.onBindViewHolderOfPairedDevicesRvAdapter(holder, position);
+    }
+
+    @Override
+    public int onGetItemCountOfPairedDevicesRvAdapter() {
+        return presenter.onGetItemCountOfPairedDevicesRvAdapter();
+    }
+
+    @Override
+    public void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesItemView holder, int position) {
         presenter.onBindViewHolderOfAvailableDevicesRvAdapter(holder, position);
     }
 
     @Override
     public int onGetItemCountOfAvailableDevicesRvAdapter() {
         return presenter.onGetItemCountOfAvailableDevicesRvAdapter();
+    }
+
+    @Override
+    public void onAvailableDevicesFragmentStart() {
+        presenter.onAvailableDevicesFragmentStart();
     }
 
     @Override
@@ -158,6 +229,12 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     public void onRvConfigTabsItemClick() {
 
     }
+
+    @Override
+    public void OnConfigurationFragmentStart() {
+        presenter.OnConfigurationFragmentStart();
+    }
+
     // ---------------------------------------------------------------------------------------------
 
 
@@ -173,11 +250,27 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         presenter.onConsoleFragmentCreateView();
     }
 
+    @Override
+    public void onConsoleFragmentStart() {
+        presenter.onConsoleFragmentStart();
+    }
+
+    @Override
+    public void onTvLogsLongClick() {
+        presenter.onTvLogsLongClick();
+    }
+
     // ---------------------------------------------------------------------------------------------
 
 
     // ---------------------------------------------------------------------------------------------
     // Contract.View
+
+    @Override
+    public void showToast(String toast) {
+        Toast.makeText(this, toast, Toast.LENGTH_LONG).show();
+    }
+
     @Override
     public void showLog(String logsMessages) {
         consoleFragment.showLog(logsMessages);
@@ -189,7 +282,13 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public void showParameter(Parameter parameter) {}
+    public void showParameter(Parameter parameter) {
+    }
+
+    @Override
+    public void setDevicesVisible() {
+        bluetoothFragment.setDevicesVisible();
+    }
 
     @Override
     public void showPairedDevices() {
@@ -202,8 +301,8 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public void showAvailableDevices(ArrayList<BluetoothDevice> availableBluetoothDevices) {
-        bluetoothFragment.showAvailableDevices(availableBluetoothDevices);
+    public void showAvailableDevices() {
+        bluetoothFragment.showAvailableDevices();
     }
 
     @Override

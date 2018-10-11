@@ -3,7 +3,6 @@ package tech.sadovnikov.configurator.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,12 +68,17 @@ public class ConsoleFragment extends Fragment {
                 }
             }
         });
-        BottomNavigationView navigation = getActivity().findViewById(R.id.navigation);
-        navigation.getMenu().getItem(2).setChecked(true);
+        tvLogs.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                onConsoleFragmentInteractionListener.onTvLogsLongClick();
+                return false;
+            }
+        });
     }
 
     void showLog(String logsMessages) {
-        Log.d(TAG, "onShowLog: " + logsMessages);
+        // Log.d(TAG, "onShowLog: " + logsMessages);
         if (tvLogs != null) {
             tvLogs.setText(logsMessages);
         }
@@ -106,6 +110,7 @@ public class ConsoleFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.v(TAG, "onAttach");
         if (context instanceof OnConsoleFragmentInteractionListener) {
             onConsoleFragmentInteractionListener = (OnConsoleFragmentInteractionListener) context;
         } else {
@@ -122,6 +127,7 @@ public class ConsoleFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
+        onConsoleFragmentInteractionListener.onConsoleFragmentStart();
     }
 
     public void onResume() {
@@ -162,6 +168,9 @@ public class ConsoleFragment extends Fragment {
 
         void onConsoleFragmentCreateView();
 
+        void onConsoleFragmentStart();
+
+        void onTvLogsLongClick();
     }
 
 }

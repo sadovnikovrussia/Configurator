@@ -47,6 +47,7 @@ public class ConfigurationFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.v(TAG, "onAttach");
         if (context instanceof OnConfigurationFragmentInteractionListener) {
             onConfigurationFragmentInteractionListener = (OnConfigurationFragmentInteractionListener) context;
         } else {
@@ -65,6 +66,7 @@ public class ConfigurationFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
+        onConfigurationFragmentInteractionListener.OnConfigurationFragmentStart();
     }
 
     @Override
@@ -107,6 +109,8 @@ public class ConfigurationFragment extends Fragment {
     interface OnConfigurationFragmentInteractionListener {
 
         void onRvConfigTabsItemClick();
+
+        void OnConfigurationFragmentStart();
 
     }
 }
