@@ -9,13 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
-import tech.sadovnikov.configurator.presenter.BluetoothService;
 import tech.sadovnikov.configurator.presenter.Presenter;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
@@ -24,28 +25,32 @@ import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 public class MainActivity extends AppCompatActivity implements Contract.View,
         BluetoothFragment.OnBluetoothFragmentInteractionListener,
         ConfigurationFragment.OnConfigurationFragmentInteractionListener,
-        ConsoleFragment.OnConsoleFragmentInteractionListener {
+        ConsoleFragment.OnConsoleFragmentInteractionListener,
+        ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
     public static final String BLUETOOTH_FRAGMENT = "BluetoothFragment";
     public static final String CONFIGURATION_FRAGMENT = "ConfigurationFragment";
     public static final String CONSOLE_FRAGMENT = "ConsoleFragment";
+    public static final String CONFIG_BUOY_FRAGMENT = "Буй";
+    public static final String CONFIG_MAIN_FRAGMENT = "Основные";
+    public static final String CONFIG_NAVIGATION_FRAGMENT = "Навигация";
 
     Contract.Presenter presenter;
 
+    // UI
     FrameLayout container;
     BottomNavigationView navigation;
+    Menu menuActionsWithConfiguration;
 
-    public BluetoothFragment bluetoothFragment;
+    // Fragments
+    BluetoothFragment bluetoothFragment;
     ConfigurationFragment configurationFragment;
     ConfigBuoyFragment configBuoyFragment;
     ConfigMainFragment configMainFragment;
     ConfigNavigationFragment configNavigationFragment;
     ConsoleFragment consoleFragment;
-    Menu menuActionsWithConfiguration;
-
-    BluetoothService bluetoothService;
 
     public MainActivity() {
         Log.v(TAG, "onConstructor");
@@ -66,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         bluetoothFragment = new BluetoothFragment();
         configurationFragment = new ConfigurationFragment();
         consoleFragment = new ConsoleFragment();
-        //-----------------------------------------------
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -76,8 +80,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         });
     }
 
-
-    // Выбор фрагмента
+    // Показать фрагмент
     @Override
     public void showFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -96,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         fragmentTransaction.commit();
     }
 
-    // Выбор фрагмента
+    // Показать фрагмент
     @Override
     public void showFragment(String fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -116,25 +119,47 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 fragmentTransaction.replace(R.id.container, consoleFragment);
                 navigation.setSelectedItemId(consoleFragment.getId());
                 break;
+            case CONFIG_BUOY_FRAGMENT:
+                configBuoyFragment = new ConfigBuoyFragment();
+                fragmentTransaction.replace(R.id.container, configBuoyFragment);
+                navigation.setSelectedItemId(configurationFragment.getId());
+                break;
+            case CONFIG_MAIN_FRAGMENT:
+                configMainFragment = new ConfigMainFragment();
+                fragmentTransaction.replace(R.id.container, configMainFragment);
+                navigation.setSelectedItemId(configurationFragment.getId());
+                break;
+            case CONFIG_NAVIGATION_FRAGMENT:
+                configNavigationFragment = new ConfigNavigationFragment();
+                fragmentTransaction.replace(R.id.container, configNavigationFragment);
+                navigation.setSelectedItemId(configurationFragment.getId());
+                break;
         }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
+    // Поставить активную позицию на bottomNavigation в зависимости от фрагмента
     @Override
     public void setNavigationPosition(String fragment) {
         switch (fragment) {
             case BLUETOOTH_FRAGMENT:
-                //navigation.setSelectedItemId(R.id.navigation_bluetooth);
                 navigation.getMenu().getItem(0).setChecked(true);
                 break;
             case CONFIGURATION_FRAGMENT:
-                //navigation.setSelectedItemId(R.id.navigation_configuration);
                 navigation.getMenu().getItem(1).setChecked(true);
                 break;
             case CONSOLE_FRAGMENT:
-                //navigation.setSelectedItemId(R.id.navigation_console);
                 navigation.getMenu().getItem(2).setChecked(true);
+                break;
+            case CONFIG_BUOY_FRAGMENT:
+                navigation.getMenu().getItem(1).setChecked(true);
+                break;
+            case CONFIG_MAIN_FRAGMENT:
+                navigation.getMenu().getItem(1).setChecked(true);
+                break;
+            case CONFIG_NAVIGATION_FRAGMENT:
+                navigation.getMenu().getItem(1).setChecked(true);
                 break;
         }
     }
@@ -150,6 +175,23 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public void showParameter(String name, String value) {
+        switch (name) {
+            case Configuration.ID:
+                ((EditText)findViewById(R.id.et_id)).setText(value);
+                break;
+            case Configuration.FIRMWARE_VERSION:
+                ((EditText)findViewById(R.id.et_version)).setText(value);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        presenter.onConfigurationOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
+    }
 
     // ---------------------------------------------------------------------------------------------
     // OnBluetoothFragmentInteractionListener
@@ -217,19 +259,27 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     // ---------------------------------------------------------------------------------------------
     // OnConfigurationFragmentInteractionListener
     @Override
-    public void onRvConfigTabsItemClick() {}
+    public void onConfigTabsRvItemClick(String tab) {
+        presenter.onConfigTabsRvItemClick(tab);
+    }
 
     @Override
     public void OnConfigurationFragmentStart() {
-        presenter.OnConfigurationFragmentStart();
+        presenter.onConfigurationFragmentStart();
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // OnConfigBuoyFragmentInteractionListener
+    @Override
+    public void onConfigBuoyFragmentStart() {
+        presenter.onConfigBuoyFragmentStart();
+    }
 
     // ---------------------------------------------------------------------------------------------
     // OnConsoleFragmentInteractionListener
     @Override
     public void onBtnSendCommandClick(String command) {
-        bluetoothService.sendData(command);
+        presenter.onBtnSendCommandClick();
     }
 
     @Override
@@ -286,8 +336,13 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public void updateAvailableDevices() {
-        // Log.d(TAG, "updateAvailableDevices()");
+        // Logs.d(TAG, "updateAvailableDevices()");
         bluetoothFragment.updateAvailableDevices();
+    }
+
+    @Override
+    public String getCommandLineText() {
+        return consoleFragment.getCommandLineText();
     }
 
     // ---------------------------------------------------------------------------------------------

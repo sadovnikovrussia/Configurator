@@ -19,8 +19,6 @@ import java.util.HashMap;
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.Configuration;
-import tech.sadovnikov.configurator.model.Device;
-import tech.sadovnikov.configurator.model.Logs;
 import tech.sadovnikov.configurator.view.BluetoothFragment;
 import tech.sadovnikov.configurator.view.ConfigurationFragment;
 import tech.sadovnikov.configurator.view.ConsoleFragment;
@@ -28,28 +26,31 @@ import tech.sadovnikov.configurator.view.MainActivity;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
-public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener {
+public class Presenter implements Contract.Presenter, tech.sadovnikov.configurator.model.Logs.OnLogsActionsListener {
     private static final String TAG = "Presenter";
 
     private Contract.View mainView;
-    private Contract.Repository device;
-    private Contract.Log logs;
+    private Contract.Device device;
+    private Contract.Logs logs;
+    private Contract.Configuration uiConfiguration;
 
     private Bundle bundleRepository;
 
     private BluetoothService bluetoothService;
     private BluetoothBroadcastReceiver bluetoothBroadcastReceiver;
     private UiHandler uiHandler;
+    private MessageAnalyzer messageAnalyzer;
 
     public Presenter(Contract.View mainView) {
         Log.v(TAG, "onConstructor");
         this.mainView = mainView;
-        this.device = Device.getInstance();
-        this.logs = Logs.getInstance(this);
-        this.uiHandler = new UiHandler((Activity) mainView, this);
-        this.bluetoothService = new BluetoothService(uiHandler);
-        this.bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver(this);
-        this.bundleRepository = new Bundle();
+        uiConfiguration = new Configuration();
+        device = tech.sadovnikov.configurator.model.Device.getInstance();
+        logs = tech.sadovnikov.configurator.model.Logs.getInstance(this);
+        uiHandler = new UiHandler((Activity) mainView, this);
+        bluetoothService = new BluetoothService(uiHandler);
+        bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver(this);
+        bundleRepository = new Bundle();
         bundleRepository.putSerializable("UiConfiguration", new Configuration());
         registerBluetoothBroadcastReceiver((Context) mainView);
     }
@@ -68,7 +69,7 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
 
     @Override
     public void onSwitchBtStateChanged(boolean state) {
-        // Log.d(TAG, "onSwitchBtStateChanged" + String.valueOf(state));
+        // Logs.d(TAG, "onSwitchBtStateChanged" + String.valueOf(state));
         if (state) {
             bluetoothService.enableBt();
         } else {
@@ -96,13 +97,21 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
                 String message = (String) obj;
                 logs.addLine(message);
                 break;
-            // Загрузка данных в LiveData
+            //
             case DataAnalyzer.WHAT_COMMAND_DATA:
                 HashMap msgData = (HashMap) obj;
-                String data = (String) msgData.get(DataAnalyzer.DATA);
+                String data = (String) msgData.get(DataAnalyzer.PARAMETER_VALUE);
                 String command = (String) msgData.get(DataAnalyzer.PARAMETER_NAME);
+                uiConfiguration.setParameter(command, data);
+                device.getCurrentConfiguration().setParameter(command, data);
                 break;
         }
+    }
+
+    @Override
+    public void onBtnSendCommandClick() {
+        String commandLineText = mainView.getCommandLineText();
+        bluetoothService.sendData(commandLineText);
     }
 
     // BluetoothFragment Lifecycle -----------------------------------------------------------------
@@ -121,10 +130,32 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
         }
     }
 
-    // ConfigurationFragment Lifecycle -------------------------------------------------------------
+    // ConfigurationFragment -----------------------------------------------------------------------
     @Override
-    public void OnConfigurationFragmentStart() {
+    public void onConfigTabsRvItemClick(String tab) {
+        mainView.showFragment(tab);
+    }
+
+    @Override
+    public void onConfigurationOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.item_load){
+            device.loadConfiguration();
+        }
+    }
+
+    // Lifecycle -----------------------------------------------------------------------------------
+    @Override
+    public void onConfigurationFragmentStart() {
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
+    }
+
+    // ConfigBuoyFragment -----------------------------------------------------------------------
+    @Override
+    public void onConfigBuoyFragmentStart() {
+        mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
+        mainView.showParameter(Configuration.ID, uiConfiguration.getParameter(Configuration.ID));
+        mainView.showParameter(Configuration.FIRMWARE_VERSION, uiConfiguration.getParameter(Configuration.FIRMWARE_VERSION));
     }
 
     // ConsoleFragment lifecycle -------------------------------------------------------------------
@@ -154,19 +185,16 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigation_bluetooth:
-                BluetoothFragment bluetoothFragment = new BluetoothFragment();
-                bluetoothFragment.setArguments(bundleRepository);
-                ((MainActivity) mainView).bluetoothFragment = bluetoothFragment;
-                mainView.showFragment(bluetoothFragment);
+                //BluetoothFragment bluetoothFragment = new BluetoothFragment();
+                mainView.showFragment(MainActivity.BLUETOOTH_FRAGMENT);
                 return true;
             case R.id.navigation_configuration:
-                ConfigurationFragment configurationFragment = new ConfigurationFragment();
-                configurationFragment.setArguments(bundleRepository);
-                mainView.showFragment(configurationFragment);
+                //ConfigurationFragment configurationFragment = new ConfigurationFragment();
+                mainView.showFragment(MainActivity.CONFIGURATION_FRAGMENT);
                 return true;
             case R.id.navigation_console:
-                ConsoleFragment consoleFragment = new ConsoleFragment();
-                mainView.showFragment(consoleFragment);
+                //ConsoleFragment consoleFragment = new ConsoleFragment();
+                mainView.showFragment(MainActivity.CONSOLE_FRAGMENT);
                 return true;
         }
         return false;

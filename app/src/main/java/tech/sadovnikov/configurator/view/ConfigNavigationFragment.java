@@ -9,11 +9,7 @@ import android.view.ViewGroup;
 
 import tech.sadovnikov.configurator.R;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class ConfigNavigationFragment extends Fragment {
+public class ConfigNavigationFragment extends android.support.v4.app.Fragment {
 
 
     public ConfigNavigationFragment() {

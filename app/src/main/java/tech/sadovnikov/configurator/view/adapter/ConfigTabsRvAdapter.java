@@ -1,6 +1,5 @@
 package tech.sadovnikov.configurator.view.adapter;
 
-import android.bluetooth.BluetoothDevice;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,32 +7,40 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.view.ConfigurationFragment;
 
 public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapter.ConfigTabsViewHolder> {
     private static final String TAG = "RvBtDevicesAdapter";
-    private String[] configTabs;
+
+    ConfigurationFragment.OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener;
+
+    private String[] configTabs = new String[]{"Буй", "Основные", "Навигация"};
 
 
-    public ConfigTabsRvAdapter(String[] configTabs) {
+    public ConfigTabsRvAdapter(ConfigurationFragment.OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener) {
         // Logs.d(TAG, "onConstructor, " + bluetoothDevices.toString());
-        this.configTabs = configTabs;
-    }
+        this.onConfigurationFragmentInteractionListener = onConfigurationFragmentInteractionListener;
+        }
 
     @NonNull
     @Override
     public ConfigTabsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View deviceView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_config_tab, parent, false);
+        View configTabView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_config_tab, parent, false);
         // Logs.d(TAG, "onCreateBluetoothDeviceViewHolder");
-        return new ConfigTabsViewHolder(deviceView);
+        return new ConfigTabsViewHolder(configTabView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ConfigTabsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ConfigTabsViewHolder holder, int position) {
         // Logs.d(TAG, "onBindViewHolder");
         holder.bind(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onConfigurationFragmentInteractionListener.onConfigTabsRvItemClick((String) holder.tvConfigTabName.getText());
+            }
+        });
     }
 
     @Override

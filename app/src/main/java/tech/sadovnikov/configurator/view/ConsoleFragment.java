@@ -78,7 +78,7 @@ public class ConsoleFragment extends Fragment {
     }
 
     void showLog(String logsMessages) {
-        // Log.d(TAG, "onShowLog: " + logsMessages);
+        // Logs.d(TAG, "onShowLog: " + logsMessages);
         if (tvLogs != null) {
             tvLogs.setText(logsMessages);
         }
@@ -160,6 +160,11 @@ public class ConsoleFragment extends Fragment {
         Log.v(TAG, "onDetach");
         onConsoleFragmentInteractionListener = null;
     }
+
+    public String getCommandLineText() {
+        return String.valueOf(etCommandLine.getText());
+    }
+
     // ---------------------------------------------------------------------------------------------
 
     interface OnConsoleFragmentInteractionListener {

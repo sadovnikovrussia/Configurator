@@ -1,29 +1,23 @@
 package tech.sadovnikov.configurator;
 
-import android.bluetooth.BluetoothDevice;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-
-import tech.sadovnikov.configurator.model.Configuration;
-import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
-import tech.sadovnikov.configurator.view.adapter.AvailableDevicesRvAdapter;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
 
 public interface Contract {
 
-    interface Repository {
+    interface Device {
 
         // Загрузить (установить) конфигурацию в устройство
         void setConfiguration(Configuration configuration);
 
         // Считать конфигурацию из устройства
-        Configuration loadConfiguration();
+        void loadConfiguration();
 
         // Сохранить конфигурацию в файл.cfg
         void saveConfiguration(Configuration configuration);
@@ -39,6 +33,7 @@ public interface Contract {
 
         // Показать (установить фрагмент в MainActivity)
         void showFragment(Fragment fragment);
+
         void showFragment(String fragment);
 
         // Вывести сообщение лога в консоль
@@ -65,6 +60,10 @@ public interface Contract {
         void setNavigationPosition(String fragment);
 
         void showToast(String toast);
+
+        String getCommandLineText();
+
+        void showParameter(String name, String value);
     }
 
     interface Presenter {
@@ -79,7 +78,9 @@ public interface Contract {
 
         void onAvailableDevicesFragmentDestroyView();
 
-        void OnConfigurationFragmentStart();
+        void onConfigurationFragmentStart();
+
+        void onConfigBuoyFragmentStart();
 
         void onConsoleFragmentCreateView();
 
@@ -111,9 +112,21 @@ public interface Contract {
 
         void onAvailableDevicesRvItemClicked(String bluetoothDeviceAddress);
 
+        void onBtnSendCommandClick();
+
+        void onConfigTabsRvItemClick(String tab);
+
+        void onConfigurationOptionsItemSelected(MenuItem item);
     }
 
-    interface Log {
+    interface Configuration {
+
+        String getParameter(String name);
+
+        void setParameter(String name, String value);
+    }
+
+    interface Logs {
         void addLine(String line);
 
         String getLogsMessages();

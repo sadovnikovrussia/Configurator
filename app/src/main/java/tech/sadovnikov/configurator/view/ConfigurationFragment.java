@@ -2,6 +2,7 @@ package tech.sadovnikov.configurator.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,8 +21,6 @@ import tech.sadovnikov.configurator.view.adapter.ConfigTabsRvAdapter;
 public class ConfigurationFragment extends Fragment {
     private static final String TAG = "ConfigurationFragment";
 
-    private String[] configTabs = new String[]{"Буй", "Основные", "Навигация"};
-
     // UI
     RecyclerView rvConfigTabs;
 
@@ -35,10 +34,11 @@ public class ConfigurationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.v(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_configuration, container, false);
         rvConfigTabs = view.findViewById(R.id.rv_config_tabs);
         rvConfigTabs.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        rvConfigTabs.setAdapter(new ConfigTabsRvAdapter(configTabs));
+        rvConfigTabs.setAdapter(new ConfigTabsRvAdapter(onConfigurationFragmentInteractionListener));
         return view;
     }
 
@@ -54,6 +54,12 @@ public class ConfigurationFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnConfigurationFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate");
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -106,9 +112,9 @@ public class ConfigurationFragment extends Fragment {
     }
     // ---------------------------------------------------------------------------------------------
 
-    interface OnConfigurationFragmentInteractionListener {
+    public interface OnConfigurationFragmentInteractionListener {
 
-        void onRvConfigTabsItemClick();
+        void onConfigTabsRvItemClick(String text);
 
         void OnConfigurationFragmentStart();
 

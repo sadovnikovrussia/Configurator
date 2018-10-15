@@ -17,7 +17,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
     private BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
     public PairedDevicesRvAdapter(BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener) {
-        // Log.d(TAG, "onConstructor");
+        // Logs.d(TAG, "onConstructor");
         this.onBluetoothFragmentInteractionListener = onBluetoothFragmentInteractionListener;
     }
 
@@ -25,13 +25,13 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
     @Override
     public BluetoothDeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View deviceView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bluetooth_device, parent, false);
-        // Log.d(TAG, "onCreateBluetoothDeviceViewHolder");
+        // Logs.d(TAG, "onCreateBluetoothDeviceViewHolder");
         return new BluetoothDeviceViewHolder(deviceView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final BluetoothDeviceViewHolder holder, final int position) {
-        // Log.d(TAG, "onBindViewHolder");
+        // Logs.d(TAG, "onBindViewHolder");
         onBluetoothFragmentInteractionListener.onBindViewHolderOfPairedDevicesRvAdapter(holder, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +46,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
     @Override
     public int getItemCount() {
         int count = onBluetoothFragmentInteractionListener.onGetItemCountOfPairedDevicesRvAdapter();
-        // Log.d(TAG, "getItemCount: " + String.valueOf(count));
+        // Logs.d(TAG, "getItemCount: " + String.valueOf(count));
         return count;
     }
 
@@ -63,7 +63,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
 
         BluetoothDeviceViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Log.d(TAG, "onConstructor");
+            // Logs.d(TAG, "onConstructor");
             tvDeviceName = itemView.findViewById(R.id.tv_device_name);
             tvDeviceAddress = itemView.findViewById(R.id.tv_device_address);
         }

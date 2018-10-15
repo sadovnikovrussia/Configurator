@@ -5,7 +5,7 @@ import tech.sadovnikov.configurator.Contract;
 /**
  * Класс, представляющий собой логи устройства
  */
-public class Logs implements Contract.Log {
+public class Logs implements Contract.Logs {
     private static final String TAG = "Logs";
 
     private static OnLogsActionsListener onLogsActionsListener;

@@ -1,5 +1,7 @@
 package tech.sadovnikov.configurator.model;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -8,38 +10,33 @@ import tech.sadovnikov.configurator.Contract;
 /**
  * Класс, представляющий конфигурацию устройства
  */
-public class Configuration implements Serializable {
+public class Configuration implements Serializable, Contract.Configuration {
     private static final String TAG = "Configuration";
 
-    HashMap<String, String> configuration;
+    public static final String ID = "id";
+    public static final String FIRMWARE_VERSION = "firmware version";
+
+    private String[] parametersList = new String[]{ID, FIRMWARE_VERSION};
+
+    private HashMap<String, String> configuration;
 
     public Configuration() {
         this.configuration = new HashMap<>();
-        this.configuration.put("id", "");
-        this.configuration.put("version", "");
+        for (String parameter : parametersList) {
+            configuration.put(parameter, "");
+        }
     }
 
-    String getParameter(String name) {
+    @Override
+    public String getParameter(String name) {
         return configuration.get(name);
     }
 
-    void setParameter(String name, String value) {
+    @Override
+    public void setParameter(String name, String value) {
+        Log.w(TAG, "setParameter: " + name + "=" + value);
         configuration.put(name, value);
     }
 
-
-    // private Parameter id;
-    // private Parameter server;
-
-//    void setParameter(String name, String value) {
-//        switch (name) {
-//            case "Id":
-//                this.id.setValue(value);
-//                break;
-//            case "Server":
-//                this.server.setValue(value);
-//                break;
-//        }
-//    }
 
 }

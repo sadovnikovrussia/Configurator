@@ -18,7 +18,7 @@ public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDev
     private BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
     public AvailableDevicesRvAdapter(BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener) {
-        // Log.w(TAG, "onConstructor");
+        // Logs.w(TAG, "onConstructor");
         this.onBluetoothFragmentInteractionListener = onBluetoothFragmentInteractionListener;
     }
 
@@ -26,13 +26,13 @@ public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDev
     @Override
     public BluetoothDeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View deviceView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bluetooth_device, parent, false);
-        // Log.d(TAG, "onCreateBluetoothDeviceViewHolder");
+        // Logs.d(TAG, "onCreateBluetoothDeviceViewHolder");
         return new BluetoothDeviceViewHolder(deviceView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final BluetoothDeviceViewHolder holder, final int position) {
-        // Log.d(TAG, "onBindViewHolder");
+        // Logs.d(TAG, "onBindViewHolder");
         onBluetoothFragmentInteractionListener.onBindViewHolderOfAvailableDevicesRvAdapter(holder, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +45,7 @@ public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDev
     @Override
     public int getItemCount() {
         int count = onBluetoothFragmentInteractionListener.onGetItemCountOfAvailableDevicesRvAdapter();
-        //Log.d(TAG, "getItemCount: " + String.valueOf(count));
+        //Logs.d(TAG, "getItemCount: " + String.valueOf(count));
         return count;
     }
 

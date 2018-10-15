@@ -9,10 +9,6 @@ import android.support.v4.app.Fragment;
 
 import tech.sadovnikov.configurator.R;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ConfigMainFragment extends Fragment {
 
 

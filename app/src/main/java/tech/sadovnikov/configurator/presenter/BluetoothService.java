@@ -41,12 +41,12 @@ public class BluetoothService {
     }
 
     void enableBt() {
-        // Log.d(TAG, "enableBt");
+        // Logs.d(TAG, "enableBt");
         bluetoothAdapter.enable();
     }
 
     void disableBt() {
-        // Log.d(TAG, "disableBt");
+        // Logs.d(TAG, "disableBt");
         bluetoothAdapter.disable();
     }
 
@@ -73,13 +73,13 @@ public class BluetoothService {
     }
 
     ArrayList<BluetoothDevice> getAvailableDevices() {
-        //Log.d(TAG, "getAvailableDevices: " + availableDevices.toString());
+        //Logs.d(TAG, "getAvailableDevices: " + availableDevices.toString());
         return availableDevices;
     }
 
     ArrayList<BluetoothDevice> getPairedDevices() {
         ArrayList<BluetoothDevice> pairedDevices = new ArrayList<>(bluetoothAdapter.getBondedDevices());
-        //Log.d(TAG, "getPairedDevices: " + pairedDevices.toString());
+        //Logs.d(TAG, "getPairedDevices: " + pairedDevices.toString());
         return pairedDevices;
     }
 
