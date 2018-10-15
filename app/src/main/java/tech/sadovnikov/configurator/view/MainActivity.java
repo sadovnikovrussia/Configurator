@@ -1,9 +1,5 @@
 package tech.sadovnikov.configurator.view;
 
-import android.bluetooth.BluetoothDevice;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -16,11 +12,8 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.presenter.BluetoothService;
 import tech.sadovnikov.configurator.presenter.Presenter;
@@ -191,6 +184,11 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
+    public void onAvailableDevicesFragmentDestroyView() {
+        presenter.onAvailableDevicesFragmentDestroyView();
+    }
+
+    @Override
     public void onBindViewHolderOfPairedDevicesRvAdapter(PairedDevicesItemView holder, int position) {
         presenter.onBindViewHolderOfPairedDevicesRvAdapter(holder, position);
     }
@@ -211,31 +209,20 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public void onAvailableDevicesFragmentStart() {
-        presenter.onAvailableDevicesFragmentStart();
-    }
-
-    @Override
     public void startDiscovery() {
         presenter.startDiscovery();
     }
-
-    // ---------------------------------------------------------------------------------------------
 
 
     // ---------------------------------------------------------------------------------------------
     // OnConfigurationFragmentInteractionListener
     @Override
-    public void onRvConfigTabsItemClick() {
-
-    }
+    public void onRvConfigTabsItemClick() {}
 
     @Override
     public void OnConfigurationFragmentStart() {
         presenter.OnConfigurationFragmentStart();
     }
-
-    // ---------------------------------------------------------------------------------------------
 
 
     // ---------------------------------------------------------------------------------------------
@@ -261,11 +248,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     // ---------------------------------------------------------------------------------------------
-
-
-    // ---------------------------------------------------------------------------------------------
     // Contract.View
-
     @Override
     public void showToast(String toast) {
         Toast.makeText(this, toast, Toast.LENGTH_LONG).show();
@@ -282,32 +265,29 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public void showParameter(Parameter parameter) {
+    public void showDevices() {
+        bluetoothFragment.showDevices();
     }
 
     @Override
-    public void setDevicesVisible() {
-        bluetoothFragment.setDevicesVisible();
-    }
-
-    @Override
-    public void showPairedDevices() {
-        bluetoothFragment.showPairedDevices();
-    }
-
-    @Override
-    public void hideAllDevices() {
-        bluetoothFragment.hidePairedDevices();
-    }
-
-    @Override
-    public void showAvailableDevices() {
-        bluetoothFragment.showAvailableDevices();
+    public void hideDevices() {
+        bluetoothFragment.hideDevices();
     }
 
     @Override
     public void unregisterBluetoothBroadcastReceiver(BluetoothBroadcastReceiver bluetoothBroadcastReceiver) {
         unregisterReceiver(bluetoothBroadcastReceiver);
+    }
+
+    @Override
+    public void updatePairedDevices() {
+        bluetoothFragment.updatePairedDevices();
+    }
+
+    @Override
+    public void updateAvailableDevices() {
+        // Log.d(TAG, "updateAvailableDevices()");
+        bluetoothFragment.updateAvailableDevices();
     }
 
     // ---------------------------------------------------------------------------------------------

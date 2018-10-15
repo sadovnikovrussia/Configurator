@@ -1,6 +1,5 @@
 package tech.sadovnikov.configurator.view;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,15 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.presenter.BluetoothService;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesRvAdapter;
-import tech.sadovnikov.configurator.view.adapter.PairedDevicesRvAdapter;
 
 public class AvailableDevicesFragment extends Fragment {
-    public static final String ARG_PAGE = "ARG_PAGE";
     private static final String TAG = "AvailableDeviceFragment";
 
     RecyclerView rvAvailableDevices;
@@ -28,22 +22,30 @@ public class AvailableDevicesFragment extends Fragment {
 
     BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
-    public static AvailableDevicesFragment newInstance() {
-        //Bundle args = new Bundle();
-        //args.putInt(ARG_PAGE, page);
-        AvailableDevicesFragment fragment = new AvailableDevicesFragment();
-        //fragment.setArguments(args);
-        return fragment;
+    private static AvailableDevicesFragment availableDevicesFragment;
+
+    public AvailableDevicesFragment() {
+        Log.v(TAG, "onConstructor");
     }
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    public static AvailableDevicesFragment getInstance(){
+        if (availableDevicesFragment == null) {
+            availableDevicesFragment = new AvailableDevicesFragment();
+        }
+        return availableDevicesFragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
     }
 
-    @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                                       Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.v(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_paired_devices, container, false);
-
         rvAvailableDevices = view.findViewById(R.id.rv_paired_devices);
         availableDevicesRvAdapter = new AvailableDevicesRvAdapter(onBluetoothFragmentInteractionListener);
         // TODO <Узнать, какой контекст подавать в аргумент LL>
@@ -53,7 +55,7 @@ public class AvailableDevicesFragment extends Fragment {
         return view;
     }
 
-    public void showAvailableDevices() {
+    public void updateAvailableDevices() {
         availableDevicesRvAdapter.updateAvailableBluetoothDevices();
     }
 
@@ -81,7 +83,6 @@ public class AvailableDevicesFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        onBluetoothFragmentInteractionListener.onAvailableDevicesFragmentStart();
     }
 
     @Override
@@ -107,6 +108,7 @@ public class AvailableDevicesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.v(TAG, "onDestroyView");
+        onBluetoothFragmentInteractionListener.onAvailableDevicesFragmentDestroyView();
     }
 
     @Override
@@ -119,6 +121,7 @@ public class AvailableDevicesFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
     // ---------------------------------------------------------------------------------------------
 
 }

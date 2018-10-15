@@ -16,18 +16,16 @@ import tech.sadovnikov.configurator.view.PairedDevicesFragment;
 public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
     private static final String TAG = "DevicesFragPagerAdapter";
 
-    final int PAGE_COUNT = 2;
+    private final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[]{"Подключенные", "Доступные"};
-    private Context context;
-    public PairedDevicesFragment pairedDevicesFragment;
-    public AvailableDevicesFragment availableDevicesFragment;
+    private PairedDevicesFragment pairedDevicesFragment;
+    private AvailableDevicesFragment availableDevicesFragment;
 
-    public DevicesFragmentPagerAdapter(FragmentManager fm, Context context) {
+    public DevicesFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
-        pairedDevicesFragment = PairedDevicesFragment.newInstance();
-        availableDevicesFragment = AvailableDevicesFragment.newInstance();
         Log.d(TAG, "onConstructor");
-        this.context = context;
+        pairedDevicesFragment = PairedDevicesFragment.getInstance();
+        availableDevicesFragment = AvailableDevicesFragment.getInstance();
     }
 
     @Override
@@ -43,7 +41,6 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
         } else {
             return availableDevicesFragment;
         }
-        //return PairedDevicesFragment.newInstance(position + 1);
     }
 
     @Override
@@ -52,13 +49,11 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
         return tabTitles[position];
     }
 
-    public void showAvailableDevices() {
-        Log.d(TAG,"showAvailableDevices()");
-        availableDevicesFragment.showAvailableDevices();
+    public void updateAvailableDevices() {
+        availableDevicesFragment.updateAvailableDevices();
     }
 
-    public void showPairedDevices() {
-        Log.d(TAG, "showPairedDevices()");
-        pairedDevicesFragment.showPairedDevices();
+    public void updatePairedDevices() {
+        pairedDevicesFragment.updatePairedDevices();
     }
 }

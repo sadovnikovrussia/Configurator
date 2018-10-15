@@ -149,6 +149,7 @@ public class BluetoothService {
     }
 
     void cancelDiscovery() {
+        Log.d(TAG, "cancelDiscovery");
         bluetoothAdapter.cancelDiscovery();
     }
 

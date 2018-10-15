@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.presenter.BluetoothService;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesRvAdapter;
 
 public class PairedDevicesFragment extends Fragment {
@@ -23,20 +22,29 @@ public class PairedDevicesFragment extends Fragment {
 
     BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
-    public static PairedDevicesFragment newInstance() {
-        //Bundle args = new Bundle();
-        //args.putInt(ARG_PAGE, page);
-        PairedDevicesFragment fragment = new PairedDevicesFragment();
-        //fragment.setArguments(args);
-        return fragment;
+    private static PairedDevicesFragment pairedDevicesFragment;
+
+    public PairedDevicesFragment() {
+        Log.v(TAG, "onConstructor");
     }
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    public static PairedDevicesFragment getInstance() {
+        if (pairedDevicesFragment == null) {
+            pairedDevicesFragment = new PairedDevicesFragment();
+        }
+        return pairedDevicesFragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
     }
 
-    @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                                       Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.v(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_paired_devices, container, false);
         rvPairedDevices = view.findViewById(R.id.rv_paired_devices);
         pairedDevicesRvAdapter = new PairedDevicesRvAdapter(onBluetoothFragmentInteractionListener);
@@ -46,9 +54,10 @@ public class PairedDevicesFragment extends Fragment {
         return view;
     }
 
-    public void showPairedDevices() {
+    public void updatePairedDevices() {
         pairedDevicesRvAdapter.updatePairedBluetoothDevices();
     }
+
 
     // ---------------------------------------------------------------------------------------------
     // States

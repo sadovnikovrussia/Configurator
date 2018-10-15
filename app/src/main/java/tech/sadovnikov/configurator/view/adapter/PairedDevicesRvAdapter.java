@@ -17,7 +17,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
     private BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
     public PairedDevicesRvAdapter(BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener) {
-        Log.i(TAG, "onConstructor");
+        // Log.d(TAG, "onConstructor");
         this.onBluetoothFragmentInteractionListener = onBluetoothFragmentInteractionListener;
     }
 
@@ -25,13 +25,13 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
     @Override
     public BluetoothDeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View deviceView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bluetooth_device, parent, false);
-        Log.d(TAG, "onCreateBluetoothDeviceViewHolder");
+        // Log.d(TAG, "onCreateBluetoothDeviceViewHolder");
         return new BluetoothDeviceViewHolder(deviceView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final BluetoothDeviceViewHolder holder, final int position) {
-        Log.d(TAG, "onBindViewHolder");
+        // Log.d(TAG, "onBindViewHolder");
         onBluetoothFragmentInteractionListener.onBindViewHolderOfPairedDevicesRvAdapter(holder, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +51,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
     }
 
     public void updatePairedBluetoothDevices() {
-        Log.d(TAG, "updateAvailableBluetoothDevices");
+        Log.d(TAG, "updatePairedBluetoothDevices()");
         notifyDataSetChanged();
     }
 
@@ -63,7 +63,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
 
         BluetoothDeviceViewHolder(@NonNull View itemView) {
             super(itemView);
-            Log.d(TAG, "onConstructor");
+            // Log.d(TAG, "onConstructor");
             tvDeviceName = itemView.findViewById(R.id.tv_device_name);
             tvDeviceAddress = itemView.findViewById(R.id.tv_device_address);
         }

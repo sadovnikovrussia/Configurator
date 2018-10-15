@@ -1,8 +1,8 @@
 package tech.sadovnikov.configurator.view;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -14,13 +14,10 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-import java.util.ArrayList;
-
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.DevicesFragmentPagerAdapter;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
-
 
 /**
  * Фрагмент для отображения спаренных и доступных bluetooth устройств
@@ -54,7 +51,7 @@ public class BluetoothFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.v(TAG, "onCreateView");
@@ -74,7 +71,7 @@ public class BluetoothFragment extends Fragment {
         });
         tabLayout = inflate.findViewById(R.id.tabLayout);
         viewPager = inflate.findViewById(R.id.viewPager);
-        devicesFragmentPagerAdapter = new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext());
+        devicesFragmentPagerAdapter = new DevicesFragmentPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(devicesFragmentPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -107,31 +104,22 @@ public class BluetoothFragment extends Fragment {
         switchBt.setChecked(state);
     }
 
-    public void setDevicesVisible() {
+    public void showDevices() {
         viewPager.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
     }
 
-    void showPairedDevices() {
-        Log.d(TAG, "showPairedDevices");
-        setDevicesVisible();
-        devicesFragmentPagerAdapter.showPairedDevices();
-        //viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
-        //tabLayout.setupWithViewPager(viewPager);
-    }
-
-    public void showAvailableDevices() {
-        Log.d(TAG, "showAvailableDevices()");
-        setDevicesVisible();
-        devicesFragmentPagerAdapter.showAvailableDevices();
-
-        //viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager(), getContext()));
-        //tabLayout.setupWithViewPager(viewPager);
-    }
-
-    public void hidePairedDevices() {
+    public void hideDevices() {
         viewPager.setVisibility(View.INVISIBLE);
         tabLayout.setVisibility(View.INVISIBLE);
+    }
+
+    public void updateAvailableDevices() {
+        devicesFragmentPagerAdapter.updateAvailableDevices();
+    }
+
+    public void updatePairedDevices() {
+        devicesFragmentPagerAdapter.updatePairedDevices();
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -196,6 +184,7 @@ public class BluetoothFragment extends Fragment {
         super.onDetach();
         onBluetoothFragmentInteractionListener = null;
     }
+
     // ---------------------------------------------------------------------------------------------
 
     /**
@@ -231,8 +220,7 @@ public class BluetoothFragment extends Fragment {
 
         int onGetItemCountOfPairedDevicesRvAdapter();
 
-        void onAvailableDevicesFragmentStart();
+        void onAvailableDevicesFragmentDestroyView();
     }
-
 
 }

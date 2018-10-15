@@ -115,15 +115,10 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
         mainView.setSwitchBtState(bluetoothService.isEnabled());
         mainView.setNavigationPosition(MainActivity.BLUETOOTH_FRAGMENT);
         if (bluetoothService.isEnabled()) {
-            mainView.setDevicesVisible();
+            mainView.showDevices();
         } else {
-            mainView.hideAllDevices();
+            mainView.hideDevices();
         }
-    }
-
-    @Override
-    public void onAvailableDevicesFragmentStart() {
-        mainView.showAvailableDevices();
     }
 
     // ConfigurationFragment Lifecycle -------------------------------------------------------------
@@ -200,11 +195,17 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
     public void onDevicesPageSelected(int position) {
         if (position == 0){
           bluetoothService.cancelDiscovery();
-          mainView.showPairedDevices();
+          mainView.updatePairedDevices();
+          //mainView.showPairedDevices();
         } else if (position == 1) {
             startDiscovery();
             //mainView.showAvailableDevices();
         }
+    }
+
+    @Override
+    public void onAvailableDevicesFragmentDestroyView() {
+        bluetoothService.cancelDiscovery();
     }
 
     @Override
@@ -231,13 +232,15 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
 
     void onBluetoothServiceStateOn() {
         mainView.setSwitchBtState(bluetoothService.isEnabled());
-        mainView.showPairedDevices();
-        mainView.setDevicesVisible();
+        // mainView.showPairedDevices();
+        mainView.showDevices();
+        mainView.updatePairedDevices();
+        mainView.updateAvailableDevices();
     }
 
     void onBluetoothServiceStateOff() {
         mainView.setSwitchBtState(bluetoothService.isEnabled());
-        mainView.hideAllDevices();
+        mainView.hideDevices();
     }
 
     void onBluetoothServiceActionFound(BluetoothDevice bluetoothDevice) {
@@ -245,7 +248,8 @@ public class Presenter implements Contract.Presenter, Logs.OnLogsActionsListener
         String name = bluetoothDevice.getName();
         String address = bluetoothDevice.getAddress();
         Log.d(TAG, "onBluetoothServiceActionFound: name = " + name + ", address = " + address);
-        mainView.showAvailableDevices();
+        //mainView.showAvailableDevices();
+        mainView.updateAvailableDevices();
     }
 
     void onBluetoothServiceActionDiscoveryStarted() {

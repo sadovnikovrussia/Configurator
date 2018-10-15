@@ -46,23 +46,21 @@ public interface Contract {
 
         void addLogsLine(String line);
 
-        // Вывести значение параметра на экран в соответствующий компонент
-        void showParameter(Parameter parameter);
+        // Скрыть устройства
+        void hideDevices();
 
-        // Показать спаренные устройства
-        void showPairedDevices();
+        // Показать устройства
+        void showDevices();
 
-        // Скрыть все устройства устройства
-        void hideAllDevices();
+        // Обновить список подключенных устройств
+        void updatePairedDevices();
 
-        // Показать доступные устройства
-        void showAvailableDevices();
+        // Обновить список доступных устройств
+        void updateAvailableDevices();
 
         void setSwitchBtState(boolean state);
 
         void unregisterBluetoothBroadcastReceiver(BluetoothBroadcastReceiver bluetoothBroadcastReceiver);
-
-        void setDevicesVisible();
 
         void setNavigationPosition(String fragment);
 
@@ -79,7 +77,7 @@ public interface Contract {
 
         void onBluetoothFragmentCreateView();
 
-        void onAvailableDevicesFragmentStart();
+        void onAvailableDevicesFragmentDestroyView();
 
         void OnConfigurationFragmentStart();
 
