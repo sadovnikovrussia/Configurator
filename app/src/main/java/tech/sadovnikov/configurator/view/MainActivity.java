@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -179,12 +180,23 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     public void showParameter(String name, String value) {
         switch (name) {
             case Configuration.ID:
-                ((EditText)findViewById(R.id.et_id)).setText(value);
+                EditText etID = findViewById(R.id.et_id);
+                if (etID != null) {
+                    etID.setText(value);
+                }
                 break;
             case Configuration.FIRMWARE_VERSION:
-                ((EditText)findViewById(R.id.et_version)).setText(value);
+                EditText etVersion = findViewById(R.id.et_version);
+                if (etVersion != null) {
+                    etVersion.setText(value);
+                }
                 break;
         }
+    }
+
+    @Override
+    public String getEtIdText() {
+        return configBuoyFragment.getEtIdText();
     }
 
     @Override
@@ -273,6 +285,11 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     @Override
     public void onConfigBuoyFragmentStart() {
         presenter.onConfigBuoyFragmentStart();
+    }
+
+    @Override
+    public void onEtIdAfterTextChanged() {
+        presenter.onEtIdAfterTextChanged();
     }
 
     // ---------------------------------------------------------------------------------------------

@@ -19,13 +19,6 @@ public interface Contract {
         // Считать конфигурацию из устройства
         void loadConfiguration();
 
-        // Сохранить конфигурацию в файл.cfg
-        void saveConfiguration(Configuration configuration);
-
-        // Открыть конфигурацию из файла.cfg
-        Configuration openConfiguration();
-
-        // Получить текущую конфигурацию устройства (когда уже что-то считано из устройства)
         Configuration getCurrentConfiguration();
     }
 
@@ -64,6 +57,8 @@ public interface Contract {
         String getCommandLineText();
 
         void showParameter(String name, String value);
+
+        String getEtIdText();
     }
 
     interface Presenter {
@@ -117,13 +112,25 @@ public interface Contract {
         void onConfigTabsRvItemClick(String tab);
 
         void onConfigurationOptionsItemSelected(MenuItem item);
+
+        void onSetParameter(String name, String value);
+
+        void onEtIdAfterTextChanged();
     }
 
     interface Configuration {
 
-        String getParameter(String name);
+        String getSetCommand(int index);
+
+        String getRequestCommand(int index);
+
+        String getParameterValue(String name);
 
         void setParameter(String name, String value);
+
+        int getSize();
+
+        void setParameterWithoutCallback(String name, String value);
     }
 
     interface Logs {

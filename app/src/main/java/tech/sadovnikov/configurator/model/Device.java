@@ -9,8 +9,6 @@ public class Device implements Contract.Device {
 
     private static Device instance;
 
-    // Текущая конфигурация устройства
-    private Configuration deviceConfiguration = new Configuration();
 
     // Получение синглтона
     public static Device getInstance() {
@@ -33,20 +31,9 @@ public class Device implements Contract.Device {
 
     }
 
-    // Сохранить конфигурацию в файл.cfg
     @Override
-    public void saveConfiguration(Contract.Configuration configuration) {
-    }
-
-    // Открыть конфигурацию из файла.cfg
-    @Override
-    public Configuration openConfiguration() {
+    public Contract.Configuration getCurrentConfiguration() {
         return null;
     }
 
-    // Получить текущую конфигурацию устройства (когда уже что-то считано из устройства)
-    @Override
-    public Configuration getCurrentConfiguration() {
-        return deviceConfiguration;
-    }
 }

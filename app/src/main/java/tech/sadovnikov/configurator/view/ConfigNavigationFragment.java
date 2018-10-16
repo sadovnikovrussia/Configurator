@@ -2,14 +2,14 @@ package tech.sadovnikov.configurator.view;
 
 
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import tech.sadovnikov.configurator.R;
 
-public class ConfigNavigationFragment extends android.support.v4.app.Fragment {
+public class ConfigNavigationFragment extends Fragment {
 
 
     public ConfigNavigationFragment() {

@@ -19,9 +19,6 @@ import java.util.HashMap;
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.Configuration;
-import tech.sadovnikov.configurator.view.BluetoothFragment;
-import tech.sadovnikov.configurator.view.ConfigurationFragment;
-import tech.sadovnikov.configurator.view.ConsoleFragment;
 import tech.sadovnikov.configurator.view.MainActivity;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
@@ -34,24 +31,21 @@ public class Presenter implements Contract.Presenter, tech.sadovnikov.configurat
     private Contract.Logs logs;
     private Contract.Configuration uiConfiguration;
 
-    private Bundle bundleRepository;
-
     private BluetoothService bluetoothService;
     private BluetoothBroadcastReceiver bluetoothBroadcastReceiver;
     private UiHandler uiHandler;
-    private MessageAnalyzer messageAnalyzer;
+    private Loader loader;
 
     public Presenter(Contract.View mainView) {
         Log.v(TAG, "onConstructor");
         this.mainView = mainView;
-        uiConfiguration = new Configuration();
+        uiConfiguration = new Configuration(this);
         device = tech.sadovnikov.configurator.model.Device.getInstance();
         logs = tech.sadovnikov.configurator.model.Logs.getInstance(this);
         uiHandler = new UiHandler((Activity) mainView, this);
         bluetoothService = new BluetoothService(uiHandler);
         bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver(this);
-        bundleRepository = new Bundle();
-        bundleRepository.putSerializable("UiConfiguration", new Configuration());
+        loader = new Loader(bluetoothService);
         registerBluetoothBroadcastReceiver((Context) mainView);
     }
 
@@ -67,26 +61,17 @@ public class Presenter implements Contract.Presenter, tech.sadovnikov.configurat
         context.registerReceiver(bluetoothBroadcastReceiver, intentFilter);
     }
 
+
     @Override
-    public void onSwitchBtStateChanged(boolean state) {
-        // Logs.d(TAG, "onSwitchBtStateChanged" + String.valueOf(state));
-        if (state) {
-            bluetoothService.enableBt();
-        } else {
-            bluetoothService.disableBt();
-        }
+    public void onSetParameter(String name, String value) {
+        mainView.showParameter(name, value);
     }
 
     @Override
-    public void onPairedDevicesRvItemClick(String bluetoothDeviceAddress) {
-        // Logs.d(TAG, "Ща будем подключаться к " + bluetoothDevice.getName());
-        bluetoothService.connectTo(bluetoothDeviceAddress);
+    public void onEtIdAfterTextChanged() {
+        uiConfiguration.setParameterWithoutCallback("id", mainView.getEtIdText());
     }
 
-    @Override
-    public void onAvailableDevicesRvItemClicked(String bluetoothDeviceAddress) {
-        bluetoothService.connectTo(bluetoothDeviceAddress);
-    }
 
     @Override
     public void onHandleMessage(Message msg) {
@@ -103,18 +88,40 @@ public class Presenter implements Contract.Presenter, tech.sadovnikov.configurat
                 String data = (String) msgData.get(DataAnalyzer.PARAMETER_VALUE);
                 String command = (String) msgData.get(DataAnalyzer.PARAMETER_NAME);
                 uiConfiguration.setParameter(command, data);
-                device.getCurrentConfiguration().setParameter(command, data);
                 break;
         }
     }
 
+
+    // BluetoothFragment ---------------------------------------------------------------------------
     @Override
     public void onBtnSendCommandClick() {
         String commandLineText = mainView.getCommandLineText();
         bluetoothService.sendData(commandLineText);
     }
 
-    // BluetoothFragment Lifecycle -----------------------------------------------------------------
+    @Override
+    public void onPairedDevicesRvItemClick(String bluetoothDeviceAddress) {
+        // Logs.d(TAG, "Ща будем подключаться к " + bluetoothDevice.getName());
+        bluetoothService.connectTo(bluetoothDeviceAddress);
+    }
+
+    @Override
+    public void onAvailableDevicesRvItemClicked(String bluetoothDeviceAddress) {
+        bluetoothService.connectTo(bluetoothDeviceAddress);
+    }
+
+    @Override
+    public void onSwitchBtStateChanged(boolean state) {
+        // Logs.d(TAG, "onSwitchBtStateChanged" + String.valueOf(state));
+        if (state) {
+            bluetoothService.enableBt();
+        } else {
+            bluetoothService.disableBt();
+        }
+    }
+
+    // Lifecycle
     @Override
     public void onBluetoothFragmentCreateView() {
     }
@@ -139,12 +146,14 @@ public class Presenter implements Contract.Presenter, tech.sadovnikov.configurat
     @Override
     public void onConfigurationOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.item_load){
-            device.loadConfiguration();
+        if (itemId == R.id.item_set){
+            loader.setConfiguration(uiConfiguration);
+        } else if (itemId == R.id.item_load) {
+            loader.loadConfiguration(uiConfiguration);
         }
     }
 
-    // Lifecycle -----------------------------------------------------------------------------------
+    // Lifecycle
     @Override
     public void onConfigurationFragmentStart() {
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
@@ -154,8 +163,8 @@ public class Presenter implements Contract.Presenter, tech.sadovnikov.configurat
     @Override
     public void onConfigBuoyFragmentStart() {
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
-        mainView.showParameter(Configuration.ID, uiConfiguration.getParameter(Configuration.ID));
-        mainView.showParameter(Configuration.FIRMWARE_VERSION, uiConfiguration.getParameter(Configuration.FIRMWARE_VERSION));
+        mainView.showParameter(Configuration.ID, uiConfiguration.getParameterValue(Configuration.ID));
+        mainView.showParameter(Configuration.FIRMWARE_VERSION, uiConfiguration.getParameterValue(Configuration.FIRMWARE_VERSION));
     }
 
     // ConsoleFragment lifecycle -------------------------------------------------------------------
