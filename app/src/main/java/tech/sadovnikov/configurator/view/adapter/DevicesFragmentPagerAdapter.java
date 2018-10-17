@@ -24,6 +24,7 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
     public DevicesFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
         Log.d(TAG, "onConstructor");
+        // TODO <Надо ли здесь получать фрагменты?>
         pairedDevicesFragment = PairedDevicesFragment.getInstance();
         availableDevicesFragment = AvailableDevicesFragment.getInstance();
     }

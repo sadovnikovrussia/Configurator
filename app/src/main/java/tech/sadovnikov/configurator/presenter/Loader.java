@@ -1,6 +1,10 @@
 package tech.sadovnikov.configurator.presenter;
 
 import android.os.Handler;
+import android.util.Log;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import tech.sadovnikov.configurator.Contract;
 
@@ -13,7 +17,14 @@ import tech.sadovnikov.configurator.Contract;
 class Loader {
     private static final String TAG = "Loader";
 
-    private int delay = 1500;
+    int currentAttempt = 1;
+    boolean isAnswered = false;
+
+    private int period = 3000;
+
+    Contract.Configuration configuration;
+    private Timer timer;
+    private AttemptTask task;
 
     private BluetoothService bluetoothService;
 
@@ -31,21 +42,45 @@ class Loader {
                     String command = tmpConfiguration.getSetCommand(0);
                     bluetoothService.sendData(command);
                 }
-            }, delay * i);
+            }, period * i);
         }
     }
 
-    void loadConfiguration(final Contract.Configuration configuration) {
-        Handler handler = new Handler();
-        for (int i = 0; i < configuration.getSize(); i++) {
-            final int finalI = i;
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    String command = configuration.getRequestCommand(finalI);
+    void loadConfiguration(Contract.Configuration configuration) {
+        task = new AttemptTask(configuration);
+        timer = new Timer();
+        timer.schedule(task, 0, period);
+    }
+
+    private class AttemptTask extends TimerTask {
+        Contract.Configuration configuration;
+        int currentCommand = 0;
+        int currentAttempt = 1;
+        int attempts = 3;
+
+        AttemptTask(Contract.Configuration configuration) {
+            this.configuration = configuration;
+        }
+
+        @Override
+        public void run() {
+            if (currentCommand < configuration.getSize()){
+                if (currentAttempt <= attempts) {
+                    Log.d(TAG, "run() called: currentAttempt = " + String.valueOf(currentAttempt));
+                    String command = configuration.getRequestCommand(currentCommand);
                     bluetoothService.sendData(command);
+                    currentAttempt++;
+                } else {
+                    currentCommand++;
+                    currentAttempt = 1;
                 }
-            }, delay * i);
+            }
+             else {
+                currentCommand++;
+                timer.purge();
+                timer.cancel();
+            }
+
         }
     }
 

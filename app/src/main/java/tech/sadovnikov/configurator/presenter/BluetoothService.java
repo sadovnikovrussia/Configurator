@@ -32,7 +32,7 @@ public class BluetoothService {
     private DataAnalyzer dataAnalyzer;
 
     BluetoothService(Handler handler) {
-        Log.v(TAG, "OnConstructor");
+        // Log.v(TAG, "OnConstructor");
         Handler mHandler = handler;
         dataAnalyzer = new DataAnalyzer(mHandler);
     }
@@ -73,7 +73,6 @@ public class BluetoothService {
 
     void connectTo(String address) {
         BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
-        Log.d(TAG, "onConnecting to: " + device.getName());
         onConnecting(device);
     }
 
@@ -104,7 +103,7 @@ public class BluetoothService {
     }
 
     private synchronized void onConnected(BluetoothSocket socket) {
-        Log.d(TAG, "onConnected to Socket: " + socket.toString());
+        // Log.d(TAG, "onConnected to Socket: " + socket.toString());
         // Cancel the thread that completed the connection
         if (mConnectThread != null) {
             mConnectThread.cancel();
@@ -122,7 +121,7 @@ public class BluetoothService {
         mConnectedThread.start();
     }
 
-    public void closeAllConnections() {
+    void closeAllConnections() {
         try {
             mConnectThread.mSocket.close();
             mConnectedThread.mmSocket.close();
@@ -167,20 +166,13 @@ public class BluetoothService {
             bluetoothAdapter.cancelDiscovery();
             // Log.d(TAG, "Выключили поиск: " + "bluetoothAdapter.isDiscovering() = " + bluetoothAdapter.isDiscovering());
             try {
-                // Log.d(TAG, "Пробуем mSocket.onConnecting()");
                 mSocket.connect();
-
-                // Message message = new Message();
-                // message.obj = mDevice.getName();
-                // mHandler.sendMessage(message);
-                // Log.d(TAG, "mSocket is onConnected? " + String.valueOf(mSocket.isConnected()));
+                // Log.d(TAG, "");
             } catch (IOException e) {
                 // Log.d(TAG, "Не получилось. mSocket is onConnected? " + String.valueOf(mSocket.isConnected()) + ", " + e.getMessage());
                 e.printStackTrace();
                 try {
-                    // Log.d(TAG, "Закрываем socket");
                     mSocket.close();
-                    // Log.d(TAG, "Закрыли socket");
                 } catch (IOException e1) {
                     e1.printStackTrace();
                     // Log.d(TAG, "Не удалось закрыть socket: " + e1.getMessage());
@@ -197,6 +189,7 @@ public class BluetoothService {
         void cancel() {
             try {
                 mSocket.close();
+                // Log.d(TAG, "Закрыли socket");
             } catch (IOException e) {
                 Log.e(TAG, "cancel: Не удалось закрыть socket в connectThread", e);
             }
@@ -224,31 +217,27 @@ public class BluetoothService {
             }
             readerSerial = tmpReaderSerial;
             try {
-                Log.d(TAG, "Пытаемся создать OutputStream");
+                // Log.d(TAG, "Пытаемся создать OutputStream");
                 tmpWriterSerial = new PrintWriter(socket.getOutputStream());
-                Log.d(TAG, "Получили OutputStream: " + tmpWriterSerial.toString());
+                // Log.d(TAG, "Получили OutputStream: " + tmpWriterSerial.toString());
             } catch (IOException e) {
-                Log.d(TAG, "Не удалось создать OutputStream: ", e);
+                Log.e(TAG, "Не удалось создать OutputStream: ", e);
             }
             writerSerial = tmpWriterSerial;
         }
 
         public void run() {
             setName("ConnectedThread");
-            Log.d(TAG, "Start thread " + getName());
+            // Log.d(TAG, "Start thread " + getName());
             String line;
             try {
-                Log.d(TAG, "Пытаемся прочитать из потока");
+                // Log.d(TAG, "Пытаемся прочитать из потока");
                 while ((line = readerSerial.readLine()) != null) {
-                    Log.i(TAG, line);
+                    Log.v(TAG, line);
                     dataAnalyzer.analyze(line);
-                    //Message message = new Message();
-                    //message.obj = line;
-                    //message.what = WHAT_LOG;
-                    //mUiHandler.sendMessage(message);
                 }
             } catch (IOException e) {
-                Log.d(TAG, "Не удалось прочитать из потока", e);
+                Log.e(TAG, "Не удалось прочитать из потока", e);
             }
         }
 

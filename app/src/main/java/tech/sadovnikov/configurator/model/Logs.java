@@ -8,23 +8,11 @@ import tech.sadovnikov.configurator.Contract;
 public class Logs implements Contract.Logs {
     private static final String TAG = "Logs";
 
-    private static OnLogsActionsListener onLogsActionsListener;
-
+    private Contract.Presenter presenter;
     private StringBuilder logsMessages = new StringBuilder();
 
-    private static final Logs ourInstance = new Logs();
-
-    public static Logs getInstance(Contract.Presenter presenter) {
-        if (presenter instanceof OnLogsActionsListener) {
-            onLogsActionsListener = (OnLogsActionsListener) presenter;
-        } else {
-            throw new RuntimeException(presenter.toString()
-                    + " must implement OnLogsActionsListener");
-        }
-        return ourInstance;
-    }
-
-    private Logs() {
+    public Logs(Contract.Presenter presenter) {
+        this.presenter = presenter;
     }
 
     @Override
@@ -35,11 +23,7 @@ public class Logs implements Contract.Logs {
     @Override
     public void addLine(String line) {
         logsMessages.append(line).append("\r\n");
-        onLogsActionsListener.onAddLogsLineEvent(line);
+        presenter.onAddLogsLineEvent(line);
     }
 
-
-    public interface OnLogsActionsListener {
-        void onAddLogsLineEvent(String line);
-    }
 }

@@ -9,9 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import tech.sadovnikov.configurator.Contract;
@@ -21,6 +21,10 @@ import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.presenter.Presenter;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
+
+import static tech.sadovnikov.configurator.Contract.Configuration.BLINKER_MODE;
+import static tech.sadovnikov.configurator.Contract.Configuration.FIRMWARE_VERSION;
+import static tech.sadovnikov.configurator.Contract.Configuration.ID;
 
 
 public class MainActivity extends AppCompatActivity implements Contract.View,
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     // UI
     FrameLayout container;
     BottomNavigationView navigation;
-    Menu menuActionsWithConfiguration;
+    // Menu menuActionsWithConfiguration;
 
     // Fragments
     BluetoothFragment bluetoothFragment;
@@ -59,11 +63,11 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.v(TAG, "onCreate");
-        presenter = new Presenter(this);
         initUi();
+        presenter = new Presenter(this);
         presenter.onMainActivityCreate();
     }
 
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 return presenter.onNavigationItemSelected(item);
             }
         });
+
     }
 
     // Показать фрагмент
@@ -176,19 +181,26 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         return super.onCreateOptionsMenu(menu);
     }
 
+    // TODO <Добавить параметр>
     @Override
     public void showParameter(String name, String value) {
         switch (name) {
-            case Configuration.ID:
+            case ID:
                 EditText etID = findViewById(R.id.et_id);
                 if (etID != null) {
                     etID.setText(value);
                 }
                 break;
-            case Configuration.FIRMWARE_VERSION:
+            case FIRMWARE_VERSION:
                 EditText etVersion = findViewById(R.id.et_version);
                 if (etVersion != null) {
                     etVersion.setText(value);
+                }
+                break;
+            case BLINKER_MODE:
+                Spinner spinnerBlinkerMode = findViewById(R.id.spin_blinker_mode);
+                if (spinnerBlinkerMode != null) {
+                    spinnerBlinkerMode.setSelection(Integer.valueOf(value));
                 }
                 break;
         }

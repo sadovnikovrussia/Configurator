@@ -23,6 +23,12 @@ public interface Contract {
     }
 
     interface View {
+        String BLUETOOTH_FRAGMENT = "BluetoothFragment";
+        String CONFIGURATION_FRAGMENT = "ConfigurationFragment";
+        String CONSOLE_FRAGMENT = "ConsoleFragment";
+        String CONFIG_BUOY_FRAGMENT = "Буй";
+        String CONFIG_MAIN_FRAGMENT = "Основные";
+        String CONFIG_NAVIGATION_FRAGMENT = "Навигация";
 
         // Показать (установить фрагмент в MainActivity)
         void showFragment(Fragment fragment);
@@ -116,9 +122,17 @@ public interface Contract {
         void onSetParameter(String name, String value);
 
         void onEtIdAfterTextChanged();
+
+        void onAddLogsLineEvent(String line);
     }
 
     interface Configuration {
+        String ID = "id";
+        String FIRMWARE_VERSION = "firmware version";
+        String BLINKER_MODE = "blinker mode";
+
+        // TODO <Добавить параметр>
+        String[] parametersList = new String[]{ID, FIRMWARE_VERSION, BLINKER_MODE};
 
         String getSetCommand(int index);
 

@@ -6,11 +6,12 @@ import android.util.Log;
 
 import java.util.HashMap;
 
+import static tech.sadovnikov.configurator.Contract.Configuration.parametersList;
+
 /**
  * Класс, предназначенный для парсинга данных из лога
  */
-public class DataAnalyzer {
-
+class DataAnalyzer {
     private static final String TAG = "DataAnalyzer";
 
     private final static char LOG_SYMBOL = 0x7F;
@@ -18,13 +19,11 @@ public class DataAnalyzer {
     private static final String CMD = "CMD";
     private static final String OK = "OK";
 
-    public static final String PARAMETER_VALUE = "Data";
-    public static final String PARAMETER_NAME = "Parameter's name";
+    static final String PARAMETER_VALUE = "Data";
+    static final String PARAMETER_NAME = "Parameter's name";
 
-    public static final int WHAT_COMMAND_DATA = 1;
-    public static final int WHAT_MAIN_LOG = 0;
-
-    private static final String[] COMMANDS = new String[]{"id", "firmware version"};
+    static final int WHAT_COMMAND_DATA = 1;
+    static final int WHAT_MAIN_LOG = 0;
 
     private Handler uiHandler;
 
@@ -35,7 +34,7 @@ public class DataAnalyzer {
     }
 
     void analyze(String line) {
-        sendMainLog(line);
+        sendLogs(line);
         buffer = buffer + line + "\r\n";
         if (buffer.startsWith(String.valueOf(LOG_SYMBOL))) {
             int indexStartNewMessage = buffer.indexOf(LOG_SYMBOL, 1);
@@ -48,16 +47,16 @@ public class DataAnalyzer {
                     String logType = message.substring(2, 5);
                     if (logType.equals(CMD) & Integer.valueOf(logLevel) == 1) {
                         if (message.contains(OK)) {
-                            for (String command : COMMANDS) {
-                                if (message.toLowerCase().contains(command)) {
-                                    String data = parseMessage(message);
-                                    sendDataToUi(data, command);
+                            for (String parameter : parametersList) {
+                                if (message.toLowerCase().contains(parameter)) {
+                                    String value = parseMessage(message);
+                                    sendCommand(value, parameter);
                                 }
                             }
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "analyze: ", e);
                 }
             }
         } else buffer = "";
@@ -67,7 +66,7 @@ public class DataAnalyzer {
         if (message.contains("@version")) {
             int index_firmware_version = message.indexOf("Firmware version");
             int endIndex = message.indexOf("\r\n", index_firmware_version);
-            Log.d(TAG, message + ", " + message.substring(index_firmware_version + 17, endIndex));
+            // Log.d(TAG, message + ", " + message.substring(index_firmware_version + 17, endIndex));
             return message.substring(index_firmware_version + 17, endIndex);
         } else {
             int ravnoIndex = message.indexOf("=");
@@ -76,18 +75,18 @@ public class DataAnalyzer {
         }
     }
 
-    private void sendDataToUi(String data, String command) {
-        // Log.i(TAG, "sendDataToUi");
+    private void sendCommand(String value, String parameter) {
+        // Log.i(TAG, "sendCommand");
         Message msg = new Message();
         msg.what = WHAT_COMMAND_DATA;
         HashMap<String, Object> msgObj = new HashMap<>();
-        msgObj.put(PARAMETER_VALUE, data);
-        msgObj.put(PARAMETER_NAME, command);
+        msgObj.put(PARAMETER_VALUE, value);
+        msgObj.put(PARAMETER_NAME, parameter);
         msg.obj = msgObj;
         uiHandler.sendMessage(msg);
     }
 
-    private void sendMainLog(String line){
+    private void sendLogs(String line) {
         Message msg = new Message();
         msg.what = WHAT_MAIN_LOG;
         msg.obj = line;

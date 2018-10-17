@@ -91,6 +91,7 @@ public class BluetoothFragment extends Fragment {
             }
         });
         tabLayout.setupWithViewPager(viewPager);
+
         btnTest = inflate.findViewById(R.id.button);
         btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,15 +102,19 @@ public class BluetoothFragment extends Fragment {
     }
 
     public void setSwitchBtState(boolean state) {
-        switchBt.setChecked(state);
+        if (switchBt != null){
+            switchBt.setChecked(state);
+        }
     }
 
     public void showDevices() {
+        // TODO <Или здесь нужно создание компонентов, а не изменение их видимости?>
         viewPager.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
     }
 
     public void hideDevices() {
+        Log.d(TAG, "hideDevices: ");
         viewPager.setVisibility(View.INVISIBLE);
         tabLayout.setVisibility(View.INVISIBLE);
     }

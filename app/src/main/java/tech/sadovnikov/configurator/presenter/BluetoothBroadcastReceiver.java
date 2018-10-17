@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import tech.sadovnikov.configurator.Contract;
-
 public class BluetoothBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "BluetoothBroadReceiver";
@@ -32,6 +30,12 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                     break;
                 case BluetoothDevice.ACTION_PAIRING_REQUEST:
                     Log.w(TAG, "BluetoothDevice.ACTION_PAIRING_REQUEST");
+                    break;
+                case BluetoothDevice.ACTION_ACL_CONNECTED:
+                    Log.w(TAG, "BluetoothDevice.ACTION_ACL_CONNECTED");
+                    break;
+                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                    Log.w(TAG, "BluetoothDevice.ACTION_ACL_DISCONNECTED");
                     break;
                 case BluetoothDevice.ACTION_BOND_STATE_CHANGED:
                     Log.w(TAG, "BluetoothDevice.ACTION_BOND_STATE_CHANGED");

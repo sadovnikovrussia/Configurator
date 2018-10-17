@@ -34,6 +34,17 @@
         <item>Основные</item>
         <item>Навигация</item>
     </string-array>
+    <string-array name="blinker_mode_list">
+        <item>Постоянный</item>
+        <item>Однопроблесковый</item>
+        <item>Двухпроблесковый</item>
+        <item>Частопроблесковый</item>
+        <item>Группочастопроблесковый</item>
+        <item>Пульсирующий</item>
+        <item>Прерывистый пульсирующий</item>
+        <item>Затмевающийся</item>
+        <item>Пользовательский</item>
+    </string-array>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="device_name">Device name</string>
     <string name="device_adddress">Device adddress</string>

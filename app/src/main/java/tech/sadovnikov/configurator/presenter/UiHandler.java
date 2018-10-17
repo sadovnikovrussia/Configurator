@@ -15,6 +15,7 @@ public class UiHandler extends Handler {
 
     Contract.Presenter presenter;
 
+
     UiHandler(Activity activity, Contract.Presenter presenter) {
         activityWeakReference = new WeakReference<>(activity);
         this.presenter = presenter;
