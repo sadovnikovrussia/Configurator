@@ -8,7 +8,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -247,13 +246,13 @@ public class Presenter implements Contract.Presenter, tech.sadovnikov.configurat
 
     @Override
     public void onBindViewHolderOfPairedDevicesRvAdapter(PairedDevicesItemView holder, int position) {
-        holder.setDeviceName(bluetoothService.getPairedDevices().get(position).getName());
-        holder.setDeviceAddress(bluetoothService.getPairedDevices().get(position).getAddress());
+        holder.setDeviceName(bluetoothService.getBondedDevices().get(position).getName());
+        holder.setDeviceAddress(bluetoothService.getBondedDevices().get(position).getAddress());
     }
 
     @Override
     public int onGetItemCountOfPairedDevicesRvAdapter() {
-        return bluetoothService.getPairedDevices().size();
+        return bluetoothService.getBondedDevices().size();
     }
 
     @Override

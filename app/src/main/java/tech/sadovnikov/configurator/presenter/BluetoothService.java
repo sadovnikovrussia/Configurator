@@ -21,7 +21,6 @@ public class BluetoothService {
 
     private static final String TAG = "BluetoothService";
     private static final java.util.UUID UUID = java.util.UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private static final int WHAT_LOG = 10;
 
     private static BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private ArrayList<BluetoothDevice> availableDevices = new ArrayList<>();
@@ -29,14 +28,12 @@ public class BluetoothService {
     // Потоки
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
-    private Thread analyzeThread;
 
-    private Handler mHandler;
-    DataAnalyzer dataAnalyzer;
+    private DataAnalyzer dataAnalyzer;
 
     BluetoothService(Handler handler) {
         Log.v(TAG, "OnConstructor");
-        mHandler = handler;
+        Handler mHandler = handler;
         dataAnalyzer = new DataAnalyzer(mHandler);
     }
 
@@ -54,12 +51,6 @@ public class BluetoothService {
         return bluetoothAdapter.isEnabled();
     }
 
-    // Получение списка спаренных устройств
-    static public ArrayList<BluetoothDevice> getBondedDevices() {
-        Set<BluetoothDevice> mBondedDevices = bluetoothAdapter.getBondedDevices();
-        return new ArrayList<>(mBondedDevices);
-    }
-
     void clearAvailableDevices() {
         this.availableDevices.clear();
     }
@@ -68,18 +59,15 @@ public class BluetoothService {
         this.availableDevices.add(bluetoothDevice);
     }
 
-    void setAvailableDevices(ArrayList<BluetoothDevice> availableDevices) {
-        this.availableDevices = availableDevices;
-    }
-
     ArrayList<BluetoothDevice> getAvailableDevices() {
         //Logs.d(TAG, "getAvailableDevices: " + availableDevices.toString());
         return availableDevices;
     }
 
-    ArrayList<BluetoothDevice> getPairedDevices() {
+    // Получение списка спаренных устройств
+    ArrayList<BluetoothDevice> getBondedDevices() {
         ArrayList<BluetoothDevice> pairedDevices = new ArrayList<>(bluetoothAdapter.getBondedDevices());
-        //Logs.d(TAG, "getPairedDevices: " + pairedDevices.toString());
+        //Logs.d(TAG, "getBondedDevices: " + pairedDevices.toString());
         return pairedDevices;
     }
 
@@ -96,7 +84,7 @@ public class BluetoothService {
 
 
     private synchronized void onConnecting(BluetoothDevice device) {
-        Log.d(TAG, "Connecting to: " + device);
+        //Log.d(TAG, "Connecting to: " + device);
 
         // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {
@@ -144,12 +132,12 @@ public class BluetoothService {
     }
 
     void startDiscovery() {
-        Log.d(TAG, "startDiscovery");
+        // Log.d(TAG, "startDiscovery");
         bluetoothAdapter.startDiscovery();
     }
 
     void cancelDiscovery() {
-        Log.d(TAG, "cancelDiscovery");
+        // Log.d(TAG, "cancelDiscovery");
         bluetoothAdapter.cancelDiscovery();
     }
 
@@ -158,15 +146,16 @@ public class BluetoothService {
         BluetoothDevice mDevice;
 
         ConnectThread(BluetoothDevice device) {
-            Log.d(TAG, "Create ConnectThread");
+            // Log.d(TAG, "Create ConnectThread");
             BluetoothSocket tmp = null;
             mDevice = device;
             try {
                 tmp = device.createRfcommSocketToServiceRecord(UUID);
-                Log.d(TAG, "Получаем socket c помощью createRfcommSocketToServiceRecord(UUID): " + "BluetoothSocket = " + tmp.toString());
+                // Log.d(TAG, "Получаем socket c помощью createRfcommSocketToServiceRecord(UUID): " + "BluetoothSocket = " + tmp.toString());
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.d(TAG, "Socket's createRfcommSocketToServiceRecord(UUID) method failed", e);
+                Log.e(TAG, "ConnectThread: не удалось createRfcommSocketToServiceRecord", e);
+                // Log.d(TAG, "Socket's createRfcommSocketToServiceRecord(UUID) method failed", e);
             }
             mSocket = tmp;
         }
@@ -174,26 +163,27 @@ public class BluetoothService {
         @Override
         synchronized public void run() {
             setName("ConnectThread");
-            Log.d(TAG, "Started thread " + "\"" + getName() + "\"");
+            // Log.d(TAG, "Started thread " + "\"" + getName() + "\"");
             bluetoothAdapter.cancelDiscovery();
-            Log.d(TAG, "Выключили поиск: " + "bluetoothAdapter.isDiscovering() = " + bluetoothAdapter.isDiscovering());
+            // Log.d(TAG, "Выключили поиск: " + "bluetoothAdapter.isDiscovering() = " + bluetoothAdapter.isDiscovering());
             try {
-                Log.d(TAG, "Пробуем mSocket.onConnecting()");
+                // Log.d(TAG, "Пробуем mSocket.onConnecting()");
                 mSocket.connect();
-                Message message = new Message();
-                message.obj = mDevice.getName();
-                mHandler.sendMessage(message);
-                Log.d(TAG, "mSocket is onConnected? " + String.valueOf(mSocket.isConnected()));
+
+                // Message message = new Message();
+                // message.obj = mDevice.getName();
+                // mHandler.sendMessage(message);
+                // Log.d(TAG, "mSocket is onConnected? " + String.valueOf(mSocket.isConnected()));
             } catch (IOException e) {
-                Log.d(TAG, "Не получилось. mSocket is onConnected? " + String.valueOf(mSocket.isConnected()) + ", " + e.getMessage());
+                // Log.d(TAG, "Не получилось. mSocket is onConnected? " + String.valueOf(mSocket.isConnected()) + ", " + e.getMessage());
                 e.printStackTrace();
                 try {
-                    Log.d(TAG, "Закрываем socket");
+                    // Log.d(TAG, "Закрываем socket");
                     mSocket.close();
-                    Log.d(TAG, "Закрыли socket");
+                    // Log.d(TAG, "Закрыли socket");
                 } catch (IOException e1) {
                     e1.printStackTrace();
-                    Log.d(TAG, "Не удалось закрыть socket: " + e1.getMessage());
+                    // Log.d(TAG, "Не удалось закрыть socket: " + e1.getMessage());
                 }
                 return;
             }
@@ -208,7 +198,7 @@ public class BluetoothService {
             try {
                 mSocket.close();
             } catch (IOException e) {
-                Log.d(TAG, "close() of onConnecting " + " socket failed", e);
+                Log.e(TAG, "cancel: Не удалось закрыть socket в connectThread", e);
             }
         }
     }
@@ -219,18 +209,18 @@ public class BluetoothService {
         private final PrintWriter writerSerial;
 
         ConnectedThread(BluetoothSocket socket) {
-            Log.d(TAG, "Create ConnectedThread");
+            // Log.d(TAG, "Create ConnectedThread");
             mmSocket = socket;
             BufferedReader tmpReaderSerial = null;
             PrintWriter tmpWriterSerial = null;
 
             // Get the BluetoothSocket readerSerial and output streams
             try {
-                Log.d(TAG, "Пытаемся получить InputStream");
+                // Log.d(TAG, "Пытаемся получить InputStream");
                 tmpReaderSerial = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                Log.d(TAG, "Получили InputStream: " + tmpReaderSerial.toString());
+                // Log.d(TAG, "Получили InputStream: " + tmpReaderSerial.toString());
             } catch (IOException e) {
-                Log.d(TAG, "Не удалось получить InputStream: " + e.getMessage());
+                // Log.d(TAG, "Не удалось получить InputStream: " + e.getMessage());
             }
             readerSerial = tmpReaderSerial;
             try {
@@ -277,15 +267,10 @@ public class BluetoothService {
         }
     }
 
-    public void sendData(String data) {
+    void sendData(String data) {
         if (mConnectedThread != null) {
             mConnectedThread.write(data);
         }
     }
-
-    //String readFromDevice(String line){
-    //    return line;
-    //}
-
 
 }
