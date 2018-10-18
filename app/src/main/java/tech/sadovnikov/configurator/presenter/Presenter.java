@@ -29,7 +29,7 @@ import static tech.sadovnikov.configurator.Contract.Configuration.ID;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_COMMAND_DATA;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_MAIN_LOG;
 
-public class Presenter implements Contract.Presenter {
+public class Presenter implements Contract.Presenter, Configuration.OnConfigurationInteractionListener {
     private static final String TAG = "Presenter";
 
     private Contract.View mainView;
@@ -68,12 +68,10 @@ public class Presenter implements Contract.Presenter {
         context.registerReceiver(bluetoothBroadcastReceiver, intentFilter);
     }
 
-
     @Override
     public void onSetParameter(String name, String value) {
         mainView.showParameter(name, value);
     }
-
 
     @Override
     public void onHandleMessage(Message msg) {
@@ -90,8 +88,13 @@ public class Presenter implements Contract.Presenter {
                 String value = (String) msgData.get(DataAnalyzer.PARAMETER_VALUE);
                 String name = (String) msgData.get(DataAnalyzer.PARAMETER_NAME);
                 uiConfiguration.setParameter(name, value);
+                onReceiveCommand();
                 break;
         }
+    }
+
+    private void onReceiveCommand() {
+        loader.nextCommand();
     }
 
 
@@ -189,9 +192,11 @@ public class Presenter implements Contract.Presenter {
     public void onConfigurationOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.item_set) {
-            loader.setConfiguration(uiConfiguration);
+            loader.loadConfiguration(uiConfiguration.getConfigurationForSet(), Loader.SET);
+            // loader.setConfiguration(uiConfiguration);
         } else if (itemId == R.id.item_load) {
-            loader.loadConfiguration(uiConfiguration);
+            loader.loadConfiguration(uiConfiguration, Loader.READ);
+            // loader.readConfiguration(uiConfiguration);
         }
     }
 

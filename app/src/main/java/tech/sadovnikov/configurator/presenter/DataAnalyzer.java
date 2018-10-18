@@ -28,6 +28,7 @@ class DataAnalyzer {
     private Handler uiHandler;
 
     private String buffer = "";
+    private String logType;
 
     DataAnalyzer(Handler handler) {
         uiHandler = handler;
@@ -44,7 +45,7 @@ class DataAnalyzer {
                     buffer = buffer.substring(indexStartNewMessage);
                     String logLevel = message.substring(1, 2);
                     // TODO <Переделать определение logType>
-                    String logType = message.substring(2, 5);
+                    logType = message.substring(2, 5);
                     if (logType.equals(CMD) & Integer.valueOf(logLevel) == 1) {
                         if (message.contains(OK)) {
                             for (String parameter : parametersList) {
@@ -56,7 +57,7 @@ class DataAnalyzer {
                         }
                     }
                 } catch (Exception e) {
-                    Log.e(TAG, "analyze: ", e);
+                    Log.w(TAG, "analyze: " + logType, e);
                 }
             }
         } else buffer = "";

@@ -4,6 +4,8 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
@@ -134,9 +136,11 @@ public interface Contract {
         // TODO <Добавить параметр>
         String[] parametersList = new String[]{ID, FIRMWARE_VERSION, BLINKER_MODE};
 
-        String getSetCommand(int index);
+        Configuration getConfigurationForSet();
 
-        String getRequestCommand(int index);
+        String getSettingCommand(int index);
+
+        String getReadingCommand(int index);
 
         String getParameterValue(String name);
 

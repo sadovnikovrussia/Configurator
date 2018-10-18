@@ -12,6 +12,7 @@ import tech.sadovnikov.configurator.R;
 public class ConfigMainFragment extends Fragment {
 
 
+
     public ConfigMainFragment() {
         // Required empty public constructor
     }

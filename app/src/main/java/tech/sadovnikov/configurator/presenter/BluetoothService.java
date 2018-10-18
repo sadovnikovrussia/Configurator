@@ -153,7 +153,7 @@ public class BluetoothService {
                 // Log.d(TAG, "Получаем socket c помощью createRfcommSocketToServiceRecord(UUID): " + "BluetoothSocket = " + tmp.toString());
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e(TAG, "ConnectThread: не удалось createRfcommSocketToServiceRecord", e);
+                // Log.e(TAG, "ConnectThread: не удалось createRfcommSocketToServiceRecord", e);
                 // Log.d(TAG, "Socket's createRfcommSocketToServiceRecord(UUID) method failed", e);
             }
             mSocket = tmp;
@@ -169,8 +169,9 @@ public class BluetoothService {
                 mSocket.connect();
                 // Log.d(TAG, "");
             } catch (IOException e) {
-                // Log.d(TAG, "Не получилось. mSocket is onConnected? " + String.valueOf(mSocket.isConnected()) + ", " + e.getMessage());
-                e.printStackTrace();
+                Log.w(TAG, "run: ", e);
+                //Log.d(TAG, "Не получилось. mSocket is onConnected? " + String.valueOf(mSocket.isConnected()) + ", " + e.getMessage());
+                //e.printStackTrace();
                 try {
                     mSocket.close();
                 } catch (IOException e1) {

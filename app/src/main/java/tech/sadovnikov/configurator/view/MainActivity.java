@@ -7,8 +7,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
@@ -180,6 +182,20 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+
+//    @Override
+//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+//        // super.onCreateContextMenu(menu, v, menuInfo);
+//        menu.setHeaderTitle("Действия с конфигурацией");
+//        menu.add("Считать").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                presenter.onConfigurationOptionsItemSelected(item);
+//                return false;
+//            }
+//        });
+//    }
 
     // TODO <Добавить параметр>
     @Override
