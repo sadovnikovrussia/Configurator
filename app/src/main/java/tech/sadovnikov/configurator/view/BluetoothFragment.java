@@ -96,7 +96,7 @@ public class BluetoothFragment extends Fragment {
         btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBluetoothFragmentInteractionListener.startDiscovery();
+                onBluetoothFragmentInteractionListener.onTestButtonClick();
             }
         });
     }
@@ -213,7 +213,7 @@ public class BluetoothFragment extends Fragment {
 
         void onBluetoothFragmentStart();
 
-        void startDiscovery();
+        void onTestButtonClick();
 
         void onDevicesPageSelected(int position);
 

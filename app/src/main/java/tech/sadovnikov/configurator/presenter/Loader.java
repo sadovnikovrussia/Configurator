@@ -20,7 +20,7 @@ class Loader {
     private int command = 0;
     private int attempt = 1;
     private int attempts = 3;
-    private int period = 6000;
+    private int period = 5000;
 
     private Contract.Configuration configuration;
 

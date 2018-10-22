@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     public static final String CONFIG_BUOY_FRAGMENT = "Буй";
     public static final String CONFIG_MAIN_FRAGMENT = "Основные";
     public static final String CONFIG_NAVIGATION_FRAGMENT = "Навигация";
+    public static final int FILE_MANAGER_REQUEST_CODE = 1;
 
     Contract.Presenter presenter;
 
@@ -228,6 +230,21 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
+    public void startFileManagerActivity() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("downloads/*");
+        startActivityForResult(intent, FILE_MANAGER_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: " + "requestCode = " + requestCode + ", " + "resultCode = " + resultCode + ", " + "data = " + data.getData());
+        // data.getData();
+        presenter.onMainActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         presenter.onConfigurationOptionsItemSelected(item);
         return super.onOptionsItemSelected(item);
@@ -291,8 +308,8 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public void startDiscovery() {
-        presenter.startDiscovery();
+    public void onTestButtonClick() {
+        presenter.onTestButtonClick();
     }
 
 

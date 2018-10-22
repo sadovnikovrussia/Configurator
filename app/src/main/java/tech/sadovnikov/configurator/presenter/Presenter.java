@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
@@ -19,6 +20,7 @@ import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Logs;
+import tech.sadovnikov.configurator.model.Repository;
 import tech.sadovnikov.configurator.view.MainActivity;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
@@ -29,29 +31,31 @@ import static tech.sadovnikov.configurator.Contract.Configuration.ID;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_COMMAND_DATA;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_MAIN_LOG;
 
-public class Presenter implements Contract.Presenter, Configuration.OnConfigurationInteractionListener {
+public class Presenter implements Contract.Presenter, Configuration.OnConfigurationInteractionListener, Repository.OnRepositoryEventsListener {
     private static final String TAG = "Presenter";
 
     private Contract.View mainView;
-    private Contract.Device device;
     private Contract.Logs logs;
     private Contract.Configuration uiConfiguration;
+    private Contract.Repository repository;
 
     private BluetoothService bluetoothService;
     private BluetoothBroadcastReceiver bluetoothBroadcastReceiver;
     private UiHandler uiHandler;
     private Loader loader;
+    private FileManager fileManager;
 
     public Presenter(Contract.View mainView) {
         Log.v(TAG, "onConstructor");
         this.mainView = mainView;
         uiConfiguration = new Configuration(this);
-        device = tech.sadovnikov.configurator.model.Device.getInstance();
         logs = new Logs(this);
         uiHandler = new UiHandler((Activity) mainView, this);
         bluetoothService = new BluetoothService(uiHandler);
         bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver(this);
         loader = new Loader(bluetoothService);
+        fileManager = new FileManager();
+        repository = new Repository(this);
         registerBluetoothBroadcastReceiver((Context) mainView);
     }
 
@@ -67,6 +71,18 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
         intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
         context.registerReceiver(bluetoothBroadcastReceiver, intentFilter);
     }
+
+    @Override
+    public void startDiscovery() {
+        bluetoothService.clearAvailableDevices();
+        // TODO <Проверить, при каких условиях требуется данный permission>
+        int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
+        ActivityCompat.requestPermissions((MainActivity) mainView,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+        bluetoothService.startDiscovery();
+    }
+
 
     @Override
     public void onSetParameter(String name, String value) {
@@ -100,9 +116,23 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
 
     // BluetoothFragment events --------------------------------------------------------------------
     @Override
-    public void onBtnSendCommandClick() {
-        String commandLineText = mainView.getCommandLineText();
-        bluetoothService.sendData(commandLineText);
+    public void onTestButtonClick() {
+        int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
+        ActivityCompat.requestPermissions((MainActivity) mainView,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+        // fileManager.saveConfiguration(uiConfiguration.getConfigurationForSetAndSave());
+        mainView.startFileManagerActivity();
+    }
+
+    @Override
+    public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case MainActivity.FILE_MANAGER_REQUEST_CODE:
+                if (requestCode == Activity.RESULT_OK) {
+                    // uiConfiguration = fileManager.openConfiguration(data.getData());
+                }
+        }
     }
 
     @Override
@@ -192,7 +222,7 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
     public void onConfigurationOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.item_set) {
-            loader.loadConfiguration(uiConfiguration.getConfigurationForSet(), Loader.SET);
+            loader.loadConfiguration(uiConfiguration.getConfigurationForSetAndSave(), Loader.SET);
             // loader.setConfiguration(uiConfiguration);
         } else if (itemId == R.id.item_load) {
             loader.loadConfiguration(uiConfiguration, Loader.READ);
@@ -219,10 +249,16 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
         // TODO <Добавить параметр>
         mainView.showParameter(ID, uiConfiguration.getParameterValue(ID));
         mainView.showParameter(FIRMWARE_VERSION, uiConfiguration.getParameterValue(FIRMWARE_VERSION));
-        mainView.showParameter(BLINKER_MODE, uiConfiguration.getParameterValue(BLINKER_MODE));
     }
 
     // ConsoleFragment lifecycle -------------------------------------------------------------------
+    @Override
+    public void onBtnSendCommandClick() {
+        String commandLineText = mainView.getCommandLineText();
+        bluetoothService.sendData(commandLineText);
+    }
+
+
     @Override
     public void onConsoleFragmentStart() {
         mainView.setNavigationPosition(MainActivity.CONSOLE_FRAGMENT);
@@ -231,18 +267,6 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
     @Override
     public void onConsoleFragmentCreateView() {
         mainView.showLog(logs.getLogsMessages());
-    }
-
-
-    @Override
-    public void startDiscovery() {
-        bluetoothService.clearAvailableDevices();
-        // TODO <Проверить, при каких условиях требуется данный permission>
-        int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
-        ActivityCompat.requestPermissions((MainActivity) mainView,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-        bluetoothService.startDiscovery();
     }
 
     // MainActivity events -------------------------------------------------------------------------
@@ -316,4 +340,8 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
 
     }
 
+    @Override
+    public String toString() {
+        return "Presenter";
+    }
 }

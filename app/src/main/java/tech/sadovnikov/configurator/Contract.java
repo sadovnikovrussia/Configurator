@@ -1,28 +1,19 @@
 package tech.sadovnikov.configurator;
 
+import android.content.Intent;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
 
+import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
 
 public interface Contract {
-
-    interface Device {
-
-        // Загрузить (установить) конфигурацию в устройство
-        void setConfiguration(Configuration configuration);
-
-        // Считать конфигурацию из устройства
-        void loadConfiguration();
-
-        Configuration getCurrentConfiguration();
-    }
 
     interface View {
         String BLUETOOTH_FRAGMENT = "BluetoothFragment";
@@ -67,6 +58,8 @@ public interface Contract {
         void showParameter(String name, String value);
 
         String getEtIdText();
+
+        void startFileManagerActivity();
     }
 
     interface Presenter {
@@ -126,6 +119,10 @@ public interface Contract {
         void onEtIdAfterTextChanged();
 
         void onAddLogsLineEvent(String line);
+
+        void onTestButtonClick();
+
+        void onMainActivityResult(int requestCode, int resultCode, Intent data);
     }
 
     interface Configuration {
@@ -136,11 +133,13 @@ public interface Contract {
         // TODO <Добавить параметр>
         String[] parametersList = new String[]{ID, FIRMWARE_VERSION, BLINKER_MODE};
 
-        Configuration getConfigurationForSet();
+        Configuration getConfigurationForSetAndSave();
 
         String getSettingCommand(int index);
 
         String getReadingCommand(int index);
+
+        String getReadingCommand(Parameter parameter);
 
         String getParameterValue(String name);
 
@@ -155,5 +154,22 @@ public interface Contract {
         void addLine(String line);
 
         String getLogsMessages();
+    }
+
+    interface Repository {
+        Configuration getConfigurationForSetAndSave();
+
+        String getSettingCommand(int index);
+
+        String getReadingCommand(int index);
+
+        String getParameterValue(String name);
+
+        void setParameter(String name, String value);
+
+        int getSize();
+
+        void setParameterWithoutCallback(String name, String value);
+
     }
 }

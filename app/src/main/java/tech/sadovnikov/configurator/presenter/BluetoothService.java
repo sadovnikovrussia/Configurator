@@ -131,7 +131,7 @@ public class BluetoothService {
     }
 
     void startDiscovery() {
-        // Log.d(TAG, "startDiscovery");
+        // Log.d(TAG, "onTestButtonClick");
         bluetoothAdapter.startDiscovery();
     }
 
