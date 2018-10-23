@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import static tech.sadovnikov.configurator.Contract.Configuration.parametersList;
 
+
 /**
  * Класс, предназначенный для парсинга данных из лога
  */

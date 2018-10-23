@@ -1,17 +1,17 @@
 package tech.sadovnikov.configurator.view;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
@@ -19,15 +19,14 @@ import android.widget.Toast;
 
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.presenter.Presenter;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
-import static tech.sadovnikov.configurator.Contract.Configuration.BLINKER_MODE;
-import static tech.sadovnikov.configurator.Contract.Configuration.FIRMWARE_VERSION;
-import static tech.sadovnikov.configurator.Contract.Configuration.ID;
+import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
+import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
+import static tech.sadovnikov.configurator.model.Configuration.ID;
 
 
 public class MainActivity extends AppCompatActivity implements Contract.View,
@@ -231,15 +230,20 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public void startFileManagerActivity() {
+        int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 3;
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("downloads/*");
+        intent.setType("*/*");
         startActivityForResult(intent, FILE_MANAGER_REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: " + "requestCode = " + requestCode + ", " + "resultCode = " + resultCode + ", " + "data = " + data.getData());
+        // Log.d(TAG, "onActivityResult: " + "requestCode = " + requestCode + ", " + "resultCode = " + resultCode + ", " + "data = " + data.getData());
         // data.getData();
         presenter.onMainActivityResult(requestCode, resultCode, data);
     }

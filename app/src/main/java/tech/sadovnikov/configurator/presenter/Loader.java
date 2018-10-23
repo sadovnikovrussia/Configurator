@@ -5,7 +5,7 @@ import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import tech.sadovnikov.configurator.Contract;
+import tech.sadovnikov.configurator.model.Configuration;
 
 /**
  * Класс, отвечающий за отправку списка команд (установка и считывание параметров из устройства)
@@ -17,12 +17,12 @@ class Loader {
     private static final String TAG = "Loader";
 
     private boolean loading = false;
-    private int command = 0;
-    private int attempt = 1;
+    private int commandNumber = 0;
+    private int attemptNumber = 1;
     private int attempts = 3;
     private int period = 5000;
 
-    private Contract.Configuration configuration;
+    private Configuration configuration;
 
     private Timer timer;
     private TimerTask task;
@@ -36,12 +36,12 @@ class Loader {
         this.bluetoothService = bluetoothService;
     }
 
-    void loadConfiguration(Contract.Configuration configuration, String action) {
+    void loadConfiguration(final Configuration configuration, String action) {
         this.configuration = configuration;
-        Log.d(TAG, "loadConfiguration: configuration = " + this.configuration.toString() + ", size = " + configuration.getSize());
+        Log.d(TAG, "loadConfiguration: configuration = " + this.configuration);
         loading = true;
-        command = 0;
-        attempt = 1;
+        commandNumber = 0;
+        attemptNumber = 1;
         timer = new Timer();
         if (action.equals(READ)){
             task = new ReadingTask(this.configuration);
@@ -53,7 +53,7 @@ class Loader {
 
     void nextCommand() {
         if (loading) {
-            Log.d(TAG, "onNextCommand: " + this.configuration.toString());
+            Log.d(TAG, "onNextCommand: " + this.configuration);
             timer.cancel();
             timer.purge();
             timer = new Timer();
@@ -62,39 +62,41 @@ class Loader {
             } else if (task instanceof SettingTask) {
                 task = new SettingTask(this.configuration);
             }
-            command++;
-            attempt = 1;
+            commandNumber++;
+            attemptNumber = 1;
             timer.schedule(task, 0, period);
         }
     }
 
 
     private class ReadingTask extends TimerTask {
-        Contract.Configuration configuration;
+        private static final String TAG = "ReadingTask";
+        Configuration configuration;
 
-        ReadingTask(Contract.Configuration configuration) {
+        ReadingTask(Configuration configuration) {
             this.configuration = configuration;
         }
 
         @Override
         public void run() {
-            if (command < configuration.getSize()) {
-                if (attempt <= attempts) {
-                    String command = configuration.getReadingCommand(Loader.this.command);
-                    Log.d(TAG, "run() called: command = " + String.valueOf(Loader.this.command) + ", " + "attempt = " + Loader.this.attempt + ", " + configuration.toString() + ", " + configuration.getSize());
+            //if (configuration.getParametersArrayList().it)
+            if (commandNumber < configuration.getSize()) {
+                if (attemptNumber <= attempts) {
+                    String command = this.configuration.getReadingCommand(commandNumber);
+                    Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + configuration);
                     bluetoothService.sendData(command);
-                    attempt++;
+                    attemptNumber++;
                 } else {
-                    command++;
-                    if (command < configuration.getSize()){
-                        attempt = 1;
-                        String command = configuration.getReadingCommand(Loader.this.command);
-                        Log.d(TAG, "run() called: command = " + String.valueOf(Loader.this.command) + ", " + "attempt = " + Loader.this.attempt + ", " + configuration.toString() + ", " + configuration.getSize());
+                    commandNumber++;
+                    if (commandNumber < configuration.getSize()){
+                        attemptNumber = 1;
+                        String command = configuration.getReadingCommand(commandNumber);
+                        Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + configuration);
                         bluetoothService.sendData(command);
                     }
                 }
             } else {
-                command++;
+                commandNumber++;
                 timer.cancel();
                 timer.purge();
                 loading = false;
@@ -104,32 +106,32 @@ class Loader {
     }
 
     private class SettingTask extends TimerTask {
-        Contract.Configuration configuration;
+        Configuration configuration;
 
-        SettingTask(Contract.Configuration configuration) {
+        SettingTask(Configuration configuration) {
             this.configuration = configuration;
             Log.d(TAG, "SettingTask: onConstructor: " + this.configuration.toString());
         }
 
         @Override
         public void run() {
-            if (command < configuration.getSize()) {
-                if (attempt <= attempts) {
-                    String command = configuration.getSettingCommand(Loader.this.command);
-                    Log.d(TAG, "run() called: command = " + String.valueOf(Loader.this.command) + ", " + "attempt = " + Loader.this.attempt + ", " + configuration.toString() + ", " + configuration.getSize());
+            if (commandNumber < configuration.getSize()) {
+                if (attemptNumber <= attempts) {
+                    String command = configuration.getSettingCommand(commandNumber);
+                    Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + configuration.toString() + ", " + configuration.getSize());
                     bluetoothService.sendData(command);
-                    attempt++;
+                    attemptNumber++;
                 } else {
-                    command++;
-                    if (command < configuration.getSize()){
-                        attempt = 1;
-                        String command = configuration.getSettingCommand(Loader.this.command);
-                        Log.d(TAG, "run() called: command = " + String.valueOf(Loader.this.command) + ", " + "attempt = " + Loader.this.attempt + ", " + configuration.toString() + ", " + configuration.getSize());
+                    commandNumber++;
+                    if (commandNumber < configuration.getSize()){
+                        attemptNumber = 1;
+                        String command = configuration.getSettingCommand(commandNumber);
+                        Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + configuration.toString() + ", " + configuration.getSize());
                         bluetoothService.sendData(command);
                     }
                 }
             } else {
-                command++;
+                commandNumber++;
                 timer.cancel();
                 timer.purge();
                 loading = false;
@@ -139,21 +141,21 @@ class Loader {
 
     }
 
-    //    void setConfiguration(Contract.Configuration configuration) {
+    //    void setConfiguration(Configuration configuration) {
 //        this.configuration = configuration;
 //        loading = true;
-//        command = 0;
-//        attempt = 1;
+//        commandNumber = 0;
+//        attemptNumber = 1;
 //        timer = new Timer();
 //        readingTask = new ReadingTask(configuration);
 //        timer.schedule(readingTask, 0, period);
 //    }
 //
-//    void readConfiguration(Contract.Configuration configuration) {
+//    void readConfiguration(Configuration configuration) {
 //        this.configuration = configuration;
 //        loading = true;
-//        command = 0;
-//        attempt = 1;
+//        commandNumber = 0;
+//        attemptNumber = 1;
 //        timer = new Timer();
 //        readingTask = new ReadingTask(configuration);
 //        timer.schedule(readingTask, 0, period);

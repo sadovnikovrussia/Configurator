@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 
+import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
@@ -132,22 +133,6 @@ public interface Contract {
 
         // TODO <Добавить параметр>
         String[] parametersList = new String[]{ID, FIRMWARE_VERSION, BLINKER_MODE};
-
-        Configuration getConfigurationForSetAndSave();
-
-        String getSettingCommand(int index);
-
-        String getReadingCommand(int index);
-
-        String getReadingCommand(Parameter parameter);
-
-        String getParameterValue(String name);
-
-        void setParameter(String name, String value);
-
-        int getSize();
-
-        void setParameterWithoutCallback(String name, String value);
     }
 
     interface Logs {
@@ -156,8 +141,12 @@ public interface Contract {
         String getLogsMessages();
     }
 
-    interface Repository {
-        Configuration getConfigurationForSetAndSave();
+    interface RepositoryConfiguration {
+        tech.sadovnikov.configurator.model.Configuration getUiConfiguration();
+
+        void setUiConfiguration(tech.sadovnikov.configurator.model.Configuration uiConfiguration);
+
+        tech.sadovnikov.configurator.model.Configuration getConfigurationForSetAndSave();
 
         String getSettingCommand(int index);
 
@@ -167,9 +156,11 @@ public interface Contract {
 
         void setParameter(String name, String value);
 
-        int getSize();
+        void setParameter(Parameter parameter);
+
+        int getConfigurationSize();
 
         void setParameterWithoutCallback(String name, String value);
-
     }
+
 }

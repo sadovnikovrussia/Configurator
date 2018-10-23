@@ -1,6 +1,5 @@
 package tech.sadovnikov.configurator.presenter;
 
-import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
@@ -12,7 +11,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import tech.sadovnikov.configurator.Contract;
+import tech.sadovnikov.configurator.model.Configuration;
+import tech.sadovnikov.configurator.model.Parameter;
 
 /**
  * Класс, предназначенный для работы с файлом конфигурации (открытие, сохранение)
@@ -33,14 +33,15 @@ public class FileManager {
 
     public File getFile() {
         // Get the directory for the user's public download directory.
-        File dir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(dir, "Конфигурация.cfg");
+        // File dir = Environment.getExternalStorageDirectory();
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        Log.d(TAG, "getFile: dir = " + dir.getAbsolutePath());
+        File file = new File(dir, "Configuration.cfg");
         if (!file.exists()) {
-            Log.e(TAG, "file does not exist");
+            Log.d(TAG, "File does not exist");
             try {
                 file.createNewFile();
-                Log.d(TAG, "getFile: Создан файл по умолчанию");
+                Log.d(TAG, "getFile: Создан файл по умолчанию, dir = " + file.getAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -57,7 +58,7 @@ public class FileManager {
         return file;
     }
 
-    void saveConfiguration(Contract.Configuration configuration) {
+    void saveConfiguration(Configuration configuration) {
         File file = getFile();
         // Log.d(TAG, "saveConfiguration: " + String.valueOf(file.isDirectory()) + ", " +  String.valueOf(file.isFile()));
         try {
@@ -83,17 +84,36 @@ public class FileManager {
 
     }
 
-    public Contract.Configuration openConfiguration(Uri data) {
-        File file = new File(String.valueOf(data));
+    Configuration openConfiguration(String path) {
+        Log.d(TAG, "openConfiguration: path = " + path);
         FileReader fileReader;
         BufferedReader bufferedReader;
+        Configuration configuration = Configuration.getEmptyConfiguration();
+        File file;
+        if (!path.startsWith("/storage") && path.contains("/storage")) {
+            String newPath = path.substring(path.indexOf("/storage"));
+            Log.d(TAG, "openConfiguration: newPath = " + newPath);
+            file = new File(newPath);
+        } else {
+            file = new File(path);
+        }
         try {
             fileReader = new FileReader(file);
             bufferedReader = new BufferedReader(fileReader);
             String line;
             try {
                 while ((line = bufferedReader.readLine()) != null) {
-
+                    int indexOfRavno = line.indexOf("=");
+                    String value = "";
+                    if (indexOfRavno != -1) {
+                        value = line.substring(indexOfRavno + 1).replaceAll("\\s", "");
+                    }
+                    String name = line.substring(0, indexOfRavno).trim();
+                    Parameter parameter = new Parameter(name, value);
+                    // Log.d(TAG, "openConfiguration: Parameter name =" + name + ", " + "value = " + value);
+                    Log.d(TAG, "openConfiguration: read Parameter: " + parameter);
+                    // TODO <>
+                    configuration.addParameter(parameter);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "openConfiguration: Ошибка при чтении файла", e);
@@ -101,7 +121,8 @@ public class FileManager {
         } catch (FileNotFoundException e) {
             Log.e(TAG, "openConfiguration: Файл не найден", e);
         }
-        return null;
+        Log.d(TAG, "openConfiguration() returned: " + configuration);
+        return configuration;
     }
 
     void analyze(String line) {

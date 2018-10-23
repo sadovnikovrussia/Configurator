@@ -1,79 +1,100 @@
 package tech.sadovnikov.configurator.model;
 
+import android.content.Intent;
 import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 
-import tech.sadovnikov.configurator.Contract;
 
 /**
  * Класс, представляющий конфигурацию устройства
  */
-public class Configuration implements Serializable, Contract.Configuration {
+public class Configuration implements Serializable {
     private static final String TAG = "Configuration";
 
-    private OnConfigurationInteractionListener onConfigurationInteractionListener;
+    public static final String ID = "id";
+    public static final String FIRMWARE_VERSION = "firmware version";
+    public static final String BLINKER_MODE = "blinker mode";
+
+    // TODO <Добавить параметр>
+    String[] parametersList = new String[]{ID, FIRMWARE_VERSION, BLINKER_MODE};
 
 
     // Параметры
-    private Parameter id = new Parameter(Contract.Configuration.ID);
-    private Parameter firmwareVersion = new Parameter(Contract.Configuration.FIRMWARE_VERSION);
-    private Parameter blinkerMode = new Parameter(Contract.Configuration.BLINKER_MODE);
+    private Parameter id = new Parameter(ID);
+    private Parameter firmwareVersion = new Parameter(FIRMWARE_VERSION);
+    private Parameter blinkerMode = new Parameter(BLINKER_MODE);
 
     private ArrayList<Parameter> parametersArrayList = new ArrayList<>();
 
     public Configuration() {
-        parametersArrayList.add(id);
-        parametersArrayList.add(firmwareVersion);
-        parametersArrayList.add(blinkerMode);
+        init();
         // Log.d(TAG, "Configuration: " + name + " = " + configurationMap.get(name));
-        // parametersArrayList.add(name);
     }
 
-    public Configuration(OnConfigurationInteractionListener onConfigurationInteractionListener) {
-        this.onConfigurationInteractionListener = onConfigurationInteractionListener;
+    public static Configuration getEmptyConfiguration() {
+        Configuration configuration = new Configuration();
+        configuration.clear();
+        return configuration;
+    }
+
+    public void init() {
+        parametersArrayList.clear();
         parametersArrayList.add(id);
         parametersArrayList.add(firmwareVersion);
         parametersArrayList.add(blinkerMode);
-        // Log.d(TAG, "Configuration: " + parameter + " = " + configurationMap.get(parameter));
     }
 
-    @Override
+    private void clear(){
+        parametersArrayList.clear();
+    }
+
     public Configuration getConfigurationForSetAndSave() {
-        Configuration configurationForSet = new Configuration(onConfigurationInteractionListener);
-        configurationForSet.removeParameter(firmwareVersion);
-        Log.d(TAG, "getConfigurationForSetAndSave() returned: " + configurationForSet);
-        return configurationForSet;
+        Configuration configurationForSetAndSave = new Configuration();
+        ArrayList<Parameter> tempParameters = new ArrayList<>();
+        for (Parameter parameter : this.getParametersArrayList()) {
+            if (!parameter.isEmpty()) {
+                tempParameters.add(parameter);
+            }
+        }
+        configurationForSetAndSave.setParametersArrayList(tempParameters);
+        configurationForSetAndSave.removeParameter(firmwareVersion);
+        Log.d(TAG, "getConfigurationForSetAndSave() returned: " + configurationForSetAndSave);
+        return configurationForSetAndSave;
     }
 
+//    private void removeParameter(String name) {
+//        switch (name) {
+//            case ID:
+//                parametersArrayList.remove(id);
+//                break;
+//            case FIRMWARE_VERSION:
+//                parametersArrayList.remove(firmwareVersion);
+//                break;
+//            case BLINKER_MODE:
+//                parametersArrayList.remove(blinkerMode);
+//                break;
+//        }
+//    }
 
-    private void removeParameter(String name) {
-        switch (name) {
-            case ID:
-                parametersArrayList.remove(id);
-                break;
-            case FIRMWARE_VERSION:
-                parametersArrayList.remove(firmwareVersion);
-                break;
-            case BLINKER_MODE:
-                parametersArrayList.remove(blinkerMode);
-                break;
-        }
+
+    private void setParametersArrayList(ArrayList<Parameter> parametersArrayList) {
+        this.parametersArrayList = parametersArrayList;
+    }
+
+    public ArrayList<Parameter> getParametersArrayList() {
+        return parametersArrayList;
     }
 
     private void removeParameter(Parameter parameter) {
         parametersArrayList.remove(parameter);
     }
 
-    @Override
     public String getSettingCommand(int index) {
         return parametersArrayList.get(index).getName() + "=" + parametersArrayList.get(index).getValue();
     }
 
-    @Override
     public String getReadingCommand(int index) {
         String name = parametersArrayList.get(index).getName();
         if (name.equals(FIRMWARE_VERSION)) {
@@ -82,7 +103,6 @@ public class Configuration implements Serializable, Contract.Configuration {
         return name + "?";
     }
 
-    @Override
     public String getReadingCommand(Parameter parameter) {
         String name = parameter.getName();
         switch (name) {
@@ -93,22 +113,43 @@ public class Configuration implements Serializable, Contract.Configuration {
         }
     }
 
-    @Override
     public String getParameterValue(String name) {
         // Log.d(TAG, "getParameterValue(): " + name + "=" + configurationMap.get(name));
-        switch (name) {
-            case ID:
-                return id.getValue();
-            case FIRMWARE_VERSION:
-                return firmwareVersion.getValue();
-            case BLINKER_MODE:
-                return blinkerMode.getValue();
-            default:
-                return "";
+        Parameter parameter = new Parameter(name);
+        int i = parametersArrayList.indexOf(parametersArrayList);
+        if (i != -1) {
+            return parametersArrayList.get(i).getValue();
+        } else {
+            return "";
         }
     }
 
-    @Override
+    public void setParameter(Parameter parameter) {
+        // Log.i(TAG, "setParameter: parametersArrayList.contains(" + parameter + ") = " + parametersArrayList.contains(parameter));
+        if (parametersArrayList.contains(parameter)) {
+            //Log.i(TAG, "setParameter: " + parameter + ".equals(" + id +") = " + parameter.equals(id));
+            //Log.d(TAG, "setParameter: ДО: " + this);
+            int index = parametersArrayList.indexOf(parameter);
+            parametersArrayList.remove(parameter);
+            parametersArrayList.add(index, parameter);
+            // parametersArrayList.add(parameter);
+            //Log.d(TAG, "setParameter: ПОСЛЕ: " + this);
+//            if (parameter.equals(id)) {
+//                // parametersArrayList.get(parametersArrayList.indexOf(parameter))
+//                Log.d(TAG, "setParameter: ДО: " + this);
+//                id = parameter;
+//                Log.d(TAG, "setParameter: ПОСЛЕ: " + this);
+//                parametersArrayList.get(0).
+//            } else if (parameter.equals(firmwareVersion)) {
+//                firmwareVersion = parameter;
+//            } else if (parameter.equals(blinkerMode)) {
+//                blinkerMode = parameter;
+//            }
+        } else {
+            Log.d(TAG, "setParameter: В конфигурации нет параметра " + parameter + "configuration = " + this);
+        }
+    }
+
     public void setParameter(String name, String value) {
         switch (name) {
             case ID:
@@ -120,12 +161,13 @@ public class Configuration implements Serializable, Contract.Configuration {
             case BLINKER_MODE:
                 blinkerMode.setValue(value);
                 break;
+            default:
+                Log.d(TAG, "setParameter: В конфигурации нет параметра " + name + " = " + value + ", " + "configuration = " + this);
+
         }
         Log.w(TAG, "setParameter: " + name + "=" + value);
-        onConfigurationInteractionListener.onSetParameter(name, value);
     }
 
-    @Override
     public void setParameterWithoutCallback(String name, String value) {
         switch (name) {
             case ID:
@@ -141,19 +183,21 @@ public class Configuration implements Serializable, Contract.Configuration {
         Log.d(TAG, "setParameterWithoutCallback: " + name + "=" + value);
     }
 
-    @Override
     public int getSize() {
         return parametersArrayList.size();
     }
 
-
-    @Override
     public String toString() {
-        return parametersArrayList.toString();
+        return "Configuration{<" + getSize() + ">" + parametersArrayList + '}';
     }
 
-    public interface OnConfigurationInteractionListener {
+    public boolean contains(Parameter parameter) {
+        return parametersArrayList.contains(parameter);
+    }
 
-        void onSetParameter(String name, String value);
+    public void addParameter(Parameter parameter) {
+        if (!parametersArrayList.contains(parameter)){
+            parametersArrayList.add(parameter);
+        }
     }
 }

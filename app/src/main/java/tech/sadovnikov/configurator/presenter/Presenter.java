@@ -15,29 +15,28 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Logs;
-import tech.sadovnikov.configurator.model.Repository;
+import tech.sadovnikov.configurator.model.Parameter;
+import tech.sadovnikov.configurator.model.RepositoryConfiguration;
 import tech.sadovnikov.configurator.view.MainActivity;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
-import static tech.sadovnikov.configurator.Contract.Configuration.BLINKER_MODE;
-import static tech.sadovnikov.configurator.Contract.Configuration.FIRMWARE_VERSION;
-import static tech.sadovnikov.configurator.Contract.Configuration.ID;
+import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
+import static tech.sadovnikov.configurator.model.Configuration.ID;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_COMMAND_DATA;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_MAIN_LOG;
 
-public class Presenter implements Contract.Presenter, Configuration.OnConfigurationInteractionListener, Repository.OnRepositoryEventsListener {
+public class Presenter implements Contract.Presenter, RepositoryConfiguration.OnRepositoryConfigurationEventsListener {
     private static final String TAG = "Presenter";
 
     private Contract.View mainView;
     private Contract.Logs logs;
-    private Contract.Configuration uiConfiguration;
-    private Contract.Repository repository;
+    private Contract.RepositoryConfiguration repositoryConfiguration;
 
     private BluetoothService bluetoothService;
     private BluetoothBroadcastReceiver bluetoothBroadcastReceiver;
@@ -48,14 +47,13 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
     public Presenter(Contract.View mainView) {
         Log.v(TAG, "onConstructor");
         this.mainView = mainView;
-        uiConfiguration = new Configuration(this);
         logs = new Logs(this);
         uiHandler = new UiHandler((Activity) mainView, this);
         bluetoothService = new BluetoothService(uiHandler);
         bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver(this);
         loader = new Loader(bluetoothService);
         fileManager = new FileManager();
-        repository = new Repository(this);
+        repositoryConfiguration = new RepositoryConfiguration(this);
         registerBluetoothBroadcastReceiver((Context) mainView);
     }
 
@@ -83,12 +81,6 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
         bluetoothService.startDiscovery();
     }
 
-
-    @Override
-    public void onSetParameter(String name, String value) {
-        mainView.showParameter(name, value);
-    }
-
     @Override
     public void onHandleMessage(Message msg) {
         Object obj = msg.obj;
@@ -103,7 +95,8 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
                 HashMap msgData = (HashMap) obj;
                 String value = (String) msgData.get(DataAnalyzer.PARAMETER_VALUE);
                 String name = (String) msgData.get(DataAnalyzer.PARAMETER_NAME);
-                uiConfiguration.setParameter(name, value);
+                Parameter parameter = new Parameter(name,value);
+                repositoryConfiguration.setParameter(parameter);
                 onReceiveCommand();
                 break;
         }
@@ -121,7 +114,7 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
         ActivityCompat.requestPermissions((MainActivity) mainView,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-        // fileManager.saveConfiguration(uiConfiguration.getConfigurationForSetAndSave());
+        // fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSetAndSave());
         mainView.startFileManagerActivity();
     }
 
@@ -129,8 +122,8 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
     public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case MainActivity.FILE_MANAGER_REQUEST_CODE:
-                if (requestCode == Activity.RESULT_OK) {
-                    // uiConfiguration = fileManager.openConfiguration(data.getData());
+                if (resultCode == Activity.RESULT_OK) {
+                    repositoryConfiguration.setUiConfiguration(fileManager.openConfiguration(Objects.requireNonNull(data.getData()).getPath()));
                 }
         }
     }
@@ -222,11 +215,14 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
     public void onConfigurationOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.item_set) {
-            loader.loadConfiguration(uiConfiguration.getConfigurationForSetAndSave(), Loader.SET);
-            // loader.setConfiguration(uiConfiguration);
+            loader.loadConfiguration(repositoryConfiguration.getConfigurationForSetAndSave(), Loader.SET);
         } else if (itemId == R.id.item_load) {
-            loader.loadConfiguration(uiConfiguration, Loader.READ);
-            // loader.readConfiguration(uiConfiguration);
+            loader.loadConfiguration(repositoryConfiguration.getUiConfiguration(), Loader.READ);
+        } else if (itemId == R.id.item_open) {
+            // fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSetAndSave());
+            mainView.startFileManagerActivity();
+        } else if (itemId == R.id.item_save) {
+            fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSetAndSave());
         }
     }
 
@@ -239,7 +235,7 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
     // ConfigBuoyFragment events -------------------------------------------------------------------
     @Override
     public void onEtIdAfterTextChanged() {
-        uiConfiguration.setParameterWithoutCallback("id", mainView.getEtIdText());
+        repositoryConfiguration.setParameterWithoutCallback("id", mainView.getEtIdText());
     }
 
     // Lifecycle
@@ -247,8 +243,8 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
     public void onConfigBuoyFragmentStart() {
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
         // TODO <Добавить параметр>
-        mainView.showParameter(ID, uiConfiguration.getParameterValue(ID));
-        mainView.showParameter(FIRMWARE_VERSION, uiConfiguration.getParameterValue(FIRMWARE_VERSION));
+        mainView.showParameter(ID, repositoryConfiguration.getParameterValue(ID));
+        mainView.showParameter(FIRMWARE_VERSION, repositoryConfiguration.getParameterValue(FIRMWARE_VERSION));
     }
 
     // ConsoleFragment lifecycle -------------------------------------------------------------------
@@ -338,6 +334,16 @@ public class Presenter implements Contract.Presenter, Configuration.OnConfigurat
 
     void onBluetoothServiceActionDiscoveryStarted() {
 
+    }
+
+    @Override
+    public void onSetParameter(String name, String value) {
+        mainView.showParameter(name, value);
+    }
+
+    @Override
+    public void onSetUiConfiguration() {
+        // TODO <Обработать событие>
     }
 
     @Override
