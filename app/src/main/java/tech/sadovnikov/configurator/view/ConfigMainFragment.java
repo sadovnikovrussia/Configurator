@@ -3,6 +3,7 @@ package tech.sadovnikov.configurator.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,18 +21,19 @@ public class ConfigMainFragment extends Fragment {
 
     // UI
     Spinner spinBlinkerMode;
+    Spinner spinBlinkerBrightness;
+
 
     public ConfigMainFragment() {
         // Required empty public constructor
         Log.v(TAG, "onConstructor");
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
+        Log.v(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_config_main, container, false);
         initUi(view);
         return view;
@@ -42,7 +44,21 @@ public class ConfigMainFragment extends Fragment {
         spinBlinkerMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "onItemSelected: " + position);
                 onConfigMainFragmentInteractionListener.onSpinBlinkerModeItemSelected(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinBlinkerBrightness = view.findViewById(R.id.spin_blinker_brightness);
+        spinBlinkerBrightness.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "onItemSelected: " + position);
+                onConfigMainFragmentInteractionListener.onSpinBlinkerBrightnessItemSelected(position);
             }
 
             @Override
@@ -120,11 +136,26 @@ public class ConfigMainFragment extends Fragment {
         super.onDetach();
     }
 
+    public String getSpinBlinkerModeValue() {
+        return spinBlinkerMode.getSelectedItem().toString();
+    }
+
+    public String getSpinBlinkerBrightnessValue() {
+        return spinBlinkerBrightness.getSelectedItem().toString();
+    }
+
+    public void setSpinBlinkerModePosition(Integer position) {
+        spinBlinkerBrightness.setSelection(position);
+    }
+
+
     public interface OnConfigMainFragmentInteractionListener {
 
         void onConfigMainFragmentStart();
 
         void onSpinBlinkerModeItemSelected(int position);
+
+        void onSpinBlinkerBrightnessItemSelected(int position);
     }
 
 }

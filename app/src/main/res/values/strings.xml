@@ -34,6 +34,10 @@
         <item>Основные</item>
         <item>Навигация</item>
     </string-array>
+    <string-array name="blinker_brightness_list">
+        <item>50%</item>
+        <item>100%</item>
+    </string-array>
     <string-array name="blinker_mode_list">
         <item>Постоянный</item>
         <item>Однопроблесковый</item>

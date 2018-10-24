@@ -261,6 +261,20 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         bluetoothService.sendData("@reset settings");
     }
 
+
+    // ---------------------------------------------------------------------------------------------
+    // ConfigMainFragment events
+    @Override
+    public void onSpinBlinkerModeItemSelected(int position) {
+        repositoryConfiguration.setParameterWithoutCallback(BLINKER_MODE, String.valueOf(position));
+    }
+
+    @Override
+    public void onSpinBlinkerBrightnessItemSelected(int position) {
+
+    }
+
+    // Lifecycle
     @Override
     public void onConfigMainFragmentStart() {
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);

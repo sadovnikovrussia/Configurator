@@ -80,7 +80,9 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
 
     @Override
     public void setParameterWithoutCallback(String name, String value) {
+        Log.d(TAG, "setParameterWithoutCallback: ДО: " + uiConfiguration);
         uiConfiguration.setParameter(name, value);
+        Log.d(TAG, "setParameterWithoutCallback: ПОСЛЕ: " + uiConfiguration);
     }
 
     @Override

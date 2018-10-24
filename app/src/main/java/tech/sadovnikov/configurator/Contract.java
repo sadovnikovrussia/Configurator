@@ -58,6 +58,10 @@ public interface Contract {
         String getEtIdText();
 
         void startFileManagerActivity();
+
+        String getSpinBlinkerBrightnessValue();
+
+        String getSpinBlinkerModeValue();
     }
 
     interface Presenter {
@@ -127,6 +131,10 @@ public interface Contract {
         void onBtnRestartClick();
 
         void onBtnDefaultSettingsClick();
+
+        void onSpinBlinkerBrightnessItemSelected(int position);
+
+        void onSpinBlinkerModeItemSelected(int position);
     }
 
     interface Configuration {

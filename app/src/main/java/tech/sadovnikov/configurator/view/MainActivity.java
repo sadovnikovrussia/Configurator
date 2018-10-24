@@ -12,9 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import tech.sadovnikov.configurator.Contract;
@@ -217,14 +217,17 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 }
                 break;
             case BLINKER_MODE:
-                Spinner spinnerBlinkerMode = findViewById(R.id.spin_blinker_mode);
-                if (spinnerBlinkerMode != null) {
-                    spinnerBlinkerMode.setSelection(Integer.valueOf(value));
+                // Spinner spinnerBlinkerMode = findViewById(R.id.spin_blinker_mode);
+                if (!value.isEmpty()){
+                    if (!isNull(configMainFragment, configMainFragment.spinBlinkerMode))
+                    configMainFragment.setSpinBlinkerModePosition(Integer.valueOf(value));
                 }
-                break;
         }
     }
 
+    boolean isNull(Fragment fragment, View view){
+        return fragment != null && view != null;
+    }
     @Override
     public String getEtIdText() {
         return configBuoyFragment.getEtIdText();
@@ -240,6 +243,16 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         startActivityForResult(intent, FILE_MANAGER_REQUEST_CODE);
+    }
+
+    @Override
+    public String getSpinBlinkerModeValue() {
+        return configMainFragment.getSpinBlinkerModeValue();
+    }
+
+    @Override
+    public String getSpinBlinkerBrightnessValue() {
+        return configMainFragment.getSpinBlinkerBrightnessValue();
     }
 
     @Override
@@ -364,7 +377,12 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public void onSpinBlinkerModeItemSelected(int position) {
+        presenter.onSpinBlinkerModeItemSelected(position);
+    }
 
+    @Override
+    public void onSpinBlinkerBrightnessItemSelected(int position) {
+        presenter.onSpinBlinkerBrightnessItemSelected(position);
     }
 
     // ---------------------------------------------------------------------------------------------
