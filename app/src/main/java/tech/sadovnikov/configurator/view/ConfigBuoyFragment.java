@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -26,6 +27,8 @@ public class ConfigBuoyFragment extends Fragment {
     EditText etId;
     TextView tvVersion;
     EditText etVersion;
+    Button btnRestart;
+    Button btnDefaultSettings;
 
     public ConfigBuoyFragment() {
         // Required empty public constructor
@@ -37,14 +40,14 @@ public class ConfigBuoyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inflate = inflater.inflate(R.layout.fragment_config_buoy, container, false);
-        initUi(inflate);
-        return inflate;
+        View view = inflater.inflate(R.layout.fragment_config_buoy, container, false);
+        initUi(view);
+        return view;
     }
 
-    private void initUi(View inflate) {
-        tvId = inflate.findViewById(R.id.tv_id);
-        etId = inflate.findViewById(R.id.et_id);
+    private void initUi(View view) {
+        tvId = view.findViewById(R.id.tv_id);
+        etId = view.findViewById(R.id.et_id);
         etId.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -62,8 +65,22 @@ public class ConfigBuoyFragment extends Fragment {
                 onConfigBuoyFragmentInteractionListener.onEtIdAfterTextChanged();
             }
         });
-        tvVersion = inflate.findViewById(R.id.tv_version);
-        etVersion = inflate.findViewById(R.id.et_version);
+        tvVersion = view.findViewById(R.id.tv_version);
+        etVersion = view.findViewById(R.id.et_version);
+        btnRestart = view.findViewById(R.id.btn_restart);
+        btnRestart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onConfigBuoyFragmentInteractionListener.onBtnRestartClick();
+            }
+        });
+        btnDefaultSettings = view.findViewById(R.id.btn_default_settings);
+        btnDefaultSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onConfigBuoyFragmentInteractionListener.onBtnDefaultSettingsClick();
+            }
+        });
     }
 
 
@@ -75,6 +92,7 @@ public class ConfigBuoyFragment extends Fragment {
     // States
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
     }
 
@@ -143,6 +161,10 @@ public class ConfigBuoyFragment extends Fragment {
         void onConfigBuoyFragmentStart();
 
         void onEtIdAfterTextChanged();
+
+        void onBtnRestartClick();
+
+        void onBtnDefaultSettingsClick();
     }
 
 }

@@ -6,7 +6,7 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-import static tech.sadovnikov.configurator.Contract.Configuration.parametersList;
+import static tech.sadovnikov.configurator.model.Configuration.PARAMETERS_NAMES;
 
 
 /**
@@ -49,7 +49,7 @@ class DataAnalyzer {
                     logType = message.substring(2, 5);
                     if (logType.equals(CMD) & Integer.valueOf(logLevel) == 1) {
                         if (message.contains(OK)) {
-                            for (String parameter : parametersList) {
+                            for (String parameter : PARAMETERS_NAMES) {
                                 if (message.toLowerCase().contains(parameter)) {
                                     String value = parseMessage(message);
                                     sendCommand(value, parameter);

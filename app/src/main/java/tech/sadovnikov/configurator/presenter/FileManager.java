@@ -14,12 +14,15 @@ import java.io.OutputStreamWriter;
 import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Parameter;
 
+import static tech.sadovnikov.configurator.model.Configuration.PARAMETERS_NAMES_LIST;
+
 /**
  * Класс, предназначенный для работы с файлом конфигурации (открытие, сохранение)
  */
 public class FileManager {
     private static final String TAG = "FileManager";
 
+    // TODO <Добавить эти проверки при чтении/записи файла>
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
@@ -31,6 +34,7 @@ public class FileManager {
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
+    // TODO <Отрефакторить код с учетом возвращаемых значений createFile() и обработать события>
     public File getFile() {
         // Get the directory for the user's public download directory.
         // File dir = Environment.getExternalStorageDirectory();
@@ -38,10 +42,13 @@ public class FileManager {
         Log.d(TAG, "getFile: dir = " + dir.getAbsolutePath());
         File file = new File(dir, "Configuration.cfg");
         if (!file.exists()) {
-            Log.d(TAG, "File does not exist");
+            // Log.d(TAG, "File does not exist");
             try {
-                file.createNewFile();
-                Log.d(TAG, "getFile: Создан файл по умолчанию, dir = " + file.getAbsolutePath());
+                if (!file.createNewFile()){
+                    Log.d(TAG, "getFile: Создан файл по умолчанию, file dir = " + file.getAbsolutePath());
+                } else {
+                    Log.d(TAG, "getFile: Данный файл уже существует, file dir = " + file.getAbsolutePath());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -81,11 +88,10 @@ public class FileManager {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 
+    // TODO <Доделать проверки валидности пути и тд. (.cfg?), добавить выброс исключений>
     Configuration openConfiguration(String path) {
-        Log.d(TAG, "openConfiguration: path = " + path);
         FileReader fileReader;
         BufferedReader bufferedReader;
         Configuration configuration = Configuration.getEmptyConfiguration();
@@ -95,6 +101,7 @@ public class FileManager {
             Log.d(TAG, "openConfiguration: newPath = " + newPath);
             file = new File(newPath);
         } else {
+            Log.d(TAG, "openConfiguration: path = " + path);
             file = new File(path);
         }
         try {
@@ -104,16 +111,18 @@ public class FileManager {
             try {
                 while ((line = bufferedReader.readLine()) != null) {
                     int indexOfRavno = line.indexOf("=");
-                    String value = "";
+                    String value;
+                    String name;
                     if (indexOfRavno != -1) {
-                        value = line.substring(indexOfRavno + 1).replaceAll("\\s", "");
+                        name = line.substring(0, indexOfRavno).trim().toLowerCase();
+                        if (PARAMETERS_NAMES_LIST.contains(name)) {
+                            value = line.substring(indexOfRavno + 1).replaceAll("\\s", "");
+                            Parameter parameter = new Parameter(name, value);
+                            Log.d(TAG, "openConfiguration: read Parameter: " + parameter);
+                            configuration.addParameter(parameter);
+                            // Log.d(TAG, "openConfiguration: Parameter name =" + name + ", " + "value = " + value);
+                        }
                     }
-                    String name = line.substring(0, indexOfRavno).trim();
-                    Parameter parameter = new Parameter(name, value);
-                    // Log.d(TAG, "openConfiguration: Parameter name =" + name + ", " + "value = " + value);
-                    Log.d(TAG, "openConfiguration: read Parameter: " + parameter);
-                    // TODO <>
-                    configuration.addParameter(parameter);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "openConfiguration: Ошибка при чтении файла", e);
@@ -121,15 +130,8 @@ public class FileManager {
         } catch (FileNotFoundException e) {
             Log.e(TAG, "openConfiguration: Файл не найден", e);
         }
-        Log.d(TAG, "openConfiguration() returned: " + configuration);
+        Log.i(TAG, "openConfiguration() returned: " + configuration);
         return configuration;
     }
 
-    void analyze(String line) {
-        if (!line.equals("\r\n")) {
-            int index;
-            if ((index = line.indexOf("")) != -1) {
-            }
-        }
-    }
 }

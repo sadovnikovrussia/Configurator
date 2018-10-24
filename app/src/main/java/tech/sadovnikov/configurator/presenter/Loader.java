@@ -58,7 +58,7 @@ class Loader {
             timer.purge();
             timer = new Timer();
             if (task instanceof ReadingTask){
-                task = new ReadingTask(this.configuration);
+                task = new ReadingTask();
             } else if (task instanceof SettingTask) {
                 task = new SettingTask(this.configuration);
             }
@@ -71,18 +71,21 @@ class Loader {
 
     private class ReadingTask extends TimerTask {
         private static final String TAG = "ReadingTask";
-        Configuration configuration;
+        //Configuration configuration;
 
         ReadingTask(Configuration configuration) {
-            this.configuration = configuration;
+            //this.configuration = configuration;
+        }
+
+        public ReadingTask() {
         }
 
         @Override
         public void run() {
-            //if (configuration.getParametersArrayList().it)
+            //if (configuration.getParametersList().it)
             if (commandNumber < configuration.getSize()) {
                 if (attemptNumber <= attempts) {
-                    String command = this.configuration.getReadingCommand(commandNumber);
+                    String command = configuration.getReadingCommand(commandNumber);
                     Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + configuration);
                     bluetoothService.sendData(command);
                     attemptNumber++;
@@ -118,7 +121,7 @@ class Loader {
             if (commandNumber < configuration.getSize()) {
                 if (attemptNumber <= attempts) {
                     String command = configuration.getSettingCommand(commandNumber);
-                    Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + configuration.toString() + ", " + configuration.getSize());
+                    Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + configuration);
                     bluetoothService.sendData(command);
                     attemptNumber++;
                 } else {
@@ -126,7 +129,7 @@ class Loader {
                     if (commandNumber < configuration.getSize()){
                         attemptNumber = 1;
                         String command = configuration.getSettingCommand(commandNumber);
-                        Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + configuration.toString() + ", " + configuration.getSize());
+                        Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + configuration);
                         bluetoothService.sendData(command);
                     }
                 }

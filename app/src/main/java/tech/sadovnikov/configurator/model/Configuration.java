@@ -1,10 +1,10 @@
 package tech.sadovnikov.configurator.model;
 
-import android.content.Intent;
 import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 /**
@@ -17,18 +17,20 @@ public class Configuration implements Serializable {
     public static final String FIRMWARE_VERSION = "firmware version";
     public static final String BLINKER_MODE = "blinker mode";
 
-    // TODO <Добавить параметр>
-    String[] parametersList = new String[]{ID, FIRMWARE_VERSION, BLINKER_MODE};
-
+    public static final String[] PARAMETERS_NAMES = new String[]{ID, FIRMWARE_VERSION, BLINKER_MODE};
+    public static final ArrayList<String> PARAMETERS_NAMES_LIST = new ArrayList<>();
+    static {
+        Collections.addAll(PARAMETERS_NAMES_LIST, PARAMETERS_NAMES);
+    }
 
     // Параметры
     private Parameter id = new Parameter(ID);
     private Parameter firmwareVersion = new Parameter(FIRMWARE_VERSION);
     private Parameter blinkerMode = new Parameter(BLINKER_MODE);
 
-    private ArrayList<Parameter> parametersArrayList = new ArrayList<>();
+    private ArrayList<Parameter> parametersList = new ArrayList<>();
 
-    public Configuration() {
+    Configuration() {
         init();
         // Log.d(TAG, "Configuration: " + name + " = " + configurationMap.get(name));
     }
@@ -39,64 +41,44 @@ public class Configuration implements Serializable {
         return configuration;
     }
 
-    public void init() {
-        parametersArrayList.clear();
-        parametersArrayList.add(id);
-        parametersArrayList.add(firmwareVersion);
-        parametersArrayList.add(blinkerMode);
+    private void init() {
+        parametersList.clear();
+        parametersList.add(id);
+        parametersList.add(firmwareVersion);
+        parametersList.add(blinkerMode);
     }
 
-    private void clear(){
-        parametersArrayList.clear();
+    void clear(){
+        parametersList.clear();
     }
 
-    public Configuration getConfigurationForSetAndSave() {
-        Configuration configurationForSetAndSave = new Configuration();
-        ArrayList<Parameter> tempParameters = new ArrayList<>();
-        for (Parameter parameter : this.getParametersArrayList()) {
+
+    Configuration getConfigurationForSetAndSave() {
+        Configuration configuration = Configuration.getEmptyConfiguration();
+        for (Parameter parameter : getParametersList()) {
             if (!parameter.isEmpty()) {
-                tempParameters.add(parameter);
+                configuration.addParameter(parameter);
             }
         }
-        configurationForSetAndSave.setParametersArrayList(tempParameters);
-        configurationForSetAndSave.removeParameter(firmwareVersion);
-        Log.d(TAG, "getConfigurationForSetAndSave() returned: " + configurationForSetAndSave);
-        return configurationForSetAndSave;
+        configuration.removeParameter(firmwareVersion);
+        Log.i(TAG, "getConfigurationForSetAndSave() returned: " + configuration);
+        return configuration;
     }
 
-//    private void removeParameter(String name) {
-//        switch (name) {
-//            case ID:
-//                parametersArrayList.remove(id);
-//                break;
-//            case FIRMWARE_VERSION:
-//                parametersArrayList.remove(firmwareVersion);
-//                break;
-//            case BLINKER_MODE:
-//                parametersArrayList.remove(blinkerMode);
-//                break;
-//        }
-//    }
-
-
-    private void setParametersArrayList(ArrayList<Parameter> parametersArrayList) {
-        this.parametersArrayList = parametersArrayList;
-    }
-
-    public ArrayList<Parameter> getParametersArrayList() {
-        return parametersArrayList;
+    ArrayList<Parameter> getParametersList() {
+        return parametersList;
     }
 
     private void removeParameter(Parameter parameter) {
-        parametersArrayList.remove(parameter);
+        parametersList.remove(parameter);
     }
 
     public String getSettingCommand(int index) {
-        return parametersArrayList.get(index).getName() + "=" + parametersArrayList.get(index).getValue();
+        return parametersList.get(index).getName() + "=" + parametersList.get(index).getValue();
     }
 
     public String getReadingCommand(int index) {
-        String name = parametersArrayList.get(index).getName();
+        String name = parametersList.get(index).getName();
         if (name.equals(FIRMWARE_VERSION)) {
             return "@" + name.substring(9);
         }
@@ -113,91 +95,69 @@ public class Configuration implements Serializable {
         }
     }
 
-    public String getParameterValue(String name) {
-        // Log.d(TAG, "getParameterValue(): " + name + "=" + configurationMap.get(name));
-        Parameter parameter = new Parameter(name);
-        int i = parametersArrayList.indexOf(parametersArrayList);
-        if (i != -1) {
-            return parametersArrayList.get(i).getValue();
-        } else {
+    String getParameterValue(String parameterName) {
+        // Log.d(TAG, "getParameterValue(): " + parameterName + "=" + configurationMap.get(parameterName));
+        Parameter parameter = new Parameter(parameterName);
+        if (parametersList.contains(parameter)) {
+            return parametersList.get(parametersList.indexOf(parameter)).getValue();
+        }
+        else {
+            Log.w(TAG, "getParameterValue: Параметр " + parameterName + " не существует в конфигурации" );
             return "";
         }
     }
 
-    public void setParameter(Parameter parameter) {
-        // Log.i(TAG, "setParameter: parametersArrayList.contains(" + parameter + ") = " + parametersArrayList.contains(parameter));
-        if (parametersArrayList.contains(parameter)) {
-            //Log.i(TAG, "setParameter: " + parameter + ".equals(" + id +") = " + parameter.equals(id));
-            //Log.d(TAG, "setParameter: ДО: " + this);
-            int index = parametersArrayList.indexOf(parameter);
-            parametersArrayList.remove(parameter);
-            parametersArrayList.add(index, parameter);
-            // parametersArrayList.add(parameter);
-            //Log.d(TAG, "setParameter: ПОСЛЕ: " + this);
-//            if (parameter.equals(id)) {
-//                // parametersArrayList.get(parametersArrayList.indexOf(parameter))
-//                Log.d(TAG, "setParameter: ДО: " + this);
-//                id = parameter;
-//                Log.d(TAG, "setParameter: ПОСЛЕ: " + this);
-//                parametersArrayList.get(0).
-//            } else if (parameter.equals(firmwareVersion)) {
-//                firmwareVersion = parameter;
-//            } else if (parameter.equals(blinkerMode)) {
-//                blinkerMode = parameter;
-//            }
+    void setParameter(Parameter parameter) {
+        if (PARAMETERS_NAMES_LIST.contains(parameter.getName())){
+            if (parametersList.contains(parameter)) {
+                int index = parametersList.indexOf(parameter);
+                parametersList.get(index).setValue(parameter.getValue());
+                //parametersList.remove(parameter);
+                //parametersList.add(index, parameter);
+            } else {
+                Log.w(TAG, "setParameter: В конфигурации нет параметра " + parameter + "configuration = " + this);
+            }
+        }
+
+    }
+
+    void setParameter(String name, String value) {
+        Parameter parameter = new Parameter(name, value);
+        if (parametersList.contains(parameter)) {
+            int index = parametersList.indexOf(parameter);
+            parametersList.get(index).setValue(parameter.getValue());
+            //parametersList.remove(parameter);
+            //parametersList.add(index, parameter);
         } else {
-            Log.d(TAG, "setParameter: В конфигурации нет параметра " + parameter + "configuration = " + this);
+            Log.w(TAG, "setParameter: В конфигурации нет параметра " + parameter + "configuration = " + this);
         }
-    }
-
-    public void setParameter(String name, String value) {
-        switch (name) {
-            case ID:
-                id.setValue(value);
-                break;
-            case FIRMWARE_VERSION:
-                firmwareVersion.setValue(value);
-                break;
-            case BLINKER_MODE:
-                blinkerMode.setValue(value);
-                break;
-            default:
-                Log.d(TAG, "setParameter: В конфигурации нет параметра " + name + " = " + value + ", " + "configuration = " + this);
-
-        }
-        Log.w(TAG, "setParameter: " + name + "=" + value);
-    }
-
-    public void setParameterWithoutCallback(String name, String value) {
-        switch (name) {
-            case ID:
-                id.setValue(value);
-                break;
-            case FIRMWARE_VERSION:
-                firmwareVersion.setValue(value);
-                break;
-            case BLINKER_MODE:
-                blinkerMode.setValue(value);
-                break;
-        }
-        Log.d(TAG, "setParameterWithoutCallback: " + name + "=" + value);
-    }
-
-    public int getSize() {
-        return parametersArrayList.size();
-    }
-
-    public String toString() {
-        return "Configuration{<" + getSize() + ">" + parametersArrayList + '}';
-    }
-
-    public boolean contains(Parameter parameter) {
-        return parametersArrayList.contains(parameter);
     }
 
     public void addParameter(Parameter parameter) {
-        if (!parametersArrayList.contains(parameter)){
-            parametersArrayList.add(parameter);
+        if (PARAMETERS_NAMES_LIST.contains(parameter.getName())){
+            if (!parametersList.contains(parameter)){
+                parametersList.add(parameter);
+                //Log.d(TAG, "addParameter: " + parameter + ", " + this);
+            }
         }
     }
+
+
+
+    public int getSize() {
+        return parametersList.size();
+    }
+
+    public String toString() {
+        return "Configuration{<" + getSize() + ">" + parametersList + '}';
+    }
+
+    public boolean contains(Parameter parameter) {
+        return parametersList.contains(parameter);
+    }
+
+    public boolean contains(String parameterName) {
+        return parametersList.contains(new Parameter(parameterName));
+    }
+
 }

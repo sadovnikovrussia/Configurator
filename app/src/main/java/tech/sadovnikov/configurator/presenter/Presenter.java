@@ -26,8 +26,10 @@ import tech.sadovnikov.configurator.view.MainActivity;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
+import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
 import static tech.sadovnikov.configurator.model.Configuration.ID;
+
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_COMMAND_DATA;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_MAIN_LOG;
 
@@ -242,19 +244,40 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onConfigBuoyFragmentStart() {
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
-        // TODO <Добавить параметр>
         mainView.showParameter(ID, repositoryConfiguration.getParameterValue(ID));
         mainView.showParameter(FIRMWARE_VERSION, repositoryConfiguration.getParameterValue(FIRMWARE_VERSION));
     }
 
-    // ConsoleFragment lifecycle -------------------------------------------------------------------
+
+    // ---------------------------------------------------------------------------------------------
+    // ConfigBuoyFragment events
+    @Override
+    public void onBtnRestartClick() {
+        bluetoothService.sendData("@restart");
+    }
+
+    @Override
+    public void onBtnDefaultSettingsClick() {
+        bluetoothService.sendData("@reset settings");
+    }
+
+    @Override
+    public void onConfigMainFragmentStart() {
+        mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
+        mainView.showParameter(BLINKER_MODE, repositoryConfiguration.getParameterValue(BLINKER_MODE));
+
+    }
+
+
+    // ---------------------------------------------------------------------------------------------
+    // ConsoleFragment events
     @Override
     public void onBtnSendCommandClick() {
         String commandLineText = mainView.getCommandLineText();
         bluetoothService.sendData(commandLineText);
     }
 
-
+    // Lifecycle
     @Override
     public void onConsoleFragmentStart() {
         mainView.setNavigationPosition(MainActivity.CONSOLE_FRAGMENT);
@@ -292,7 +315,9 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onMainActivityDestroy() {
         mainView.unregisterBluetoothBroadcastReceiver(bluetoothBroadcastReceiver);
-        bluetoothService.closeAllConnections();
+        if (bluetoothService != null){
+            bluetoothService.closeAllConnections();
+        }
     }
 
     // Logs events ---------------------------------------------------------------------------------
@@ -342,9 +367,10 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     }
 
     @Override
-    public void onSetUiConfiguration() {
-        // TODO <Обработать событие>
+    public void onSetParameter(Parameter parameter) {
+        mainView.showParameter(parameter.getName(), parameter.getValue());
     }
+
 
     @Override
     public String toString() {

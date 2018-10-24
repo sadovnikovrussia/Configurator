@@ -33,7 +33,9 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         BluetoothFragment.OnBluetoothFragmentInteractionListener,
         ConfigurationFragment.OnConfigurationFragmentInteractionListener,
         ConsoleFragment.OnConsoleFragmentInteractionListener,
-        ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener {
+        ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener,
+        ConfigMainFragment.OnConfigMainFragmentInteractionListener
+{
 
     private static final String TAG = "MainActivity";
 
@@ -329,16 +331,40 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         presenter.onConfigurationFragmentStart();
     }
 
+
     // ---------------------------------------------------------------------------------------------
     // OnConfigBuoyFragmentInteractionListener
+    @Override
+    public void onEtIdAfterTextChanged() {
+        presenter.onEtIdAfterTextChanged();
+    }
+
+    @Override
+    public void onBtnRestartClick() {
+        presenter.onBtnRestartClick();
+    }
+
+    @Override
+    public void onBtnDefaultSettingsClick() {
+        presenter.onBtnDefaultSettingsClick();
+    }
+
     @Override
     public void onConfigBuoyFragmentStart() {
         presenter.onConfigBuoyFragmentStart();
     }
 
+
+    // ---------------------------------------------------------------------------------------------
+    // OnConfigMainFragmentInteractionListener
     @Override
-    public void onEtIdAfterTextChanged() {
-        presenter.onEtIdAfterTextChanged();
+    public void onConfigMainFragmentStart() {
+        presenter.onConfigMainFragmentStart();
+    }
+
+    @Override
+    public void onSpinBlinkerModeItemSelected(int position) {
+
     }
 
     // ---------------------------------------------------------------------------------------------

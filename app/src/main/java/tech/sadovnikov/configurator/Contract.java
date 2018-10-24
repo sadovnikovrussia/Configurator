@@ -5,9 +5,6 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-
-import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
@@ -124,6 +121,12 @@ public interface Contract {
         void onTestButtonClick();
 
         void onMainActivityResult(int requestCode, int resultCode, Intent data);
+
+        void onConfigMainFragmentStart();
+
+        void onBtnRestartClick();
+
+        void onBtnDefaultSettingsClick();
     }
 
     interface Configuration {
@@ -147,10 +150,6 @@ public interface Contract {
         void setUiConfiguration(tech.sadovnikov.configurator.model.Configuration uiConfiguration);
 
         tech.sadovnikov.configurator.model.Configuration getConfigurationForSetAndSave();
-
-        String getSettingCommand(int index);
-
-        String getReadingCommand(int index);
 
         String getParameterValue(String name);
 

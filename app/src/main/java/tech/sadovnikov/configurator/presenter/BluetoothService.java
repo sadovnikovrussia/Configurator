@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -12,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Set;
 
 /**
  * Класс, прденазначенный для работы с Bluetooth соединением
@@ -33,8 +31,7 @@ public class BluetoothService {
 
     BluetoothService(Handler handler) {
         // Log.v(TAG, "OnConstructor");
-        Handler mHandler = handler;
-        dataAnalyzer = new DataAnalyzer(mHandler);
+        dataAnalyzer = new DataAnalyzer(handler);
     }
 
     void enableBt() {
@@ -55,7 +52,7 @@ public class BluetoothService {
         this.availableDevices.clear();
     }
 
-    void addAvailableDevice (BluetoothDevice bluetoothDevice) {
+    void addAvailableDevice(BluetoothDevice bluetoothDevice) {
         this.availableDevices.add(bluetoothDevice);
     }
 
@@ -66,9 +63,8 @@ public class BluetoothService {
 
     // Получение списка спаренных устройств
     ArrayList<BluetoothDevice> getBondedDevices() {
-        ArrayList<BluetoothDevice> pairedDevices = new ArrayList<>(bluetoothAdapter.getBondedDevices());
         //Logs.d(TAG, "getBondedDevices: " + pairedDevices.toString());
-        return pairedDevices;
+        return new ArrayList<>(bluetoothAdapter.getBondedDevices());
     }
 
     void connectTo(String address) {
@@ -76,10 +72,10 @@ public class BluetoothService {
         onConnecting(device);
     }
 
-    void connectTo(BluetoothDevice bluetoothDevice) {
-        Log.d(TAG, "onConnecting to: " + bluetoothDevice.getName());
-        onConnecting(bluetoothDevice);
-    }
+//    void connectTo(BluetoothDevice bluetoothDevice) {
+//        Log.d(TAG, "onConnecting to: " + bluetoothDevice.getName());
+//        onConnecting(bluetoothDevice);
+//    }
 
 
     private synchronized void onConnecting(BluetoothDevice device) {
