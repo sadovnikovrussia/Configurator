@@ -2,8 +2,9 @@ package tech.sadovnikov.configurator;
 
 import android.content.Intent;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
 
 import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
@@ -20,10 +21,9 @@ public interface Contract {
         String CONFIG_BUOY_FRAGMENT = "Буй";
         String CONFIG_MAIN_FRAGMENT = "Основные";
         String CONFIG_NAVIGATION_FRAGMENT = "Навигация";
+        int FILE_MANAGER_REQUEST_CODE = 1;
 
         // Показать (установить фрагмент в MainActivity)
-        void showFragment(Fragment fragment);
-
         void showFragment(String fragment);
 
         // Вывести сообщение лога в консоль
@@ -59,9 +59,6 @@ public interface Contract {
 
         void startFileManagerActivity();
 
-        String getSpinBlinkerBrightnessValue();
-
-        String getSpinBlinkerModeValue();
     }
 
     interface Presenter {
@@ -116,8 +113,6 @@ public interface Contract {
 
         void onConfigurationOptionsItemSelected(MenuItem item);
 
-        void onSetParameter(String name, String value);
-
         void onEtIdAfterTextChanged();
 
         void onAddLogsLineEvent(String line);
@@ -135,15 +130,7 @@ public interface Contract {
         void onSpinBlinkerBrightnessItemSelected(int position);
 
         void onSpinBlinkerModeItemSelected(int position);
-    }
 
-    interface Configuration {
-        String ID = "id";
-        String FIRMWARE_VERSION = "firmware version";
-        String BLINKER_MODE = "blinker mode";
-
-        // TODO <Добавить параметр>
-        String[] parametersList = new String[]{ID, FIRMWARE_VERSION, BLINKER_MODE};
     }
 
     interface Logs {
@@ -153,7 +140,6 @@ public interface Contract {
     }
 
     interface RepositoryConfiguration {
-        tech.sadovnikov.configurator.model.Configuration getUiConfiguration();
 
         void setUiConfiguration(tech.sadovnikov.configurator.model.Configuration uiConfiguration);
 
@@ -161,13 +147,14 @@ public interface Contract {
 
         String getParameterValue(String name);
 
-        void setParameter(String name, String value);
-
         void setParameter(Parameter parameter);
 
-        int getConfigurationSize();
-
         void setParameterWithoutCallback(String name, String value);
+
+        ArrayList<String> getCommandListForReadConfiguration();
+
+        ArrayList<String> getCommandListForSetConfiguration();
+
     }
 
 }

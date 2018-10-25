@@ -41,7 +41,6 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                     Log.w(TAG, "BluetoothDevice.ACTION_BOND_STATE_CHANGED");
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
-                    presenter.onBluetoothServiceActionDiscoveryStarted();
                     Log.w(TAG, "BluetoothAdapter.ACTION_DISCOVERY_STARTED");
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:

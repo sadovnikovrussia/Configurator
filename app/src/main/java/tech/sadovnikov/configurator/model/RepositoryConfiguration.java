@@ -2,6 +2,8 @@ package tech.sadovnikov.configurator.model;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import tech.sadovnikov.configurator.Contract;
 
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
@@ -20,15 +22,26 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
     }
 
     @Override
-    public Configuration getUiConfiguration() {
-        Log.d(TAG, "getUiConfiguration: " + uiConfiguration);
-        return uiConfiguration;
+    public void setParameter(Parameter parameter) {
+        Log.i(TAG, "setParameter2: ДО: " + uiConfiguration);
+        Log.i(TAG, "setParameter2: Устанавливаем " + parameter);
+        uiConfiguration.setParameter(parameter);
+        Log.i(TAG, "setParameter2: ПОСЛЕ: " + uiConfiguration);
+        onRepositoryConfigurationEventsListener.onSetParameter(parameter);
+    }
+
+    @Override
+    public void setParameterWithoutCallback(String name, String value) {
+        Log.i(TAG, "setParameterWithoutCallback: ДО: " + uiConfiguration);
+        Log.i(TAG, "setParameterWithoutCallback: Устанавливаем " + new Parameter(name, value));
+        uiConfiguration.setParameter(name, value);
+        Log.i(TAG, "setParameterWithoutCallback: ПОСЛЕ: " + uiConfiguration);
     }
 
     /**
      * Установливает в приложении кофнигурацию, считанную из файла *.cfg
      *
-     * @param configuration
+     * @param configuration - Конфигурация
      */
     @Override
     public void setUiConfiguration(Configuration configuration) {
@@ -41,13 +54,12 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
 
     private void resetConfiguration() {
         Log.d(TAG, "resetConfiguration: Ресетим");
-        for (Parameter parameter : uiConfiguration.getParametersList()){
+        for (Parameter parameter : uiConfiguration.getParametersList()) {
             // TODO <Добавить неустанавливаемые параметры>
-            if (!parameter.getName().equals(FIRMWARE_VERSION)){
+            if (!parameter.getName().equals(FIRMWARE_VERSION)) {
                 setParameter(new Parameter(parameter.getName()));
             }
         }
-
     }
 
     @Override
@@ -62,38 +74,16 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
     }
 
     @Override
-    public void setParameter(String name, String value) {
-        uiConfiguration.setParameter(name, value);
-        Log.d(TAG, "setParameter1: Устанавливаем " + new Parameter(name, value));
-        Log.i(TAG, "setParameter1: " + uiConfiguration);
-        onRepositoryConfigurationEventsListener.onSetParameter(name, value);
+    public ArrayList<String> getCommandListForReadConfiguration() {
+        return uiConfiguration.getCommandListForReadConfiguration();
     }
 
     @Override
-    public void setParameter(Parameter parameter) {
-        Log.d(TAG, "setParameter2: ДО: " + uiConfiguration);
-        Log.d(TAG, "setParameter2: Устанавливаем " + parameter);
-        uiConfiguration.setParameter(parameter);
-        Log.i(TAG, "setParameter2: ПОСЛЕ: " + uiConfiguration);
-        onRepositoryConfigurationEventsListener.onSetParameter(parameter);
+    public ArrayList<String> getCommandListForSetConfiguration() {
+        return uiConfiguration.getCommandListForSetConfiguration();
     }
-
-    @Override
-    public void setParameterWithoutCallback(String name, String value) {
-        Log.d(TAG, "setParameterWithoutCallback: ДО: " + uiConfiguration);
-        uiConfiguration.setParameter(name, value);
-        Log.d(TAG, "setParameterWithoutCallback: ПОСЛЕ: " + uiConfiguration);
-    }
-
-    @Override
-    public int getConfigurationSize() {
-        return uiConfiguration.getSize();
-    }
-
 
     public interface OnRepositoryConfigurationEventsListener {
-        void onSetParameter(String name, String value);
-
         void onSetParameter(Parameter parameter);
     }
 }

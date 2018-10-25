@@ -6,14 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -24,6 +21,7 @@ import tech.sadovnikov.configurator.presenter.Presenter;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
+import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNESS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
 import static tech.sadovnikov.configurator.model.Configuration.ID;
@@ -34,18 +32,9 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         ConfigurationFragment.OnConfigurationFragmentInteractionListener,
         ConsoleFragment.OnConsoleFragmentInteractionListener,
         ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener,
-        ConfigMainFragment.OnConfigMainFragmentInteractionListener
-{
+        ConfigMainFragment.OnConfigMainFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
-
-    public static final String BLUETOOTH_FRAGMENT = "BluetoothFragment";
-    public static final String CONFIGURATION_FRAGMENT = "ConfigurationFragment";
-    public static final String CONSOLE_FRAGMENT = "ConsoleFragment";
-    public static final String CONFIG_BUOY_FRAGMENT = "Буй";
-    public static final String CONFIG_MAIN_FRAGMENT = "Основные";
-    public static final String CONFIG_NAVIGATION_FRAGMENT = "Навигация";
-    public static final int FILE_MANAGER_REQUEST_CODE = 1;
 
     Contract.Presenter presenter;
 
@@ -91,24 +80,40 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     }
 
-    // Показать фрагмент
+    // ---------------------------------------------------------------------------------------------
+    // Contract.View
+    // TODO <Добавить параметр>
     @Override
-    public void showFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if (fragment instanceof BluetoothFragment) {
-            bluetoothFragment = (BluetoothFragment) fragment;
-            fragmentTransaction.replace(R.id.container, bluetoothFragment);
-        } else if (fragment instanceof ConfigurationFragment) {
-            configurationFragment = (ConfigurationFragment) fragment;
-            fragmentTransaction.replace(R.id.container, configurationFragment);
-        } else if (fragment instanceof ConsoleFragment) {
-            consoleFragment = (ConsoleFragment) fragment;
-            fragmentTransaction.replace(R.id.container, consoleFragment);
+    public void showParameter(String name, String value) {
+        Log.d(TAG, "showParameter: " + name + "=" + value);
+        switch (name) {
+            case ID:
+                if (configBuoyFragment != null && configBuoyFragment.etId != null)
+                    configBuoyFragment.etId.setText(value);
+                break;
+            case FIRMWARE_VERSION:
+                if (configBuoyFragment != null && configBuoyFragment.etVersion != null)
+                    configBuoyFragment.etVersion.setText(value);
+                break;
+            case BLINKER_MODE:
+                if (!value.isEmpty()) {
+                    if (configMainFragment != null && configMainFragment.spinBlinkerMode != null) {
+                        configMainFragment.spinBlinkerMode.setSelection(Integer.valueOf(value));
+                    }
+                }
+                break;
+            case BLINKER_BRIGHTNESS:
+                Log.d(TAG, "showParameter: case BLINKER_BRIGHTNESS: value = " + value + ".isEmpty() = " + value.isEmpty());
+                if (!value.isEmpty()) {
+                    Log.d(TAG, "showParameter: нихера=" + Integer.valueOf(value));
+                    if (configMainFragment != null && configMainFragment.spinBlinkerBrightness != null) {
+                        configMainFragment.spinBlinkerBrightness.setSelection(Integer.valueOf(value));
+                    }
+                }
+                break;
         }
-        fragmentTransaction.addToBackStack(null);
-        //navigation.setSelectedItemId(fragment.getId());
-        fragmentTransaction.commit();
     }
+
 
     // Показать фрагмент
     @Override
@@ -150,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         fragmentTransaction.commit();
     }
 
+    // TODO <Добавить фрагмент для параметра>
     // Поставить активную позицию на bottomNavigation в зависимости от фрагмента
     @Override
     public void setNavigationPosition(String fragment) {
@@ -181,58 +187,52 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
-        return super.onCreateOptionsMenu(menu);
+    public void showToast(String toast) {
+        Toast.makeText(this, toast, Toast.LENGTH_LONG).show();
     }
 
-
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-//        // super.onCreateContextMenu(menu, v, menuInfo);
-//        menu.setHeaderTitle("Действия с конфигурацией");
-//        menu.add("Считать").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                presenter.onConfigurationOptionsItemSelected(item);
-//                return false;
-//            }
-//        });
-//    }
-
-    // TODO <Добавить параметр>
     @Override
-    public void showParameter(String name, String value) {
-        switch (name) {
-            case ID:
-                EditText etID = findViewById(R.id.et_id);
-                if (etID != null) {
-                    etID.setText(value);
-                }
-                break;
-            case FIRMWARE_VERSION:
-                EditText etVersion = findViewById(R.id.et_version);
-                if (etVersion != null) {
-                    etVersion.setText(value);
-                }
-                break;
-            case BLINKER_MODE:
-                // Spinner spinnerBlinkerMode = findViewById(R.id.spin_blinker_mode);
-                if (!value.isEmpty()){
-                    if (!isNull(configMainFragment, configMainFragment.spinBlinkerMode))
-                    configMainFragment.setSpinBlinkerModePosition(Integer.valueOf(value));
-                }
-        }
+    public void showLog(String logsMessages) {
+        consoleFragment.showLog(logsMessages);
     }
 
-    boolean isNull(Fragment fragment, View view){
-        return fragment != null && view != null;
-    }
     @Override
-    public String getEtIdText() {
-        return configBuoyFragment.getEtIdText();
+    public void addLogsLine(String line) {
+        consoleFragment.addLogsLine(line);
     }
 
+    @Override
+    public void showDevices() {
+        bluetoothFragment.showDevices();
+    }
+
+    @Override
+    public void hideDevices() {
+        bluetoothFragment.hideDevices();
+    }
+
+    @Override
+    public void unregisterBluetoothBroadcastReceiver(BluetoothBroadcastReceiver bluetoothBroadcastReceiver) {
+        unregisterReceiver(bluetoothBroadcastReceiver);
+    }
+
+    @Override
+    public void updatePairedDevices() {
+        bluetoothFragment.updatePairedDevices();
+    }
+
+    @Override
+    public void updateAvailableDevices() {
+        // Logs.d(TAG, "updateAvailableDevices()");
+        bluetoothFragment.updateAvailableDevices();
+    }
+
+    @Override
+    public String getCommandLineText() {
+        return consoleFragment.getCommandLineText();
+    }
+
+    // TODO <Нужно ли здесь делать принудительный запрос permission>
     @Override
     public void startFileManagerActivity() {
         int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 3;
@@ -246,13 +246,16 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public String getSpinBlinkerModeValue() {
-        return configMainFragment.getSpinBlinkerModeValue();
+    public String getEtIdText() {
+        return configBuoyFragment.getEtIdText();
     }
 
+
+    // ---------------------------------------------------------------------------------------------
     @Override
-    public String getSpinBlinkerBrightnessValue() {
-        return configMainFragment.getSpinBlinkerBrightnessValue();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -268,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         presenter.onConfigurationOptionsItemSelected(item);
         return super.onOptionsItemSelected(item);
     }
+
 
     // ---------------------------------------------------------------------------------------------
     // OnBluetoothFragmentInteractionListener
@@ -371,11 +375,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     // ---------------------------------------------------------------------------------------------
     // OnConfigMainFragmentInteractionListener
     @Override
-    public void onConfigMainFragmentStart() {
-        presenter.onConfigMainFragmentStart();
-    }
-
-    @Override
     public void onSpinBlinkerModeItemSelected(int position) {
         presenter.onSpinBlinkerModeItemSelected(position);
     }
@@ -384,6 +383,13 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     public void onSpinBlinkerBrightnessItemSelected(int position) {
         presenter.onSpinBlinkerBrightnessItemSelected(position);
     }
+
+    // Lifecycle
+    @Override
+    public void onConfigMainFragmentStart() {
+        presenter.onConfigMainFragmentStart();
+    }
+
 
     // ---------------------------------------------------------------------------------------------
     // OnConsoleFragmentInteractionListener
@@ -407,55 +413,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         presenter.onTvLogsLongClick();
     }
 
-    // ---------------------------------------------------------------------------------------------
-    // Contract.View
-    @Override
-    public void showToast(String toast) {
-        Toast.makeText(this, toast, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void showLog(String logsMessages) {
-        consoleFragment.showLog(logsMessages);
-    }
-
-    @Override
-    public void addLogsLine(String line) {
-        consoleFragment.addLogsLine(line);
-    }
-
-    @Override
-    public void showDevices() {
-        bluetoothFragment.showDevices();
-    }
-
-    @Override
-    public void hideDevices() {
-        bluetoothFragment.hideDevices();
-    }
-
-    @Override
-    public void unregisterBluetoothBroadcastReceiver(BluetoothBroadcastReceiver bluetoothBroadcastReceiver) {
-        unregisterReceiver(bluetoothBroadcastReceiver);
-    }
-
-    @Override
-    public void updatePairedDevices() {
-        bluetoothFragment.updatePairedDevices();
-    }
-
-    @Override
-    public void updateAvailableDevices() {
-        // Logs.d(TAG, "updateAvailableDevices()");
-        bluetoothFragment.updateAvailableDevices();
-    }
-
-    @Override
-    public String getCommandLineText() {
-        return consoleFragment.getCommandLineText();
-    }
-
-    // ---------------------------------------------------------------------------------------------
 
 
     // ---------------------------------------------------------------------------------------------
@@ -489,7 +446,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         super.onDestroy();
         Log.v(TAG, "onDestroy");
         presenter.onMainActivityDestroy();
-        // unregisterReceiver(bluetoothBroadcastReceiver);
     }
     // ---------------------------------------------------------------------------------------------
 

@@ -44,7 +44,7 @@ public class ConfigMainFragment extends Fragment {
         spinBlinkerMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemSelected: " + position);
+                //Log.d(TAG, "onSpinBlinkerModeItemSelected: " + position);
                 onConfigMainFragmentInteractionListener.onSpinBlinkerModeItemSelected(position);
             }
 
@@ -57,7 +57,7 @@ public class ConfigMainFragment extends Fragment {
         spinBlinkerBrightness.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemSelected: " + position);
+                //Log.d(TAG, "onSpinBlinkerBrightnessItemSelected: " + position);
                 onConfigMainFragmentInteractionListener.onSpinBlinkerBrightnessItemSelected(position);
             }
 
@@ -67,6 +67,7 @@ public class ConfigMainFragment extends Fragment {
             }
         });
     }
+
 
     // ---------------------------------------------------------------------------------------------
     // States
@@ -135,19 +136,7 @@ public class ConfigMainFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
-
-    public String getSpinBlinkerModeValue() {
-        return spinBlinkerMode.getSelectedItem().toString();
-    }
-
-    public String getSpinBlinkerBrightnessValue() {
-        return spinBlinkerBrightness.getSelectedItem().toString();
-    }
-
-    public void setSpinBlinkerModePosition(Integer position) {
-        spinBlinkerBrightness.setSelection(position);
-    }
-
+    // ---------------------------------------------------------------------------------------------
 
     public interface OnConfigMainFragmentInteractionListener {
 
@@ -156,6 +145,7 @@ public class ConfigMainFragment extends Fragment {
         void onSpinBlinkerModeItemSelected(int position);
 
         void onSpinBlinkerBrightnessItemSelected(int position);
+
     }
 
 }

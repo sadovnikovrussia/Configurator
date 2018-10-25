@@ -14,7 +14,7 @@ import java.io.OutputStreamWriter;
 import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Parameter;
 
-import static tech.sadovnikov.configurator.model.Configuration.PARAMETERS_NAMES_LIST;
+import static tech.sadovnikov.configurator.model.Configuration.PARAMETER_NAMES_LIST;
 
 /**
  * Класс, предназначенный для работы с файлом конфигурации (открытие, сохранение)
@@ -115,7 +115,7 @@ public class FileManager {
                     String name;
                     if (indexOfRavno != -1) {
                         name = line.substring(0, indexOfRavno).trim().toLowerCase();
-                        if (PARAMETERS_NAMES_LIST.contains(name)) {
+                        if (PARAMETER_NAMES_LIST.contains(name)) {
                             value = line.substring(indexOfRavno + 1).replaceAll("\\s", "");
                             Parameter parameter = new Parameter(name, value);
                             Log.d(TAG, "openConfiguration: read Parameter: " + parameter);

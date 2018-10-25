@@ -26,10 +26,10 @@ import tech.sadovnikov.configurator.view.MainActivity;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
+import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNESS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
 import static tech.sadovnikov.configurator.model.Configuration.ID;
-
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_COMMAND_DATA;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_MAIN_LOG;
 
@@ -42,7 +42,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     private BluetoothService bluetoothService;
     private BluetoothBroadcastReceiver bluetoothBroadcastReceiver;
-    private UiHandler uiHandler;
     private Loader loader;
     private FileManager fileManager;
 
@@ -50,7 +49,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         Log.v(TAG, "onConstructor");
         this.mainView = mainView;
         logs = new Logs(this);
-        uiHandler = new UiHandler((Activity) mainView, this);
+        UiHandler uiHandler = new UiHandler((Activity) mainView, this);
         bluetoothService = new BluetoothService(uiHandler);
         bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver(this);
         loader = new Loader(bluetoothService);
@@ -97,7 +96,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
                 HashMap msgData = (HashMap) obj;
                 String value = (String) msgData.get(DataAnalyzer.PARAMETER_VALUE);
                 String name = (String) msgData.get(DataAnalyzer.PARAMETER_NAME);
-                Parameter parameter = new Parameter(name,value);
+                Parameter parameter = new Parameter(name, value);
                 repositoryConfiguration.setParameter(parameter);
                 onReceiveCommand();
                 break;
@@ -118,16 +117,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
                 MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
         // fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSetAndSave());
         mainView.startFileManagerActivity();
-    }
-
-    @Override
-    public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case MainActivity.FILE_MANAGER_REQUEST_CODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    repositoryConfiguration.setUiConfiguration(fileManager.openConfiguration(Objects.requireNonNull(data.getData()).getPath()));
-                }
-        }
     }
 
     @Override
@@ -217,9 +206,16 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     public void onConfigurationOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.item_set) {
-            loader.loadConfiguration(repositoryConfiguration.getConfigurationForSetAndSave(), Loader.SET);
+            // TODO? <Что делать со спинерами, когда эти параметр не трогали?>
+            // TODO <Поставить условие на подключение к устройству>
+            // TODO <Показать бегунок загрузки>
+            //loader.loadConfiguration(repositoryConfiguration.getConfigurationForSetAndSave(), Loader.SET);
+            loader.loadCommandList(repositoryConfiguration.getCommandListForSetConfiguration());
         } else if (itemId == R.id.item_load) {
-            loader.loadConfiguration(repositoryConfiguration.getUiConfiguration(), Loader.READ);
+            // TODO <Поставить условие на подключение к устройству>
+            // TODO <Показать бегунок загрузки>
+            //loader.loadConfiguration(repositoryConfiguration.getUiConfiguration(), Loader.READ);
+            loader.loadCommandList(repositoryConfiguration.getCommandListForReadConfiguration());
         } else if (itemId == R.id.item_open) {
             // fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSetAndSave());
             mainView.startFileManagerActivity();
@@ -233,6 +229,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     public void onConfigurationFragmentStart() {
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
     }
+
 
     // ConfigBuoyFragment events -------------------------------------------------------------------
     @Override
@@ -266,12 +263,14 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // ConfigMainFragment events
     @Override
     public void onSpinBlinkerModeItemSelected(int position) {
+        Log.d(TAG, "onSpinBlinkerModeItemSelected: position = " + position);
         repositoryConfiguration.setParameterWithoutCallback(BLINKER_MODE, String.valueOf(position));
     }
 
     @Override
     public void onSpinBlinkerBrightnessItemSelected(int position) {
-
+        Log.d(TAG, "onSpinBlinkerBrightnessItemSelected: position = " + position);
+        repositoryConfiguration.setParameterWithoutCallback(BLINKER_BRIGHTNESS, String.valueOf(position));
     }
 
     // Lifecycle
@@ -279,6 +278,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     public void onConfigMainFragmentStart() {
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
         mainView.showParameter(BLINKER_MODE, repositoryConfiguration.getParameterValue(BLINKER_MODE));
+        mainView.showParameter(BLINKER_BRIGHTNESS, repositoryConfiguration.getParameterValue(BLINKER_BRIGHTNESS));
 
     }
 
@@ -302,6 +302,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         mainView.showLog(logs.getLogsMessages());
     }
 
+
     // MainActivity events -------------------------------------------------------------------------
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -320,6 +321,16 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     }
 
+    @Override
+    public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case MainActivity.FILE_MANAGER_REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    repositoryConfiguration.setUiConfiguration(fileManager.openConfiguration(Objects.requireNonNull(data.getData()).getPath()));
+                }
+        }
+    }
+
     // Lifecycle
     @Override
     public void onMainActivityCreate() {
@@ -329,7 +340,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onMainActivityDestroy() {
         mainView.unregisterBluetoothBroadcastReceiver(bluetoothBroadcastReceiver);
-        if (bluetoothService != null){
+        if (bluetoothService != null) {
             bluetoothService.closeAllConnections();
         }
     }
@@ -345,10 +356,14 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         String logsMessages = logs.getLogsMessages();
         ClipboardManager clipboard = (ClipboardManager) ((Activity) mainView).getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("", logsMessages);
-        clipboard.setPrimaryClip(clip);
-        mainView.showToast("Логи скопированы в буфер обмена");
+        if (clipboard != null) {
+            clipboard.setPrimaryClip(clip);
+            mainView.showToast("Логи скопированы в буфер обмена");
+        }
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // BT events
     void onBluetoothServiceStateOn() {
         mainView.setSwitchBtState(bluetoothService.isEnabled());
         // mainView.showPairedDevices();
@@ -367,24 +382,13 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         String name = bluetoothDevice.getName();
         String address = bluetoothDevice.getAddress();
         Log.d(TAG, "onBluetoothServiceActionFound: name = " + name + ", address = " + address);
-        //mainView.showAvailableDevices();
         mainView.updateAvailableDevices();
-    }
-
-    void onBluetoothServiceActionDiscoveryStarted() {
-
-    }
-
-    @Override
-    public void onSetParameter(String name, String value) {
-        mainView.showParameter(name, value);
     }
 
     @Override
     public void onSetParameter(Parameter parameter) {
         mainView.showParameter(parameter.getName(), parameter.getValue());
     }
-
 
     @Override
     public String toString() {
