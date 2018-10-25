@@ -12,15 +12,17 @@ import java.util.Collections;
 public class Configuration {
     private static final String TAG = "Configuration";
 
-    // TODO <ДОбавить параметр>
+    // TODO <Добавить параметр>
     // Parameter names
     public static final String ID = "id";
     public static final String FIRMWARE_VERSION = "firmware version";
     public static final String BLINKER_MODE = "blinker mode";
     public static final String BLINKER_BRIGHTNESS = "blinker brightness";
+    public static final String BLINKER_LX = "blinker lx";
 
-    // TODO <ДОбавить параметр>
-    public static final String[] PARAMETER_NAMES = new String[]{ID, FIRMWARE_VERSION, BLINKER_MODE, BLINKER_BRIGHTNESS};
+    // TODO <Добавить параметр>
+    public static final String[] PARAMETER_NAMES = new String[]{
+            ID, FIRMWARE_VERSION, BLINKER_MODE, BLINKER_BRIGHTNESS, BLINKER_LX};
     public static final ArrayList<String> PARAMETER_NAMES_LIST = new ArrayList<>();
 
     static {

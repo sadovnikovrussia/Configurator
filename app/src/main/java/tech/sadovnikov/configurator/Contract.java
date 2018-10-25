@@ -59,6 +59,7 @@ public interface Contract {
 
         void startFileManagerActivity();
 
+        String getEtBlinkerLxText();
     }
 
     interface Presenter {
@@ -131,6 +132,7 @@ public interface Contract {
 
         void onSpinBlinkerModeItemSelected(int position);
 
+        void afterEtBlinkerLxTextChanged();
     }
 
     interface Logs {

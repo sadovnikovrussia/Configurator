@@ -22,6 +22,7 @@ import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNESS;
+import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
 import static tech.sadovnikov.configurator.model.Configuration.ID;
@@ -103,12 +104,16 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 }
                 break;
             case BLINKER_BRIGHTNESS:
-                Log.d(TAG, "showParameter: case BLINKER_BRIGHTNESS: value = " + value + ".isEmpty() = " + value.isEmpty());
+                // Log.d(TAG, "showParameter: case BLINKER_BRIGHTNESS: value = " + value + ".isEmpty() = " + value.isEmpty());
                 if (!value.isEmpty()) {
-                    Log.d(TAG, "showParameter: нихера=" + Integer.valueOf(value));
                     if (configMainFragment != null && configMainFragment.spinBlinkerBrightness != null) {
                         configMainFragment.spinBlinkerBrightness.setSelection(Integer.valueOf(value));
                     }
+                }
+                break;
+            case BLINKER_LX:
+                if (configMainFragment != null && configMainFragment.etBlinkerLx != null) {
+                    configMainFragment.etBlinkerLx.setText(value);
                 }
                 break;
         }
@@ -243,6 +248,11 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         startActivityForResult(intent, FILE_MANAGER_REQUEST_CODE);
+    }
+
+    @Override
+    public String getEtBlinkerLxText() {
+        return configMainFragment.etBlinkerLx.getText().toString();
     }
 
     @Override
@@ -384,6 +394,11 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         presenter.onSpinBlinkerBrightnessItemSelected(position);
     }
 
+    @Override
+    public void afterEtBlinkerLxTextChanged() {
+        presenter.afterEtBlinkerLxTextChanged();
+    }
+
     // Lifecycle
     @Override
     public void onConfigMainFragmentStart() {
@@ -412,7 +427,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     public void onTvLogsLongClick() {
         presenter.onTvLogsLongClick();
     }
-
 
 
     // ---------------------------------------------------------------------------------------------

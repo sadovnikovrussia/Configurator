@@ -27,6 +27,7 @@ import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNESS;
+import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
 import static tech.sadovnikov.configurator.model.Configuration.ID;
@@ -234,7 +235,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // ConfigBuoyFragment events -------------------------------------------------------------------
     @Override
     public void onEtIdAfterTextChanged() {
-        repositoryConfiguration.setParameterWithoutCallback("id", mainView.getEtIdText());
+        repositoryConfiguration.setParameterWithoutCallback(ID, mainView.getEtIdText());
     }
 
     // Lifecycle
@@ -268,6 +269,11 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     }
 
     @Override
+    public void afterEtBlinkerLxTextChanged() {
+        repositoryConfiguration.setParameterWithoutCallback(BLINKER_LX, mainView.getEtBlinkerLxText());
+    }
+
+    @Override
     public void onSpinBlinkerBrightnessItemSelected(int position) {
         Log.d(TAG, "onSpinBlinkerBrightnessItemSelected: position = " + position);
         repositoryConfiguration.setParameterWithoutCallback(BLINKER_BRIGHTNESS, String.valueOf(position));
@@ -279,7 +285,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
         mainView.showParameter(BLINKER_MODE, repositoryConfiguration.getParameterValue(BLINKER_MODE));
         mainView.showParameter(BLINKER_BRIGHTNESS, repositoryConfiguration.getParameterValue(BLINKER_BRIGHTNESS));
-
+        mainView.showParameter(BLINKER_LX, repositoryConfiguration.getParameterValue(BLINKER_LX));
     }
 
 
