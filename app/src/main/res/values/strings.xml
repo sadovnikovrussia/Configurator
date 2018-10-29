@@ -24,7 +24,7 @@
     <string name="tv_luminescence">Яркость свечения</string>
     <string name="tv_illumination_level">Пороговый уровень освещенности</string>
     <string name="tv_longitude">Долгота</string>
-    <string name="tv_current_coordinates">Текущие координаты</string>
+    <string name="tv_current_coordinates">Текущие координаты терминала</string>
     <string name="tv_latitude">Широта</string>
     <string name="btn_request_coordinates">Запросить координаты</string>
     <string name="buoy_address">38:1C:4A:2C:C8:09</string>
@@ -37,6 +37,11 @@
     <string-array name="blinker_brightness_list">
         <item>50%</item>
         <item>100%</item>
+    </string-array>
+    <string-array name="satellite_system_list">
+        <item>ГЛОНАСС и GPS</item>
+        <item>GPS</item>
+        <item>ГЛОНАСС</item>
     </string-array>
     <string-array name="blinker_mode_list">
         <item>Постоянный</item>
@@ -63,4 +68,7 @@
     <string name="porogoviy_uroven_zaryada_batarei">Пороговый уровень заряда батареи</string>
     <string name="porogoviy_uroven_udara">Пороговый уровень удара</string>
     <string name="period_prosypaniya">Период просыпания для определения координат</string>
+    <string name="base_pos">Базовые координаты терминала</string>
+    <string name="Set">Установить</string>
+    <string name="set_base_pos">Установить текущие координаты</string>
 </resources>

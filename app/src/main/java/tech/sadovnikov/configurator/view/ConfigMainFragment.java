@@ -222,6 +222,7 @@ public class ConfigMainFragment extends Fragment {
 
     @Override
     public void onDetach() {
+        Log.v(TAG, "onDetach");
         super.onDetach();
     }
     // ---------------------------------------------------------------------------------------------
