@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import tech.sadovnikov.configurator.Contract;
 
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
+import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
 
 
 public class RepositoryConfiguration implements Contract.RepositoryConfiguration {
@@ -56,8 +57,11 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
         Log.d(TAG, "resetConfiguration: Ресетим");
         for (Parameter parameter : uiConfiguration.getParametersList()) {
             // TODO <Добавить неустанавливаемые параметры>
-            if (!parameter.getName().equals(FIRMWARE_VERSION)) {
-                setParameter(new Parameter(parameter.getName()));
+            String name = parameter.getName();
+            if (!name.equals(FIRMWARE_VERSION)) {
+                setParameter(new Parameter(name));
+            } else if (!name.equals(UPOWER)) {
+                setParameter(new Parameter(name));
             }
         }
     }

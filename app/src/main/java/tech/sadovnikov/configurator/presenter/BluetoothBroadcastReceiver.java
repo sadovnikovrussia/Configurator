@@ -11,10 +11,10 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "BluetoothBroadReceiver";
 
-    Presenter presenter;
+    OnBluetoothBroadcastReceiverEventsListener listener;
 
-    public BluetoothBroadcastReceiver(Presenter presenter) {
-        this.presenter = presenter;
+    public BluetoothBroadcastReceiver(OnBluetoothBroadcastReceiverEventsListener onBluetoothBroadcastReceiverEventsListener) {
+        listener = onBluetoothBroadcastReceiverEventsListener;
     }
 
     @Override
@@ -25,14 +25,14 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
             switch (action) {
                 case BluetoothDevice.ACTION_FOUND:
                     Log.w(TAG, "ACTION_FOUND");
-                    BluetoothDevice d = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    presenter.onBluetoothServiceActionFound(d);
+                    listener.onBluetoothServiceActionFound((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
                     break;
                 case BluetoothDevice.ACTION_PAIRING_REQUEST:
                     Log.w(TAG, "BluetoothDevice.ACTION_PAIRING_REQUEST");
                     break;
                 case BluetoothDevice.ACTION_ACL_CONNECTED:
                     Log.w(TAG, "BluetoothDevice.ACTION_ACL_CONNECTED");
+                    listener.onStateConnected((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
                     break;
                 case BluetoothDevice.ACTION_ACL_DISCONNECTED:
                     Log.w(TAG, "BluetoothDevice.ACTION_ACL_DISCONNECTED");
@@ -52,12 +52,16 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                         // BT включился
                         case BluetoothAdapter.STATE_ON:
                             Log.w(TAG, "BluetoothAdapter.STATE_ON");
-                            presenter.onBluetoothServiceStateOn();
+                            listener.onBluetoothServiceStateOn();
+                            break;
+                        case BluetoothAdapter.STATE_CONNECTED:
+                            Log.w(TAG, "BluetoothAdapter.STATE_CONNECTED");
+                            listener.onStateConnected((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
                             break;
                         // BT выключился
                         case BluetoothAdapter.STATE_OFF:
                             Log.w(TAG, "BluetoothAdapter.STATE_OFF");
-                            presenter.onBluetoothServiceStateOff();
+                            listener.onBluetoothServiceStateOff();
                             break;
                         // BT включается
                         case BluetoothAdapter.STATE_TURNING_ON:
@@ -71,5 +75,15 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
             }
         }
 
+    }
+
+    interface OnBluetoothBroadcastReceiverEventsListener{
+        void onStateConnected(BluetoothDevice device);
+
+        void onBluetoothServiceActionFound(BluetoothDevice device);
+
+        void onBluetoothServiceStateOn();
+
+        void onBluetoothServiceStateOff();
     }
 }

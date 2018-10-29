@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Message;
+import android.service.quicksettings.Tile;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,12 +30,21 @@ import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNESS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
+import static tech.sadovnikov.configurator.model.Configuration.DEVIATION_INT;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
 import static tech.sadovnikov.configurator.model.Configuration.ID;
+import static tech.sadovnikov.configurator.model.Configuration.IMPACT_POW;
+import static tech.sadovnikov.configurator.model.Configuration.MAX_ACTIVE;
+import static tech.sadovnikov.configurator.model.Configuration.MAX_DEVIATION;
+import static tech.sadovnikov.configurator.model.Configuration.TILT_ANGLE;
+import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
+import static tech.sadovnikov.configurator.model.Configuration.UPOWER_THLD;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_COMMAND_DATA;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_MAIN_LOG;
+import static tech.sadovnikov.configurator.presenter.Loader.WHAT_LOADING_END;
 
-public class Presenter implements Contract.Presenter, RepositoryConfiguration.OnRepositoryConfigurationEventsListener {
+public class Presenter implements Contract.Presenter, RepositoryConfiguration.OnRepositoryConfigurationEventsListener, Loader.OnLoaderEventsListener,
+        BluetoothBroadcastReceiver.OnBluetoothBroadcastReceiverEventsListener, BluetoothService.OnBluetoothServiceEventsListener {
     private static final String TAG = "Presenter";
 
     private Contract.View mainView;
@@ -51,9 +61,9 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         this.mainView = mainView;
         logs = new Logs(this);
         UiHandler uiHandler = new UiHandler((Activity) mainView, this);
-        bluetoothService = new BluetoothService(uiHandler);
+        bluetoothService = new BluetoothService(this, uiHandler);
         bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver(this);
-        loader = new Loader(bluetoothService);
+        loader = new Loader(this, bluetoothService, uiHandler);
         fileManager = new FileManager();
         repositoryConfiguration = new RepositoryConfiguration(this);
         registerBluetoothBroadcastReceiver((Context) mainView);
@@ -100,6 +110,9 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
                 Parameter parameter = new Parameter(name, value);
                 repositoryConfiguration.setParameter(parameter);
                 onReceiveCommand();
+                break;
+            case WHAT_LOADING_END:
+                mainView.hideLoadingProgress();
                 break;
         }
     }
@@ -274,11 +287,42 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     }
 
     @Override
+    public void onEtMaxDeviationFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(MAX_DEVIATION, mainView.getEtMaxDeviationText());
+    }
+
+    @Override
+    public void onEtTiltAngleFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(TILT_ANGLE, mainView.getEtTiltDeviationText());
+    }
+
+    @Override
+    public void onEtImpactPowFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(IMPACT_POW, mainView.getEtImpactPowText());
+    }
+
+    @Override
+    public void onEtUpowerThldFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(UPOWER_THLD, mainView.getEtUpowerThldText());
+    }
+
+    @Override
+    public void onEtDeviationIntFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(DEVIATION_INT, mainView.getEtDeviationIntText());
+    }
+
+    @Override
+    public void onEtMaxActiveFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(MAX_ACTIVE, mainView.getEtMaxActiveText());
+    }
+
+    @Override
     public void onSpinBlinkerBrightnessItemSelected(int position) {
         Log.d(TAG, "onSpinBlinkerBrightnessItemSelected: position = " + position);
         repositoryConfiguration.setParameterWithoutCallback(BLINKER_BRIGHTNESS, String.valueOf(position));
     }
 
+    // TODO <ДОБАВИТЬ ПАРАМЕТР>
     // Lifecycle
     @Override
     public void onConfigMainFragmentStart() {
@@ -286,6 +330,13 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         mainView.showParameter(BLINKER_MODE, repositoryConfiguration.getParameterValue(BLINKER_MODE));
         mainView.showParameter(BLINKER_BRIGHTNESS, repositoryConfiguration.getParameterValue(BLINKER_BRIGHTNESS));
         mainView.showParameter(BLINKER_LX, repositoryConfiguration.getParameterValue(BLINKER_LX));
+        mainView.showParameter(MAX_DEVIATION, repositoryConfiguration.getParameterValue(MAX_DEVIATION));
+        mainView.showParameter(TILT_ANGLE, repositoryConfiguration.getParameterValue(TILT_ANGLE));
+        mainView.showParameter(IMPACT_POW, repositoryConfiguration.getParameterValue(IMPACT_POW));
+        mainView.showParameter(UPOWER_THLD, repositoryConfiguration.getParameterValue(UPOWER_THLD));
+        mainView.showParameter(DEVIATION_INT, repositoryConfiguration.getParameterValue(DEVIATION_INT));
+        mainView.showParameter(MAX_ACTIVE, repositoryConfiguration.getParameterValue(MAX_ACTIVE));
+        mainView.showParameter(UPOWER, repositoryConfiguration.getParameterValue(UPOWER));
     }
 
 
@@ -370,20 +421,30 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     // ---------------------------------------------------------------------------------------------
     // BT events
-    void onBluetoothServiceStateOn() {
+    @Override
+    public void onBluetoothServiceStateOn() {
         mainView.setSwitchBtState(bluetoothService.isEnabled());
         // mainView.showPairedDevices();
         mainView.showDevices();
         mainView.updatePairedDevices();
         mainView.updateAvailableDevices();
+
     }
 
-    void onBluetoothServiceStateOff() {
+    @Override
+    public void onBluetoothServiceStateOff() {
         mainView.setSwitchBtState(bluetoothService.isEnabled());
         mainView.hideDevices();
+        bluetoothService.closeAllConnections();
     }
 
-    void onBluetoothServiceActionFound(BluetoothDevice bluetoothDevice) {
+    @Override
+    public void onStateConnected(BluetoothDevice device) {
+        mainView.showToast("Подключено устройство " + device.getName());
+    }
+
+    @Override
+    public void onBluetoothServiceActionFound(BluetoothDevice bluetoothDevice) {
         bluetoothService.addAvailableDevice(bluetoothDevice);
         String name = bluetoothDevice.getName();
         String address = bluetoothDevice.getAddress();
@@ -399,5 +460,30 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public String toString() {
         return "Presenter";
+    }
+
+    @Override
+    public void onStartLoading(int size) {
+        mainView.showLoadingProgress(size);
+    }
+
+    @Override
+    public void onNextCommand(int commandNumber) {
+        mainView.setLoadingProgress(commandNumber);
+    }
+
+//    @Override
+//    public void onEndOfLoading() {
+//        mainView.hideLoadingProgress();
+//    }
+
+    @Override
+    public void onConnectingTo(String name) {
+        mainView.showToast("Подключение к " + name);
+    }
+
+    @Override
+    public void onErrorToConnect() {
+        mainView.showToast("Не удалось подключиться");
     }
 }

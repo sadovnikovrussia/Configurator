@@ -141,7 +141,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_dopustimiy_uroven_snosa"
+                    android:id="@+id/tv_max_deviation"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -150,7 +150,7 @@
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
                 <EditText
-                    android:id="@+id/et_tv_dopustimiy_uroven_snosa"
+                    android:id="@+id/et_max_deviation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
@@ -167,7 +167,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_porogoviy_uroven_krena"
+                    android:id="@+id/tv_tilt_angle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -176,7 +176,7 @@
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
                 <EditText
-                    android:id="@+id/et_porogoviy_uroven_krena"
+                    android:id="@+id/et_tilt_angle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
@@ -193,7 +193,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_porogoviy_uroven_udara"
+                    android:id="@+id/tv_impact_pow"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -202,7 +202,7 @@
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
                 <EditText
-                    android:id="@+id/et_porogoviy_uroven_udara"
+                    android:id="@+id/et_impact_pow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
@@ -219,7 +219,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_porogoviy_uroven_zaryada_batarei"
+                    android:id="@+id/tv_upower_thld"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -228,7 +228,7 @@
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
                 <EditText
-                    android:id="@+id/et_porogoviy_uroven_zaryada_batarei"
+                    android:id="@+id/et_upower_thld"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
@@ -246,7 +246,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_period_prosypaniya"
+                    android:id="@+id/tv_deviation_int"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -255,7 +255,7 @@
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
                 <EditText
-                    android:id="@+id/et_period_prosypaniya"
+                    android:id="@+id/et_deviation_int"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
@@ -274,7 +274,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_max_vremya_activnosti_system"
+                    android:id="@+id/tv_max_active"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -283,7 +283,7 @@
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
                 <EditText
-                    android:id="@+id/et_max_vremya_activnosti_system"
+                    android:id="@+id/et_max_active"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
@@ -302,7 +302,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_tekuschee_napryazhenie"
+                    android:id="@+id/tv_upower"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -311,10 +311,13 @@
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
                 <EditText
-                    android:id="@+id/et_tekuschee_napryazhenie"
+                    android:id="@+id/et_upower"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:editable="false"
                     android:ems="10"
                     android:inputType="number"
                     android:textAlignment="viewEnd"

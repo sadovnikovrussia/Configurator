@@ -11,7 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import tech.sadovnikov.configurator.Contract;
@@ -24,8 +26,15 @@ import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNESS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
+import static tech.sadovnikov.configurator.model.Configuration.DEVIATION_INT;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
 import static tech.sadovnikov.configurator.model.Configuration.ID;
+import static tech.sadovnikov.configurator.model.Configuration.IMPACT_POW;
+import static tech.sadovnikov.configurator.model.Configuration.MAX_ACTIVE;
+import static tech.sadovnikov.configurator.model.Configuration.MAX_DEVIATION;
+import static tech.sadovnikov.configurator.model.Configuration.TILT_ANGLE;
+import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
+import static tech.sadovnikov.configurator.model.Configuration.UPOWER_THLD;
 
 
 public class MainActivity extends AppCompatActivity implements Contract.View,
@@ -42,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     // UI
     FrameLayout container;
     BottomNavigationView navigation;
+    ProgressBar progressBar;
+
     // Menu menuActionsWithConfiguration;
 
     // Fragments
@@ -68,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     private void initUi() {
         container = findViewById(R.id.container);
+        progressBar = findViewById(R.id.progressBar);
         bluetoothFragment = new BluetoothFragment();
         configurationFragment = new ConfigurationFragment();
         consoleFragment = new ConsoleFragment();
@@ -83,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     // ---------------------------------------------------------------------------------------------
     // Contract.View
-    // TODO <Добавить параметр>
+    // TODO <ДОБАВИТЬ ПАРАМЕТР>
     @Override
     public void showParameter(String name, String value) {
         Log.d(TAG, "showParameter: " + name + "=" + value);
@@ -115,6 +127,34 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 if (configMainFragment != null && configMainFragment.etBlinkerLx != null) {
                     configMainFragment.etBlinkerLx.setText(value);
                 }
+                break;
+            case MAX_DEVIATION:
+                if (configMainFragment != null && configMainFragment.etMaxDeviation != null)
+                    configMainFragment.etMaxDeviation.setText(value);
+                break;
+            case TILT_ANGLE:
+                if (configMainFragment != null && configMainFragment.etTiltAngle != null)
+                    configMainFragment.etTiltAngle.setText(value);
+                break;
+            case IMPACT_POW:
+                if (configMainFragment != null && configMainFragment.etImpactPow != null)
+                    configMainFragment.etImpactPow.setText(value);
+                break;
+            case UPOWER_THLD:
+                if (configMainFragment != null && configMainFragment.etUpowerThld != null)
+                    configMainFragment.etUpowerThld.setText(value);
+                break;
+            case DEVIATION_INT:
+                if (configMainFragment != null && configMainFragment.etDeviationInt != null)
+                    configMainFragment.etDeviationInt.setText(value);
+                break;
+            case MAX_ACTIVE:
+                if (configMainFragment != null && configMainFragment.etMaxActive != null)
+                    configMainFragment.etMaxActive.setText(value);
+                break;
+            case UPOWER:
+                if (configMainFragment != null && configMainFragment.etUpower != null)
+                    configMainFragment.etUpower.setText(value);
                 break;
         }
     }
@@ -232,6 +272,28 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         bluetoothFragment.updateAvailableDevices();
     }
 
+
+    @Override
+    public void showLoadingProgress(int size) {
+        progressBar.setMax(size);
+        progressBar.setVisibility(View.VISIBLE);
+        //container.setEnabled(false);
+        container.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void setLoadingProgress(int commandNumber) {
+        progressBar.setProgress(commandNumber + 1);
+    }
+
+    @Override
+    public void hideLoadingProgress() {
+        progressBar.setProgress(0);
+        progressBar.setVisibility(View.INVISIBLE);
+        //container.setEnabled(true);
+        container.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public String getCommandLineText() {
         return consoleFragment.getCommandLineText();
@@ -258,6 +320,36 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     @Override
     public String getEtIdText() {
         return configBuoyFragment.getEtIdText();
+    }
+
+    @Override
+    public String getEtMaxDeviationText() {
+        return configMainFragment.etMaxDeviation.getText().toString();
+    }
+
+    @Override
+    public String getEtTiltDeviationText() {
+        return configMainFragment.etTiltAngle.getText().toString();
+    }
+
+    @Override
+    public String getEtImpactPowText() {
+        return configMainFragment.etImpactPow.getText().toString();
+    }
+
+    @Override
+    public String getEtUpowerThldText() {
+        return configMainFragment.etUpowerThld.getText().toString();
+    }
+
+    @Override
+    public String getEtDeviationIntText() {
+        return configMainFragment.etDeviationInt.getText().toString();
+    }
+
+    @Override
+    public String getEtMaxActiveText() {
+        return configMainFragment.etMaxActive.getText().toString();
     }
 
 
@@ -397,6 +489,36 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     @Override
     public void afterEtBlinkerLxTextChanged() {
         presenter.afterEtBlinkerLxTextChanged();
+    }
+
+    @Override
+    public void onEtMaxDeviationFocusChange(boolean hasFocus) {
+        presenter.onEtMaxDeviationFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtTiltAngleFocusChange(boolean hasFocus) {
+        presenter.onEtTiltAngleFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtImpactPowFocusChange(boolean hasFocus) {
+        presenter.onEtImpactPowFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtUpowerThldFocusChange(boolean hasFocus) {
+        presenter.onEtUpowerThldFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtDeviationIntFocusChange(boolean hasFocus) {
+        presenter.onEtDeviationIntFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtMaxActiveFocusChange(boolean hasFocus) {
+        presenter.onEtMaxActiveFocusChange(hasFocus);
     }
 
     // Lifecycle

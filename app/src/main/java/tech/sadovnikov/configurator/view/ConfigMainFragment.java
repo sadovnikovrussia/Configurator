@@ -28,6 +28,20 @@ public class ConfigMainFragment extends Fragment {
     Spinner spinBlinkerBrightness;
     TextView tvBlinkerLx;
     EditText etBlinkerLx;
+    TextView tvMaxDeviation;
+    EditText etMaxDeviation;
+    TextView tvTiltAngle;
+    EditText etTiltAngle;
+    TextView tvImpactPow;
+    EditText etImpactPow;
+    TextView tvUpowerThld;
+    EditText etUpowerThld;
+    TextView tvDeviationInt;
+    EditText etDeviationInt;
+    TextView tvMaxActive;
+    EditText etMaxActive;
+    TextView tvUpower;
+    EditText etUpower;
 
 
     public ConfigMainFragment() {
@@ -90,7 +104,56 @@ public class ConfigMainFragment extends Fragment {
                 onConfigMainFragmentInteractionListener.afterEtBlinkerLxTextChanged();
             }
         });
-
+        tvMaxDeviation = view.findViewById(R.id.tv_max_deviation);
+        etMaxDeviation = view.findViewById(R.id.et_max_deviation);
+        etMaxDeviation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                onConfigMainFragmentInteractionListener.onEtMaxDeviationFocusChange(hasFocus);
+            }
+        });
+        tvTiltAngle = view.findViewById(R.id.tv_tilt_angle);
+        etTiltAngle = view.findViewById(R.id.et_tilt_angle);
+        etTiltAngle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                onConfigMainFragmentInteractionListener.onEtTiltAngleFocusChange(hasFocus);
+            }
+        });
+        tvImpactPow = view.findViewById(R.id.tv_impact_pow);
+        etImpactPow = view.findViewById(R.id.et_impact_pow);
+        etImpactPow.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                onConfigMainFragmentInteractionListener.onEtImpactPowFocusChange(hasFocus);
+            }
+        });
+        tvUpowerThld = view.findViewById(R.id.tv_upower_thld);
+        etUpowerThld = view.findViewById(R.id.et_upower_thld);
+        etUpowerThld.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                onConfigMainFragmentInteractionListener.onEtUpowerThldFocusChange(hasFocus);
+            }
+        });
+        tvDeviationInt = view.findViewById(R.id.tv_deviation_int);
+        etDeviationInt = view.findViewById(R.id.et_deviation_int);
+        etDeviationInt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                onConfigMainFragmentInteractionListener.onEtDeviationIntFocusChange(hasFocus);
+            }
+        });
+        tvMaxActive = view.findViewById(R.id.tv_max_active);
+        etMaxActive = view.findViewById(R.id.et_max_active);
+        etMaxActive.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                onConfigMainFragmentInteractionListener.onEtMaxActiveFocusChange(hasFocus);
+            }
+        });
+        tvUpower = view.findViewById(R.id.tv_upower);
+        etUpower = view.findViewById(R.id.et_upower);
     }
 
 
@@ -172,6 +235,18 @@ public class ConfigMainFragment extends Fragment {
         void onSpinBlinkerBrightnessItemSelected(int position);
 
         void afterEtBlinkerLxTextChanged();
+
+        void onEtMaxDeviationFocusChange(boolean hasFocus);
+
+        void onEtTiltAngleFocusChange(boolean hasFocus);
+
+        void onEtImpactPowFocusChange(boolean hasFocus);
+
+        void onEtUpowerThldFocusChange(boolean hasFocus);
+
+        void onEtDeviationIntFocusChange(boolean hasFocus);
+
+        void onEtMaxActiveFocusChange(boolean hasFocus);
     }
 
 }

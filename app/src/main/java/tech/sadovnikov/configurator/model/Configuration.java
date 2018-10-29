@@ -12,17 +12,24 @@ import java.util.Collections;
 public class Configuration {
     private static final String TAG = "Configuration";
 
-    // TODO <Добавить параметр>
+    // TODO <ДОБАВИТЬ ПАРАМЕТР>
     // Parameter names
     public static final String ID = "id";
     public static final String FIRMWARE_VERSION = "firmware version";
     public static final String BLINKER_MODE = "blinker mode";
     public static final String BLINKER_BRIGHTNESS = "blinker brightness";
     public static final String BLINKER_LX = "blinker lx";
+    public static final String MAX_DEVIATION = "max deviation";
+    public static final String TILT_ANGLE = "tilt angle";
+    public static final String IMPACT_POW = "impact pow";
+    public static final String UPOWER_THLD = "upower thld";
+    public static final String DEVIATION_INT = "deviation int";
+    public static final String MAX_ACTIVE = "max active";
+    public static final String UPOWER = "upower";
 
-    // TODO <Добавить параметр>
+    // TODO <ДОБАВИТЬ ПАРАМЕТР>
     public static final String[] PARAMETER_NAMES = new String[]{
-            ID, FIRMWARE_VERSION, BLINKER_MODE, BLINKER_BRIGHTNESS, BLINKER_LX};
+            ID, FIRMWARE_VERSION, BLINKER_MODE, BLINKER_BRIGHTNESS, BLINKER_LX, MAX_DEVIATION, TILT_ANGLE, IMPACT_POW, UPOWER_THLD, DEVIATION_INT, MAX_ACTIVE, UPOWER};
     public static final ArrayList<String> PARAMETER_NAMES_LIST = new ArrayList<>();
 
     static {
@@ -68,6 +75,7 @@ public class Configuration {
             }
         }
         configuration.removeParameter(new Parameter(FIRMWARE_VERSION));
+        configuration.removeParameter(new Parameter(UPOWER));
         Log.i(TAG, "getConfigurationForSetAndSave() returned: " + configuration);
         return configuration;
     }
@@ -160,10 +168,11 @@ public class Configuration {
         for (Parameter parameter : parametersList) {
             String value = parameter.getValue();
             String name = parameter.getName();
-            if (!value.isEmpty() && !name.equals(FIRMWARE_VERSION)) {
+            if (!value.isEmpty() && !name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER)) {
                 commandListForSetConfiguration.add(name + "=" + value);
             }
         }
+        Log.d(TAG, "getCommandListForSetConfiguration() returned: " + commandListForSetConfiguration);
         return commandListForSetConfiguration;
     }
 }

@@ -16,12 +16,13 @@ import java.util.ArrayList;
  * Класс, прденазначенный для работы с Bluetooth соединением
  */
 public class BluetoothService {
-
     private static final String TAG = "BluetoothService";
     private static final java.util.UUID UUID = java.util.UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     private static BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private ArrayList<BluetoothDevice> availableDevices = new ArrayList<>();
+
+    private OnBluetoothServiceEventsListener listener;
 
     // Потоки
     private ConnectThread mConnectThread;
@@ -29,8 +30,9 @@ public class BluetoothService {
 
     private DataAnalyzer dataAnalyzer;
 
-    BluetoothService(Handler handler) {
+    BluetoothService(OnBluetoothServiceEventsListener onBluetoothServiceEventsListener, Handler handler) {
         // Log.v(TAG, "OnConstructor");
+        listener = onBluetoothServiceEventsListener;
         dataAnalyzer = new DataAnalyzer(handler);
     }
 
@@ -69,7 +71,9 @@ public class BluetoothService {
 
     void connectTo(String address) {
         BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
+        listener.onConnectingTo(device.getName());
         onConnecting(device);
+
     }
 
 //    void connectTo(BluetoothDevice bluetoothDevice) {
@@ -118,11 +122,15 @@ public class BluetoothService {
     }
 
     void closeAllConnections() {
-        try {
-            mConnectThread.mSocket.close();
-            mConnectedThread.mmSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (mConnectThread != null) {
+            mConnectThread.cancel();
+            mConnectThread = null;
+        }
+
+        // Cancel any thread currently running a connection
+        if (mConnectedThread != null) {
+            mConnectedThread.cancel();
+            mConnectedThread = null;
         }
     }
 
@@ -166,6 +174,8 @@ public class BluetoothService {
                 // Log.d(TAG, "");
             } catch (IOException e) {
                 Log.w(TAG, "run: ", e);
+                // TODO <Сделать обработку события через handler>
+                //listener.onErrorToConnect();
                 //Log.d(TAG, "Не получилось. mSocket is onConnected? " + String.valueOf(mSocket.isConnected()) + ", " + e.getMessage());
                 //e.printStackTrace();
                 try {
@@ -194,7 +204,7 @@ public class BluetoothService {
     }
 
     private class ConnectedThread extends Thread {
-        final BluetoothSocket mmSocket;
+        BluetoothSocket mmSocket;
         private final BufferedReader readerSerial;
         private final PrintWriter writerSerial;
 
@@ -259,4 +269,10 @@ public class BluetoothService {
         }
     }
 
+    interface OnBluetoothServiceEventsListener {
+
+        void onConnectingTo(String name);
+
+        void onErrorToConnect();
+    }
 }

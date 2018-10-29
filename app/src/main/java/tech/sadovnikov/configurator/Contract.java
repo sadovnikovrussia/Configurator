@@ -43,6 +43,10 @@ public interface Contract {
         // Обновить список доступных устройств
         void updateAvailableDevices();
 
+        void showLoadingProgress(int size);
+
+        void hideLoadingProgress();
+
         void setSwitchBtState(boolean state);
 
         void unregisterBluetoothBroadcastReceiver(BluetoothBroadcastReceiver bluetoothBroadcastReceiver);
@@ -60,6 +64,20 @@ public interface Contract {
         void startFileManagerActivity();
 
         String getEtBlinkerLxText();
+
+        void setLoadingProgress(int commandNumber);
+
+        String getEtMaxDeviationText();
+
+        String getEtTiltDeviationText();
+
+        String getEtImpactPowText();
+
+        String getEtUpowerThldText();
+
+        String getEtDeviationIntText();
+
+        String getEtMaxActiveText();
     }
 
     interface Presenter {
@@ -133,6 +151,19 @@ public interface Contract {
         void onSpinBlinkerModeItemSelected(int position);
 
         void afterEtBlinkerLxTextChanged();
+
+        void onEtMaxDeviationFocusChange(boolean hasFocus);
+
+        void onEtTiltAngleFocusChange(boolean hasFocus);
+
+        void onEtImpactPowFocusChange(boolean hasFocus);
+
+        void onEtUpowerThldFocusChange(boolean hasFocus);
+
+        void onEtDeviationIntFocusChange(boolean hasFocus);
+
+        void onEtMaxActiveFocusChange(boolean hasFocus);
+
     }
 
     interface Logs {
