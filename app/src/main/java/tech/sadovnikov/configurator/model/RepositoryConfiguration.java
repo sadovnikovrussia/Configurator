@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import tech.sadovnikov.configurator.Contract;
 
+import static tech.sadovnikov.configurator.model.Configuration.BASE_POS;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
 
@@ -24,10 +25,10 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
 
     @Override
     public void setParameter(Parameter parameter) {
-        Log.i(TAG, "setParameter2: ДО: " + uiConfiguration);
-        Log.i(TAG, "setParameter2: Устанавливаем " + parameter);
+        Log.i(TAG, "setParameter: ДО: " + uiConfiguration);
+        Log.i(TAG, "setParameter: Устанавливаем " + parameter);
         uiConfiguration.setParameter(parameter);
-        Log.i(TAG, "setParameter2: ПОСЛЕ: " + uiConfiguration);
+        Log.i(TAG, "setParameter: ПОСЛЕ: " + uiConfiguration);
         onRepositoryConfigurationEventsListener.onSetParameter(parameter);
     }
 
@@ -58,9 +59,7 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
         for (Parameter parameter : uiConfiguration.getParametersList()) {
             // TODO <Добавить неустанавливаемые параметры>
             String name = parameter.getName();
-            if (!name.equals(FIRMWARE_VERSION)) {
-                setParameter(new Parameter(name));
-            } else if (!name.equals(UPOWER)) {
+            if (!name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER) && !name.equals(BASE_POS)) {
                 setParameter(new Parameter(name));
             }
         }

@@ -27,6 +27,7 @@ import tech.sadovnikov.configurator.view.MainActivity;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
+import static tech.sadovnikov.configurator.model.Configuration.BASE_POS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNESS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
@@ -231,9 +232,9 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
             //loader.loadConfiguration(repositoryConfiguration.getUiConfiguration(), Loader.READ);
             loader.loadCommandList(repositoryConfiguration.getCommandListForReadConfiguration());
         } else if (itemId == R.id.item_open) {
-            // fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSetAndSave());
             mainView.startFileManagerActivity();
         } else if (itemId == R.id.item_save) {
+            mainView.requestWritePermission();
             fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSetAndSave());
         }
     }
@@ -337,6 +338,20 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         mainView.showParameter(DEVIATION_INT, repositoryConfiguration.getParameterValue(DEVIATION_INT));
         mainView.showParameter(MAX_ACTIVE, repositoryConfiguration.getParameterValue(MAX_ACTIVE));
         mainView.showParameter(UPOWER, repositoryConfiguration.getParameterValue(UPOWER));
+        mainView.showParameter(BASE_POS, repositoryConfiguration.getParameterValue(BASE_POS));
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // ConfigMainFragment events
+    @Override
+    public void onBtnRcvColdStartClick() {
+        bluetoothService.sendData("@rcv coldstart");
+    }
+
+    // Lifecycle
+    @Override
+    public void onConfigNavigationFragmentStart() {
+        // TODO <ДОБАВИТЬ Show>
     }
 
 

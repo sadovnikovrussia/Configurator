@@ -23,6 +23,7 @@ import tech.sadovnikov.configurator.presenter.Presenter;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
+import static tech.sadovnikov.configurator.model.Configuration.BASE_POS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNESS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
@@ -42,7 +43,8 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         ConfigurationFragment.OnConfigurationFragmentInteractionListener,
         ConsoleFragment.OnConsoleFragmentInteractionListener,
         ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener,
-        ConfigMainFragment.OnConfigMainFragmentInteractionListener {
+        ConfigMainFragment.OnConfigMainFragmentInteractionListener,
+ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener{
 
     private static final String TAG = "MainActivity";
 
@@ -155,6 +157,13 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
             case UPOWER:
                 if (configMainFragment != null && configMainFragment.etUpower != null)
                     configMainFragment.etUpower.setText(value);
+                break;
+            case BASE_POS:
+                if (configNavigationFragment != null && configNavigationFragment.etLongitude != null && configNavigationFragment.etLatitude != null) {
+                    String[] strings = value.split(",");
+                    configNavigationFragment.etLongitude.setText(strings[0].trim());
+                    configNavigationFragment.etLatitude.setText(strings[1].trim());
+                }
                 break;
         }
     }
@@ -352,6 +361,16 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         return configMainFragment.etMaxActive.getText().toString();
     }
 
+    // TODO <Обработать permissions>
+    @Override
+    public void requestWritePermission() {
+        int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 4;
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+    }
+
 
     // ---------------------------------------------------------------------------------------------
     @Override
@@ -529,6 +548,20 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
 
     // ---------------------------------------------------------------------------------------------
+    // OnConfigNavigationFragmentInteractionListener
+    @Override
+    public void onBtnRcvColdStartClick() {
+        presenter.onBtnRcvColdStartClick();
+    }
+    // Lifecycle
+    @Override
+    public void onConfigNavigationFragmentStart() {
+        presenter.onConfigNavigationFragmentStart();
+    }
+
+
+
+    // ---------------------------------------------------------------------------------------------
     // OnConsoleFragmentInteractionListener
     @Override
     public void onBtnSendCommandClick(String command) {
@@ -583,6 +616,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         Log.v(TAG, "onDestroy");
         presenter.onMainActivityDestroy();
     }
+
     // ---------------------------------------------------------------------------------------------
 
 }

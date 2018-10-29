@@ -26,10 +26,12 @@ public class Configuration {
     public static final String DEVIATION_INT = "deviation int";
     public static final String MAX_ACTIVE = "max active";
     public static final String UPOWER = "upower";
+    public static final String BASE_POS = "base pos";
 
     // TODO <ДОБАВИТЬ ПАРАМЕТР>
     public static final String[] PARAMETER_NAMES = new String[]{
-            ID, FIRMWARE_VERSION, BLINKER_MODE, BLINKER_BRIGHTNESS, BLINKER_LX, MAX_DEVIATION, TILT_ANGLE, IMPACT_POW, UPOWER_THLD, DEVIATION_INT, MAX_ACTIVE, UPOWER};
+            ID, FIRMWARE_VERSION, BLINKER_MODE, BLINKER_BRIGHTNESS, BLINKER_LX, MAX_DEVIATION,
+            TILT_ANGLE, IMPACT_POW, UPOWER_THLD, DEVIATION_INT, MAX_ACTIVE, UPOWER, BASE_POS};
     public static final ArrayList<String> PARAMETER_NAMES_LIST = new ArrayList<>();
 
     static {

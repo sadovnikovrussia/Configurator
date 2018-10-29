@@ -78,6 +78,8 @@ public interface Contract {
         String getEtDeviationIntText();
 
         String getEtMaxActiveText();
+
+        void requestWritePermission();
     }
 
     interface Presenter {
@@ -164,6 +166,9 @@ public interface Contract {
 
         void onEtMaxActiveFocusChange(boolean hasFocus);
 
+        void onConfigNavigationFragmentStart();
+
+        void onBtnRcvColdStartClick();
     }
 
     interface Logs {

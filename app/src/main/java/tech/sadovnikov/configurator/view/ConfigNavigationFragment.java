@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import tech.sadovnikov.configurator.R;
 
@@ -15,6 +17,11 @@ public class ConfigNavigationFragment extends Fragment {
     private static final String TAG = "ConfigNavigationFragmen";
 
     OnConfigNavigationFragmentInteractionListener listener;
+
+    // UI
+    EditText etLongitude;
+    EditText etLatitude;
+    Button btnRcvColdStart;
 
     public ConfigNavigationFragment() {
         // Required empty public constructor
@@ -25,7 +32,21 @@ public class ConfigNavigationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_config_navigation, container, false);
+        View view = inflater.inflate(R.layout.fragment_config_navigation, container, false);
+        initUi(view);
+        return view;
+    }
+
+    private void initUi(View view) {
+        etLongitude = view.findViewById(R.id.et_longitude);
+        etLatitude = view.findViewById(R.id.et_latitude);
+        btnRcvColdStart = view.findViewById(R.id.btn_rcv_coldstart);
+        btnRcvColdStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onBtnRcvColdStartClick();
+            }
+        });
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -99,7 +120,8 @@ public class ConfigNavigationFragment extends Fragment {
     // ---------------------------------------------------------------------------------------------
 
     interface OnConfigNavigationFragmentInteractionListener{
-
         void onConfigNavigationFragmentStart();
+
+        void onBtnRcvColdStartClick();
     }
 }
