@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Message;
-import android.service.quicksettings.Tile;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MenuItem;
@@ -33,10 +32,15 @@ import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.DEVIATION_INT;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
+import static tech.sadovnikov.configurator.model.Configuration.FIX_DELAY;
+import static tech.sadovnikov.configurator.model.Configuration.HDOP;
 import static tech.sadovnikov.configurator.model.Configuration.ID;
 import static tech.sadovnikov.configurator.model.Configuration.IMPACT_POW;
+import static tech.sadovnikov.configurator.model.Configuration.LAT_DEVIATION;
+import static tech.sadovnikov.configurator.model.Configuration.LONG_DEVIATION;
 import static tech.sadovnikov.configurator.model.Configuration.MAX_ACTIVE;
 import static tech.sadovnikov.configurator.model.Configuration.MAX_DEVIATION;
+import static tech.sadovnikov.configurator.model.Configuration.SATELLITE_SYSTEM;
 import static tech.sadovnikov.configurator.model.Configuration.TILT_ANGLE;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER_THLD;
@@ -323,7 +327,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         repositoryConfiguration.setParameterWithoutCallback(BLINKER_BRIGHTNESS, String.valueOf(position));
     }
 
-    // TODO <ДОБАВИТЬ ПАРАМЕТР>
     // Lifecycle
     @Override
     public void onConfigMainFragmentStart() {
@@ -348,10 +351,45 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         bluetoothService.sendData("@rcv coldstart");
     }
 
+    @Override
+    public void onEtLongDeviationFocusChanged(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(LONG_DEVIATION, mainView.getEtLongDeviationText());
+    }
+
+    @Override
+    public void onEtLatDeviationFocusChanged(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(LAT_DEVIATION, mainView.getEtLatDeviationText());
+    }
+
+    @Override
+    public void onEtHdopFocusChanged(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(HDOP, mainView.getEtHdopText());
+    }
+
+    @Override
+    public void onEtFixDelayFocusChanged(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(FIX_DELAY, mainView.getEtFixDelayText());
+    }
+
+    @Override
+    public void onSpinSatelliteSystemItemSelected(int position) {
+        repositoryConfiguration.setParameterWithoutCallback(SATELLITE_SYSTEM, String.valueOf(position));
+    }
+
+    @Override
+    public void onBtnRequestBasePosClick() {
+        bluetoothService.sendData("base pos?");
+    }
+
+    // TODO <ДОБАВИТЬ ПАРАМЕТР>
     // Lifecycle
     @Override
     public void onConfigNavigationFragmentStart() {
-        // TODO <ДОБАВИТЬ Show>
+        mainView.showParameter(LONG_DEVIATION, repositoryConfiguration.getParameterValue(LONG_DEVIATION));
+        mainView.showParameter(LAT_DEVIATION, repositoryConfiguration.getParameterValue(LAT_DEVIATION));
+        mainView.showParameter(HDOP, repositoryConfiguration.getParameterValue(HDOP));
+        mainView.showParameter(FIX_DELAY, repositoryConfiguration.getParameterValue(FIX_DELAY));
+        mainView.showParameter(SATELLITE_SYSTEM, repositoryConfiguration.getParameterValue(SATELLITE_SYSTEM));
     }
 
 

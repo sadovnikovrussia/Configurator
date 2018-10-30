@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import tech.sadovnikov.configurator.R;
 
@@ -19,9 +21,15 @@ public class ConfigNavigationFragment extends Fragment {
     OnConfigNavigationFragmentInteractionListener listener;
 
     // UI
-    EditText etLongitude;
-    EditText etLatitude;
+    EditText etBaseLongitude;
+    EditText etBaseLatitude;
     Button btnRcvColdStart;
+    EditText etLongDeviation;
+    EditText etLatDeviation;
+    EditText etHdop;
+    EditText etFixDelay;
+    Spinner spinSatelliteSystem;
+    Button btnRequestBasePos;
 
     public ConfigNavigationFragment() {
         // Required empty public constructor
@@ -38,13 +46,60 @@ public class ConfigNavigationFragment extends Fragment {
     }
 
     private void initUi(View view) {
-        etLongitude = view.findViewById(R.id.et_longitude);
-        etLatitude = view.findViewById(R.id.et_latitude);
+        etBaseLongitude = view.findViewById(R.id.et_base_longitude);
+        etBaseLatitude = view.findViewById(R.id.et_base_latitude);
         btnRcvColdStart = view.findViewById(R.id.btn_rcv_coldstart);
         btnRcvColdStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onBtnRcvColdStartClick();
+            }
+        });
+        etLongDeviation = view.findViewById(R.id.et_long_deviation);
+        etLongDeviation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                listener.onEtLongDeviationFocusChanged(hasFocus);
+            }
+        });
+        etLatDeviation = view.findViewById(R.id.et_lat_deviation);
+        etLatDeviation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                listener.onEtLatDeviationFocusChanged(hasFocus);
+            }
+        });
+        etHdop = view.findViewById(R.id.et_hdop);
+        etHdop.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                listener.onEtHdopFocusChanged(hasFocus);
+            }
+        });
+        etFixDelay = view.findViewById(R.id.et_fix_delay);
+        etFixDelay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                listener.onEtFixDelayFocusChanged(hasFocus);
+            }
+        });
+        spinSatelliteSystem = view.findViewById(R.id.spin_satellite_system);
+        spinSatelliteSystem.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                listener.onSpinSatelliteSystemItemSelected(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        btnRequestBasePos = view.findViewById(R.id.btn_request_base_pos);
+        btnRequestBasePos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onBtnRequestBasePosClick();
             }
         });
     }
@@ -123,5 +178,17 @@ public class ConfigNavigationFragment extends Fragment {
         void onConfigNavigationFragmentStart();
 
         void onBtnRcvColdStartClick();
+
+        void onEtLongDeviationFocusChanged(boolean hasFocus);
+
+        void onEtLatDeviationFocusChanged(boolean hasFocus);
+
+        void onEtHdopFocusChanged(boolean hasFocus);
+
+        void onEtFixDelayFocusChanged(boolean hasFocus);
+
+        void onSpinSatelliteSystemItemSelected(int position);
+
+        void onBtnRequestBasePosClick();
     }
 }

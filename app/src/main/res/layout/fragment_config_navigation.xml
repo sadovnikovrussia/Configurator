@@ -176,37 +176,15 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/btn_request_coordinates2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif"
-                android:text="@string/Set"
-                android:textAllCaps="false"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/btn_request_coordinates3"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif"
-                android:text="@string/set_base_pos"
-                android:textAllCaps="false"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/btn_rcv_coldstart"
+                android:id="@+id/btn_request_base_pos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:text="Холодный старт" />
+                android:fontFamily="sans-serif"
+                android:text="Запросить базовые координаты"
+                android:textAllCaps="false"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_long_and_lat_deviation"
@@ -232,7 +210,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="@string/tv_longitude"
+                    android:text="По долготе"
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView"
                     android:textSize="16sp" />
 
@@ -240,8 +218,9 @@
                     android:id="@+id/et_long_deviation"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="5"
                     android:ems="10"
+                    android:gravity="end"
                     android:inputType="number"
                     android:textSize="16sp"
                     tools:ignore="LabelFor" />
@@ -260,7 +239,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="@string/tv_latitude"
+                    android:text="По широте"
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView"
                     android:textSize="16sp" />
 
@@ -268,8 +247,9 @@
                     android:id="@+id/et_lat_deviation"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="5"
                     android:ems="10"
+                    android:gravity="end"
                     android:inputType="number"
                     android:textSize="16sp"
                     tools:ignore="LabelFor" />
@@ -308,8 +288,9 @@
                     android:id="@+id/et_hdop"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="5"
                     android:ems="10"
+                    android:gravity="end"
                     android:inputType="number"
                     android:textSize="16sp"
                     tools:ignore="LabelFor" />
@@ -336,13 +317,26 @@
                     android:id="@+id/et_fix_delay"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="5"
                     android:ems="10"
+                    android:gravity="end"
                     android:inputType="number"
                     android:textSize="16sp"
                     tools:ignore="LabelFor" />
 
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_rcv_coldstart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="sans-serif"
+                android:text="Холодный старт приёмника"
+                android:textAllCaps="false"
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -369,7 +363,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:entries="@array/satellite_system_list"
-                    android:gravity="end" />
+                    android:foregroundGravity="right"
+                    android:gravity="end"
+                    android:textAlignment="textEnd" />
             </LinearLayout>
 
         </LinearLayout>

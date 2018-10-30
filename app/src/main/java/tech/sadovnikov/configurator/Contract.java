@@ -80,6 +80,14 @@ public interface Contract {
         String getEtMaxActiveText();
 
         void requestWritePermission();
+
+        String getEtLongDeviationText();
+
+        String getEtLatDeviationText();
+
+        String getEtHdopText();
+
+        String getEtFixDelayText();
     }
 
     interface Presenter {
@@ -169,6 +177,18 @@ public interface Contract {
         void onConfigNavigationFragmentStart();
 
         void onBtnRcvColdStartClick();
+
+        void onEtLongDeviationFocusChanged(boolean hasFocus);
+
+        void onEtLatDeviationFocusChanged(boolean hasFocus);
+
+        void onEtHdopFocusChanged(boolean hasFocus);
+
+        void onEtFixDelayFocusChanged(boolean hasFocus);
+
+        void onSpinSatelliteSystemItemSelected(int position);
+
+        void onBtnRequestBasePosClick();
     }
 
     interface Logs {

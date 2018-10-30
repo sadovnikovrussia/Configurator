@@ -29,10 +29,15 @@ import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.DEVIATION_INT;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
+import static tech.sadovnikov.configurator.model.Configuration.FIX_DELAY;
+import static tech.sadovnikov.configurator.model.Configuration.HDOP;
 import static tech.sadovnikov.configurator.model.Configuration.ID;
 import static tech.sadovnikov.configurator.model.Configuration.IMPACT_POW;
+import static tech.sadovnikov.configurator.model.Configuration.LAT_DEVIATION;
+import static tech.sadovnikov.configurator.model.Configuration.LONG_DEVIATION;
 import static tech.sadovnikov.configurator.model.Configuration.MAX_ACTIVE;
 import static tech.sadovnikov.configurator.model.Configuration.MAX_DEVIATION;
+import static tech.sadovnikov.configurator.model.Configuration.SATELLITE_SYSTEM;
 import static tech.sadovnikov.configurator.model.Configuration.TILT_ANGLE;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER_THLD;
@@ -159,16 +164,39 @@ ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener{
                     configMainFragment.etUpower.setText(value);
                 break;
             case BASE_POS:
-                if (configNavigationFragment != null && configNavigationFragment.etLongitude != null && configNavigationFragment.etLatitude != null) {
+                if (configNavigationFragment != null && configNavigationFragment.etBaseLongitude != null && configNavigationFragment.etBaseLatitude != null) {
                     String[] strings = value.split(",");
-                    configNavigationFragment.etLongitude.setText(strings[0].trim());
-                    configNavigationFragment.etLatitude.setText(strings[1].trim());
+                    configNavigationFragment.etBaseLongitude.setText(strings[0].trim());
+                    configNavigationFragment.etBaseLatitude.setText(strings[1].trim());
+                }
+                break;
+            case LONG_DEVIATION:
+                if (configNavigationFragment != null && configNavigationFragment.etLongDeviation != null)
+                    configNavigationFragment.etLongDeviation.setText(value);
+                break;
+            case LAT_DEVIATION:
+                if (configNavigationFragment != null && configNavigationFragment.etLatDeviation != null)
+                    configNavigationFragment.etLatDeviation.setText(value);
+                break;
+            case HDOP:
+                if (configNavigationFragment != null && configNavigationFragment.etHdop != null)
+                    configNavigationFragment.etHdop.setText(value);
+                break;
+            case FIX_DELAY:
+                if (configNavigationFragment != null && configNavigationFragment.etFixDelay != null)
+                    configNavigationFragment.etFixDelay.setText(value);
+                break;
+            case SATELLITE_SYSTEM:
+                if (!value.isEmpty()) {
+                    if (configNavigationFragment != null && configNavigationFragment.spinSatelliteSystem != null) {
+                        configNavigationFragment.spinSatelliteSystem.setSelection(Integer.valueOf(value));
+                    }
                 }
                 break;
         }
     }
 
-
+    // TODO <Добавить фрагмент для параметра>
     // Показать фрагмент
     @Override
     public void showFragment(String fragment) {
@@ -371,6 +399,26 @@ ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener{
                 MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
     }
 
+    @Override
+    public String getEtLongDeviationText() {
+        return configNavigationFragment.etLongDeviation.getText().toString();
+    }
+
+    @Override
+    public String getEtLatDeviationText() {
+        return configNavigationFragment.etLatDeviation.getText().toString();
+    }
+
+    @Override
+    public String getEtHdopText() {
+        return configNavigationFragment.etHdop.getText().toString();
+    }
+
+    @Override
+    public String getEtFixDelayText() {
+        return configNavigationFragment.etFixDelay.getText().toString();
+    }
+
 
     // ---------------------------------------------------------------------------------------------
     @Override
@@ -553,6 +601,37 @@ ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener{
     public void onBtnRcvColdStartClick() {
         presenter.onBtnRcvColdStartClick();
     }
+
+    @Override
+    public void onEtLongDeviationFocusChanged(boolean hasFocus) {
+        presenter.onEtLongDeviationFocusChanged(hasFocus);
+    }
+
+    @Override
+    public void onEtLatDeviationFocusChanged(boolean hasFocus) {
+        presenter.onEtLatDeviationFocusChanged(hasFocus);
+    }
+
+    @Override
+    public void onEtHdopFocusChanged(boolean hasFocus) {
+        presenter.onEtHdopFocusChanged(hasFocus);
+    }
+
+    @Override
+    public void onEtFixDelayFocusChanged(boolean hasFocus) {
+        presenter.onEtFixDelayFocusChanged(hasFocus);
+    }
+
+    @Override
+    public void onSpinSatelliteSystemItemSelected(int position) {
+        presenter.onSpinSatelliteSystemItemSelected(position);
+    }
+
+    @Override
+    public void onBtnRequestBasePosClick() {
+        presenter.onBtnRequestBasePosClick();
+    }
+
     // Lifecycle
     @Override
     public void onConfigNavigationFragmentStart() {

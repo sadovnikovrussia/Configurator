@@ -63,7 +63,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="2"
                         android:entries="@array/blinker_mode_list"
-                        android:gravity="end" />
+                        android:gravity="end"
+                        android:textAlignment="textEnd" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -94,7 +95,8 @@
                         android:layout_gravity="end"
                         android:layout_weight="2"
                         android:entries="@array/blinker_brightness_list"
-                        android:gravity="end" />
+                        android:gravity="end"
+                        android:textAlignment="textEnd" />
                 </LinearLayout>
 
                 <LinearLayout
