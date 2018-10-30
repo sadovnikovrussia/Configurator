@@ -22,6 +22,7 @@ public interface Contract {
         String CONFIG_MAIN_FRAGMENT = "Основные";
         String CONFIG_NAVIGATION_FRAGMENT = "Навигация";
         String CONFIG_EVENTS_FRAGMENT = "События";
+        String CONFIG_SERVER_FRAGMENT = "Сервер";
         int FILE_MANAGER_REQUEST_CODE = 1;
 
         // Показать (установить фрагмент в MainActivity)

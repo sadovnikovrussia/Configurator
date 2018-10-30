@@ -39,6 +39,7 @@ public class ConfigEventsFragment extends Fragment {
 
     public ConfigEventsFragment() {
         // Required empty public constructor
+        Log.v(TAG, "onConstructor");
     }
 
     private void initUi(View view) {
@@ -197,7 +198,7 @@ public class ConfigEventsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        listener.OnConfigEventsFragmentStart();
+        listener.onConfigEventsFragmentStart();
     }
 
     @Override
@@ -240,7 +241,7 @@ public class ConfigEventsFragment extends Fragment {
 
     interface OnConfigEventsFragmentInteractionListener {
 
-        void OnConfigEventsFragmentStart();
+        void onConfigEventsFragmentStart();
 
         void onBtnAlarmEventsClick();
 

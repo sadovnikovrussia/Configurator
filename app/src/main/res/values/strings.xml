@@ -39,6 +39,10 @@
         <item>50%</item>
         <item>100%</item>
     </string-array>
+    <string-array name="priority_chnl_list">
+        <item>SMS</item>
+        <item>GPRS</item>
+    </string-array>
     <string-array name="satellite_system_list">
         <item>ГЛОНАСС и GPS</item>
         <item>GPS</item>

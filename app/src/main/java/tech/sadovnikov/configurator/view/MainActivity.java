@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     ConfigMainFragment configMainFragment;
     ConfigNavigationFragment configNavigationFragment;
     ConfigEventsFragment configEventsFragment;
+    ConfigServerFragment configServerFragment;
     ConsoleFragment consoleFragment;
 
     public MainActivity() {
@@ -246,6 +247,11 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 fragmentTransaction.replace(R.id.container, configEventsFragment);
                 navigation.setSelectedItemId(configurationFragment.getId());
                 break;
+            case CONFIG_SERVER_FRAGMENT:
+                configServerFragment = new ConfigServerFragment();
+                fragmentTransaction.replace(R.id.container, configServerFragment);
+                navigation.setSelectedItemId(configurationFragment.getId());
+                break;
         }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -275,6 +281,9 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 navigation.getMenu().getItem(1).setChecked(true);
                 break;
             case CONFIG_EVENTS_FRAGMENT:
+                navigation.getMenu().getItem(1).setChecked(true);
+                break;
+            case CONFIG_SERVER_FRAGMENT:
                 navigation.getMenu().getItem(1).setChecked(true);
                 break;
         }
@@ -700,7 +709,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     // Lifecycle
     @Override
-    public void OnConfigEventsFragmentStart() {
+    public void onConfigEventsFragmentStart() {
         presenter.OnConfigEventsFragmentStart();
     }
 
