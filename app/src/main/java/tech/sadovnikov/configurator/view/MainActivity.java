@@ -51,7 +51,9 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener,
         ConfigMainFragment.OnConfigMainFragmentInteractionListener,
         ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener,
-        ConfigEventsFragment.OnConfigEventsFragmentInteractionListener {
+        ConfigEventsFragment.OnConfigEventsFragmentInteractionListener,
+        ConfigServerFragment.OnConfigServerFragmentInteractionListener,
+        ConfigSimCardFragment.OnConfigSimCardFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -696,7 +698,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
 
     // ---------------------------------------------------------------------------------------------
-    // OnConfigNavigationFragmentInteractionListener
+    // OnConfigEventsFragmentInteractionListener
     @Override
     public void onBtnAlarmEventsClick() {
         presenter.onBtnAlarmEventsClick();
@@ -713,6 +715,24 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         presenter.OnConfigEventsFragmentStart();
     }
 
+
+    // ---------------------------------------------------------------------------------------------
+    // OnConfigSimCardFragmentInteractionListener
+
+    // Lifecycle
+    @Override
+    public void onConfigServerFragmentStart() {
+
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // OnConfigSimCardFragmentInteractionListener
+
+    // Lifecycle
+    @Override
+    public void onConfigSimCardFragmentStart() {
+
+    }
 
     // ---------------------------------------------------------------------------------------------
     // OnConsoleFragmentInteractionListener
@@ -769,6 +789,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         Log.v(TAG, "onDestroy");
         presenter.onMainActivityDestroy();
     }
+
     // ---------------------------------------------------------------------------------------------
 
 }
