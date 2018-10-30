@@ -31,6 +31,7 @@ import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNES
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.DEVIATION_INT;
+import static tech.sadovnikov.configurator.model.Configuration.EVENTS_MASK;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
 import static tech.sadovnikov.configurator.model.Configuration.FIX_DELAY;
 import static tech.sadovnikov.configurator.model.Configuration.HDOP;
@@ -126,8 +127,8 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         loader.nextCommand();
     }
 
-
-    // BluetoothFragment events --------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // BluetoothFragment events
     @Override
     public void onTestButtonClick() {
         int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
@@ -153,10 +154,8 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         if (position == 0) {
             bluetoothService.cancelDiscovery();
             mainView.updatePairedDevices();
-            //mainView.showPairedDevices();
         } else if (position == 1) {
             startDiscovery();
-            //mainView.showAvailableDevices();
         }
     }
 
@@ -192,6 +191,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         bluetoothService.cancelDiscovery();
     }
 
+    // Recycler bluetooth devices events
     @Override
     public void onBindViewHolderOfPairedDevicesRvAdapter(PairedDevicesItemView holder, int position) {
         holder.setDeviceName(bluetoothService.getBondedDevices().get(position).getName());
@@ -214,8 +214,8 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         return bluetoothService.getAvailableDevices().size();
     }
 
-
-    // ConfigurationFragment events ----------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ConfigurationFragment events
     @Override
     public void onConfigTabsRvItemClick(String tab) {
         mainView.showFragment(tab);
@@ -250,7 +250,18 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     }
 
 
-    // ConfigBuoyFragment events -------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ConfigBuoyFragment events
+    @Override
+    public void onBtnRestartClick() {
+        bluetoothService.sendData("@restart");
+    }
+
+    @Override
+    public void onBtnDefaultSettingsClick() {
+        bluetoothService.sendData("@reset settings");
+    }
+
     @Override
     public void onEtIdAfterTextChanged() {
         repositoryConfiguration.setParameterWithoutCallback(ID, mainView.getEtIdText());
@@ -262,19 +273,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
         mainView.showParameter(ID, repositoryConfiguration.getParameterValue(ID));
         mainView.showParameter(FIRMWARE_VERSION, repositoryConfiguration.getParameterValue(FIRMWARE_VERSION));
-    }
-
-
-    // ---------------------------------------------------------------------------------------------
-    // ConfigBuoyFragment events
-    @Override
-    public void onBtnRestartClick() {
-        bluetoothService.sendData("@restart");
-    }
-
-    @Override
-    public void onBtnDefaultSettingsClick() {
-        bluetoothService.sendData("@reset settings");
     }
 
 
@@ -381,7 +379,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         bluetoothService.sendData("base pos?");
     }
 
-    // TODO <ДОБАВИТЬ ПАРАМЕТР>
     // Lifecycle
     @Override
     public void onConfigNavigationFragmentStart() {
@@ -391,6 +388,28 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         mainView.showParameter(FIX_DELAY, repositoryConfiguration.getParameterValue(FIX_DELAY));
         mainView.showParameter(SATELLITE_SYSTEM, repositoryConfiguration.getParameterValue(SATELLITE_SYSTEM));
     }
+
+
+    // ---------------------------------------------------------------------------------------------
+    // ConfigMainFragment events
+    @Override
+    public void onBtnAlarmEventsClick() {
+        String events = mainView.getCheckedAlarmEvents();
+        if (!events.isEmpty()) bluetoothService.sendData("alarm events=" + events);
+    }
+
+    @Override
+    public void onEventsMaskCbClick() {
+        repositoryConfiguration.setParameterWithoutCallback(EVENTS_MASK, mainView.getCheckedEventsMask());
+    }
+
+    // Lifecycle
+    // TODO <ДОБАВИТЬ ПАРАМЕТР>
+    @Override
+    public void OnConfigEventsFragmentStart() {
+        mainView.showParameter(EVENTS_MASK, repositoryConfiguration.getParameterValue(EVENTS_MASK));
+    }
+
 
 
     // ---------------------------------------------------------------------------------------------

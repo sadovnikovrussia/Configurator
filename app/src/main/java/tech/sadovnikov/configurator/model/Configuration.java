@@ -32,12 +32,13 @@ public class Configuration {
     public static final String HDOP = "hdop";
     public static final String FIX_DELAY = "fix delay";
     public static final String SATELLITE_SYSTEM = "satellite system";
+    public static final String EVENTS_MASK = "events mask";
 
     // TODO <ДОБАВИТЬ ПАРАМЕТР>
     public static final String[] PARAMETER_NAMES = new String[]{
             ID, FIRMWARE_VERSION, BLINKER_MODE, BLINKER_BRIGHTNESS, BLINKER_LX, MAX_DEVIATION,
             TILT_ANGLE, IMPACT_POW, UPOWER_THLD, DEVIATION_INT, MAX_ACTIVE, UPOWER, BASE_POS,
-            LONG_DEVIATION, LAT_DEVIATION, HDOP, FIX_DELAY, SATELLITE_SYSTEM};
+            LONG_DEVIATION, LAT_DEVIATION, HDOP, FIX_DELAY, SATELLITE_SYSTEM, EVENTS_MASK};
     public static final ArrayList<String> PARAMETER_NAMES_LIST = new ArrayList<>();
 
     static {

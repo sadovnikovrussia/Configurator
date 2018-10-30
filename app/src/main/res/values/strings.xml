@@ -33,6 +33,7 @@
         <item>Буй</item>
         <item>Основные</item>
         <item>Навигация</item>
+        <item>События</item>
     </string-array>
     <string-array name="blinker_brightness_list">
         <item>50%</item>

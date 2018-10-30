@@ -21,6 +21,7 @@ public interface Contract {
         String CONFIG_BUOY_FRAGMENT = "Буй";
         String CONFIG_MAIN_FRAGMENT = "Основные";
         String CONFIG_NAVIGATION_FRAGMENT = "Навигация";
+        String CONFIG_EVENTS_FRAGMENT = "События";
         int FILE_MANAGER_REQUEST_CODE = 1;
 
         // Показать (установить фрагмент в MainActivity)
@@ -88,6 +89,10 @@ public interface Contract {
         String getEtHdopText();
 
         String getEtFixDelayText();
+
+        String getCheckedAlarmEvents();
+
+        String getCheckedEventsMask();
     }
 
     interface Presenter {
@@ -189,6 +194,13 @@ public interface Contract {
         void onSpinSatelliteSystemItemSelected(int position);
 
         void onBtnRequestBasePosClick();
+
+        void OnConfigEventsFragmentStart();
+
+        void onBtnAlarmEventsClick();
+
+        void onEventsMaskCbClick();
+
     }
 
     interface Logs {

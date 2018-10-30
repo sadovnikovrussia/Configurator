@@ -21,7 +21,7 @@ import tech.sadovnikov.configurator.R;
 public class ConfigMainFragment extends Fragment {
     private static final String TAG = "ConfigMainFragment";
 
-    OnConfigMainFragmentInteractionListener onConfigMainFragmentInteractionListener;
+    OnConfigMainFragmentInteractionListener listener;
 
     // UI
     Spinner spinBlinkerMode;
@@ -61,11 +61,18 @@ public class ConfigMainFragment extends Fragment {
 
     private void initUi(View view) {
         spinBlinkerMode = view.findViewById(R.id.spin_blinker_mode);
+        // TODO <Попробовать данный вид обработки>
+        spinBlinkerMode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "onSpinBlinkerModeItemClick: " + position);
+            }
+        });
         spinBlinkerMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //Log.d(TAG, "onSpinBlinkerModeItemSelected: " + position);
-                onConfigMainFragmentInteractionListener.onSpinBlinkerModeItemSelected(position);
+                Log.d(TAG, "onSpinBlinkerModeItemSelected: " + position);
+                listener.onSpinBlinkerModeItemSelected(position);
             }
 
             @Override
@@ -77,8 +84,8 @@ public class ConfigMainFragment extends Fragment {
         spinBlinkerBrightness.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //Log.d(TAG, "onSpinBlinkerBrightnessItemSelected: " + position);
-                onConfigMainFragmentInteractionListener.onSpinBlinkerBrightnessItemSelected(position);
+                Log.d(TAG, "onSpinBlinkerBrightnessItemSelected: " + position);
+                listener.onSpinBlinkerBrightnessItemSelected(position);
             }
 
             @Override
@@ -101,7 +108,7 @@ public class ConfigMainFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                onConfigMainFragmentInteractionListener.afterEtBlinkerLxTextChanged();
+                listener.afterEtBlinkerLxTextChanged();
             }
         });
         tvMaxDeviation = view.findViewById(R.id.tv_max_deviation);
@@ -109,7 +116,7 @@ public class ConfigMainFragment extends Fragment {
         etMaxDeviation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                onConfigMainFragmentInteractionListener.onEtMaxDeviationFocusChange(hasFocus);
+                listener.onEtMaxDeviationFocusChange(hasFocus);
             }
         });
         tvTiltAngle = view.findViewById(R.id.tv_tilt_angle);
@@ -117,7 +124,7 @@ public class ConfigMainFragment extends Fragment {
         etTiltAngle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                onConfigMainFragmentInteractionListener.onEtTiltAngleFocusChange(hasFocus);
+                listener.onEtTiltAngleFocusChange(hasFocus);
             }
         });
         tvImpactPow = view.findViewById(R.id.tv_impact_pow);
@@ -125,7 +132,7 @@ public class ConfigMainFragment extends Fragment {
         etImpactPow.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                onConfigMainFragmentInteractionListener.onEtImpactPowFocusChange(hasFocus);
+                listener.onEtImpactPowFocusChange(hasFocus);
             }
         });
         tvUpowerThld = view.findViewById(R.id.tv_upower_thld);
@@ -133,7 +140,7 @@ public class ConfigMainFragment extends Fragment {
         etUpowerThld.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                onConfigMainFragmentInteractionListener.onEtUpowerThldFocusChange(hasFocus);
+                listener.onEtUpowerThldFocusChange(hasFocus);
             }
         });
         tvDeviationInt = view.findViewById(R.id.tv_deviation_int);
@@ -141,7 +148,7 @@ public class ConfigMainFragment extends Fragment {
         etDeviationInt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                onConfigMainFragmentInteractionListener.onEtDeviationIntFocusChange(hasFocus);
+                listener.onEtDeviationIntFocusChange(hasFocus);
             }
         });
         tvMaxActive = view.findViewById(R.id.tv_max_active);
@@ -149,7 +156,7 @@ public class ConfigMainFragment extends Fragment {
         etMaxActive.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                onConfigMainFragmentInteractionListener.onEtMaxActiveFocusChange(hasFocus);
+                listener.onEtMaxActiveFocusChange(hasFocus);
             }
         });
         tvUpower = view.findViewById(R.id.tv_upower);
@@ -170,7 +177,7 @@ public class ConfigMainFragment extends Fragment {
         super.onAttach(context);
         Log.v(TAG, "onAttach");
         if (context instanceof ConfigMainFragment.OnConfigMainFragmentInteractionListener) {
-            onConfigMainFragmentInteractionListener = (ConfigMainFragment.OnConfigMainFragmentInteractionListener) context;
+            listener = (ConfigMainFragment.OnConfigMainFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnConfigBuoyFragmentInteractionListener");
@@ -187,7 +194,7 @@ public class ConfigMainFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        onConfigMainFragmentInteractionListener.onConfigMainFragmentStart();
+        listener.onConfigMainFragmentStart();
     }
 
     @Override
@@ -223,6 +230,7 @@ public class ConfigMainFragment extends Fragment {
     @Override
     public void onDetach() {
         Log.v(TAG, "onDetach");
+        listener = null;
         super.onDetach();
     }
     // ---------------------------------------------------------------------------------------------

@@ -11,11 +11,11 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.view.ConfigurationFragment;
 
 public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapter.ConfigTabsViewHolder> {
-    private static final String TAG = "RvBtDevicesAdapter";
+    // private static final String TAG = "RvBtDevicesAdapter";
 
-    ConfigurationFragment.OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener;
+    private ConfigurationFragment.OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener;
 
-    private String[] configTabs = new String[]{"Буй", "Основные", "Навигация"};
+    private String[] configTabs = new String[]{"Буй", "Основные", "Навигация", "События"};
 
 
     public ConfigTabsRvAdapter(ConfigurationFragment.OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener) {

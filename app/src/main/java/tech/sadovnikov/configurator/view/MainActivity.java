@@ -28,6 +28,7 @@ import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNES
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.DEVIATION_INT;
+import static tech.sadovnikov.configurator.model.Configuration.EVENTS_MASK;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
 import static tech.sadovnikov.configurator.model.Configuration.FIX_DELAY;
 import static tech.sadovnikov.configurator.model.Configuration.HDOP;
@@ -49,7 +50,8 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         ConsoleFragment.OnConsoleFragmentInteractionListener,
         ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener,
         ConfigMainFragment.OnConfigMainFragmentInteractionListener,
-ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener{
+        ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener,
+        ConfigEventsFragment.OnConfigEventsFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -68,6 +70,7 @@ ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener{
     ConfigBuoyFragment configBuoyFragment;
     ConfigMainFragment configMainFragment;
     ConfigNavigationFragment configNavigationFragment;
+    ConfigEventsFragment configEventsFragment;
     ConsoleFragment consoleFragment;
 
     public MainActivity() {
@@ -193,6 +196,12 @@ ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener{
                     }
                 }
                 break;
+            case EVENTS_MASK:
+                // Можно дописать в условие все cb, но если cb9 существует, то и остальные тоже
+                if (configEventsFragment != null && configEventsFragment.cb9 != null) {
+                    configEventsFragment.setCheckedEventsMaskCb(value);
+                }
+                break;
         }
     }
 
@@ -232,6 +241,11 @@ ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener{
                 fragmentTransaction.replace(R.id.container, configNavigationFragment);
                 navigation.setSelectedItemId(configurationFragment.getId());
                 break;
+            case CONFIG_EVENTS_FRAGMENT:
+                configEventsFragment = new ConfigEventsFragment();
+                fragmentTransaction.replace(R.id.container, configEventsFragment);
+                navigation.setSelectedItemId(configurationFragment.getId());
+                break;
         }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -258,6 +272,9 @@ ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener{
                 navigation.getMenu().getItem(1).setChecked(true);
                 break;
             case CONFIG_NAVIGATION_FRAGMENT:
+                navigation.getMenu().getItem(1).setChecked(true);
+                break;
+            case CONFIG_EVENTS_FRAGMENT:
                 navigation.getMenu().getItem(1).setChecked(true);
                 break;
         }
@@ -417,6 +434,36 @@ ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener{
     @Override
     public String getEtFixDelayText() {
         return configNavigationFragment.etFixDelay.getText().toString();
+    }
+
+    @Override
+    public String getCheckedAlarmEvents() {
+        String events = "";
+        if (configEventsFragment.cb1.isChecked()) events += "1,";
+        if (configEventsFragment.cb2.isChecked()) events += "2,";
+        if (configEventsFragment.cb3.isChecked()) events += "3,";
+        if (configEventsFragment.cb4.isChecked()) events += "4,";
+        if (configEventsFragment.cb5.isChecked()) events += "5,";
+        if (configEventsFragment.cb6.isChecked()) events += "6,";
+        if (configEventsFragment.cb7.isChecked()) events += "7,";
+        if (configEventsFragment.cb8.isChecked()) events += "8,";
+        if (!events.isEmpty()) events = events.substring(0, events.length() - 1);
+        return events;
+    }
+
+    @Override
+    public String getCheckedEventsMask() {
+        String events = "";
+        if (configEventsFragment.cb9.isChecked()) events += "1,";
+        if (configEventsFragment.cb10.isChecked()) events += "2,";
+        if (configEventsFragment.cb11.isChecked()) events += "3,";
+        if (configEventsFragment.cb12.isChecked()) events += "4,";
+        if (configEventsFragment.cb13.isChecked()) events += "5,";
+        if (configEventsFragment.cb14.isChecked()) events += "6,";
+        if (configEventsFragment.cb15.isChecked()) events += "7,";
+        if (configEventsFragment.cb16.isChecked()) events += "8,";
+        if (!events.isEmpty()) events = events.substring(0, events.length() - 1);
+        return events;
     }
 
 
@@ -639,6 +686,24 @@ ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener{
     }
 
 
+    // ---------------------------------------------------------------------------------------------
+    // OnConfigNavigationFragmentInteractionListener
+    @Override
+    public void onBtnAlarmEventsClick() {
+        presenter.onBtnAlarmEventsClick();
+    }
+
+    @Override
+    public void onEventsMaskCbClick() {
+        presenter.onEventsMaskCbClick();
+    }
+
+    // Lifecycle
+    @Override
+    public void OnConfigEventsFragmentStart() {
+        presenter.OnConfigEventsFragmentStart();
+    }
+
 
     // ---------------------------------------------------------------------------------------------
     // OnConsoleFragmentInteractionListener
@@ -695,7 +760,6 @@ ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener{
         Log.v(TAG, "onDestroy");
         presenter.onMainActivityDestroy();
     }
-
     // ---------------------------------------------------------------------------------------------
 
 }
