@@ -23,10 +23,14 @@ import tech.sadovnikov.configurator.presenter.Presenter;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
+import static tech.sadovnikov.configurator.model.Configuration.ALARM_INT;
+import static tech.sadovnikov.configurator.model.Configuration.ANSW_NUMBER;
 import static tech.sadovnikov.configurator.model.Configuration.BASE_POS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNESS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
+import static tech.sadovnikov.configurator.model.Configuration.CMD_NUMBER;
+import static tech.sadovnikov.configurator.model.Configuration.CONNECT_ATTEMPTS;
 import static tech.sadovnikov.configurator.model.Configuration.DEVIATION_INT;
 import static tech.sadovnikov.configurator.model.Configuration.EVENTS_MASK;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
@@ -38,7 +42,14 @@ import static tech.sadovnikov.configurator.model.Configuration.LAT_DEVIATION;
 import static tech.sadovnikov.configurator.model.Configuration.LONG_DEVIATION;
 import static tech.sadovnikov.configurator.model.Configuration.MAX_ACTIVE;
 import static tech.sadovnikov.configurator.model.Configuration.MAX_DEVIATION;
+import static tech.sadovnikov.configurator.model.Configuration.NORMAL_INT;
+import static tech.sadovnikov.configurator.model.Configuration.PACKETS;
+import static tech.sadovnikov.configurator.model.Configuration.PACKET_TOUT;
+import static tech.sadovnikov.configurator.model.Configuration.PRIORITY_CHNL;
 import static tech.sadovnikov.configurator.model.Configuration.SATELLITE_SYSTEM;
+import static tech.sadovnikov.configurator.model.Configuration.SERVER;
+import static tech.sadovnikov.configurator.model.Configuration.SESSION_TIME;
+import static tech.sadovnikov.configurator.model.Configuration.SMS_CENTER;
 import static tech.sadovnikov.configurator.model.Configuration.TILT_ANGLE;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER_THLD;
@@ -203,6 +214,55 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 // Можно дописать в условие все cb, но если cb9 существует, то и остальные тоже
                 if (configEventsFragment != null && configEventsFragment.cb9 != null) {
                     configEventsFragment.setCheckedEventsMaskCb(value);
+                }
+                break;
+            case SERVER:
+                if (configServerFragment != null && configServerFragment.etServer != null)
+                    configServerFragment.etServer.setText(value);
+                break;
+            case CONNECT_ATTEMPTS:
+                if (configServerFragment != null && configServerFragment.etConnectAttempts != null)
+                    configServerFragment.etConnectAttempts.setText(value);
+                break;
+            case SESSION_TIME:
+                if (configServerFragment != null && configServerFragment.etSessionTime != null)
+                    configServerFragment.etSessionTime.setText(value);
+                break;
+            case PACKET_TOUT:
+                if (configServerFragment != null && configServerFragment.etPacketTout != null)
+                    configServerFragment.etPacketTout.setText(value);
+                break;
+            case PRIORITY_CHNL:
+                if (!value.isEmpty()) {
+                    if (configServerFragment != null && configServerFragment.spinPriorityChnl != null) {
+                        configServerFragment.spinPriorityChnl.setSelection(Integer.valueOf(value));
+                    }
+                }
+                break;
+            case NORMAL_INT:
+                if (configServerFragment != null && configServerFragment.etNormalInt != null)
+                    configServerFragment.etNormalInt.setText(value);
+                break;
+            case ALARM_INT:
+                if (configServerFragment != null && configServerFragment.etAlarmInt != null)
+                    configServerFragment.etAlarmInt.setText(value);
+                break;
+            case SMS_CENTER:
+                if (configServerFragment != null && configServerFragment.etSmsCenter != null)
+                    configServerFragment.etSmsCenter.setText(value);
+                break;
+            case CMD_NUMBER:
+                if (configServerFragment != null && configServerFragment.etCmdNumber != null)
+                    configServerFragment.etCmdNumber.setText(value);
+                break;
+            case ANSW_NUMBER:
+                if (configServerFragment != null && configServerFragment.etAnswNumber != null)
+                    configServerFragment.etAnswNumber.setText(value);
+                break;
+            case PACKETS:
+                if (!value.isEmpty() && configServerFragment != null && configServerFragment.etPackets != null) {
+                    configServerFragment.etPackets.setText(value.split(",")[0]);
+                    configServerFragment.etPacketsPercents.setText(value.split(",")[1]);
                 }
                 break;
         }
@@ -477,6 +537,51 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         return events;
     }
 
+    @Override
+    public String getEtServerText() {
+        return configServerFragment.etServer.getText().toString();
+    }
+
+    @Override
+    public String getEtConnectAttemptsText() {
+        return configServerFragment.etConnectAttempts.getText().toString();
+    }
+
+    @Override
+    public String getEtSessionTimeText() {
+        return configServerFragment.etSessionTime.getText().toString();
+    }
+
+    @Override
+    public String getEtPacketToutText() {
+        return configServerFragment.etPacketTout.getText().toString();
+    }
+
+    @Override
+    public String getEtNormalIntText() {
+        return configServerFragment.etNormalInt.getText().toString();
+    }
+
+    @Override
+    public String getEtAlarmIntText() {
+        return configServerFragment.etAlarmInt.getText().toString();
+    }
+
+    @Override
+    public String getEtSmsCenterText() {
+        return configServerFragment.etSmsCenter.getText().toString();
+    }
+
+    @Override
+    public String getEtCmdNumberText() {
+        return configServerFragment.etCmdNumber.getText().toString();
+    }
+
+    @Override
+    public String getEtAnswNumberText() {
+        return configServerFragment.etAnswNumber.getText().toString();
+    }
+
 
     // ---------------------------------------------------------------------------------------------
     @Override
@@ -612,11 +717,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public void afterEtBlinkerLxTextChanged() {
-        presenter.afterEtBlinkerLxTextChanged();
-    }
-
-    @Override
     public void onEtMaxDeviationFocusChange(boolean hasFocus) {
         presenter.onEtMaxDeviationFocusChange(hasFocus);
     }
@@ -644,6 +744,11 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     @Override
     public void onEtMaxActiveFocusChange(boolean hasFocus) {
         presenter.onEtMaxActiveFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtBlinkerLxFocusChange(boolean hasFocus) {
+        presenter.onEtBlinkerLxFocusChange(hasFocus);
     }
 
     // Lifecycle
@@ -717,13 +822,73 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
 
     // ---------------------------------------------------------------------------------------------
-    // OnConfigSimCardFragmentInteractionListener
+    // OnConfigServerFragmentInteractionListener
+    @Override
+    public void onEtServerFocusChange(boolean hasFocus) {
+        presenter.onEtServerFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtConnectAttemptsFocusChange(boolean hasFocus) {
+        presenter.onEtConnectAttemptsFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtSessionTimeFocusChange(boolean hasFocus) {
+        presenter.onEtSessionTimeFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtPacketToutFocusChange(boolean hasFocus) {
+        presenter.onEtPacketToutFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onSpinPriorityChnlItemClick(int position) {
+        presenter.onSpinPriorityChnlItemClick(position);
+    }
+
+    @Override
+    public void onEtNormalIntFocusChange(boolean hasFocus) {
+        presenter.onEtNormalIntFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtAlarmIntFocusChange(boolean hasFocus) {
+        presenter.onEtAlarmIntFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtSmsCenterFocusChange(boolean hasFocus) {
+        presenter.onEtSmsCenterFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtCmdNumberFocusChange(boolean hasFocus) {
+        presenter.onEtCmdNumberFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtAnswNumberFocusChange(boolean hasFocus) {
+        presenter.onEtAnswNumberFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onBtnClearArchiveClick() {
+        presenter.onBtnClearArchiveClick();
+    }
+
+    @Override
+    public void onBtnCloseConnectClick() {
+        presenter.onBtnCloseConnectClick();
+    }
 
     // Lifecycle
     @Override
     public void onConfigServerFragmentStart() {
-
+        presenter.onConfigServerFragmentStart();
     }
+
 
     // ---------------------------------------------------------------------------------------------
     // OnConfigSimCardFragmentInteractionListener

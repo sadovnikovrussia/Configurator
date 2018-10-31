@@ -198,7 +198,7 @@
                 <EditText
                     android:id="@+id/et_normal_int"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="5"
                     android:ems="10"
                     android:inputType="number"
@@ -225,7 +225,7 @@
                     android:textSize="16sp" />
 
                 <EditText
-                    android:id="@+id/et_alarml_int"
+                    android:id="@+id/et_alarm_int"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="5"
@@ -256,7 +256,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="center_vertical"
                     android:text="Номер SMS центра оператора"
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView"
@@ -268,7 +268,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:ems="10"
-                    android:inputType="number"
+                    android:inputType="phone"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
 
@@ -295,9 +295,9 @@
                     android:id="@+id/et_cmd_number"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="number"
+                    android:inputType="phone"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
 
@@ -324,9 +324,10 @@
                     android:id="@+id/et_answ_number"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="number"
+                    android:gravity="clip_vertical"
+                    android:inputType="phone"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
 
@@ -384,7 +385,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="Заполняемость архива"
+                    android:text="Заполняемость архива, [%]"
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView"
                     android:textSize="16sp" />
 
@@ -413,7 +414,7 @@
                 android:textSize="16sp" />
 
             <Button
-                android:id="@+id/btn_clear_archive2"
+                android:id="@+id/btn_close_connect"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"

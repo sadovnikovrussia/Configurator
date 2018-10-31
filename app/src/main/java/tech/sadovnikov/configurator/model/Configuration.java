@@ -33,12 +33,25 @@ public class Configuration {
     public static final String FIX_DELAY = "fix delay";
     public static final String SATELLITE_SYSTEM = "satellite system";
     public static final String EVENTS_MASK = "events mask";
+    public static final String SERVER = "server";
+    public static final String CONNECT_ATTEMPTS = "connect attempts";
+    public static final String SESSION_TIME = "session time";
+    public static final String PACKET_TOUT = "packet tout";
+    public static final String PRIORITY_CHNL = "priority chnl";
+    public static final String NORMAL_INT = "normal int";
+    public static final String ALARM_INT = "alarm int";
+    public static final String SMS_CENTER = "sms center";
+    public static final String CMD_NUMBER = "cmd number";
+    public static final String ANSW_NUMBER = "answ number";
+    public static final String PACKETS = "packets";
 
     // TODO <ДОБАВИТЬ ПАРАМЕТР>
     public static final String[] PARAMETER_NAMES = new String[]{
             ID, FIRMWARE_VERSION, BLINKER_MODE, BLINKER_BRIGHTNESS, BLINKER_LX, MAX_DEVIATION,
             TILT_ANGLE, IMPACT_POW, UPOWER_THLD, DEVIATION_INT, MAX_ACTIVE, UPOWER, BASE_POS,
-            LONG_DEVIATION, LAT_DEVIATION, HDOP, FIX_DELAY, SATELLITE_SYSTEM, EVENTS_MASK};
+            LONG_DEVIATION, LAT_DEVIATION, HDOP, FIX_DELAY, SATELLITE_SYSTEM, EVENTS_MASK, SERVER,
+            CONNECT_ATTEMPTS, SESSION_TIME, PACKET_TOUT, PRIORITY_CHNL, NORMAL_INT, ALARM_INT,
+            SMS_CENTER, CMD_NUMBER, ANSW_NUMBER, PACKETS};
     public static final ArrayList<String> PARAMETER_NAMES_LIST = new ArrayList<>();
 
     static {
@@ -86,6 +99,7 @@ public class Configuration {
         configuration.removeParameter(new Parameter(FIRMWARE_VERSION));
         configuration.removeParameter(new Parameter(UPOWER));
         configuration.removeParameter(new Parameter(BASE_POS));
+        configuration.removeParameter(new Parameter(PACKETS));
         Log.i(TAG, "getConfigurationForSetAndSave() returned: " + configuration);
         return configuration;
     }
@@ -118,8 +132,6 @@ public class Configuration {
             if (parametersList.contains(parameter)) {
                 int index = parametersList.indexOf(parameter);
                 parametersList.get(index).setValue(parameter.getValue());
-                //parametersList.remove(parameter);
-                //parametersList.add(index, parameter);
             } else {
                 Log.w(TAG, "setParameter: В конфигурации нет параметра " + parameter + "configuration = " + this);
             }
@@ -132,8 +144,6 @@ public class Configuration {
             if (parametersList.contains(parameter)) {
                 int index = parametersList.indexOf(parameter);
                 parametersList.get(index).setValue(parameter.getValue());
-                //parametersList.remove(parameter);
-                //parametersList.add(index, parameter);
             } else {
                 Log.w(TAG, "setParameter: В конфигурации нет параметра " + parameter + "configuration = " + this);
             }
@@ -163,11 +173,15 @@ public class Configuration {
     ArrayList<String> getCommandListForReadConfiguration() {
         ArrayList<String> commandListForReadConfiguration = new ArrayList<>();
         for (String parameterName : PARAMETER_NAMES_LIST) {
-            if (parameterName.equals(FIRMWARE_VERSION))
-            {
-                commandListForReadConfiguration.add("@version");
-            } else {
-                commandListForReadConfiguration.add(parameterName + "?");
+            switch (parameterName) {
+                case FIRMWARE_VERSION:
+                    commandListForReadConfiguration.add("@version");
+                    break;
+                case PACKETS:
+                    commandListForReadConfiguration.add("@packets?");
+                    break;
+                default:
+                    commandListForReadConfiguration.add(parameterName + "?");
             }
         }
         return commandListForReadConfiguration;
@@ -178,7 +192,7 @@ public class Configuration {
         for (Parameter parameter : parametersList) {
             String value = parameter.getValue();
             String name = parameter.getName();
-            if (!value.isEmpty() && !name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER)) {
+            if (!value.isEmpty() && !name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER) && !name.equals(BASE_POS) && !name.equals(PACKETS)) {
                 commandListForSetConfiguration.add(name + "=" + value);
             }
         }

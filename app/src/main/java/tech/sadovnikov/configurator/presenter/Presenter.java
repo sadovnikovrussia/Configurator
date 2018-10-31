@@ -26,10 +26,14 @@ import tech.sadovnikov.configurator.view.MainActivity;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
+import static tech.sadovnikov.configurator.model.Configuration.ALARM_INT;
+import static tech.sadovnikov.configurator.model.Configuration.ANSW_NUMBER;
 import static tech.sadovnikov.configurator.model.Configuration.BASE_POS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNESS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
+import static tech.sadovnikov.configurator.model.Configuration.CMD_NUMBER;
+import static tech.sadovnikov.configurator.model.Configuration.CONNECT_ATTEMPTS;
 import static tech.sadovnikov.configurator.model.Configuration.DEVIATION_INT;
 import static tech.sadovnikov.configurator.model.Configuration.EVENTS_MASK;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
@@ -41,7 +45,14 @@ import static tech.sadovnikov.configurator.model.Configuration.LAT_DEVIATION;
 import static tech.sadovnikov.configurator.model.Configuration.LONG_DEVIATION;
 import static tech.sadovnikov.configurator.model.Configuration.MAX_ACTIVE;
 import static tech.sadovnikov.configurator.model.Configuration.MAX_DEVIATION;
+import static tech.sadovnikov.configurator.model.Configuration.NORMAL_INT;
+import static tech.sadovnikov.configurator.model.Configuration.PACKETS;
+import static tech.sadovnikov.configurator.model.Configuration.PACKET_TOUT;
+import static tech.sadovnikov.configurator.model.Configuration.PRIORITY_CHNL;
 import static tech.sadovnikov.configurator.model.Configuration.SATELLITE_SYSTEM;
+import static tech.sadovnikov.configurator.model.Configuration.SERVER;
+import static tech.sadovnikov.configurator.model.Configuration.SESSION_TIME;
+import static tech.sadovnikov.configurator.model.Configuration.SMS_CENTER;
 import static tech.sadovnikov.configurator.model.Configuration.TILT_ANGLE;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER_THLD;
@@ -285,8 +296,18 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     }
 
     @Override
-    public void afterEtBlinkerLxTextChanged() {
+    public void onEtBlinkerLxFocusChange(boolean hasFocus) {
         repositoryConfiguration.setParameterWithoutCallback(BLINKER_LX, mainView.getEtBlinkerLxText());
+    }
+
+    @Override
+    public void onBtnClearArchiveClick() {
+        bluetoothService.sendData("@clear archive");
+    }
+
+    @Override
+    public void onBtnCloseConnectClick() {
+        bluetoothService.sendData("close connect");
     }
 
     @Override
@@ -391,7 +412,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
 
     // ---------------------------------------------------------------------------------------------
-    // ConfigMainFragment events
+    // ConfigEventsFragment events
     @Override
     public void onBtnAlarmEventsClick() {
         String events = mainView.getCheckedAlarmEvents();
@@ -404,12 +425,80 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     }
 
     // Lifecycle
-    // TODO <ДОБАВИТЬ ПАРАМЕТР>
     @Override
     public void OnConfigEventsFragmentStart() {
         mainView.showParameter(EVENTS_MASK, repositoryConfiguration.getParameterValue(EVENTS_MASK));
     }
 
+
+    // ---------------------------------------------------------------------------------------------
+    // ConfigServerFragment events
+    @Override
+    public void onEtServerFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(SERVER, mainView.getEtServerText());
+    }
+
+    @Override
+    public void onEtConnectAttemptsFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(CONNECT_ATTEMPTS, mainView.getEtConnectAttemptsText());
+    }
+
+    @Override
+    public void onEtSessionTimeFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(SESSION_TIME, mainView.getEtSessionTimeText());
+    }
+
+    @Override
+    public void onEtPacketToutFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(PACKET_TOUT, mainView.getEtPacketToutText());
+    }
+
+    @Override
+    public void onSpinPriorityChnlItemClick(int position) {
+        repositoryConfiguration.setParameterWithoutCallback(PRIORITY_CHNL, String.valueOf(position));
+    }
+
+    @Override
+    public void onEtNormalIntFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(NORMAL_INT, mainView.getEtNormalIntText());
+    }
+
+    @Override
+    public void onEtAlarmIntFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(ALARM_INT, mainView.getEtAlarmIntText());
+    }
+
+    @Override
+    public void onEtSmsCenterFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(SMS_CENTER, mainView.getEtSmsCenterText());
+    }
+
+    @Override
+    public void onEtCmdNumberFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(CMD_NUMBER, mainView.getEtCmdNumberText());
+    }
+
+    @Override
+    public void onEtAnswNumberFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(ANSW_NUMBER, mainView.getEtAnswNumberText());
+    }
+
+    // Lifecycle
+    // TODO <ДОБАВИТЬ ПАРАМЕТР>
+    @Override
+    public void onConfigServerFragmentStart() {
+        mainView.showParameter(SERVER, repositoryConfiguration.getParameterValue(SERVER));
+        mainView.showParameter(CONNECT_ATTEMPTS, repositoryConfiguration.getParameterValue(CONNECT_ATTEMPTS));
+        mainView.showParameter(SESSION_TIME, repositoryConfiguration.getParameterValue(SESSION_TIME));
+        mainView.showParameter(PACKET_TOUT, repositoryConfiguration.getParameterValue(PACKET_TOUT));
+        mainView.showParameter(PRIORITY_CHNL, repositoryConfiguration.getParameterValue(PRIORITY_CHNL));
+        mainView.showParameter(NORMAL_INT, repositoryConfiguration.getParameterValue(NORMAL_INT));
+        mainView.showParameter(ALARM_INT, repositoryConfiguration.getParameterValue(ALARM_INT));
+        mainView.showParameter(SMS_CENTER, repositoryConfiguration.getParameterValue(SMS_CENTER));
+        mainView.showParameter(CMD_NUMBER, repositoryConfiguration.getParameterValue(CMD_NUMBER));
+        mainView.showParameter(ANSW_NUMBER, repositoryConfiguration.getParameterValue(ANSW_NUMBER));
+        mainView.showParameter(PACKETS, repositoryConfiguration.getParameterValue(PACKETS));
+    }
 
 
     // ---------------------------------------------------------------------------------------------

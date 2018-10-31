@@ -94,6 +94,24 @@ public interface Contract {
         String getCheckedAlarmEvents();
 
         String getCheckedEventsMask();
+
+        String getEtServerText();
+
+        String getEtConnectAttemptsText();
+
+        String getEtSessionTimeText();
+
+        String getEtPacketToutText();
+
+        String getEtNormalIntText();
+
+        String getEtAlarmIntText();
+
+        String getEtSmsCenterText();
+
+        String getEtCmdNumberText();
+
+        String getEtAnswNumberText();
     }
 
     interface Presenter {
@@ -166,8 +184,6 @@ public interface Contract {
 
         void onSpinBlinkerModeItemSelected(int position);
 
-        void afterEtBlinkerLxTextChanged();
-
         void onEtMaxDeviationFocusChange(boolean hasFocus);
 
         void onEtTiltAngleFocusChange(boolean hasFocus);
@@ -202,6 +218,33 @@ public interface Contract {
 
         void onEventsMaskCbClick();
 
+        void onEtServerFocusChange(boolean hasFocus);
+
+        void onConfigServerFragmentStart();
+
+        void onEtConnectAttemptsFocusChange(boolean hasFocus);
+
+        void onEtSessionTimeFocusChange(boolean hasFocus);
+
+        void onEtPacketToutFocusChange(boolean hasFocus);
+
+        void onSpinPriorityChnlItemClick(int position);
+
+        void onEtNormalIntFocusChange(boolean hasFocus);
+
+        void onEtAlarmIntFocusChange(boolean hasFocus);
+
+        void onEtSmsCenterFocusChange(boolean hasFocus);
+
+        void onEtCmdNumberFocusChange(boolean hasFocus);
+
+        void onEtAnswNumberFocusChange(boolean hasFocus);
+
+        void onEtBlinkerLxFocusChange(boolean hasFocus);
+
+        void onBtnClearArchiveClick();
+
+        void onBtnCloseConnectClick();
     }
 
     interface Logs {

@@ -8,6 +8,7 @@ import tech.sadovnikov.configurator.Contract;
 
 import static tech.sadovnikov.configurator.model.Configuration.BASE_POS;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
+import static tech.sadovnikov.configurator.model.Configuration.PACKETS;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
 
 
@@ -59,7 +60,7 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
         for (Parameter parameter : uiConfiguration.getParametersList()) {
             // TODO <Добавить неустанавливаемые параметры>
             String name = parameter.getName();
-            if (!name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER) && !name.equals(BASE_POS)) {
+            if (!name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER) && !name.equals(BASE_POS) && !name.equals(PACKETS)) {
                 setParameter(new Parameter(name));
             }
         }

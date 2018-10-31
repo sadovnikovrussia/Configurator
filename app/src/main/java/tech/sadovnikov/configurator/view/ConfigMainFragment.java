@@ -61,13 +61,6 @@ public class ConfigMainFragment extends Fragment {
 
     private void initUi(View view) {
         spinBlinkerMode = view.findViewById(R.id.spin_blinker_mode);
-        // TODO <Попробовать данный вид обработки>
-        spinBlinkerMode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onSpinBlinkerModeItemClick: " + position);
-            }
-        });
         spinBlinkerMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -95,20 +88,10 @@ public class ConfigMainFragment extends Fragment {
         });
         tvBlinkerLx = view.findViewById(R.id.tv_blinker_lx);
         etBlinkerLx = view.findViewById(R.id.et_blinker_lx);
-        etBlinkerLx.addTextChangedListener(new TextWatcher() {
+        etBlinkerLx.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                listener.afterEtBlinkerLxTextChanged();
+            public void onFocusChange(View v, boolean hasFocus) {
+                listener.onEtBlinkerLxFocusChange(hasFocus);
             }
         });
         tvMaxDeviation = view.findViewById(R.id.tv_max_deviation);
@@ -243,8 +226,6 @@ public class ConfigMainFragment extends Fragment {
 
         void onSpinBlinkerBrightnessItemSelected(int position);
 
-        void afterEtBlinkerLxTextChanged();
-
         void onEtMaxDeviationFocusChange(boolean hasFocus);
 
         void onEtTiltAngleFocusChange(boolean hasFocus);
@@ -256,6 +237,8 @@ public class ConfigMainFragment extends Fragment {
         void onEtDeviationIntFocusChange(boolean hasFocus);
 
         void onEtMaxActiveFocusChange(boolean hasFocus);
+
+        void onEtBlinkerLxFocusChange(boolean hasFocus);
     }
 
 }
