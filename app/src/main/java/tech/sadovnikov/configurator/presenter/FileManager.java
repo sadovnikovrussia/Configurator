@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Calendar;
+import java.util.Date;
 
 import tech.sadovnikov.configurator.model.Configuration;
 import tech.sadovnikov.configurator.model.Parameter;
@@ -39,8 +41,10 @@ public class FileManager {
         // Get the directory for the user's public download directory.
         // File dir = Environment.getExternalStorageDirectory();
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        Date currentTime = Calendar.getInstance().getTime();
+        String date = currentTime.toString();
         Log.d(TAG, "getFile: dir = " + dir.getAbsolutePath());
-        File file = new File(dir, "Configuration.cfg");
+        File file = new File(dir, "Configuration(" + date + ").cfg");
         if (!file.exists()) {
             // Log.d(TAG, "File does not exist");
             try {
