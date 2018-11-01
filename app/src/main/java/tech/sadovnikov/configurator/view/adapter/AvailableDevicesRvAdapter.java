@@ -2,18 +2,16 @@ package tech.sadovnikov.configurator.view.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.view.BluetoothFragment;
 
 public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDevicesRvAdapter.BluetoothDeviceViewHolder> {
-    private static final String TAG = "AvailDevicesRvAdapter";
+    // private static final String TAG = "AvailDevicesRvAdapter";
 
     private BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
@@ -44,26 +42,24 @@ public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDev
 
     @Override
     public int getItemCount() {
-        int count = onBluetoothFragmentInteractionListener.onGetItemCountOfAvailableDevicesRvAdapter();
-        //Logs.d(TAG, "getItemCount: " + String.valueOf(count));
-        return count;
+        // Logs.d(TAG, "getItemCount: " + String.valueOf(count));
+        return onBluetoothFragmentInteractionListener.onGetItemCountOfAvailableDevicesRvAdapter();
     }
 
-    public void updateAvailableBluetoothDevices()
-    {
-        Log.d(TAG, "updateAvailableBluetoothDevices");
+    public void updateAvailableBluetoothDevices() {
+        // Log.d(TAG, "updateAvailableBluetoothDevices");
         notifyDataSetChanged();
     }
 
     // ViewHolder
     public class BluetoothDeviceViewHolder extends RecyclerView.ViewHolder implements AvailableDevicesItemView {
-        private static final String TAG = "AvailDevAdaptViewHolder";
+        // private static final String TAG = "AvailDevAdaptViewHolder";
         private TextView tvDeviceName;
         private TextView tvDeviceAddress;
 
         BluetoothDeviceViewHolder(@NonNull View itemView) {
             super(itemView);
-            Log.d(TAG, "onConstructor");
+            // Log.d(TAG, "onConstructor");
             tvDeviceName = itemView.findViewById(R.id.tv_device_name);
             tvDeviceAddress = itemView.findViewById(R.id.tv_device_address);
         }

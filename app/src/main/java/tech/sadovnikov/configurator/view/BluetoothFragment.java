@@ -34,7 +34,6 @@ public class BluetoothFragment extends Fragment {
     Switch switchBt;
     TabLayout tabLayout;
     ViewPager viewPager;
-    Button btnTest;
 
     DevicesFragmentPagerAdapter devicesFragmentPagerAdapter;
 
@@ -91,14 +90,6 @@ public class BluetoothFragment extends Fragment {
             }
         });
         tabLayout.setupWithViewPager(viewPager);
-
-        btnTest = inflate.findViewById(R.id.button);
-        btnTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBluetoothFragmentInteractionListener.onTestButtonClick();
-            }
-        });
     }
 
     public void setSwitchBtState(boolean state) {
@@ -212,8 +203,6 @@ public class BluetoothFragment extends Fragment {
         void onBluetoothFragmentCreateView();
 
         void onBluetoothFragmentStart();
-
-        void onTestButtonClick();
 
         void onDevicesPageSelected(int position);
 

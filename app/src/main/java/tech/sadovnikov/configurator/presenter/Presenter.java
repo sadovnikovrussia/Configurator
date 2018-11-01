@@ -1,6 +1,5 @@
 package tech.sadovnikov.configurator.presenter;
 
-import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -10,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Message;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -105,17 +103,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     }
 
     @Override
-    public void startDiscovery() {
-        bluetoothService.clearAvailableDevices();
-        // TODO <Проверить, при каких условиях требуется данный permission>
-        int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
-        ActivityCompat.requestPermissions((MainActivity) mainView,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-        bluetoothService.startDiscovery();
-    }
-
-    @Override
     public void onHandleMessage(Message msg) {
         Object obj = msg.obj;
         switch (msg.what) {
@@ -134,7 +121,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
                 onReceiveCommand();
                 break;
             case WHAT_LOADING_END:
-                // mainView.hideLoadingProgress();
+                mainView.hideLoadingProgress();
                 break;
         }
     }
@@ -143,17 +130,88 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         loader.nextCommand();
     }
 
+
     // ---------------------------------------------------------------------------------------------
-    // BluetoothFragment events
+    // MainActivity events
     @Override
-    public void onTestButtonClick() {
-        int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
-        ActivityCompat.requestPermissions((MainActivity) mainView,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-        // fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSetAndSave());
+    public boolean onNavigationItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.navigation_bluetooth:
+                mainView.showFragment(Contract.View.BLUETOOTH_FRAGMENT);
+                return true;
+            case R.id.navigation_configuration:
+                mainView.showFragment(Contract.View.CONFIGURATION_FRAGMENT);
+                return true;
+            case R.id.navigation_console:
+                mainView.showFragment(Contract.View.CONSOLE_FRAGMENT);
+                return true;
+        }
+        return false;
+
+    }
+
+    @Override
+    public void startDiscovery() {
+    }
+
+    @Override
+    public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case MainActivity.FILE_MANAGER_REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    repositoryConfiguration.setUiConfiguration(fileManager.openConfiguration(Objects.requireNonNull(data.getData()).getPath()));
+                }
+        }
+    }
+
+    @Override
+    public void onPositiveRequestReadExternalStoragePermissionRequestResult() {
         mainView.startFileManagerActivity();
     }
+
+    @Override
+    public void onNegativeRequestReadExternalStoragePermissionRequestResult() {
+
+    }
+
+    @Override
+    public void onPositiveRequestWriteExternalStoragePermissionRequestResult() {
+        fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSetAndSave());
+    }
+
+    @Override
+    public void onNegativeRequestWriteExternalStoragePermissionRequestResult() {
+
+    }
+
+    @Override
+    public void onPositiveRequestAccessCoarseLocationPermissionRequestResult() {
+        // bluetoothService.clearAvailableDevices();
+        bluetoothService.startDiscovery();
+    }
+
+    @Override
+    public void onNegativeRequestAccessCoarseLocationPermissionRequestResult() {
+
+    }
+
+    // Lifecycle
+    @Override
+    public void onMainActivityCreate() {
+        mainView.showFragment(Contract.View.BLUETOOTH_FRAGMENT);
+    }
+
+    @Override
+    public void onMainActivityDestroy() {
+        mainView.unregisterBluetoothBroadcastReceiver(bluetoothBroadcastReceiver);
+        if (bluetoothService != null) {
+            bluetoothService.closeAllConnections();
+        }
+    }
+
+
+    // ---------------------------------------------------------------------------------------------
+    // BluetoothFragment events
 
     @Override
     public void onSwitchBtStateChanged(boolean state) {
@@ -171,7 +229,8 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
             bluetoothService.cancelDiscovery();
             mainView.updatePairedDevices();
         } else if (position == 1) {
-            startDiscovery();
+            // TODO
+            mainView.startBluetoothDiscoveryWithRequestPermission();
         }
     }
 
@@ -252,10 +311,9 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
             //loader.loadConfiguration(repositoryConfiguration.getUiConfiguration(), Loader.READ);
             loader.loadCommandList(repositoryConfiguration.getCommandListForReadConfiguration());
         } else if (itemId == R.id.item_open) {
-            mainView.startFileManagerActivity();
+            mainView.startFileManagerActivityWithRequestPermission();
         } else if (itemId == R.id.item_save) {
             mainView.requestWritePermission();
-            fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSetAndSave());
         }
     }
 
@@ -572,7 +630,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         if (!hasFocus) repositoryConfiguration.setParameterFromUi(DELIV_TIMEOUT, mainView.getEtDelivTimeoutText());
     }
 
-    // TODO <ДОБАВИТЬ ПАРАМЕТР>
     // Lifecycle
     @Override
     public void onConfigSimCardFragmentStart() {
@@ -601,49 +658,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onConsoleFragmentCreateView() {
         mainView.showLog(logs.getLogsMessages());
-    }
-
-
-    // MainActivity events -------------------------------------------------------------------------
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.navigation_bluetooth:
-                mainView.showFragment(Contract.View.BLUETOOTH_FRAGMENT);
-                return true;
-            case R.id.navigation_configuration:
-                mainView.showFragment(Contract.View.CONFIGURATION_FRAGMENT);
-                return true;
-            case R.id.navigation_console:
-                mainView.showFragment(Contract.View.CONSOLE_FRAGMENT);
-                return true;
-        }
-        return false;
-
-    }
-
-    @Override
-    public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case MainActivity.FILE_MANAGER_REQUEST_CODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    repositoryConfiguration.setUiConfiguration(fileManager.openConfiguration(Objects.requireNonNull(data.getData()).getPath()));
-                }
-        }
-    }
-
-    // Lifecycle
-    @Override
-    public void onMainActivityCreate() {
-        mainView.showFragment(Contract.View.BLUETOOTH_FRAGMENT);
-    }
-
-    @Override
-    public void onMainActivityDestroy() {
-        mainView.unregisterBluetoothBroadcastReceiver(bluetoothBroadcastReceiver);
-        if (bluetoothService != null) {
-            bluetoothService.closeAllConnections();
-        }
     }
 
     // Logs events ---------------------------------------------------------------------------------
@@ -717,10 +731,10 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         // mainView.setLoadingProgress(commandNumber);
     }
 
-//    @Override
-//    public void onEndOfLoading() {
-//        mainView.hideLoadingProgress();
-//    }
+    @Override
+    public void onEndOfLoading() {
+        mainView.hideLoadingProgress();
+    }
 
     @Override
     public void onConnectingTo(String name) {

@@ -36,8 +36,6 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onBindViewHolder.onClick, position = " + String.valueOf(position) +
-                        ", " + holder.tvDeviceName.getText() + ": " + holder.tvDeviceAddress.getText());
                 onBluetoothFragmentInteractionListener.onPairedDevicesRvItemClicked(String.valueOf(holder.tvDeviceAddress.getText()));
             }
         });
@@ -45,9 +43,8 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
 
     @Override
     public int getItemCount() {
-        int count = onBluetoothFragmentInteractionListener.onGetItemCountOfPairedDevicesRvAdapter();
         // Logs.d(TAG, "getItemCount: " + String.valueOf(count));
-        return count;
+        return onBluetoothFragmentInteractionListener.onGetItemCountOfPairedDevicesRvAdapter();
     }
 
     public void updatePairedBluetoothDevices() {
@@ -57,7 +54,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
 
     // ViewHolder
     class BluetoothDeviceViewHolder extends RecyclerView.ViewHolder implements PairedDevicesItemView {
-        private static final String TAG = "PairDevAdaptViewHolder";
+        // private static final String TAG = "PairDevAdaptViewHolder";
         private TextView tvDeviceName;
         private TextView tvDeviceAddress;
 

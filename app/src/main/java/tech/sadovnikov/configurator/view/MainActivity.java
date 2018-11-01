@@ -16,6 +16,9 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
@@ -23,6 +26,7 @@ import tech.sadovnikov.configurator.presenter.Presenter;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
+import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 import static tech.sadovnikov.configurator.model.Configuration.ALARM_INT;
 import static tech.sadovnikov.configurator.model.Configuration.ANSW_NUMBER;
 import static tech.sadovnikov.configurator.model.Configuration.APN;
@@ -73,14 +77,16 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     private static final String TAG = "MainActivity";
 
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 3;
+
     Contract.Presenter presenter;
 
     // UI
     FrameLayout container;
     BottomNavigationView navigation;
     ProgressBar progressBar;
-
-    // Menu menuActionsWithConfiguration;
 
     // Fragments
     BluetoothFragment bluetoothFragment;
@@ -97,15 +103,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         Log.v(TAG, "onConstructor");
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "onCreate");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initUi();
-        presenter = new Presenter(this);
-        presenter.onMainActivityCreate();
-    }
 
     private void initUi() {
         container = findViewById(R.id.container);
@@ -467,19 +464,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         return consoleFragment.getCommandLineText();
     }
 
-    // TODO <Нужно ли здесь делать принудительный запрос permission>
-    @Override
-    public void startFileManagerActivity() {
-        int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 3;
-        ActivityCompat.requestPermissions(
-                this,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        startActivityForResult(intent, FILE_MANAGER_REQUEST_CODE);
-    }
-
     @Override
     public String getEtBlinkerLxText() {
         return configMainFragment.etBlinkerLx.getText().toString();
@@ -520,14 +504,26 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         return configMainFragment.etMaxActive.getText().toString();
     }
 
-    // TODO <Обработать permissions>
+    @Override
+    public void requestReadPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+    }
+
     @Override
     public void requestWritePermission() {
-        int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 4;
         ActivityCompat.requestPermissions(
                 this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+    }
+
+    @Override
+    public void requestBluetoothPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
     }
 
     @Override
@@ -657,28 +653,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
 
     // ---------------------------------------------------------------------------------------------
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // Log.d(TAG, "onActivityResult: " + "requestCode = " + requestCode + ", " + "resultCode = " + resultCode + ", " + "data = " + data.getData());
-        // data.getData();
-        presenter.onMainActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        presenter.onConfigurationOptionsItemSelected(item);
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    // ---------------------------------------------------------------------------------------------
     // OnBluetoothFragmentInteractionListener
     @Override
     public void onSwitchBtStateChanged(boolean state) {
@@ -734,12 +708,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     public int onGetItemCountOfAvailableDevicesRvAdapter() {
         return presenter.onGetItemCountOfAvailableDevicesRvAdapter();
     }
-
-    @Override
-    public void onTestButtonClick() {
-        presenter.onTestButtonClick();
-    }
-
 
     // ---------------------------------------------------------------------------------------------
     // OnConfigurationFragmentInteractionListener
@@ -1064,6 +1032,16 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     // ---------------------------------------------------------------------------------------------
     // States
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate");
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        presenter = new Presenter(this);
+        initUi();
+        presenter.onMainActivityCreate();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
@@ -1094,6 +1072,84 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         presenter.onMainActivityDestroy();
     }
 
-    // ---------------------------------------------------------------------------------------------
 
+    // ---------------------------------------------------------------------------------------------
+    // Activity
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        presenter.onConfigurationOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Log.d(TAG, "onActivityResult: " + "requestCode = " + requestCode + ", " + "resultCode = " + resultCode + ", " + "data = " + data.getData());
+        // data.getData();
+        presenter.onMainActivityResult(requestCode, resultCode, data);
+    }
+
+    // TODO <Нужно ли здесь делать принудительный запрос permission>
+    @Override
+    public void startFileManagerActivityWithRequestPermission() {
+        requestReadPermission();
+    }
+
+    @Override
+    public void startBluetoothDiscoveryWithRequestPermission() {
+        requestBluetoothPermission();
+    }
+
+    @Override
+    public void startFileManagerActivity() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        startActivityForResult(intent, FILE_MANAGER_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        ArrayList<String> pers = new ArrayList<>();
+        ArrayList<Integer> grants = new ArrayList<>();
+        Collections.addAll(pers, permissions);
+        for (int i : grantResults) {
+            grants.add(i);
+        }
+        Log.d(TAG, "onRequestPermissionsResult() returned: " + requestCode + ", " + pers + ", " + grants);
+        if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
+            if (grants.contains(PERMISSION_GRANTED)) {
+                Log.i(TAG, "onRequestPermissionsResult: Подверждено =)");
+                presenter.onPositiveRequestReadExternalStoragePermissionRequestResult();
+            } else {
+                Log.e(TAG, "onRequestPermissionsResult: Отклонено =(");
+                presenter.onNegativeRequestReadExternalStoragePermissionRequestResult();
+            }
+        }
+        else if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
+            if (grants.contains(PERMISSION_GRANTED)) {
+                Log.i(TAG, "onRequestPermissionsResult: Подверждено =)");
+                presenter.onPositiveRequestWriteExternalStoragePermissionRequestResult();
+            } else {
+                Log.e(TAG, "onRequestPermissionsResult: Отклонено =(");
+                presenter.onNegativeRequestWriteExternalStoragePermissionRequestResult();
+            }
+        }
+        else if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION) {
+            if (grants.contains(PERMISSION_GRANTED)) {
+                Log.i(TAG, "onRequestPermissionsResult: Подверждено =)");
+                presenter.onPositiveRequestAccessCoarseLocationPermissionRequestResult();
+            } else {
+                Log.e(TAG, "onRequestPermissionsResult: Отклонено =(");
+                presenter.onNegativeRequestAccessCoarseLocationPermissionRequestResult();
+            }
+        }
+
+    }
 }

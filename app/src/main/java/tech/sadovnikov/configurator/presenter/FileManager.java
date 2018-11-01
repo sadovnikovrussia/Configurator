@@ -92,6 +92,7 @@ public class FileManager {
 
     // TODO <Доделать проверки валидности пути и тд. (.cfg?), добавить выброс исключений>
     Configuration openConfiguration(String path) {
+        Log.d(TAG, "openConfiguration: ");
         FileReader fileReader;
         BufferedReader bufferedReader;
         Configuration configuration = Configuration.getEmptyConfiguration();

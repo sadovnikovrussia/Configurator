@@ -64,7 +64,9 @@ public interface Contract {
 
         String getEtIdText();
 
-        void startFileManagerActivity();
+        void startFileManagerActivityWithRequestPermission();
+
+        void startBluetoothDiscoveryWithRequestPermission();
 
         String getEtBlinkerLxText();
 
@@ -82,7 +84,13 @@ public interface Contract {
 
         String getEtMaxActiveText();
 
+        void requestReadPermission();
+
         void requestWritePermission();
+
+        void requestBluetoothPermission();
+
+        void startFileManagerActivity();
 
         String getEtLongDeviationText();
 
@@ -125,6 +133,7 @@ public interface Contract {
         String getEtSimAttemptsText();
 
         String getEtDelivTimeoutText();
+
     }
 
     interface Presenter {
@@ -154,6 +163,7 @@ public interface Contract {
 
         void onHandleMessage(Message msg);
 
+        void onEndOfLoading();
 
         boolean onNavigationItemSelected(MenuItem item);
 
@@ -182,8 +192,6 @@ public interface Contract {
         void onEtIdFocusChange(boolean hasFocus);
 
         void onAddLogsLineEvent(String line);
-
-        void onTestButtonClick();
 
         void onMainActivityResult(int requestCode, int resultCode, Intent data);
 
@@ -286,6 +294,18 @@ public interface Contract {
         void onEtSimAttemptsFocusChange(boolean hasFocus);
 
         void onEtDelivTimeoutFocusChange(boolean hasFocus);
+
+        void onNegativeRequestReadExternalStoragePermissionRequestResult();
+
+        void onPositiveRequestReadExternalStoragePermissionRequestResult();
+
+        void onPositiveRequestWriteExternalStoragePermissionRequestResult();
+
+        void onNegativeRequestWriteExternalStoragePermissionRequestResult();
+
+        void onPositiveRequestAccessCoarseLocationPermissionRequestResult();
+
+        void onNegativeRequestAccessCoarseLocationPermissionRequestResult();
     }
 
     interface Logs {

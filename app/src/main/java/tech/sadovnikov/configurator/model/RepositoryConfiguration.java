@@ -48,6 +48,7 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
      */
     @Override
     public void setUiConfiguration(Configuration configuration) {
+        Log.d(TAG, "setUiConfiguration: ");
         resetConfiguration();
         for (Parameter parameter : configuration.getParametersList()) {
             setParameter(parameter);
@@ -68,8 +69,9 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
 
     @Override
     public Configuration getConfigurationForSetAndSave() {
-        Log.d(TAG, "getConfigurationForSetAndSave: " + uiConfiguration);
-        return uiConfiguration.getConfigurationForSetAndSave();
+        Configuration configurationForSetAndSave = uiConfiguration.getConfigurationForSetAndSave();
+        Log.d(TAG, "getConfigurationForSetAndSave: ");
+        return configurationForSetAndSave;
     }
 
     @Override
