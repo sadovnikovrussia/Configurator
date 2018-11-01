@@ -49,21 +49,10 @@ public class ConfigBuoyFragment extends Fragment {
     private void initUi(View view) {
         tvId = view.findViewById(R.id.tv_id);
         etId = view.findViewById(R.id.et_id);
-        etId.addTextChangedListener(new TextWatcher() {
+        etId.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                Log.d(TAG, "afterTextChanged: etId");
-                onConfigBuoyFragmentInteractionListener.onEtIdAfterTextChanged();
+            public void onFocusChange(View v, boolean hasFocus) {
+                onConfigBuoyFragmentInteractionListener.onEtIdFocusChange(hasFocus);
             }
         });
         tvVersion = view.findViewById(R.id.tv_version);
@@ -161,7 +150,7 @@ public class ConfigBuoyFragment extends Fragment {
 
         void onConfigBuoyFragmentStart();
 
-        void onEtIdAfterTextChanged();
+        void onEtIdFocusChange(boolean hasFocus);
 
         void onBtnRestartClick();
 

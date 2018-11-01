@@ -6,12 +6,15 @@ import android.util.Log;
 import java.text.DecimalFormat;
 
 import static tech.sadovnikov.configurator.model.Configuration.ANSW_NUMBER;
+import static tech.sadovnikov.configurator.model.Configuration.APN;
 import static tech.sadovnikov.configurator.model.Configuration.CMD_NUMBER;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
+import static tech.sadovnikov.configurator.model.Configuration.LOGIN;
 import static tech.sadovnikov.configurator.model.Configuration.PACKETS;
+import static tech.sadovnikov.configurator.model.Configuration.PASSWORD;
 import static tech.sadovnikov.configurator.model.Configuration.SMS_CENTER;
 
-public class DataParser {
+class DataParser {
     private static final String TAG = "DataParser";
 
     String parseMessage(String message, String parameter) {
@@ -26,6 +29,12 @@ public class DataParser {
                 return parseNumber(message);
             case ANSW_NUMBER:
                 return parseNumber(message);
+            case APN:
+                return parseSim(message);
+            case LOGIN:
+                return parseSim(message);
+            case PASSWORD:
+                return parseSim(message);
             default:
                 int ravnoIndex = message.indexOf("=");
                 int endIndex = message.indexOf("\r\n", ravnoIndex);
@@ -34,10 +43,28 @@ public class DataParser {
 
     }
 
+    private String parseSim(String message) {
+        int ravnoIndex = message.indexOf("=");
+        int endIndex = message.indexOf("\r\n", ravnoIndex);
+        String s = message.substring(ravnoIndex + 1, endIndex).trim();
+        if (message.contains("?")) {
+            return s;
+        } else {
+            switch (s) {
+                case "\"\"":
+                    return "\"Cellular operator defaults\"";
+                case "''":
+                    return "\"\"";
+                default:
+                    return "\"" + s + "\"";
+            }
+        }
+    }
+
     private String parseNumber(String message) {
         int ravnoIndex = message.indexOf("=");
         int endIndex = message.indexOf("\r\n", ravnoIndex);
-        if (message.contains("\"")){
+        if (message.contains("\"")) {
             return message.substring(ravnoIndex + 1, endIndex).replaceAll(" ", "").replaceAll("\"", "");
         }
         return message.substring(ravnoIndex + 1, endIndex).replaceAll(" ", "");

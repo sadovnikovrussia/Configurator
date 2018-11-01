@@ -34,11 +34,11 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
     }
 
     @Override
-    public void setParameterWithoutCallback(String name, String value) {
-        Log.i(TAG, "setParameterWithoutCallback: ДО: " + uiConfiguration);
-        Log.i(TAG, "setParameterWithoutCallback: Устанавливаем " + new Parameter(name, value));
-        uiConfiguration.setParameter(name, value);
-        Log.i(TAG, "setParameterWithoutCallback: ПОСЛЕ: " + uiConfiguration);
+    public void setParameterFromUi(String name, String value) {
+        Log.i(TAG, "setParameter: ДО: " + uiConfiguration);
+        Log.i(TAG, "setParameter: Устанавливаем " + new Parameter(name, value));
+        uiConfiguration.setParameterFromUi(name, value);
+        Log.i(TAG, "setParameter: ПОСЛЕ: " + uiConfiguration);
     }
 
     /**

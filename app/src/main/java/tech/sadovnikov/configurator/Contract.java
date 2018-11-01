@@ -23,6 +23,7 @@ public interface Contract {
         String CONFIG_NAVIGATION_FRAGMENT = "Навигация";
         String CONFIG_EVENTS_FRAGMENT = "События";
         String CONFIG_SERVER_FRAGMENT = "Сервер";
+        String CONFIG_SIM_CARD_FRAGMENT = "SIM карта";
         int FILE_MANAGER_REQUEST_CODE = 1;
 
         // Показать (установить фрагмент в MainActivity)
@@ -112,6 +113,18 @@ public interface Contract {
         String getEtCmdNumberText();
 
         String getEtAnswNumberText();
+
+        String getEtApnText();
+
+        String getEtPasswordText();
+
+        String getEtLoginText();
+
+        String getEtPinText();
+
+        String getEtSimAttemptsText();
+
+        String getEtDelivTimeoutText();
     }
 
     interface Presenter {
@@ -166,7 +179,7 @@ public interface Contract {
 
         void onConfigurationOptionsItemSelected(MenuItem item);
 
-        void onEtIdAfterTextChanged();
+        void onEtIdFocusChange(boolean hasFocus);
 
         void onAddLogsLineEvent(String line);
 
@@ -245,6 +258,34 @@ public interface Contract {
         void onBtnClearArchiveClick();
 
         void onBtnCloseConnectClick();
+
+        void onEtApnFocusChange(boolean hasFocus);
+
+        void onConfigSimCardFragmentStart();
+
+        void onEtPasswordFocusChange(boolean hasFocus);
+
+        void onEtLoginFocusChange(boolean hasFocus);
+
+        void onBtnDefaultApnClick();
+
+        void onBtnDefaultLoginClick();
+
+        void onBtnDefaultPasswordClick();
+
+        void onBtnClearApnClick();
+
+        void onBtnClearLoginClick();
+
+        void onBtnClearPasswordClick();
+
+        void onBtnEnterPinClick();
+
+        void onBtnClearPinClick();
+
+        void onEtSimAttemptsFocusChange(boolean hasFocus);
+
+        void onEtDelivTimeoutFocusChange(boolean hasFocus);
     }
 
     interface Logs {
@@ -263,7 +304,7 @@ public interface Contract {
 
         void setParameter(Parameter parameter);
 
-        void setParameterWithoutCallback(String name, String value);
+        void setParameterFromUi(String name, String value);
 
         ArrayList<String> getCommandListForReadConfiguration();
 

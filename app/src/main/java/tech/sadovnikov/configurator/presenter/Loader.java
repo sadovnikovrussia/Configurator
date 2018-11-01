@@ -22,7 +22,7 @@ class Loader {
     private boolean loading = false;
     private int commandNumber = 0;
     private int attemptNumber = 1;
-    private int period = 3000;
+    private int period = 2500;
 
     private ArrayList<String> commandList;
 

@@ -28,12 +28,14 @@ import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
 import static tech.sadovnikov.configurator.model.Configuration.ALARM_INT;
 import static tech.sadovnikov.configurator.model.Configuration.ANSW_NUMBER;
+import static tech.sadovnikov.configurator.model.Configuration.APN;
 import static tech.sadovnikov.configurator.model.Configuration.BASE_POS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNESS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.CMD_NUMBER;
 import static tech.sadovnikov.configurator.model.Configuration.CONNECT_ATTEMPTS;
+import static tech.sadovnikov.configurator.model.Configuration.DELIV_TIMEOUT;
 import static tech.sadovnikov.configurator.model.Configuration.DEVIATION_INT;
 import static tech.sadovnikov.configurator.model.Configuration.EVENTS_MASK;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
@@ -42,16 +44,19 @@ import static tech.sadovnikov.configurator.model.Configuration.HDOP;
 import static tech.sadovnikov.configurator.model.Configuration.ID;
 import static tech.sadovnikov.configurator.model.Configuration.IMPACT_POW;
 import static tech.sadovnikov.configurator.model.Configuration.LAT_DEVIATION;
+import static tech.sadovnikov.configurator.model.Configuration.LOGIN;
 import static tech.sadovnikov.configurator.model.Configuration.LONG_DEVIATION;
 import static tech.sadovnikov.configurator.model.Configuration.MAX_ACTIVE;
 import static tech.sadovnikov.configurator.model.Configuration.MAX_DEVIATION;
 import static tech.sadovnikov.configurator.model.Configuration.NORMAL_INT;
 import static tech.sadovnikov.configurator.model.Configuration.PACKETS;
 import static tech.sadovnikov.configurator.model.Configuration.PACKET_TOUT;
+import static tech.sadovnikov.configurator.model.Configuration.PASSWORD;
 import static tech.sadovnikov.configurator.model.Configuration.PRIORITY_CHNL;
 import static tech.sadovnikov.configurator.model.Configuration.SATELLITE_SYSTEM;
 import static tech.sadovnikov.configurator.model.Configuration.SERVER;
 import static tech.sadovnikov.configurator.model.Configuration.SESSION_TIME;
+import static tech.sadovnikov.configurator.model.Configuration.SIM_ATTEMPTS;
 import static tech.sadovnikov.configurator.model.Configuration.SMS_CENTER;
 import static tech.sadovnikov.configurator.model.Configuration.TILT_ANGLE;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
@@ -129,7 +134,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
                 onReceiveCommand();
                 break;
             case WHAT_LOADING_END:
-                mainView.hideLoadingProgress();
+                // mainView.hideLoadingProgress();
                 break;
         }
     }
@@ -274,8 +279,8 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     }
 
     @Override
-    public void onEtIdAfterTextChanged() {
-        repositoryConfiguration.setParameterWithoutCallback(ID, mainView.getEtIdText());
+    public void onEtIdFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(ID, mainView.getEtIdText());
     }
 
     // Lifecycle
@@ -291,13 +296,13 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // ConfigMainFragment events
     @Override
     public void onSpinBlinkerModeItemSelected(int position) {
-        Log.d(TAG, "onSpinBlinkerModeItemSelected: position = " + position);
-        repositoryConfiguration.setParameterWithoutCallback(BLINKER_MODE, String.valueOf(position));
+        // Log.d(TAG, "onSpinBlinkerModeItemSelected: position = " + position);
+        repositoryConfiguration.setParameterFromUi(BLINKER_MODE, String.valueOf(position));
     }
 
     @Override
     public void onEtBlinkerLxFocusChange(boolean hasFocus) {
-        repositoryConfiguration.setParameterWithoutCallback(BLINKER_LX, mainView.getEtBlinkerLxText());
+        repositoryConfiguration.setParameterFromUi(BLINKER_LX, mainView.getEtBlinkerLxText());
     }
 
     @Override
@@ -312,38 +317,38 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onEtMaxDeviationFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(MAX_DEVIATION, mainView.getEtMaxDeviationText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(MAX_DEVIATION, mainView.getEtMaxDeviationText());
     }
 
     @Override
     public void onEtTiltAngleFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(TILT_ANGLE, mainView.getEtTiltDeviationText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(TILT_ANGLE, mainView.getEtTiltDeviationText());
     }
 
     @Override
     public void onEtImpactPowFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(IMPACT_POW, mainView.getEtImpactPowText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(IMPACT_POW, mainView.getEtImpactPowText());
     }
 
     @Override
     public void onEtUpowerThldFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(UPOWER_THLD, mainView.getEtUpowerThldText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(UPOWER_THLD, mainView.getEtUpowerThldText());
     }
 
     @Override
     public void onEtDeviationIntFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(DEVIATION_INT, mainView.getEtDeviationIntText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(DEVIATION_INT, mainView.getEtDeviationIntText());
     }
 
     @Override
     public void onEtMaxActiveFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(MAX_ACTIVE, mainView.getEtMaxActiveText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(MAX_ACTIVE, mainView.getEtMaxActiveText());
     }
 
     @Override
     public void onSpinBlinkerBrightnessItemSelected(int position) {
-        Log.d(TAG, "onSpinBlinkerBrightnessItemSelected: position = " + position);
-        repositoryConfiguration.setParameterWithoutCallback(BLINKER_BRIGHTNESS, String.valueOf(position));
+        // Log.d(TAG, "onSpinBlinkerBrightnessItemSelected: position = " + position);
+        repositoryConfiguration.setParameterFromUi(BLINKER_BRIGHTNESS, String.valueOf(position));
     }
 
     // Lifecycle
@@ -372,27 +377,27 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onEtLongDeviationFocusChanged(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(LONG_DEVIATION, mainView.getEtLongDeviationText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(LONG_DEVIATION, mainView.getEtLongDeviationText());
     }
 
     @Override
     public void onEtLatDeviationFocusChanged(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(LAT_DEVIATION, mainView.getEtLatDeviationText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(LAT_DEVIATION, mainView.getEtLatDeviationText());
     }
 
     @Override
     public void onEtHdopFocusChanged(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(HDOP, mainView.getEtHdopText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(HDOP, mainView.getEtHdopText());
     }
 
     @Override
     public void onEtFixDelayFocusChanged(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(FIX_DELAY, mainView.getEtFixDelayText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(FIX_DELAY, mainView.getEtFixDelayText());
     }
 
     @Override
     public void onSpinSatelliteSystemItemSelected(int position) {
-        repositoryConfiguration.setParameterWithoutCallback(SATELLITE_SYSTEM, String.valueOf(position));
+        repositoryConfiguration.setParameterFromUi(SATELLITE_SYSTEM, String.valueOf(position));
     }
 
     @Override
@@ -421,7 +426,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onEventsMaskCbClick() {
-        repositoryConfiguration.setParameterWithoutCallback(EVENTS_MASK, mainView.getCheckedEventsMask());
+        repositoryConfiguration.setParameterFromUi(EVENTS_MASK, mainView.getCheckedEventsMask());
     }
 
     // Lifecycle
@@ -435,56 +440,55 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // ConfigServerFragment events
     @Override
     public void onEtServerFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(SERVER, mainView.getEtServerText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(SERVER, mainView.getEtServerText());
     }
 
     @Override
     public void onEtConnectAttemptsFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(CONNECT_ATTEMPTS, mainView.getEtConnectAttemptsText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(CONNECT_ATTEMPTS, mainView.getEtConnectAttemptsText());
     }
 
     @Override
     public void onEtSessionTimeFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(SESSION_TIME, mainView.getEtSessionTimeText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(SESSION_TIME, mainView.getEtSessionTimeText());
     }
 
     @Override
     public void onEtPacketToutFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(PACKET_TOUT, mainView.getEtPacketToutText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(PACKET_TOUT, mainView.getEtPacketToutText());
     }
 
     @Override
     public void onSpinPriorityChnlItemClick(int position) {
-        repositoryConfiguration.setParameterWithoutCallback(PRIORITY_CHNL, String.valueOf(position));
+        repositoryConfiguration.setParameterFromUi(PRIORITY_CHNL, String.valueOf(position));
     }
 
     @Override
     public void onEtNormalIntFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(NORMAL_INT, mainView.getEtNormalIntText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(NORMAL_INT, mainView.getEtNormalIntText());
     }
 
     @Override
     public void onEtAlarmIntFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(ALARM_INT, mainView.getEtAlarmIntText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(ALARM_INT, mainView.getEtAlarmIntText());
     }
 
     @Override
     public void onEtSmsCenterFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(SMS_CENTER, mainView.getEtSmsCenterText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(SMS_CENTER, mainView.getEtSmsCenterText());
     }
 
     @Override
     public void onEtCmdNumberFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(CMD_NUMBER, mainView.getEtCmdNumberText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(CMD_NUMBER, mainView.getEtCmdNumberText());
     }
 
     @Override
     public void onEtAnswNumberFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterWithoutCallback(ANSW_NUMBER, mainView.getEtAnswNumberText());
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(ANSW_NUMBER, mainView.getEtAnswNumberText());
     }
 
     // Lifecycle
-    // TODO <ДОБАВИТЬ ПАРАМЕТР>
     @Override
     public void onConfigServerFragmentStart() {
         mainView.showParameter(SERVER, repositoryConfiguration.getParameterValue(SERVER));
@@ -498,6 +502,85 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         mainView.showParameter(CMD_NUMBER, repositoryConfiguration.getParameterValue(CMD_NUMBER));
         mainView.showParameter(ANSW_NUMBER, repositoryConfiguration.getParameterValue(ANSW_NUMBER));
         mainView.showParameter(PACKETS, repositoryConfiguration.getParameterValue(PACKETS));
+    }
+
+
+    // ---------------------------------------------------------------------------------------------
+    // ConfigSimCardFragment events
+    @Override
+    public void onEtApnFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(APN, mainView.getEtApnText());
+    }
+
+    @Override
+    public void onEtLoginFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(LOGIN, mainView.getEtLoginText());
+    }
+
+    @Override
+    public void onEtPasswordFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(PASSWORD, mainView.getEtPasswordText());
+    }
+
+    @Override
+    public void onBtnDefaultApnClick() {
+        bluetoothService.sendData("apn=\"\"");
+    }
+
+    @Override
+    public void onBtnDefaultLoginClick() {
+        bluetoothService.sendData("login=\"\"");
+    }
+
+    @Override
+    public void onBtnDefaultPasswordClick() {
+        bluetoothService.sendData("password=\"\"");
+    }
+
+    @Override
+    public void onBtnClearApnClick() {
+        bluetoothService.sendData("apn=\'\'");
+    }
+
+    @Override
+    public void onBtnClearLoginClick() {
+        bluetoothService.sendData("login=\'\'");
+    }
+
+    @Override
+    public void onBtnClearPasswordClick() {
+        bluetoothService.sendData("password=\'\'");
+    }
+
+    @Override
+    public void onBtnEnterPinClick() {
+        bluetoothService.sendData("pin=" + mainView.getEtPinText());
+    }
+
+    @Override
+    public void onBtnClearPinClick() {
+        bluetoothService.sendData("clear pin=" + mainView.getEtPinText());
+    }
+
+    @Override
+    public void onEtSimAttemptsFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(SIM_ATTEMPTS, mainView.getEtSimAttemptsText());
+    }
+
+    @Override
+    public void onEtDelivTimeoutFocusChange(boolean hasFocus) {
+        if (!hasFocus) repositoryConfiguration.setParameterFromUi(DELIV_TIMEOUT, mainView.getEtDelivTimeoutText());
+    }
+
+    // TODO <ДОБАВИТЬ ПАРАМЕТР>
+    // Lifecycle
+    @Override
+    public void onConfigSimCardFragmentStart() {
+        mainView.showParameter(APN, repositoryConfiguration.getParameterValue(APN));
+        mainView.showParameter(LOGIN, repositoryConfiguration.getParameterValue(LOGIN));
+        mainView.showParameter(PASSWORD, repositoryConfiguration.getParameterValue(PASSWORD));
+        mainView.showParameter(SIM_ATTEMPTS, repositoryConfiguration.getParameterValue(SIM_ATTEMPTS));
+        mainView.showParameter(DELIV_TIMEOUT, repositoryConfiguration.getParameterValue(DELIV_TIMEOUT));
     }
 
 
@@ -625,12 +708,13 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onStartLoading(int size) {
-        mainView.showLoadingProgress(size);
+        // TODO <Переделать обработку>
+        // mainView.showLoadingProgress(size);
     }
 
     @Override
     public void onNextCommand(int commandNumber) {
-        mainView.setLoadingProgress(commandNumber);
+        // mainView.setLoadingProgress(commandNumber);
     }
 
 //    @Override

@@ -15,7 +15,7 @@ public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapte
 
     private ConfigurationFragment.OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener;
 
-    private String[] configTabs = new String[]{"Буй", "Основные", "Навигация", "События", "Сервер"};
+    private String[] configTabs = new String[]{"Буй", "Основные", "Навигация", "События", "Сервер", "SIM карта"};
 
 
     public ConfigTabsRvAdapter(ConfigurationFragment.OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener) {

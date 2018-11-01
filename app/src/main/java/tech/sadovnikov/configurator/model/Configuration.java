@@ -44,6 +44,11 @@ public class Configuration {
     public static final String CMD_NUMBER = "cmd number";
     public static final String ANSW_NUMBER = "answ number";
     public static final String PACKETS = "packets";
+    public static final String APN = "apn";
+    public static final String LOGIN = "login";
+    public static final String PASSWORD = "password";
+    public static final String SIM_ATTEMPTS = "sim attempts";
+    public static final String DELIV_TIMEOUT = "deliv timeout";
 
     // TODO <ДОБАВИТЬ ПАРАМЕТР>
     public static final String[] PARAMETER_NAMES = new String[]{
@@ -51,7 +56,8 @@ public class Configuration {
             TILT_ANGLE, IMPACT_POW, UPOWER_THLD, DEVIATION_INT, MAX_ACTIVE, UPOWER, BASE_POS,
             LONG_DEVIATION, LAT_DEVIATION, HDOP, FIX_DELAY, SATELLITE_SYSTEM, EVENTS_MASK, SERVER,
             CONNECT_ATTEMPTS, SESSION_TIME, PACKET_TOUT, PRIORITY_CHNL, NORMAL_INT, ALARM_INT,
-            SMS_CENTER, CMD_NUMBER, ANSW_NUMBER, PACKETS};
+            SMS_CENTER, CMD_NUMBER, ANSW_NUMBER, PACKETS, APN, LOGIN, PASSWORD, SIM_ATTEMPTS,
+            DELIV_TIMEOUT};
     public static final ArrayList<String> PARAMETER_NAMES_LIST = new ArrayList<>();
 
     static {
@@ -138,14 +144,20 @@ public class Configuration {
         }
     }
 
-    void setParameter(String name, String value) {
+    void setParameterFromUi(String name, String value) {
         if (PARAMETER_NAMES_LIST.contains(name)) {
-            Parameter parameter = new Parameter(name, value);
+            Parameter parameter;
+            if ((name.equals(APN) || name.equals(LOGIN) || name.equals(PASSWORD)) && (!value.endsWith("\"") || !value.startsWith("\""))) {
+                String s = (char) 34 + value + (char) 34;
+                parameter = new Parameter(name, s);
+            } else {
+                parameter = new Parameter(name, value);
+            }
             if (parametersList.contains(parameter)) {
                 int index = parametersList.indexOf(parameter);
                 parametersList.get(index).setValue(parameter.getValue());
             } else {
-                Log.w(TAG, "setParameter: В конфигурации нет параметра " + parameter + "configuration = " + this);
+                Log.w(TAG, "setParameterFromUi: В конфигурации нет параметра " + parameter + "configuration = " + this);
             }
         }
     }

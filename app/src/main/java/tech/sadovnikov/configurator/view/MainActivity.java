@@ -25,12 +25,14 @@ import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
 
 import static tech.sadovnikov.configurator.model.Configuration.ALARM_INT;
 import static tech.sadovnikov.configurator.model.Configuration.ANSW_NUMBER;
+import static tech.sadovnikov.configurator.model.Configuration.APN;
 import static tech.sadovnikov.configurator.model.Configuration.BASE_POS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_BRIGHTNESS;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.CMD_NUMBER;
 import static tech.sadovnikov.configurator.model.Configuration.CONNECT_ATTEMPTS;
+import static tech.sadovnikov.configurator.model.Configuration.DELIV_TIMEOUT;
 import static tech.sadovnikov.configurator.model.Configuration.DEVIATION_INT;
 import static tech.sadovnikov.configurator.model.Configuration.EVENTS_MASK;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
@@ -39,16 +41,19 @@ import static tech.sadovnikov.configurator.model.Configuration.HDOP;
 import static tech.sadovnikov.configurator.model.Configuration.ID;
 import static tech.sadovnikov.configurator.model.Configuration.IMPACT_POW;
 import static tech.sadovnikov.configurator.model.Configuration.LAT_DEVIATION;
+import static tech.sadovnikov.configurator.model.Configuration.LOGIN;
 import static tech.sadovnikov.configurator.model.Configuration.LONG_DEVIATION;
 import static tech.sadovnikov.configurator.model.Configuration.MAX_ACTIVE;
 import static tech.sadovnikov.configurator.model.Configuration.MAX_DEVIATION;
 import static tech.sadovnikov.configurator.model.Configuration.NORMAL_INT;
 import static tech.sadovnikov.configurator.model.Configuration.PACKETS;
 import static tech.sadovnikov.configurator.model.Configuration.PACKET_TOUT;
+import static tech.sadovnikov.configurator.model.Configuration.PASSWORD;
 import static tech.sadovnikov.configurator.model.Configuration.PRIORITY_CHNL;
 import static tech.sadovnikov.configurator.model.Configuration.SATELLITE_SYSTEM;
 import static tech.sadovnikov.configurator.model.Configuration.SERVER;
 import static tech.sadovnikov.configurator.model.Configuration.SESSION_TIME;
+import static tech.sadovnikov.configurator.model.Configuration.SIM_ATTEMPTS;
 import static tech.sadovnikov.configurator.model.Configuration.SMS_CENTER;
 import static tech.sadovnikov.configurator.model.Configuration.TILT_ANGLE;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
@@ -85,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     ConfigNavigationFragment configNavigationFragment;
     ConfigEventsFragment configEventsFragment;
     ConfigServerFragment configServerFragment;
+    ConfigSimCardFragment configSimCardFragment;
     ConsoleFragment consoleFragment;
 
     public MainActivity() {
@@ -182,9 +188,14 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 break;
             case BASE_POS:
                 if (configNavigationFragment != null && configNavigationFragment.etBaseLongitude != null && configNavigationFragment.etBaseLatitude != null) {
-                    String[] strings = value.split(",");
-                    configNavigationFragment.etBaseLongitude.setText(strings[0].trim());
-                    configNavigationFragment.etBaseLatitude.setText(strings[1].trim());
+                    if (value.isEmpty()){
+                        configNavigationFragment.etBaseLongitude.setText("");
+                        configNavigationFragment.etBaseLatitude.setText("");
+                    } else {
+                        String[] strings = value.split(",");
+                        configNavigationFragment.etBaseLongitude.setText(strings[0].trim());
+                        configNavigationFragment.etBaseLatitude.setText(strings[1].trim());
+                    }
                 }
                 break;
             case LONG_DEVIATION:
@@ -265,6 +276,31 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                     configServerFragment.etPacketsPercents.setText(value.split(",")[1]);
                 }
                 break;
+            case APN:
+                if (configSimCardFragment != null && configSimCardFragment.etApn != null) {
+                    configSimCardFragment.etApn.setText(value.replaceAll("\"", ""));
+                }
+                break;
+            case LOGIN:
+                if (configSimCardFragment != null && configSimCardFragment.etLogin != null) {
+                    configSimCardFragment.etLogin.setText(value.replaceAll("\"", ""));
+                }
+                break;
+            case PASSWORD:
+                if (configSimCardFragment != null && configSimCardFragment.etPassword != null) {
+                    configSimCardFragment.etPassword.setText(value.replaceAll("\"", ""));
+                }
+                break;
+            case SIM_ATTEMPTS:
+                if (configSimCardFragment != null && configSimCardFragment.etSimAttempts != null) {
+                    configSimCardFragment.etSimAttempts.setText(value);
+                }
+                break;
+            case DELIV_TIMEOUT:
+                if (configSimCardFragment != null && configSimCardFragment.etDelivTimeOut != null) {
+                    configSimCardFragment.etDelivTimeOut.setText(value);
+                }
+                break;
         }
     }
 
@@ -314,6 +350,11 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 fragmentTransaction.replace(R.id.container, configServerFragment);
                 navigation.setSelectedItemId(configurationFragment.getId());
                 break;
+            case CONFIG_SIM_CARD_FRAGMENT:
+                configSimCardFragment = new ConfigSimCardFragment();
+                fragmentTransaction.replace(R.id.container, configSimCardFragment);
+                navigation.setSelectedItemId(configurationFragment.getId());
+                break;
         }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -346,6 +387,9 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 navigation.getMenu().getItem(1).setChecked(true);
                 break;
             case CONFIG_SERVER_FRAGMENT:
+                navigation.getMenu().getItem(1).setChecked(true);
+                break;
+            case CONFIG_SIM_CARD_FRAGMENT:
                 navigation.getMenu().getItem(1).setChecked(true);
                 break;
         }
@@ -402,7 +446,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     public void showLoadingProgress(int size) {
         progressBar.setMax(size);
         progressBar.setVisibility(View.VISIBLE);
-        //container.setEnabled(false);
         container.setVisibility(View.INVISIBLE);
     }
 
@@ -582,6 +625,36 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         return configServerFragment.etAnswNumber.getText().toString();
     }
 
+    @Override
+    public String getEtApnText() {
+        return configSimCardFragment.etApn.getText().toString();
+    }
+
+    @Override
+    public String getEtPasswordText() {
+        return configSimCardFragment.etPassword.getText().toString();
+    }
+
+    @Override
+    public String getEtLoginText() {
+        return configSimCardFragment.etLogin.getText().toString();
+    }
+
+    @Override
+    public String getEtPinText() {
+        return configSimCardFragment.etPin.getText().toString();
+    }
+
+    @Override
+    public String getEtSimAttemptsText() {
+        return configSimCardFragment.etSimAttempts.getText().toString();
+    }
+
+    @Override
+    public String getEtDelivTimeoutText() {
+        return configSimCardFragment.etDelivTimeOut.getText().toString();
+    }
+
 
     // ---------------------------------------------------------------------------------------------
     @Override
@@ -684,8 +757,9 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     // ---------------------------------------------------------------------------------------------
     // OnConfigBuoyFragmentInteractionListener
     @Override
-    public void onEtIdAfterTextChanged() {
-        presenter.onEtIdAfterTextChanged();
+    public void onEtIdFocusChange(boolean hasFocus) {
+        presenter.onEtIdFocusChange(hasFocus);
+
     }
 
     @Override
@@ -892,12 +966,77 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     // ---------------------------------------------------------------------------------------------
     // OnConfigSimCardFragmentInteractionListener
+    @Override
+    public void onEtApnFocusChange(boolean hasFocus) {
+        presenter.onEtApnFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtLoginFocusChange(boolean hasFocus) {
+        presenter.onEtLoginFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtPasswordFocusChange(boolean hasFocus) {
+        presenter.onEtPasswordFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onBtnDefaultApnClick() {
+        presenter.onBtnDefaultApnClick();
+    }
+
+    @Override
+    public void onBtnDefaultLoginClick() {
+        presenter.onBtnDefaultLoginClick();
+    }
+
+    @Override
+    public void onBtnDefaultPasswordClick() {
+        presenter.onBtnDefaultPasswordClick();
+    }
+
+    @Override
+    public void onBtnClearApnClick() {
+        presenter.onBtnClearApnClick();
+    }
+
+    @Override
+    public void onBtnClearLoginClick() {
+        presenter.onBtnClearLoginClick();
+    }
+
+    @Override
+    public void onBtnClearPasswordClick() {
+        presenter.onBtnClearPasswordClick();
+    }
+
+    @Override
+    public void onBtnEnterPinClick() {
+        presenter.onBtnEnterPinClick();
+    }
+
+    @Override
+    public void onBtnClearPinClick() {
+        presenter.onBtnClearPinClick();
+    }
+
+    @Override
+    public void onEtSimAttemptsFocusChange(boolean hasFocus) {
+        presenter.onEtSimAttemptsFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtDelivTimeoutFocusChange(boolean hasFocus) {
+        presenter.onEtDelivTimeoutFocusChange(hasFocus);
+    }
 
     // Lifecycle
     @Override
     public void onConfigSimCardFragmentStart() {
-
+        presenter.onConfigSimCardFragmentStart();
     }
+
 
     // ---------------------------------------------------------------------------------------------
     // OnConsoleFragmentInteractionListener
