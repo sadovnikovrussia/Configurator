@@ -60,7 +60,7 @@ class Loader {
             task = new Task();
             commandNumber++;
             attemptNumber = 1;
-            onLoaderEventsListener.onNextCommand(commandNumber);
+            onLoaderEventsListener.onNextCommand(commandNumber, commandList.size());
             timer.schedule(task, 0, period);
         }
     }
@@ -103,6 +103,6 @@ class Loader {
     public interface OnLoaderEventsListener {
         void onStartLoading(int size);
 
-        void onNextCommand(int commandNumber);
+        void onNextCommand(int commandNumber, int size);
     }
 }

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -62,6 +63,7 @@ import static tech.sadovnikov.configurator.model.Configuration.UPOWER_THLD;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_COMMAND_DATA;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_MAIN_LOG;
 import static tech.sadovnikov.configurator.presenter.Loader.WHAT_LOADING_END;
+import static tech.sadovnikov.configurator.presenter.UiHandler.WHAT_CONNECTING_ERROR;
 
 public class Presenter implements Contract.Presenter, RepositoryConfiguration.OnRepositoryConfigurationEventsListener, Loader.OnLoaderEventsListener,
         BluetoothBroadcastReceiver.OnBluetoothBroadcastReceiverEventsListener, BluetoothService.OnBluetoothServiceEventsListener {
@@ -88,6 +90,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         repositoryConfiguration = new RepositoryConfiguration(this);
         registerBluetoothBroadcastReceiver((Context) mainView);
     }
+
 
     // Регистрация ресиверов
     private void registerBluetoothBroadcastReceiver(Context context) {
@@ -123,6 +126,9 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
             case WHAT_LOADING_END:
                 mainView.hideLoadingProgress();
                 break;
+            case WHAT_CONNECTING_ERROR:
+                mainView.showToast("Не удалось выполнить подключение к устройству");
+                break;
         }
     }
 
@@ -148,10 +154,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         }
         return false;
 
-    }
-
-    @Override
-    public void startDiscovery() {
     }
 
     @Override
@@ -186,7 +188,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onPositiveRequestAccessCoarseLocationPermissionRequestResult() {
-        // bluetoothService.clearAvailableDevices();
         bluetoothService.startDiscovery();
     }
 
@@ -715,6 +716,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         mainView.showParameter(parameter.getName(), parameter.getValue());
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Presenter";
@@ -723,12 +725,13 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onStartLoading(int size) {
         // TODO <Переделать обработку>
-        // mainView.showLoadingProgress(size);
+        mainView.showLoadingProgress(size);
+
     }
 
     @Override
-    public void onNextCommand(int commandNumber) {
-        // mainView.setLoadingProgress(commandNumber);
+    public void onNextCommand(int commandNumber, int size) {
+        mainView.setLoadingProgress(commandNumber, size);
     }
 
     @Override

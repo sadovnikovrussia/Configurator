@@ -70,7 +70,7 @@ public interface Contract {
 
         String getEtBlinkerLxText();
 
-        void setLoadingProgress(int commandNumber);
+        void setLoadingProgress(int commandNumber, int size);
 
         String getEtMaxDeviationText();
 
@@ -166,8 +166,6 @@ public interface Contract {
         void onEndOfLoading();
 
         boolean onNavigationItemSelected(MenuItem item);
-
-        void startDiscovery();
 
         void onDevicesPageSelected(int position);
 

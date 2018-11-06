@@ -11,13 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 break;
             case BASE_POS:
                 if (configNavigationFragment != null && configNavigationFragment.etBaseLongitude != null && configNavigationFragment.etBaseLatitude != null) {
-                    if (value.isEmpty()){
+                    if (value.isEmpty()) {
                         configNavigationFragment.etBaseLongitude.setText("");
                         configNavigationFragment.etBaseLatitude.setText("");
                     } else {
@@ -441,22 +441,22 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public void showLoadingProgress(int size) {
-        progressBar.setMax(size);
-        progressBar.setVisibility(View.VISIBLE);
-        container.setVisibility(View.INVISIBLE);
+        Log.d(TAG, "showLoadingProgress: ");
+        Objects.requireNonNull(getSupportActionBar()).setSubtitle("0%");
     }
 
     @Override
-    public void setLoadingProgress(int commandNumber) {
-        progressBar.setProgress(commandNumber + 1);
+    public void setLoadingProgress(int commandNumber, int size) {
+        float pers = (float) commandNumber / (float) size * (float) 100;
+        String subtitle = String.valueOf((int) pers) + "%";
+        Log.d(TAG, "setLoadingProgress: " + commandNumber + ", " + size + ", " + subtitle);
+        Objects.requireNonNull(getSupportActionBar()).setSubtitle(subtitle);
     }
 
     @Override
     public void hideLoadingProgress() {
-        progressBar.setProgress(0);
-        progressBar.setVisibility(View.INVISIBLE);
-        //container.setEnabled(true);
-        container.setVisibility(View.VISIBLE);
+        Objects.requireNonNull(getSupportActionBar()).setSubtitle("");
+        showToast("Загрузка завершена");
     }
 
     @Override
@@ -1131,8 +1131,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 Log.e(TAG, "onRequestPermissionsResult: Отклонено =(");
                 presenter.onNegativeRequestReadExternalStoragePermissionRequestResult();
             }
-        }
-        else if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
+        } else if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
             if (grants.contains(PERMISSION_GRANTED)) {
                 Log.i(TAG, "onRequestPermissionsResult: Подверждено =)");
                 presenter.onPositiveRequestWriteExternalStoragePermissionRequestResult();
@@ -1140,8 +1139,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 Log.e(TAG, "onRequestPermissionsResult: Отклонено =(");
                 presenter.onNegativeRequestWriteExternalStoragePermissionRequestResult();
             }
-        }
-        else if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION) {
+        } else if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION) {
             if (grants.contains(PERMISSION_GRANTED)) {
                 Log.i(TAG, "onRequestPermissionsResult: Подверждено =)");
                 presenter.onPositiveRequestAccessCoarseLocationPermissionRequestResult();

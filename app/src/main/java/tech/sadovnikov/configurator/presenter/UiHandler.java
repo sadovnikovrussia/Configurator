@@ -10,10 +10,11 @@ import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.view.MainActivity;
 
 public class UiHandler extends Handler {
+    static final int WHAT_CONNECTING_ERROR = 13;
 
     private WeakReference<Activity> activityWeakReference;
 
-    Contract.Presenter presenter;
+    private Contract.Presenter presenter;
 
 
     UiHandler(Activity activity, Contract.Presenter presenter) {

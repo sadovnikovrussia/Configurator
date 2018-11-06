@@ -3,7 +3,7 @@ package tech.sadovnikov.configurator.presenter;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+
+import static tech.sadovnikov.configurator.presenter.UiHandler.WHAT_CONNECTING_ERROR;
 
 /**
  * Класс, прденазначенный для работы с Bluetooth соединением
@@ -28,11 +30,13 @@ public class BluetoothService {
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
 
+    private UiHandler handler;
     private DataAnalyzer dataAnalyzer;
 
-    BluetoothService(OnBluetoothServiceEventsListener onBluetoothServiceEventsListener, Handler handler) {
+    BluetoothService(OnBluetoothServiceEventsListener onBluetoothServiceEventsListener, UiHandler handler) {
         // Log.v(TAG, "OnConstructor");
         listener = onBluetoothServiceEventsListener;
+        this.handler = handler;
         dataAnalyzer = new DataAnalyzer(handler);
     }
 
@@ -50,7 +54,7 @@ public class BluetoothService {
         return bluetoothAdapter.isEnabled();
     }
 
-    void clearAvailableDevices() {
+    private void clearAvailableDevices() {
         this.availableDevices.clear();
     }
 
@@ -75,11 +79,6 @@ public class BluetoothService {
         onConnecting(device);
 
     }
-
-//    void connectTo(BluetoothDevice bluetoothDevice) {
-//        Log.d(TAG, "onConnecting to: " + bluetoothDevice.getName());
-//        onConnecting(bluetoothDevice);
-//    }
 
 
     private synchronized void onConnecting(BluetoothDevice device) {
@@ -175,7 +174,9 @@ public class BluetoothService {
                 // Log.d(TAG, "");
             } catch (IOException e) {
                 Log.w(TAG, "run: ", e);
-                // TODO <Сделать обработку события через handler>
+                Message message = new Message();
+                message.what = WHAT_CONNECTING_ERROR;
+                handler.sendMessage(message);
                 //listener.onErrorToConnect();
                 //Log.d(TAG, "Не получилось. mSocket is onConnected? " + String.valueOf(mSocket.isConnected()) + ", " + e.getMessage());
                 //e.printStackTrace();
@@ -214,7 +215,6 @@ public class BluetoothService {
             mmSocket = socket;
             BufferedReader tmpReaderSerial = null;
             PrintWriter tmpWriterSerial = null;
-
             // Get the BluetoothSocket readerSerial and output streams
             try {
                 // Log.d(TAG, "Пытаемся получить InputStream");
