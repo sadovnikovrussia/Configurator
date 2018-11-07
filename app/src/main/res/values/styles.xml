@@ -8,4 +8,30 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="parameter_name">
+        <item name="android:textSize">@dimen/parameter_name_textSize</item>
+        <item name="android:textColor">@color/main</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:layout_width">@dimen/tv_classic_layout_width</item>
+        <item name="android:layout_height">@dimen/tv_classic_layout_height</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">@dimen/tv_classic_padding_start</item>
+        <item name="android:paddingEnd">@dimen/tv_classic_padding_end</item>
+        <item name="android:paddingTop">@dimen/tv_classic_padding_top</item>
+        <item name="android:paddingBottom">@dimen/tv_classic_padding_bottom</item>
+    </style>
+
+    <style name="subtitle">
+        <item name="android:textSize">@dimen/subtitle_textSize</item>
+        <item name="android:textColor">@color/subtitle</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:layout_width">@dimen/ll_layout_width</item>
+        <item name="android:layout_height">@dimen/ll_layout_height</item>
+        <item name="android:layout_marginTop">@dimen/subtitle_layout_margin_top</item>
+        <item name="android:paddingStart">@dimen/subtitle_padding_start</item>
+        <item name="android:paddingEnd">@dimen/subtitle_padding_end</item>
+        <item name="android:paddingTop">@dimen/subtitle_padding_top</item>
+        <item name="android:paddingBottom">@dimen/subtitle_padding_bottom</item>
+    </style>
+
 </resources>

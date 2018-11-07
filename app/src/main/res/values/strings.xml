@@ -15,8 +15,8 @@
     <string name="sw_bluetooth">Выключено</string>
     <string name="restart">Рестарт</string>
     <string name="default_settings">Заводские настройки</string>
-    <string name="version_of_termainal">Версия ПО терминала</string>
-    <string name="tv_config_probleskator">Настройка проблескатора</string>
+    <string name="firmware_version">Версия ПО терминала</string>
+    <string name="config_probleskator">Настройка проблескатора</string>
     <string name="tv_config_buoy">Буй</string>
     <string name="tv_diod_light_mode">Режим свечения светодиода</string>
     <string name="tv_luminescence">Яркость свечения</string>

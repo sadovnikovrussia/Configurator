@@ -18,21 +18,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="16dp">
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
 
             <TextView
-                android:id="@+id/tv_config_probleskator"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:paddingStart="16dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="8dp"
-                android:text="@string/tv_config_probleskator"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                style="@style/subtitle"
+                android:text="@string/config_probleskator" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,34 +31,20 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
-                    android:background="@android:color/white"
+                    android:layout_width="@dimen/ll_layout_width"
+                    android:layout_height="@dimen/ll_layout_height"
+                    android:layout_marginTop="@dimen/ll_layout_margin"
+                    android:layout_marginBottom="@dimen/ll_layout_margin"
+                    android:background="@color/ll_background"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_config_probleskator">
+                    android:paddingStart="@dimen/ll_padding_start"
+                    android:paddingEnd="@dimen/ll_padding_end">
 
                     <TextView
                         android:id="@+id/tv_diod_light_mode"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:paddingStart="0dp"
-                        android:paddingTop="16dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="16dp"
-                        android:text="@string/tv_diod_light_mode"
-                        android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/spin_blinker_mode" />
+                        style="@style/parameter_name"
+                        android:layout_weight="3"
+                        android:text="@string/tv_diod_light_mode" />
 
                     <Spinner
                         android:id="@+id/spin_blinker_mode"
@@ -75,7 +52,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical|end"
                         android:layout_marginEnd="0dp"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:dropDownWidth="match_parent"
                         android:entries="@array/blinker_mode_list"
                         android:textAlignment="textEnd"
@@ -88,8 +65,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="@dimen/ll_layout_margin"
+                    android:layout_marginBottom="@dimen/ll_layout_margin"
                     android:background="@android:color/white"
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
@@ -100,22 +77,23 @@
 
                     <TextView
                         android:id="@+id/tv_blinker_brightness"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/tv_classic_layout_width"
+                        android:layout_height="@dimen/tv_classic_layout_height"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:paddingStart="0dp"
-                        android:paddingTop="16dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="16dp"
+                        android:paddingStart="@dimen/tv_classic_padding_start"
+                        android:paddingTop="@dimen/tv_classic_padding_top"
+                        android:paddingEnd="@dimen/tv_classic_padding_end"
+                        android:paddingBottom="@dimen/tv_classic_padding_bottom"
                         android:text="@string/tv_luminescence"
-                        android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                        android:textSize="16sp" />
+                        android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
                     <Spinner
                         android:id="@+id/spin_blinker_brightness"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical|end"
+                        android:layout_weight="1"
                         android:entries="@array/blinker_brightness_list"
                         android:gravity="end"
                         android:textAlignment="textEnd" />
@@ -124,8 +102,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="@dimen/ll_layout_margin"
+                    android:layout_marginBottom="@dimen/ll_layout_margin"
                     android:background="@android:color/white"
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
@@ -133,15 +111,14 @@
 
                     <TextView
                         android:id="@+id/tv_blinker_lx"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_width="@dimen/tv_classic_layout_width"
+                        android:layout_height="@dimen/tv_classic_layout_height"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:paddingStart="0dp"
-                        android:paddingTop="16dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="16dp"
+                        android:paddingStart="@dimen/tv_classic_padding_start"
+                        android:paddingTop="@dimen/tv_classic_padding_top"
+                        android:paddingEnd="@dimen/tv_classic_padding_end"
+                        android:paddingBottom="@dimen/tv_classic_padding_bottom"
                         android:text="@string/tv_illumination_level"
                         android:textAppearance="@android:style/TextAppearance.Widget.TextView"
                         android:textSize="16sp" />
@@ -164,15 +141,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_porogi"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:paddingStart="16dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="8dp"
+                style="@style/subtitle"
                 android:text="@string/porogi_trevog" />
 
             <LinearLayout
@@ -192,10 +161,10 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:paddingStart="0dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="16dp"
+                    android:paddingStart="@dimen/tv_classic_padding_start"
+                    android:paddingTop="@dimen/tv_classic_padding_top"
+                    android:paddingEnd="@dimen/tv_classic_padding_end"
+                    android:paddingBottom="@dimen/tv_classic_padding_bottom"
                     android:text="@string/dopustimiy_radius_snosa"
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
@@ -230,10 +199,10 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:paddingStart="0dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="16dp"
+                    android:paddingStart="@dimen/tv_classic_padding_start"
+                    android:paddingTop="@dimen/tv_classic_padding_top"
+                    android:paddingEnd="@dimen/tv_classic_padding_end"
+                    android:paddingBottom="@dimen/tv_classic_padding_bottom"
                     android:text="@string/porogoviy_uroven_krena"
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
@@ -268,10 +237,10 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:paddingStart="0dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="16dp"
+                    android:paddingStart="@dimen/tv_classic_padding_start"
+                    android:paddingTop="@dimen/tv_classic_padding_top"
+                    android:paddingEnd="@dimen/tv_classic_padding_end"
+                    android:paddingBottom="@dimen/tv_classic_padding_bottom"
                     android:text="@string/porogoviy_uroven_udara"
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
@@ -306,10 +275,10 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:paddingStart="0dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="16dp"
+                    android:paddingStart="@dimen/tv_classic_padding_start"
+                    android:paddingTop="@dimen/tv_classic_padding_top"
+                    android:paddingEnd="@dimen/tv_classic_padding_end"
+                    android:paddingBottom="@dimen/tv_classic_padding_bottom"
                     android:text="@string/porogoviy_uroven_zaryada_batarei"
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
@@ -345,10 +314,10 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:paddingStart="0dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="16dp"
+                    android:paddingStart="@dimen/tv_classic_padding_start"
+                    android:paddingTop="@dimen/tv_classic_padding_top"
+                    android:paddingEnd="@dimen/tv_classic_padding_end"
+                    android:paddingBottom="@dimen/tv_classic_padding_bottom"
                     android:text="@string/period_prosypaniya"
                     android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
 
