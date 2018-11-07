@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     // ---------------------------------------------------------------------------------------------
     // Contract.View
-    // TODO <ДОБАВИТЬ ПАРАМЕТР>
     @Override
     public void showParameter(String name, String value) {
         Log.d(TAG, "showParameter: " + name + "=" + value);
@@ -302,7 +301,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         }
     }
 
-    // TODO <Добавить фрагмент для параметра>
     // Показать фрагмент
     @Override
     public void showFragment(String fragment) {
@@ -358,7 +356,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         fragmentTransaction.commit();
     }
 
-    // TODO <Добавить фрагмент для параметра>
     // Поставить активную позицию на bottomNavigation в зависимости от фрагмента
     @Override
     public void setNavigationPosition(String fragment) {
@@ -400,7 +397,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public void showToast(String toast) {
-        Toast.makeText(this, toast, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -1138,7 +1135,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         presenter.onMainActivityResult(requestCode, resultCode, data);
     }
 
-    // TODO <Нужно ли здесь делать принудительный запрос permission>
     @Override
     public void startFileManagerActivityWithRequestPermission() {
         requestReadPermission();

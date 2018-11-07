@@ -12,12 +12,10 @@
     <string name="btn_send_command">Отправить</string>
     <string name="tv_command_line">Информация из устройства</string>
     <string name="id">ID терминала</string>
-    <string name="et_command_line">id?</string>
-    <string name="sw_bluetooth">Bluetooth</string>
-    <string name="version_po">Версия ПО терминала</string>
+    <string name="sw_bluetooth">Выключено</string>
     <string name="restart">Рестарт</string>
     <string name="default_settings">Заводские настройки</string>
-    <string name="tv_version_of_termainal">Версия ПО терминала</string>
+    <string name="version_of_termainal">Версия ПО терминала</string>
     <string name="tv_config_probleskator">Настройка проблескатора</string>
     <string name="tv_config_buoy">Буй</string>
     <string name="tv_diod_light_mode">Режим свечения светодиода</string>
@@ -76,4 +74,6 @@
     <string name="base_pos">Базовые координаты терминала</string>
     <string name="Set">Установить</string>
     <string name="set_base_pos">Установить текущие координаты</string>
+    <string name="max_active">Максимальное время активности системы</string>
+    <string name="upower">Текущее напряжение питания системы</string>
 </resources>

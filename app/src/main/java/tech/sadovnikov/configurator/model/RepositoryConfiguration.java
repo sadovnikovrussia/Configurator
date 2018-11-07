@@ -59,7 +59,6 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
     private void resetConfiguration() {
         Log.d(TAG, "resetConfiguration: Ресетим");
         for (Parameter parameter : uiConfiguration.getParametersList()) {
-            // TODO <Добавить неустанавливаемые параметры>
             String name = parameter.getName();
             if (!name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER) && !name.equals(BASE_POS) && !name.equals(PACKETS)) {
                 setParameter(new Parameter(name));

@@ -48,6 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
+                    android:gravity="bottom|end"
                     android:inputType="number"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
@@ -76,6 +77,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
                     android:ems="10"
+                    android:gravity="bottom|end"
                     android:inputType="number"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
@@ -104,6 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
                     android:ems="10"
+                    android:gravity="bottom|end"
                     android:inputType="number"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
@@ -132,6 +135,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
                     android:ems="10"
+                    android:gravity="bottom|end"
                     android:inputType="number"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
@@ -201,6 +205,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="5"
                     android:ems="10"
+                    android:gravity="bottom|end"
                     android:inputType="number"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
@@ -230,6 +235,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="5"
                     android:ems="10"
+                    android:gravity="bottom|end"
                     android:inputType="number"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
@@ -268,6 +274,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:ems="10"
+                    android:gravity="bottom|end"
                     android:inputType="phone"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
@@ -297,6 +304,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:ems="10"
+                    android:gravity="bottom|end"
                     android:inputType="phone"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
@@ -326,7 +334,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:gravity="clip_vertical"
+                    android:gravity="bottom|end"
                     android:inputType="phone"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
@@ -365,7 +373,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="5"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:editable="false"
                     android:ems="10"
+                    android:focusableInTouchMode="false"
                     android:inputType="number"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
@@ -394,7 +406,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="5"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:editable="false"
                     android:ems="10"
+                    android:focusableInTouchMode="false"
                     android:inputType="number"
                     android:textAlignment="viewEnd"
                     android:textAppearance="@android:style/TextAppearance.Widget.EditText" />

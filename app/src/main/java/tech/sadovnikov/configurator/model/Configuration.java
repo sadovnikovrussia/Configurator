@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.model;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -59,17 +60,9 @@ public class Configuration {
             SMS_CENTER, CMD_NUMBER, ANSW_NUMBER, PACKETS, APN, LOGIN, PASSWORD, SIM_ATTEMPTS,
             DELIV_TIMEOUT};
     public static final ArrayList<String> PARAMETER_NAMES_LIST = new ArrayList<>();
-
     static {
         Collections.addAll(PARAMETER_NAMES_LIST, PARAMETER_NAMES);
     }
-
-//    // Параметры
-//    private Parameter id = new Parameter(ID);
-//    private Parameter firmwareVersion = new Parameter(FIRMWARE_VERSION);
-//    private Parameter blinkerMode = new Parameter(BLINKER_MODE);
-//    private Parameter blinkerBrightness = new Parameter(BLINKER_BRIGHTNESS);
-
     private ArrayList<Parameter> parametersList = new ArrayList<>();
 
     Configuration() {
@@ -178,6 +171,7 @@ public class Configuration {
         return parametersList.size();
     }
 
+    @NonNull
     public String toString() {
         return "Configuration{<" + getSize() + ">" + parametersList + '}';
     }

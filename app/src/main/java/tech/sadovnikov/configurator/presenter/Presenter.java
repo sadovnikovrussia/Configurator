@@ -214,9 +214,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onMainActivityDestroy() {
         mainView.unregisterBluetoothBroadcastReceiver(bluetoothBroadcastReceiver);
-        if (bluetoothService != null) {
-            bluetoothService.closeAllConnections();
-        }
+        if (bluetoothService != null) bluetoothService.closeAllConnections();
     }
 
 

@@ -58,7 +58,8 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            android:importantForAutofill="no" tools:targetApi="o"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/ll_version"
@@ -81,7 +82,7 @@
             android:freezesText="false"
             android:gravity="center_vertical"
             android:paddingBottom="0dp"
-            android:text="@string/tv_version_of_termainal"
+            android:text="@string/version_of_termainal"
             android:textAppearance="@android:style/TextAppearance.Widget.TextView"
             tools:layout_editor_absoluteX="48dp"
             tools:layout_editor_absoluteY="100dp" />
@@ -93,7 +94,6 @@
             android:layout_weight="2"
             android:clickable="false"
             android:cursorVisible="false"
-            android:editable="false"
             android:focusable="auto"
             android:focusableInTouchMode="false"
             android:selectAllOnFocus="false"
@@ -102,7 +102,9 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            android:importantForAutofill="no"
+            android:inputType="" tools:targetApi="o"/>
     </LinearLayout>
 
     <LinearLayout
