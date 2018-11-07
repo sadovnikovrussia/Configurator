@@ -134,6 +134,16 @@ public interface Contract {
 
         String getEtDelivTimeoutText();
 
+        void setTitle(String title);
+
+        void setSwitchBtText(String text);
+
+        void showConfigActionsMenu();
+
+        void hideConfigActionsMenu();
+
+        boolean isBluetoothFragmentResumed();
+
     }
 
     interface Presenter {
@@ -162,8 +172,6 @@ public interface Contract {
         void onPairedDevicesRvItemClick(String bluetoothDeviceAddress);
 
         void onHandleMessage(Message msg);
-
-        void onEndOfLoading();
 
         boolean onNavigationItemSelected(MenuItem item);
 
@@ -304,6 +312,12 @@ public interface Contract {
         void onPositiveRequestAccessCoarseLocationPermissionRequestResult();
 
         void onNegativeRequestAccessCoarseLocationPermissionRequestResult();
+
+        void onBluetoothFragmentDestroyView();
+
+        void onBluetoothFragmentDestroy();
+
+        void onCreateOptionsMenu();
     }
 
     interface Logs {

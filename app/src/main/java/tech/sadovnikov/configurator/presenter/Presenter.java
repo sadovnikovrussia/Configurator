@@ -167,6 +167,15 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     }
 
     @Override
+    public void onCreateOptionsMenu() {
+        if (mainView.isBluetoothFragmentResumed()){
+            mainView.hideConfigActionsMenu();
+        } else {
+            mainView.showConfigActionsMenu();
+        }
+    }
+
+    @Override
     public void onPositiveRequestReadExternalStoragePermissionRequestResult() {
         mainView.startFileManagerActivity();
     }
@@ -213,7 +222,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     // ---------------------------------------------------------------------------------------------
     // BluetoothFragment events
-
     @Override
     public void onSwitchBtStateChanged(boolean state) {
         // Logs.d(TAG, "onSwitchBtStateChanged" + String.valueOf(state));
@@ -230,7 +238,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
             bluetoothService.cancelDiscovery();
             mainView.updatePairedDevices();
         } else if (position == 1) {
-            // TODO
             mainView.startBluetoothDiscoveryWithRequestPermission();
         }
     }
@@ -253,13 +260,27 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onBluetoothFragmentStart() {
+        mainView.setTitle("Bluetooth");
+        mainView.hideConfigActionsMenu();
         mainView.setSwitchBtState(bluetoothService.isEnabled());
         mainView.setNavigationPosition(Contract.View.BLUETOOTH_FRAGMENT);
         if (bluetoothService.isEnabled()) {
+            mainView.setSwitchBtText("Включено");
             mainView.showDevices();
         } else {
+            mainView.setSwitchBtText("Выключено");
             mainView.hideDevices();
         }
+    }
+
+    @Override
+    public void onBluetoothFragmentDestroyView() {
+        mainView.showConfigActionsMenu();
+    }
+
+    @Override
+    public void onBluetoothFragmentDestroy() {
+
     }
 
     @Override
@@ -322,6 +343,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onConfigurationFragmentStart() {
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
+        mainView.setTitle("Конфигурация");
     }
 
 
@@ -345,6 +367,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // Lifecycle
     @Override
     public void onConfigBuoyFragmentStart() {
+        mainView.setTitle("Конфигурация");
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
         mainView.showParameter(ID, repositoryConfiguration.getParameterValue(ID));
         mainView.showParameter(FIRMWARE_VERSION, repositoryConfiguration.getParameterValue(FIRMWARE_VERSION));
@@ -413,6 +436,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // Lifecycle
     @Override
     public void onConfigMainFragmentStart() {
+        mainView.setTitle("Конфигурация");
         mainView.setNavigationPosition(MainActivity.CONFIGURATION_FRAGMENT);
         mainView.showParameter(BLINKER_MODE, repositoryConfiguration.getParameterValue(BLINKER_MODE));
         mainView.showParameter(BLINKER_BRIGHTNESS, repositoryConfiguration.getParameterValue(BLINKER_BRIGHTNESS));
@@ -428,7 +452,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     }
 
     // ---------------------------------------------------------------------------------------------
-    // ConfigMainFragment events
+    // ConfigNavigationFragment events
     @Override
     public void onBtnRcvColdStartClick() {
         bluetoothService.sendData("@rcv coldstart");
@@ -467,6 +491,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // Lifecycle
     @Override
     public void onConfigNavigationFragmentStart() {
+        mainView.setTitle("Конфигурация");
         mainView.showParameter(LONG_DEVIATION, repositoryConfiguration.getParameterValue(LONG_DEVIATION));
         mainView.showParameter(LAT_DEVIATION, repositoryConfiguration.getParameterValue(LAT_DEVIATION));
         mainView.showParameter(HDOP, repositoryConfiguration.getParameterValue(HDOP));
@@ -491,6 +516,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // Lifecycle
     @Override
     public void OnConfigEventsFragmentStart() {
+        mainView.setTitle("Конфигурация");
         mainView.showParameter(EVENTS_MASK, repositoryConfiguration.getParameterValue(EVENTS_MASK));
     }
 
@@ -550,6 +576,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // Lifecycle
     @Override
     public void onConfigServerFragmentStart() {
+        mainView.setTitle("Конфигурация");
         mainView.showParameter(SERVER, repositoryConfiguration.getParameterValue(SERVER));
         mainView.showParameter(CONNECT_ATTEMPTS, repositoryConfiguration.getParameterValue(CONNECT_ATTEMPTS));
         mainView.showParameter(SESSION_TIME, repositoryConfiguration.getParameterValue(SESSION_TIME));
@@ -634,6 +661,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // Lifecycle
     @Override
     public void onConfigSimCardFragmentStart() {
+        mainView.setTitle("Конфигурация");
         mainView.showParameter(APN, repositoryConfiguration.getParameterValue(APN));
         mainView.showParameter(LOGIN, repositoryConfiguration.getParameterValue(LOGIN));
         mainView.showParameter(PASSWORD, repositoryConfiguration.getParameterValue(PASSWORD));
@@ -653,6 +681,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // Lifecycle
     @Override
     public void onConsoleFragmentStart() {
+        mainView.setTitle("Консоль");
         mainView.setNavigationPosition(MainActivity.CONSOLE_FRAGMENT);
     }
 
@@ -682,6 +711,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // BT events
     @Override
     public void onBluetoothServiceStateOn() {
+        mainView.setSwitchBtText("Включено");
         mainView.setSwitchBtState(bluetoothService.isEnabled());
         // mainView.showPairedDevices();
         mainView.showDevices();
@@ -692,6 +722,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onBluetoothServiceStateOff() {
+        mainView.setSwitchBtText("Выключено");
         mainView.setSwitchBtState(bluetoothService.isEnabled());
         mainView.hideDevices();
         bluetoothService.closeAllConnections();
@@ -724,19 +755,12 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onStartLoading(int size) {
-        // TODO <Переделать обработку>
         mainView.showLoadingProgress(size);
-
     }
 
     @Override
     public void onNextCommand(int commandNumber, int size) {
         mainView.setLoadingProgress(commandNumber, size);
-    }
-
-    @Override
-    public void onEndOfLoading() {
-        mainView.hideLoadingProgress();
     }
 
     @Override

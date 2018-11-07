@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     FrameLayout container;
     BottomNavigationView navigation;
     ProgressBar progressBar;
+    Menu configurationActionsMenu;
 
     // Fragments
     BluetoothFragment bluetoothFragment;
@@ -651,6 +652,29 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         return configSimCardFragment.etDelivTimeOut.getText().toString();
     }
 
+    @Override
+    public void setTitle(String title) {
+        Objects.requireNonNull(getSupportActionBar()).setTitle(title);
+    }
+
+    @Override
+    public void setSwitchBtText(String text) {
+        if (bluetoothFragment != null && bluetoothFragment.switchBt != null) {
+            bluetoothFragment.switchBt.setText(text);
+        }
+    }
+
+    @Override
+    public void showConfigActionsMenu() {
+        if (configurationActionsMenu != null) configurationActionsMenu.setGroupVisible(R.id.group_configuration_actions_menu, true);
+
+    }
+
+    @Override
+    public void hideConfigActionsMenu() {
+        if (configurationActionsMenu != null) configurationActionsMenu.setGroupVisible(R.id.group_configuration_actions_menu, false);
+    }
+
 
     // ---------------------------------------------------------------------------------------------
     // OnBluetoothFragmentInteractionListener
@@ -675,6 +699,12 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
+    public boolean isBluetoothFragmentResumed() {
+        Log.d(TAG, "isBluetoothFragmentResumed: ");
+        return bluetoothFragment.isResumed();
+    }
+    
+    @Override
     public void onBluetoothFragmentCreateView() {
         presenter.onBluetoothFragmentCreateView();
     }
@@ -682,6 +712,16 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     @Override
     public void onBluetoothFragmentStart() {
         presenter.onBluetoothFragmentStart();
+    }
+
+    @Override
+    public void onBluetoothFragmentDestroyView() {
+        presenter.onBluetoothFragmentDestroyView();
+    }
+
+    @Override
+    public void onBluetoothFragmentDestroy() {
+        presenter.onBluetoothFragmentDestroy();
     }
 
     @Override
@@ -1077,8 +1117,11 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     // Activity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
-        return super.onCreateOptionsMenu(menu);
+        Log.d(TAG, "onCreateOptionsMenu: ");
+        configurationActionsMenu = menu;
+        getMenuInflater().inflate(R.menu.menu_configuration_options, configurationActionsMenu);
+        presenter.onCreateOptionsMenu();
+        return super.onCreateOptionsMenu(configurationActionsMenu);
     }
 
     @Override

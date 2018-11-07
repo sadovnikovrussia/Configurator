@@ -8,9 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -37,7 +37,7 @@ public class BluetoothFragment extends Fragment {
 
     DevicesFragmentPagerAdapter devicesFragmentPagerAdapter;
 
-    private OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
+    private OnBluetoothFragmentInteractionListener listener;
 
     public BluetoothFragment() {
         // Required empty public constructor
@@ -56,7 +56,7 @@ public class BluetoothFragment extends Fragment {
         Log.v(TAG, "onCreateView");
         final View inflate = inflater.inflate(R.layout.fragment_bluetooth, container, false);
         initUi(inflate);
-        onBluetoothFragmentInteractionListener.onBluetoothFragmentCreateView();
+        listener.onBluetoothFragmentCreateView();
         return inflate;
     }
 
@@ -65,7 +65,7 @@ public class BluetoothFragment extends Fragment {
         switchBt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                onBluetoothFragmentInteractionListener.onSwitchBtStateChanged(isChecked);
+                listener.onSwitchBtStateChanged(isChecked);
             }
         });
         tabLayout = inflate.findViewById(R.id.tabLayout);
@@ -81,7 +81,7 @@ public class BluetoothFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 Log.d(TAG, "onPageSelected: " + String.valueOf(position));
-                onBluetoothFragmentInteractionListener.onDevicesPageSelected(position);
+                listener.onDevicesPageSelected(position);
             }
 
             @Override
@@ -125,7 +125,7 @@ public class BluetoothFragment extends Fragment {
         super.onAttach(context);
         Log.v(TAG, "onAttach");
         if (context instanceof OnBluetoothFragmentInteractionListener) {
-            onBluetoothFragmentInteractionListener = (OnBluetoothFragmentInteractionListener) context;
+            listener = (OnBluetoothFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnBluetoothFragmentInteractionListener");
@@ -142,7 +142,7 @@ public class BluetoothFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        onBluetoothFragmentInteractionListener.onBluetoothFragmentStart();
+        listener.onBluetoothFragmentStart();
     }
 
     @Override
@@ -165,23 +165,33 @@ public class BluetoothFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
+        listener.onBluetoothFragmentDestroyView();
         Log.v(TAG, "onDestroyView");
+        super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         Log.v(TAG, "onDestroy");
+        listener.onBluetoothFragmentDestroy();
+        super.onDestroy();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        onBluetoothFragmentInteractionListener = null;
+        listener = null;
     }
 
     // ---------------------------------------------------------------------------------------------
+
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        Log.d(TAG, "onPrepareOptionsMenu: " + menu);
+        menu.setGroupVisible(R.menu.menu_configuration_options, false);
+        super.onPrepareOptionsMenu(menu);
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -204,6 +214,10 @@ public class BluetoothFragment extends Fragment {
 
         void onBluetoothFragmentStart();
 
+        void onBluetoothFragmentDestroyView();
+
+        void onBluetoothFragmentDestroy();
+
         void onDevicesPageSelected(int position);
 
         void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesItemView holder, int position);
@@ -215,6 +229,7 @@ public class BluetoothFragment extends Fragment {
         int onGetItemCountOfPairedDevicesRvAdapter();
 
         void onAvailableDevicesFragmentDestroyView();
+
     }
 
 }
