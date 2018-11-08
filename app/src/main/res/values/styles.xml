@@ -6,14 +6,15 @@
         <item name="colorPrimary">@color/stMain</item>
         <item name="colorPrimaryDark">@color/stDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/btn_background</item>
     </style>
 
-    <style name="parameter_name">
+    <style name="tv_parameter_name">
         <item name="android:textSize">@dimen/parameter_name_textSize</item>
         <item name="android:textColor">@color/main</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:layout_width">@dimen/tv_classic_layout_width</item>
-        <item name="android:layout_height">@dimen/tv_classic_layout_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingStart">@dimen/tv_classic_padding_start</item>
         <item name="android:paddingEnd">@dimen/tv_classic_padding_end</item>
@@ -21,17 +22,118 @@
         <item name="android:paddingBottom">@dimen/tv_classic_padding_bottom</item>
     </style>
 
-    <style name="subtitle">
+    <style name="tv_subtitle">
         <item name="android:textSize">@dimen/subtitle_textSize</item>
         <item name="android:textColor">@color/subtitle</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:layout_width">@dimen/ll_layout_width</item>
-        <item name="android:layout_height">@dimen/ll_layout_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginTop">@dimen/subtitle_layout_margin_top</item>
         <item name="android:paddingStart">@dimen/subtitle_padding_start</item>
         <item name="android:paddingEnd">@dimen/subtitle_padding_end</item>
         <item name="android:paddingTop">@dimen/subtitle_padding_top</item>
         <item name="android:paddingBottom">@dimen/subtitle_padding_bottom</item>
     </style>
+
+    <style name="ll_for_classic_parameter">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/ll_layout_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/ll_layout_margin_bottom</item>
+        <item name="android:background">@color/ll_background</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">@dimen/ll_padding_start</item>
+        <item name="android:paddingEnd">@dimen/ll_padding_end</item>
+    </style>
+
+    <style name="ll_for_classic_parameter_without_subtitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/ll_layout_without_subtitle_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/ll_layout_margin_bottom</item>
+        <item name="android:background">@color/ll_background</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">@dimen/ll_padding_start</item>
+        <item name="android:paddingEnd">@dimen/ll_padding_end</item>
+    </style>
+
+    <style name="ll_for_buttons">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/ll_layout_margin_top</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">@dimen/ll_padding_start</item>
+        <item name="android:paddingEnd">@dimen/ll_padding_end</item>
+    </style>
+
+    <style name="spin_parameter_value">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">center_vertical|end</item>
+        <item name="android:textAlignment">textEnd</item>
+    </style>
+
+    <style name="et_parameter_value">
+        <item name="android:textSize">@dimen/parameter_value_textSize</item>
+        <item name="android:textColor">@color/main</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical|end</item>
+        <item name="android:textAlignment">viewEnd</item>
+        <item name="android:inputType">number</item>
+    </style>
+
+    <style name="et_parameter_value_uneditable">
+        <item name="android:textSize">@dimen/parameter_value_textSize</item>
+        <item name="android:textColor">@color/main</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical|end</item>
+        <item name="android:textAlignment">viewEnd</item>
+        <item name="android:inputType">number</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="android:clickable">false</item>
+        <item name="android:longClickable">false</item>
+    </style>
+
+    <style name="btn_command">
+        <item name="android:textSize">@dimen/btn_command_textSize</item>
+        <item name="android:textColor">@color/main</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginBottom">@dimen/btn_command_layout_margin_bottom</item>
+        <item name="android:layout_marginTop">@dimen/btn_command_layout_margin_top</item>
+        <item name="android:layout_marginStart">@dimen/btn_command_layout_margin_start</item>
+        <item name="android:layout_marginEnd">@dimen/btn_command_layout_margin_end</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="btn_command_in_list">
+        <item name="android:textSize">@dimen/btn_command_textSize</item>
+        <item name="android:textColor">@color/main</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="cb_list_item">
+        <item name="android:textSize">@dimen/cb_textSize</item>
+        <item name="android:textColor">@color/main</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
 
 </resources>

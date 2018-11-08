@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.ConfigServerFragment">
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,432 +12,221 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="32dp">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:text="Сервер"
-                android:textSize="14sp" />
+                style="@style/tv_subtitle"
+                android:text="@string/subtitle_server" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="IP адрес : Порт"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/ip" />
 
                 <EditText
                     android:id="@+id/et_server"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/et_parameter_value"
                     android:layout_weight="1"
-                    android:ems="10"
-                    android:gravity="bottom|end"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
+                    android:inputType="text"
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Количество неудачных подключений к серверу"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/connect_attempts" />
 
                 <EditText
                     android:id="@+id/et_connect_attempts"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
-                    android:ems="10"
-                    android:gravity="bottom|end"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Минимальное время соединения с сервером, [c]"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/session_time" />
 
                 <EditText
                     android:id="@+id/et_session_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
-                    android:ems="10"
-                    android:gravity="bottom|end"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Время ожидания подтверждения доставки пакета от сервера, [c]"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/packet_tout" />
 
                 <EditText
                     android:id="@+id/et_packet_tout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
-                    android:ems="10"
-                    android:gravity="bottom|end"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:text="Интервалы отправки пакетов (сообщений) на сервер"
-                android:textSize="14sp" />
+                style="@style/tv_subtitle"
+                android:text="@string/subtitle_intervals" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_config_probleskator">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_priority_chnl"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Канал передачи данных по умолчанию"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/priority_chnl" />
 
                 <Spinner
                     android:id="@+id/spin_priority_chnl"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/spin_parameter_value"
                     android:layout_weight="2"
-                    android:entries="@array/priority_chnl_list"
-                    android:gravity="end"
-                    android:textAlignment="textEnd" />
+                    android:entries="@array/priority_chnl_list" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_normal_int"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="В штатном режиме, [с]"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/normal_int" />
 
                 <EditText
                     android:id="@+id/et_normal_int"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
-                    android:ems="10"
-                    android:gravity="bottom|end"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_alarm_int"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="В аварийном режиме, [с]"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/alarm_int" />
 
                 <EditText
                     android:id="@+id/et_alarm_int"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
-                    android:ems="10"
-                    android:gravity="bottom|end"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:text="Телефонные номера"
-                android:textSize="14sp" />
+            <Button
+                android:id="@+id/btn_close_connect"
+                style="@style/btn_command"
+                android:text="@string/close_connect" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <TextView
+                style="@style/tv_subtitle"
+                android:text="@string/phones" />
+
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="2"
-                    android:gravity="center_vertical"
-                    android:text="Номер SMS центра оператора"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/sms_center" />
 
                 <EditText
                     android:id="@+id/et_sms_center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value"
                     android:layout_weight="2"
-                    android:ems="10"
-                    android:gravity="bottom|end"
                     android:inputType="phone"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Управляющий номер"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/cmd_number" />
 
                 <EditText
                     android:id="@+id/et_cmd_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value"
                     android:layout_weight="1"
-                    android:ems="10"
-                    android:gravity="bottom|end"
                     android:inputType="phone"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Номер получателя навигационной информации"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/answ_number" />
 
                 <EditText
                     android:id="@+id/et_answ_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value"
                     android:layout_weight="1"
-                    android:ems="10"
-                    android:gravity="bottom|end"
                     android:inputType="phone"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:text="Архив"
-                android:textSize="14sp" />
+                style="@style/tv_subtitle"
+                android:text="@string/subtitle_archive" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Количество пакетов"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/number_of_packets" />
 
                 <EditText
                     android:id="@+id/et_packets"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value_uneditable"
                     android:layout_weight="5"
-                    android:clickable="false"
-                    android:cursorVisible="false"
-                    android:editable="false"
-                    android:ems="10"
-                    android:focusableInTouchMode="false"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Заполняемость архива, [%]"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/percents_of_archive" />
 
                 <EditText
                     android:id="@+id/et_packets_percents"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value_uneditable"
                     android:layout_weight="5"
-                    android:clickable="false"
-                    android:cursorVisible="false"
-                    android:editable="false"
-                    android:ems="10"
-                    android:focusableInTouchMode="false"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
             <Button
                 android:id="@+id/btn_clear_archive"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="24dp"
-                android:fontFamily="sans-serif"
-                android:text="Очистить архив"
-                android:textAllCaps="false"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/btn_close_connect"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="24dp"
-                android:fontFamily="sans-serif"
-                android:text="Разорвать соединение с сервером"
-                android:textAllCaps="false"
-                android:textSize="16sp" />
+                style="@style/btn_command"
+                android:text="@string/clear_archive" />
 
         </LinearLayout>
     </ScrollView>

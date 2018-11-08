@@ -41,6 +41,7 @@ public class ConfigBuoyFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.v(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_config_buoy, container, false);
         initUi(view);
         return view;
@@ -49,6 +50,7 @@ public class ConfigBuoyFragment extends Fragment {
     private void initUi(View view) {
         tvId = view.findViewById(R.id.tv_id);
         etId = view.findViewById(R.id.et_id);
+        // TODO <Сделать отслеживание закрытия клавиатуры>
         etId.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {

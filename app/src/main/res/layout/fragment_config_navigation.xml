@@ -1,371 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frag_config_navigation"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="32dp">
 
             <TextView
                 android:id="@+id/tv_current_coordinates"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="@string/tv_current_coordinates"
-                android:textSize="14sp" />
+                style="@style/tv_subtitle"
+                android:text="@string/tv_current_coordinates" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_longitude"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="@string/tv_longitude"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/tv_longitude" />
 
                 <EditText
                     android:id="@+id/et_longitude"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value_uneditable"
                     android:layout_weight="2"
-                    android:clickable="false"
-                    android:cursorVisible="false"
-                    android:ems="10"
-                    android:gravity="end"
-                    android:importantForAutofill="no"
-                    android:inputType="number"
-                    android:textSize="16sp"
-                    tools:ignore="LabelFor" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_latitude"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="@string/tv_latitude"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/tv_latitude" />
 
                 <EditText
                     android:id="@+id/et_latitude"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value_uneditable"
                     android:layout_weight="2"
-                    android:ems="10"
-                    android:gravity="end"
-                    android:importantForAutofill="no"
-                    android:inputType="number"
-                    android:textSize="16sp"
-                    tools:ignore="LabelFor" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
             <Button
                 android:id="@+id/btn_request_coordinates"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif"
-                android:text="@string/btn_request_coordinates"
-                android:textAllCaps="false"
-                android:textSize="16sp" />
+                style="@style/btn_command"
+                android:text="@string/btn_request_coordinates" />
 
             <TextView
-                android:id="@+id/tv_base_pos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/base_pos"
-                android:textSize="14sp" />
+                android:id="@+id/tv_subtitle_base_pos"
+                style="@style/tv_subtitle"
+                android:text="@string/base_pos" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_base_longitude"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="@string/tv_longitude"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/tv_longitude" />
 
                 <EditText
                     android:id="@+id/et_base_longitude"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value"
                     android:layout_weight="2"
-                    android:ems="10"
-                    android:inputType="number"
-                    android:textSize="16sp"
-                    tools:ignore="LabelFor"
-                    android:importantForAutofill="no" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_base_latitude"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="@string/tv_latitude"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/tv_latitude" />
 
                 <EditText
                     android:id="@+id/et_base_latitude"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value"
                     android:layout_weight="2"
-                    android:ems="10"
-                    android:inputType="number"
-                    android:textSize="16sp"
-                    tools:ignore="LabelFor"
-                    android:importantForAutofill="no" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
             <Button
                 android:id="@+id/btn_request_base_pos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:fontFamily="sans-serif"
-                android:text="Запросить базовые координаты"
-                android:textAllCaps="false"
-                android:textSize="16sp" />
+                style="@style/btn_command"
+                android:text="@string/request_base_pos" />
 
             <TextView
-                android:id="@+id/tv_long_and_lat_deviation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:text="Текущая точность определения местоположения"
-                android:textSize="14sp" />
+                android:id="@+id/tv_subtitle_long_and_lat_deviation"
+                style="@style/tv_subtitle"
+                android:text="@string/long_and_lat_deviation" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_long_deviation"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="По долготе"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/by_long" />
 
                 <EditText
                     android:id="@+id/et_long_deviation"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
-                    android:ems="10"
-                    android:gravity="end"
-                    android:inputType="number"
-                    android:textSize="16sp"
-                    tools:ignore="LabelFor" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_lat_deviation"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="По широте"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/by_lat" />
 
                 <EditText
                     android:id="@+id/et_lat_deviation"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
-                    android:ems="10"
-                    android:gravity="end"
-                    android:inputType="number"
-                    android:textSize="16sp"
-                    tools:ignore="LabelFor" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_filters"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:text="Фильтры"
-                android:textSize="14sp" />
+                style="@style/tv_subtitle"
+                android:text="@string/filters" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_hdop"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="HDOP"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/hdop" />
 
                 <EditText
                     android:id="@+id/et_hdop"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
-                    android:ems="10"
-                    android:gravity="end"
-                    android:inputType="number"
-                    android:textSize="16sp"
-                    tools:ignore="LabelFor" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
+
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_fix_delay"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Задержка первого решения, [c]"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/fix_delay" />
 
                 <EditText
                     android:id="@+id/et_fix_delay"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
-                    android:ems="10"
-                    android:gravity="end"
-                    android:inputType="number"
-                    android:textSize="16sp"
-                    tools:ignore="LabelFor" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
 
             <Button
                 android:id="@+id/btn_rcv_coldstart"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:fontFamily="sans-serif"
-                android:text="Холодный старт приёмника"
-                android:textAllCaps="false"
-                android:textSize="16sp" />
+                style="@style/btn_command"
+                android:text="@string/rcv_coldstart" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingTop="24dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="24dp">
+            <LinearLayout style="@style/ll_for_classic_parameter_without_subtitle">
 
                 <TextView
                     android:id="@+id/tv_satellite_system"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Выбор спутниковой группировки"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                    android:textSize="16sp" />
+                    android:text="@string/satellite_system" />
 
                 <Spinner
                     android:id="@+id/spin_satellite_system"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/spin_parameter_value"
                     android:layout_weight="1"
-                    android:entries="@array/satellite_system_list"
-                    android:foregroundGravity="right"
-                    android:gravity="end"
-                    android:textAlignment="textEnd" />
+                    android:entries="@array/satellite_system_list" />
             </LinearLayout>
 
         </LinearLayout>

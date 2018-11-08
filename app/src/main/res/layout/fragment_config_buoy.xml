@@ -13,119 +13,59 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="32dp">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_weight="1"
-                android:text="@string/tv_config_buoy"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                style="@style/tv_subtitle"
+                android:text="@string/tv_config_buoy" />
 
-            <LinearLayout
-                android:layout_width="@dimen/ll_layout_width"
-                android:layout_height="@dimen/ll_layout_height"
-                android:layout_marginTop="@dimen/ll_layout_margin"
-                android:layout_marginBottom="@dimen/ll_layout_margin"
-                android:background="@color/ll_background"
-                android:orientation="horizontal"
-                android:paddingStart="@dimen/ll_padding_start"
-                android:paddingEnd="@dimen/ll_padding_end">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_id"
-                    style="@style/parameter_name"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
                     android:text="@string/id" />
 
                 <EditText
                     android:id="@+id/et_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value"
                     android:layout_weight="2"
-                    android:ems="0"
                     android:importantForAutofill="no"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="LabelFor"
                     tools:targetApi="o" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="@dimen/ll_layout_width"
-                android:layout_height="@dimen/ll_layout_height"
-                android:layout_marginTop="@dimen/ll_layout_margin"
-                android:layout_marginBottom="@dimen/ll_layout_margin"
-                android:background="@color/ll_background"
-                android:orientation="horizontal"
-                android:paddingStart="@dimen/ll_padding_start"
-                android:paddingEnd="@dimen/ll_padding_end">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_version"
-                    style="@style/parameter_name"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
                     android:text="@string/firmware_version" />
 
                 <EditText
                     android:id="@+id/et_version"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    style="@style/et_parameter_value_uneditable"
                     android:layout_weight="1"
-                    android:clickable="false"
-                    android:cursorVisible="false"
-                    android:focusable="auto"
-                    android:focusableInTouchMode="false"
-                    android:importantForAutofill="no"
-                    android:inputType=""
-                    android:selectAllOnFocus="false"
-                    android:text="@{configuration.versionTerminal}"
-                    android:textAlignment="viewEnd"
-                    android:textSize="16sp"
-                    tools:ignore="LabelFor"
-                    tools:targetApi="o" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/ll_for_buttons">
 
                 <Button
                     android:id="@+id/btn_restart"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/btn_command_in_list"
                     android:layout_weight="2"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/restart"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"
-                    tools:ignore="ButtonStyle"
-                    tools:layout_editor_absoluteX="288dp"
-                    tools:layout_editor_absoluteY="151dp" />
+                    android:text="@string/restart" />
 
                 <Button
                     android:id="@+id/btn_default_settings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/btn_command_in_list"
                     android:layout_weight="1"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/default_settings"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btn_restart"
-                    tools:ignore="ButtonStyle" />
+                    android:text="@string/default_settings" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

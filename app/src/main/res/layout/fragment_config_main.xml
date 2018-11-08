@@ -19,399 +19,180 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:paddingBottom="32dp">
 
             <TextView
-                style="@style/subtitle"
+                style="@style/tv_subtitle"
                 android:text="@string/config_probleskator" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
-                <LinearLayout
-                    android:layout_width="@dimen/ll_layout_width"
-                    android:layout_height="@dimen/ll_layout_height"
-                    android:layout_marginTop="@dimen/ll_layout_margin"
-                    android:layout_marginBottom="@dimen/ll_layout_margin"
-                    android:background="@color/ll_background"
-                    android:orientation="horizontal"
-                    android:paddingStart="@dimen/ll_padding_start"
-                    android:paddingEnd="@dimen/ll_padding_end">
+                <TextView
+                    android:id="@+id/tv_diod_light_mode"
+                    style="@style/tv_parameter_name"
+                    android:layout_weight="3"
+                    android:text="@string/tv_diod_light_mode" />
 
-                    <TextView
-                        android:id="@+id/tv_diod_light_mode"
-                        style="@style/parameter_name"
-                        android:layout_weight="3"
-                        android:text="@string/tv_diod_light_mode" />
+                <Spinner
+                    android:id="@+id/spin_blinker_mode"
+                    style="@style/spin_parameter_value"
+                    android:layout_weight="2"
+                    android:entries="@array/blinker_mode_list" />
 
-                    <Spinner
-                        android:id="@+id/spin_blinker_mode"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical|end"
-                        android:layout_marginEnd="0dp"
-                        android:layout_weight="2"
-                        android:dropDownWidth="match_parent"
-                        android:entries="@array/blinker_mode_list"
-                        android:textAlignment="textEnd"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
 
-                </LinearLayout>
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/ll_layout_margin"
-                    android:layout_marginBottom="@dimen/ll_layout_margin"
-                    android:background="@android:color/white"
-                    android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_config_probleskator">
+                <TextView
+                    android:id="@+id/tv_blinker_brightness"
+                    style="@style/tv_parameter_name"
+                    android:layout_weight="1"
+                    android:text="@string/tv_luminescence" />
 
-                    <TextView
-                        android:id="@+id/tv_blinker_brightness"
-                        android:layout_width="@dimen/tv_classic_layout_width"
-                        android:layout_height="@dimen/tv_classic_layout_height"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:paddingStart="@dimen/tv_classic_padding_start"
-                        android:paddingTop="@dimen/tv_classic_padding_top"
-                        android:paddingEnd="@dimen/tv_classic_padding_end"
-                        android:paddingBottom="@dimen/tv_classic_padding_bottom"
-                        android:text="@string/tv_luminescence"
-                        android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
+                <Spinner
+                    android:id="@+id/spin_blinker_brightness"
+                    style="@style/spin_parameter_value"
+                    android:layout_weight="1"
+                    android:entries="@array/blinker_brightness_list" />
+            </LinearLayout>
 
-                    <Spinner
-                        android:id="@+id/spin_blinker_brightness"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical|end"
-                        android:layout_weight="1"
-                        android:entries="@array/blinker_brightness_list"
-                        android:gravity="end"
-                        android:textAlignment="textEnd" />
-                </LinearLayout>
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/ll_layout_margin"
-                    android:layout_marginBottom="@dimen/ll_layout_margin"
-                    android:background="@android:color/white"
-                    android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
+                <TextView
+                    android:id="@+id/tv_blinker_lx"
+                    style="@style/tv_parameter_name"
+                    android:layout_weight="1"
+                    android:text="@string/tv_illumination_level" />
 
-                    <TextView
-                        android:id="@+id/tv_blinker_lx"
-                        android:layout_width="@dimen/tv_classic_layout_width"
-                        android:layout_height="@dimen/tv_classic_layout_height"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:paddingStart="@dimen/tv_classic_padding_start"
-                        android:paddingTop="@dimen/tv_classic_padding_top"
-                        android:paddingEnd="@dimen/tv_classic_padding_end"
-                        android:paddingBottom="@dimen/tv_classic_padding_bottom"
-                        android:text="@string/tv_illumination_level"
-                        android:textAppearance="@android:style/TextAppearance.Widget.TextView"
-                        android:textSize="16sp" />
-
-                    <EditText
-                        android:id="@+id/et_blinker_lx"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="5"
-                        android:importantForAutofill="no"
-                        android:inputType="number"
-                        android:textAlignment="viewEnd"
-                        android:textAppearance="@android:style/TextAppearance.Widget.EditText"
-                        tools:ignore="LabelFor"
-                        tools:targetApi="o" />
-
-                </LinearLayout>
+                <EditText
+                    android:id="@+id/et_blinker_lx"
+                    style="@style/et_parameter_value"
+                    android:layout_weight="5"
+                    android:importantForAutofill="no"
+                    tools:ignore="LabelFor"
+                    tools:targetApi="o" />
 
             </LinearLayout>
 
             <TextView
-                style="@style/subtitle"
+                style="@style/tv_subtitle"
                 android:text="@string/porogi_trevog" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_max_deviation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/tv_classic_padding_start"
-                    android:paddingTop="@dimen/tv_classic_padding_top"
-                    android:paddingEnd="@dimen/tv_classic_padding_end"
-                    android:paddingBottom="@dimen/tv_classic_padding_bottom"
-                    android:text="@string/dopustimiy_radius_snosa"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
+                    android:text="@string/dopustimiy_radius_snosa" />
 
                 <EditText
                     android:id="@+id/et_max_deviation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
                     android:importantForAutofill="no"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText"
                     tools:ignore="LabelFor"
                     tools:targetApi="o" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_tilt_angle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/tv_classic_padding_start"
-                    android:paddingTop="@dimen/tv_classic_padding_top"
-                    android:paddingEnd="@dimen/tv_classic_padding_end"
-                    android:paddingBottom="@dimen/tv_classic_padding_bottom"
-                    android:text="@string/porogoviy_uroven_krena"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
+                    android:text="@string/porogoviy_uroven_krena" />
 
                 <EditText
                     android:id="@+id/et_tilt_angle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
                     android:importantForAutofill="no"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText"
                     tools:ignore="LabelFor"
                     tools:targetApi="o" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_impact_pow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/tv_classic_padding_start"
-                    android:paddingTop="@dimen/tv_classic_padding_top"
-                    android:paddingEnd="@dimen/tv_classic_padding_end"
-                    android:paddingBottom="@dimen/tv_classic_padding_bottom"
-                    android:text="@string/porogoviy_uroven_udara"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
+                    android:text="@string/porogoviy_uroven_udara" />
 
                 <EditText
                     android:id="@+id/et_impact_pow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
                     android:importantForAutofill="no"
-                    android:inputType="number"
-                    android:textAlignment="textEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText"
                     tools:ignore="LabelFor"
                     tools:targetApi="o" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_upower_thld"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/tv_classic_padding_start"
-                    android:paddingTop="@dimen/tv_classic_padding_top"
-                    android:paddingEnd="@dimen/tv_classic_padding_end"
-                    android:paddingBottom="@dimen/tv_classic_padding_bottom"
-                    android:text="@string/porogoviy_uroven_zaryada_batarei"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
+                    android:text="@string/porogoviy_uroven_zaryada_batarei" />
 
                 <EditText
                     android:id="@+id/et_upower_thld"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
-                    android:gravity="center"
                     android:importantForAutofill="no"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText"
                     tools:ignore="LabelFor"
                     tools:targetApi="o" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="1dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter_without_subtitle">
 
                 <TextView
                     android:id="@+id/tv_deviation_int"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/tv_classic_padding_start"
-                    android:paddingTop="@dimen/tv_classic_padding_top"
-                    android:paddingEnd="@dimen/tv_classic_padding_end"
-                    android:paddingBottom="@dimen/tv_classic_padding_bottom"
-                    android:text="@string/period_prosypaniya"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
+                    android:text="@string/period_prosypaniya" />
 
                 <EditText
                     android:id="@+id/et_deviation_int"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
                     android:importantForAutofill="no"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText"
                     tools:ignore="LabelFor"
                     tools:targetApi="o" />
-
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_max_active"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingStart="0dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="16dp"
-                    android:text="@string/max_active"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
+                    android:text="@string/max_active" />
 
                 <EditText
                     android:id="@+id/et_max_active"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/et_parameter_value"
                     android:layout_weight="5"
                     android:importantForAutofill="no"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText"
                     tools:ignore="LabelFor"
                     tools:targetApi="o" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+            <LinearLayout style="@style/ll_for_classic_parameter_without_subtitle">
 
                 <TextView
                     android:id="@+id/tv_upower"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/tv_parameter_name"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingStart="0dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="16dp"
-                    android:text="@string/upower"
-                    android:textAppearance="@android:style/TextAppearance.Widget.TextView" />
+                    android:text="@string/upower" />
 
                 <EditText
                     android:id="@+id/et_upower"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/et_parameter_value_uneditable"
                     android:layout_weight="5"
-                    android:cursorVisible="false"
-                    android:focusable="auto"
-                    android:focusableInTouchMode="false"
-                    android:importantForAutofill="no"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textAppearance="@android:style/TextAppearance.Widget.EditText"
-                    tools:ignore="LabelFor"
-                    tools:targetApi="o" />
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
             </LinearLayout>
 
         </LinearLayout>
