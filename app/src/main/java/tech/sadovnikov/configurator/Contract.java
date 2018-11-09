@@ -330,7 +330,7 @@ public interface Contract {
 
         void setUiConfiguration(tech.sadovnikov.configurator.model.Configuration uiConfiguration);
 
-        tech.sadovnikov.configurator.model.Configuration getConfigurationForSetAndSave();
+        tech.sadovnikov.configurator.model.Configuration getConfigurationForSave();
 
         String getParameterValue(String name);
 

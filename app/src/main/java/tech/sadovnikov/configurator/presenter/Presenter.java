@@ -116,10 +116,13 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
                 break;
             //
             case WHAT_COMMAND_DATA:
+                Log.d(TAG, "onHandleMessage: " + ((HashMap)msg.obj).get(DataAnalyzer.PARAMETER_VALUE).toString());
                 HashMap msgData = (HashMap) obj;
                 String value = (String) msgData.get(DataAnalyzer.PARAMETER_VALUE);
                 String name = (String) msgData.get(DataAnalyzer.PARAMETER_NAME);
+                Log.d(TAG, "onHandleMessage: " + value);
                 Parameter parameter = new Parameter(name, value);
+                Log.d(TAG, "onHandleMessage: " + parameter);
                 repositoryConfiguration.setParameter(parameter);
                 onReceiveCommand();
                 break;
@@ -187,7 +190,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onPositiveRequestWriteExternalStoragePermissionRequestResult() {
-        fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSetAndSave());
+        fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSave());
     }
 
     @Override
@@ -323,7 +326,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
             // TODO? <Что делать со спинерами, когда эти параметр не трогали?>
             // TODO <Поставить условие на подключение к устройству>
             // TODO <Показать бегунок загрузки>
-            //loader.loadConfiguration(repositoryConfiguration.getConfigurationForSetAndSave(), Loader.SET);
+            //loader.loadConfiguration(repositoryConfiguration.getConfigurationForSave(), Loader.SET);
             loader.loadCommandList(repositoryConfiguration.getCommandListForSetConfiguration());
         } else if (itemId == R.id.item_load) {
             // TODO <Поставить условие на подключение к устройству>

@@ -12,12 +12,14 @@ import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
 import static tech.sadovnikov.configurator.model.Configuration.LOGIN;
 import static tech.sadovnikov.configurator.model.Configuration.PACKETS;
 import static tech.sadovnikov.configurator.model.Configuration.PASSWORD;
+import static tech.sadovnikov.configurator.model.Configuration.SERVER;
 import static tech.sadovnikov.configurator.model.Configuration.SMS_CENTER;
 
 class DataParser {
     private static final String TAG = "DataParser";
 
     String parseMessage(String message, String parameter) {
+        Log.d(TAG, "parseMessage: " + message);
         switch (parameter) {
             case FIRMWARE_VERSION:
                 return parseVersion(message);
@@ -30,17 +32,29 @@ class DataParser {
             case ANSW_NUMBER:
                 return parseNumber(message);
             case APN:
-                return parseSim(message);
+                String s = parseSim(message);
+                Log.d(TAG, "parseMessage() returned: " + s);
+                return s;
             case LOGIN:
                 return parseSim(message);
             case PASSWORD:
                 return parseSim(message);
+            case SERVER:
+                return parseServer(message);
             default:
                 int ravnoIndex = message.indexOf("=");
                 int endIndex = message.indexOf("\r\n", ravnoIndex);
                 return message.substring(ravnoIndex + 1, endIndex).replaceAll(" ", "");
         }
 
+    }
+
+    private String parseServer(String message) {
+        if (!message.contains(LOGIN) && !message.contains(APN) && !message.contains(PASSWORD)) {
+            int ravnoIndex = message.indexOf("=");
+            int endIndex = message.indexOf("\r\n", ravnoIndex);
+            return message.substring(ravnoIndex + 1, endIndex).replaceAll(" ", "");
+        } else return null;
     }
 
     private String parseSim(String message) {

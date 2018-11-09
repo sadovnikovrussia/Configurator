@@ -44,7 +44,7 @@ public class Parameter {
 
     @Override
     public String toString() {
-        return "Parameter{" + name.toLowerCase() + "=" + value.toLowerCase() + "}";
+        return "Parameter{" + name + "=" + value + "}";
     }
 
     boolean isEmpty() {

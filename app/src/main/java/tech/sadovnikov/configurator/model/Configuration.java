@@ -60,9 +60,11 @@ public class Configuration {
             SMS_CENTER, CMD_NUMBER, ANSW_NUMBER, PACKETS, APN, LOGIN, PASSWORD, SIM_ATTEMPTS,
             DELIV_TIMEOUT};
     public static final ArrayList<String> PARAMETER_NAMES_LIST = new ArrayList<>();
+
     static {
         Collections.addAll(PARAMETER_NAMES_LIST, PARAMETER_NAMES);
     }
+
     private ArrayList<Parameter> parametersList = new ArrayList<>();
 
     Configuration() {
@@ -88,7 +90,7 @@ public class Configuration {
     }
 
 
-    Configuration getConfigurationForSetAndSave() {
+    Configuration getConfigurationForSave() {
         Configuration configuration = Configuration.getEmptyConfiguration();
         for (Parameter parameter : getParametersList()) {
             if (!parameter.isEmpty()) {
@@ -99,7 +101,7 @@ public class Configuration {
         configuration.removeParameter(new Parameter(UPOWER));
         configuration.removeParameter(new Parameter(BASE_POS));
         configuration.removeParameter(new Parameter(PACKETS));
-        Log.i(TAG, "getConfigurationForSetAndSave() returned: " + configuration);
+        Log.i(TAG, "getConfigurationForSave() returned: " + configuration);
         return configuration;
     }
 
@@ -133,24 +135,6 @@ public class Configuration {
                 parametersList.get(index).setValue(parameter.getValue());
             } else {
                 Log.w(TAG, "setParameter: В конфигурации нет параметра " + parameter + "configuration = " + this);
-            }
-        }
-    }
-
-    void setParameterFromUi(String name, String value) {
-        if (PARAMETER_NAMES_LIST.contains(name)) {
-            Parameter parameter;
-            if ((name.equals(APN) || name.equals(LOGIN) || name.equals(PASSWORD)) && (!value.endsWith("\"") || !value.startsWith("\""))) {
-                String s = (char) 34 + value + (char) 34;
-                parameter = new Parameter(name, s);
-            } else {
-                parameter = new Parameter(name, value);
-            }
-            if (parametersList.contains(parameter)) {
-                int index = parametersList.indexOf(parameter);
-                parametersList.get(index).setValue(parameter.getValue());
-            } else {
-                Log.w(TAG, "setParameterFromUi: В конфигурации нет параметра " + parameter + "configuration = " + this);
             }
         }
     }
@@ -198,7 +182,12 @@ public class Configuration {
         for (Parameter parameter : parametersList) {
             String value = parameter.getValue();
             String name = parameter.getName();
-            if (!value.isEmpty() && !name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER) && !name.equals(BASE_POS) && !name.equals(PACKETS)) {
+            boolean isAlp = name.equals(APN) || name.equals(LOGIN) || name.equals(PASSWORD);
+            boolean containsDefault = value.toLowerCase().contains("cellular operator defaults");
+            boolean nonEmpty = !value.isEmpty();
+            boolean changeable = !name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER) && !name.equals(BASE_POS) && !name.equals(PACKETS);
+            if (changeable && nonEmpty) {
+                if (isAlp && containsDefault) value = "\"\"";
                 commandListForSetConfiguration.add(name + "=" + value);
             }
         }

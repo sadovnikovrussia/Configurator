@@ -54,7 +54,7 @@ class DataAnalyzer {
                             for (String parameter : PARAMETER_NAMES) {
                                 if (message.toLowerCase().contains(parameter)) {
                                     String value = dataParser.parseMessage(message, parameter);
-                                    sendCommand(value, parameter);
+                                    if (value != null) sendCommand(value, parameter);
                                 }
                             }
                         }
@@ -74,6 +74,7 @@ class DataAnalyzer {
         msgObj.put(PARAMETER_VALUE, value);
         msgObj.put(PARAMETER_NAME, parameter);
         msg.obj = msgObj;
+        Log.d(TAG, "sendCommand: " + ((HashMap)msg.obj).get(DataAnalyzer.PARAMETER_VALUE).toString());
         uiHandler.sendMessage(msg);
     }
 
