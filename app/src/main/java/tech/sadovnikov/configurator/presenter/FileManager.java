@@ -121,7 +121,7 @@ public class FileManager {
                     if (indexOfRavno != -1) {
                         name = line.substring(0, indexOfRavno).trim().toLowerCase();
                         if (PARAMETER_NAMES_LIST.contains(name)) {
-                            value = line.substring(indexOfRavno + 1).replaceAll("\\s", "");
+                            value = line.substring(indexOfRavno + 1).trim();
                             Parameter parameter = new Parameter(name, value);
                             Log.d(TAG, "openConfiguration: read Parameter: " + parameter);
                             configuration.addParameter(parameter);
@@ -129,6 +129,7 @@ public class FileManager {
                         }
                     }
                 }
+
             } catch (IOException e) {
                 Log.e(TAG, "openConfiguration: Ошибка при чтении файла", e);
             }

@@ -19,7 +19,7 @@ class DataParser {
     private static final String TAG = "DataParser";
 
     String parseMessage(String message, String parameter) {
-        Log.d(TAG, "parseMessage: " + message);
+        // Log.d(TAG, "parseMessage: " + message);
         switch (parameter) {
             case FIRMWARE_VERSION:
                 return parseVersion(message);
@@ -32,9 +32,8 @@ class DataParser {
             case ANSW_NUMBER:
                 return parseNumber(message);
             case APN:
-                String s = parseSim(message);
-                Log.d(TAG, "parseMessage() returned: " + s);
-                return s;
+                //Log.d(TAG, "parseMessage() returned: " + s);
+                return parseSim(message);
             case LOGIN:
                 return parseSim(message);
             case PASSWORD:
@@ -107,7 +106,7 @@ class DataParser {
         }
         //
         double doublePercents = ((double) volUse / volAdr * 100);
-        Log.d(TAG, "parseMessage: doublePercents = " + doublePercents);
+        // Log.d(TAG, "parseMessage: doublePercents = " + doublePercents);
         String pattern = "##0.000";
         DecimalFormat decimalFormat = new DecimalFormat(pattern);
         String formattedPercents = decimalFormat.format(doublePercents).replace(",", ".");

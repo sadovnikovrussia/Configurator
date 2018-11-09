@@ -26,27 +26,30 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
 
     @Override
     public void setParameter(Parameter parameter) {
-        //Log.i(TAG, "setParameter: ДО: " + uiConfiguration);
+        Log.i(TAG, "setParameter: ДО: " + uiConfiguration);
         Log.i(TAG, "setParameter: Устанавливаем " + parameter);
         uiConfiguration.setParameter(parameter);
-        //Log.i(TAG, "setParameter: ПОСЛЕ: " + uiConfiguration);
+        Log.i(TAG, "setParameter: ПОСЛЕ: " + uiConfiguration);
         onRepositoryConfigurationEventsListener.onSetParameter(parameter.getName(), parameter.getValue());
     }
 
     @Override
     public void setParameter(String name, String value) {
         Parameter parameter = new Parameter(name, value);
+        Log.i(TAG, "setParameter: ДО: " + uiConfiguration);
         Log.i(TAG, "setParameter: Устанавливаем " + parameter);
+        uiConfiguration.setParameter(parameter);
+        Log.i(TAG, "setParameter: ПОСЛЕ: " + uiConfiguration);
         onRepositoryConfigurationEventsListener.onSetParameter(name, value);
     }
 
     @Override
     public void setParameterFromUi(String name, String value) {
-        //Log.i(TAG, "setParameter: ДО: " + uiConfiguration);
         Parameter parameter = new Parameter(name, value);
+        Log.i(TAG, "setParameter: ДО: " + uiConfiguration);
         uiConfiguration.setParameter(parameter);
         Log.i(TAG, "setParameterFromUi: Устанавливаем " + parameter);
-        //Log.i(TAG, "setParameter: ПОСЛЕ: " + uiConfiguration);
+        Log.i(TAG, "setParameter: ПОСЛЕ: " + uiConfiguration);
     }
 
     /**

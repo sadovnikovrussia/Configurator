@@ -74,7 +74,7 @@ class DataAnalyzer {
         msgObj.put(PARAMETER_VALUE, value);
         msgObj.put(PARAMETER_NAME, parameter);
         msg.obj = msgObj;
-        Log.d(TAG, "sendCommand: " + ((HashMap)msg.obj).get(DataAnalyzer.PARAMETER_VALUE).toString());
+        // Log.d(TAG, "sendCommand: " + ((HashMap)msg.obj).get(DataAnalyzer.PARAMETER_VALUE).toString());
         uiHandler.sendMessage(msg);
     }
 
