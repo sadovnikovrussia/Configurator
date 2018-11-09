@@ -1,5 +1,7 @@
 package tech.sadovnikov.configurator.model;
 
+import android.support.annotation.NonNull;
+
 import java.util.Objects;
 
 public class Parameter {
@@ -42,6 +44,7 @@ public class Parameter {
         return Objects.hash(getName());
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Parameter{" + name + "=" + value + "}";

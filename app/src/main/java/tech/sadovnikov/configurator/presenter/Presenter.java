@@ -116,14 +116,10 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
                 break;
             //
             case WHAT_COMMAND_DATA:
-                Log.d(TAG, "onHandleMessage: " + ((HashMap)msg.obj).get(DataAnalyzer.PARAMETER_VALUE).toString());
                 HashMap msgData = (HashMap) obj;
                 String value = (String) msgData.get(DataAnalyzer.PARAMETER_VALUE);
                 String name = (String) msgData.get(DataAnalyzer.PARAMETER_NAME);
-                Log.d(TAG, "onHandleMessage: " + value);
-                Parameter parameter = new Parameter(name, value);
-                Log.d(TAG, "onHandleMessage: " + parameter);
-                repositoryConfiguration.setParameter(parameter);
+                repositoryConfiguration.setParameter(name, value);
                 onReceiveCommand();
                 break;
             case WHAT_LOADING_END:
@@ -171,7 +167,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onCreateOptionsMenu() {
-        if (mainView.isBluetoothFragmentResumed()){
+        if (mainView.isBluetoothFragmentResumed()) {
             mainView.hideConfigActionsMenu();
         } else {
             mainView.showConfigActionsMenu();
@@ -400,32 +396,38 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onEtMaxDeviationFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(MAX_DEVIATION, mainView.getEtMaxDeviationText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(MAX_DEVIATION, mainView.getEtMaxDeviationText());
     }
 
     @Override
     public void onEtTiltAngleFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(TILT_ANGLE, mainView.getEtTiltDeviationText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(TILT_ANGLE, mainView.getEtTiltDeviationText());
     }
 
     @Override
     public void onEtImpactPowFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(IMPACT_POW, mainView.getEtImpactPowText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(IMPACT_POW, mainView.getEtImpactPowText());
     }
 
     @Override
     public void onEtUpowerThldFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(UPOWER_THLD, mainView.getEtUpowerThldText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(UPOWER_THLD, mainView.getEtUpowerThldText());
     }
 
     @Override
     public void onEtDeviationIntFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(DEVIATION_INT, mainView.getEtDeviationIntText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(DEVIATION_INT, mainView.getEtDeviationIntText());
     }
 
     @Override
     public void onEtMaxActiveFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(MAX_ACTIVE, mainView.getEtMaxActiveText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(MAX_ACTIVE, mainView.getEtMaxActiveText());
     }
 
     @Override
@@ -461,12 +463,14 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onEtLongDeviationFocusChanged(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(LONG_DEVIATION, mainView.getEtLongDeviationText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(LONG_DEVIATION, mainView.getEtLongDeviationText());
     }
 
     @Override
     public void onEtLatDeviationFocusChanged(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(LAT_DEVIATION, mainView.getEtLatDeviationText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(LAT_DEVIATION, mainView.getEtLatDeviationText());
     }
 
     @Override
@@ -476,7 +480,8 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onEtFixDelayFocusChanged(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(FIX_DELAY, mainView.getEtFixDelayText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(FIX_DELAY, mainView.getEtFixDelayText());
     }
 
     @Override
@@ -526,22 +531,26 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // ConfigServerFragment events
     @Override
     public void onEtServerFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(SERVER, mainView.getEtServerText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(SERVER, mainView.getEtServerText());
     }
 
     @Override
     public void onEtConnectAttemptsFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(CONNECT_ATTEMPTS, mainView.getEtConnectAttemptsText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(CONNECT_ATTEMPTS, mainView.getEtConnectAttemptsText());
     }
 
     @Override
     public void onEtSessionTimeFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(SESSION_TIME, mainView.getEtSessionTimeText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(SESSION_TIME, mainView.getEtSessionTimeText());
     }
 
     @Override
     public void onEtPacketToutFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(PACKET_TOUT, mainView.getEtPacketToutText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(PACKET_TOUT, mainView.getEtPacketToutText());
     }
 
     @Override
@@ -551,27 +560,32 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onEtNormalIntFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(NORMAL_INT, mainView.getEtNormalIntText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(NORMAL_INT, mainView.getEtNormalIntText());
     }
 
     @Override
     public void onEtAlarmIntFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(ALARM_INT, mainView.getEtAlarmIntText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(ALARM_INT, mainView.getEtAlarmIntText());
     }
 
     @Override
     public void onEtSmsCenterFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(SMS_CENTER, mainView.getEtSmsCenterText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(SMS_CENTER, mainView.getEtSmsCenterText());
     }
 
     @Override
     public void onEtCmdNumberFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(CMD_NUMBER, mainView.getEtCmdNumberText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(CMD_NUMBER, mainView.getEtCmdNumberText());
     }
 
     @Override
     public void onEtAnswNumberFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(ANSW_NUMBER, mainView.getEtAnswNumberText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(ANSW_NUMBER, mainView.getEtAnswNumberText());
     }
 
     // Lifecycle
@@ -606,7 +620,8 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onEtPasswordFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(PASSWORD, mainView.getEtPasswordText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(PASSWORD, mainView.getEtPasswordText());
     }
 
     @Override
@@ -651,12 +666,14 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onEtSimAttemptsFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(SIM_ATTEMPTS, mainView.getEtSimAttemptsText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(SIM_ATTEMPTS, mainView.getEtSimAttemptsText());
     }
 
     @Override
     public void onEtDelivTimeoutFocusChange(boolean hasFocus) {
-        if (!hasFocus) repositoryConfiguration.setParameterFromUi(DELIV_TIMEOUT, mainView.getEtDelivTimeoutText());
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(DELIV_TIMEOUT, mainView.getEtDelivTimeoutText());
     }
 
     // Lifecycle
@@ -714,7 +731,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     public void onBluetoothServiceStateOn() {
         mainView.setSwitchBtText("Включено");
         mainView.setSwitchBtState(bluetoothService.isEnabled());
-        // mainView.showPairedDevices();
         mainView.showDevices();
         mainView.updatePairedDevices();
         mainView.updateAvailableDevices();
@@ -743,9 +759,11 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         mainView.updateAvailableDevices();
     }
 
+
     @Override
-    public void onSetParameter(Parameter parameter) {
-        mainView.showParameter(parameter.getName(), parameter.getValue());
+    public void onSetParameter(String name, String value) {
+        mainView.showParameter(name, value);
+
     }
 
     @NonNull

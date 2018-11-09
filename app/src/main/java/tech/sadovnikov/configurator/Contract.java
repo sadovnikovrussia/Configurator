@@ -336,6 +336,8 @@ public interface Contract {
 
         void setParameter(Parameter parameter);
 
+        void setParameter(String name, String value);
+
         void setParameterFromUi(String name, String value);
 
         ArrayList<String> getCommandListForReadConfiguration();

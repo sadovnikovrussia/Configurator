@@ -30,7 +30,14 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
         Log.i(TAG, "setParameter: Устанавливаем " + parameter);
         uiConfiguration.setParameter(parameter);
         //Log.i(TAG, "setParameter: ПОСЛЕ: " + uiConfiguration);
-        onRepositoryConfigurationEventsListener.onSetParameter(parameter);
+        onRepositoryConfigurationEventsListener.onSetParameter(parameter.getName(), parameter.getValue());
+    }
+
+    @Override
+    public void setParameter(String name, String value) {
+        Parameter parameter = new Parameter(name, value);
+        Log.i(TAG, "setParameter: Устанавливаем " + parameter);
+        onRepositoryConfigurationEventsListener.onSetParameter(name, value);
     }
 
     @Override
@@ -92,6 +99,7 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
 
     // ---------------------------------------------------------------------------------------------
     public interface OnRepositoryConfigurationEventsListener {
-        void onSetParameter(Parameter parameter);
+
+        void onSetParameter(String name, String value);
     }
 }
