@@ -5,47 +5,28 @@
     android:id="@+id/frag_console"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ConsoleFragment">
+    tools:context=".view.ConsoleFragment"
+    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/et_command_line"
+    <Switch
+        android:id="@+id/sw_auto_scroll"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="20"
-        android:ems="10"
-        android:fontFamily="sans-serif-smallcaps"
-        android:inputType="text"
-        android:textAppearance="@android:style/TextAppearance"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_send_command"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sv_logs" />
-
-    <Button
-        android:id="@+id/btn_send_command"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="1"
-        android:text="@string/btn_send_command"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@android:color/white"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/auto_scroll"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/et_command_line"
-        app:layout_constraintTop_toBottomOf="@+id/sv_logs" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:id="@+id/sv_logs"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/btn_send_command"
+        android:layout_marginBottom="8dp"
+        android:background="@color/btn_background"
+        app:layout_constraintBottom_toTopOf="@+id/et_command_line"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sw_auto_scroll">
@@ -61,24 +42,41 @@
                 android:layout_height="match_parent"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:text="@string/tv_command_line"
-                app:layout_constraintBottom_toTopOf="@+id/et_command_line"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sw_auto_scroll" />
+                android:text="@string/tv_command_line" />
         </LinearLayout>
     </ScrollView>
 
-    <Switch
-        android:id="@+id/sw_auto_scroll"
+    <EditText
+        android:id="@+id/et_command_line"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/background"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="@string/auto_scroll"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:inputType="text"
+        android:textAppearance="@android:style/TextAppearance"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_send_command"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/sv_logs"
+        tools:ignore="Autofill,LabelFor,UnusedAttribute" />
+
+    <Button
+        android:id="@+id/btn_send_command"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:text="@string/btn_send_command"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/et_command_line"
+        app:layout_constraintTop_toBottomOf="@+id/sv_logs" />
 
 </android.support.constraint.ConstraintLayout>

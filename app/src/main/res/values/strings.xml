@@ -126,4 +126,5 @@
     <string name="close_pin_request">Отключить запрос</string>
     <string name="sim_attempts">Количество попыток опознания SIM карты</string>
     <string name="deliv_timeout">Время ожидания получения уведломления о доставке, [c]</string>
+    <string name="off">Выключено</string>
 </resources>
