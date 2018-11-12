@@ -144,6 +144,15 @@ public interface Contract {
 
         boolean isBluetoothFragmentResumed();
 
+        void startMapActivity(String latitude, String longitude);
+
+        String getEtLongitude();
+
+        String getEtLatitude();
+
+        String getEtBaseLongitude();
+
+        String getEtBaseLatitude();
     }
 
     interface Presenter {
@@ -318,6 +327,10 @@ public interface Contract {
         void onBluetoothFragmentDestroy();
 
         void onCreateOptionsMenu();
+
+        void onBtnShowMapCurrentPosClick();
+
+        void onBtnShowMapBasePosClick();
     }
 
     interface Logs {

@@ -19,7 +19,6 @@ import java.util.Objects;
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.Logs;
-import tech.sadovnikov.configurator.model.Parameter;
 import tech.sadovnikov.configurator.model.RepositoryConfiguration;
 import tech.sadovnikov.configurator.view.MainActivity;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
@@ -492,6 +491,16 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onBtnRequestBasePosClick() {
         bluetoothService.sendData("base pos?");
+    }
+
+    @Override
+    public void onBtnShowMapCurrentPosClick() {
+        mainView.startMapActivity(mainView.getEtLongitude(), mainView.getEtLatitude());
+    }
+
+    @Override
+    public void onBtnShowMapBasePosClick() {
+        mainView.startMapActivity(mainView.getEtBaseLongitude(), mainView.getEtBaseLatitude());
     }
 
     // Lifecycle

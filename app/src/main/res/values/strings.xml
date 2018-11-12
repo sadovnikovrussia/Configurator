@@ -59,7 +59,7 @@
     </string-array>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="device_name">Device name</string>
-    <string name="device_adddress">Device adddress</string>
+    <string name="device_address">Device adddress</string>
     <string name="tab">Tab</string>
     <string name="paired_devices">Подключенные</string>
     <string name="available_devices">Доступные</string>
@@ -76,7 +76,7 @@
     <string name="set_base_pos">Установить текущие координаты</string>
     <string name="max_active">Максимальное время активности системы</string>
     <string name="upower">Текущее напряжение питания системы</string>
-    <string name="request_base_pos">Запросить базовые координаты</string>
+    <string name="request_base_pos">Запросить координаты</string>
     <string name="long_and_lat_deviation">Текущая точность определения местоположения</string>
     <string name="by_long">По долготе</string>
     <string name="by_lat">По широте</string>
@@ -127,4 +127,7 @@
     <string name="sim_attempts">Количество попыток опознания SIM карты</string>
     <string name="deliv_timeout">Время ожидания получения уведломления о доставке, [c]</string>
     <string name="off">Выключено</string>
+    <string name="status">Status</string>
+    <string name="display_real_point">Отображать реальную точку</string>
+    <string name="show_on_map">Отобразить на карте</string>
 </resources>

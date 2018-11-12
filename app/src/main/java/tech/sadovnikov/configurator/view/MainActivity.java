@@ -2,6 +2,7 @@ package tech.sadovnikov.configurator.view;
 
 import android.Manifest;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -503,6 +504,26 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
+    public String getEtLongitude() {
+        return configNavigationFragment.etLongitude.getText().toString();
+    }
+
+    @Override
+    public String getEtLatitude() {
+        return configNavigationFragment.etLatitude.getText().toString();
+    }
+
+    @Override
+    public String getEtBaseLongitude() {
+        return configNavigationFragment.etBaseLongitude.getText().toString();
+    }
+
+    @Override
+    public String getEtBaseLatitude() {
+        return configNavigationFragment.etBaseLatitude.getText().toString();
+    }
+
+    @Override
     public void requestReadPermission() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -700,7 +721,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         Log.d(TAG, "isBluetoothFragmentResumed: ");
         return bluetoothFragment.isResumed();
     }
-    
+
     @Override
     public void onBluetoothFragmentCreateView() {
         presenter.onBluetoothFragmentCreateView();
@@ -872,6 +893,16 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     @Override
     public void onBtnRequestBasePosClick() {
         presenter.onBtnRequestBasePosClick();
+    }
+
+    @Override
+    public void onBtnShowMapCurrentPosClick() {
+        presenter.onBtnShowMapCurrentPosClick();
+    }
+
+    @Override
+    public void onBtnShowMapBasePosClick() {
+        presenter.onBtnShowMapBasePosClick();
     }
 
     // Lifecycle
@@ -1133,6 +1164,13 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         // Log.d(TAG, "onActivityResult: " + "requestCode = " + requestCode + ", " + "resultCode = " + resultCode + ", " + "data = " + data.getData());
         // data.getData();
         presenter.onMainActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void startMapActivity(String latitude, String longitude) {
+        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        startActivity(mapIntent);
     }
 
     @Override

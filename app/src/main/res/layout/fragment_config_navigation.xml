@@ -52,10 +52,40 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_request_coordinates"
-                style="@style/btn_command"
-                android:text="@string/btn_request_coordinates" />
+            <LinearLayout
+                style="@style/ll_for_classic_parameter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="8dp"
+                android:paddingEnd="16dp">
+
+                <CheckBox
+                    android:id="@+id/cb_new_command"
+                    style="@style/cb_list_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:text="@string/display_real_point" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/ll_for_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/btn_request_current_pos"
+                    style="@style/btn_command_in_list"
+                    android:layout_weight="1"
+                    android:text="@string/btn_request_coordinates" />
+
+                <Button
+                    android:id="@+id/btn_show_map_current_pos"
+                    style="@style/btn_command_in_list"
+                    android:layout_weight="1"
+                    android:text="@string/show_on_map" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_subtitle_base_pos"
@@ -93,10 +123,23 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_request_base_pos"
-                style="@style/btn_command"
-                android:text="@string/request_base_pos" />
+            <LinearLayout
+                style="@style/ll_for_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/btn_request_base_pos"
+                    style="@style/btn_command_in_list"
+                    android:layout_weight="1"
+                    android:text="@string/request_base_pos" />
+
+                <Button
+                    android:id="@+id/btn_show_map_base_pos"
+                    style="@style/btn_command_in_list"
+                    android:layout_weight="1"
+                    android:text="@string/show_on_map" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_subtitle_long_and_lat_deviation"

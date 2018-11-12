@@ -22,6 +22,8 @@ public class ConfigNavigationFragment extends Fragment {
     OnConfigNavigationFragmentInteractionListener listener;
 
     // UI
+    EditText etLongitude;
+    EditText etLatitude;
     EditText etBaseLongitude;
     EditText etBaseLatitude;
     Button btnRcvColdStart;
@@ -31,6 +33,8 @@ public class ConfigNavigationFragment extends Fragment {
     EditText etFixDelay;
     Spinner spinSatelliteSystem;
     Button btnRequestBasePos;
+    Button btnShowMapCurrentPos;
+    Button btnShowMapBasePos;
 
     public ConfigNavigationFragment() {
         // Required empty public constructor
@@ -47,6 +51,8 @@ public class ConfigNavigationFragment extends Fragment {
     }
 
     private void initUi(View view) {
+        etLongitude = view.findViewById(R.id.et_longitude);
+        etLatitude = view.findViewById(R.id.et_latitude);
         etBaseLongitude = view.findViewById(R.id.et_base_longitude);
         etBaseLatitude = view.findViewById(R.id.et_base_latitude);
         btnRcvColdStart = view.findViewById(R.id.btn_rcv_coldstart);
@@ -101,6 +107,20 @@ public class ConfigNavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 listener.onBtnRequestBasePosClick();
+            }
+        });
+        btnShowMapCurrentPos = view.findViewById(R.id.btn_show_map_current_pos);
+        btnShowMapCurrentPos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onBtnShowMapCurrentPosClick();
+            }
+        });
+        btnShowMapBasePos = view.findViewById(R.id.btn_show_map_base_pos);
+        btnShowMapBasePos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onBtnShowMapBasePosClick();
             }
         });
     }
@@ -191,5 +211,9 @@ public class ConfigNavigationFragment extends Fragment {
         void onSpinSatelliteSystemItemSelected(int position);
 
         void onBtnRequestBasePosClick();
+
+        void onBtnShowMapCurrentPosClick();
+
+        void onBtnShowMapBasePosClick();
     }
 }
