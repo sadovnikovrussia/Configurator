@@ -47,7 +47,8 @@ public class ConfigServerFragment extends Fragment {
     LinearLayout llSmsCenter;
     LinearLayout llCmdNumber;
     LinearLayout llAnswNumber;
-    OnEtLlParameterClickListener onEtLlParameterClickListener;
+    LinearLayout llPriorityChnl;
+    OnLlParameterClickListener onLlParameterClickListener;
 
     public ConfigServerFragment() {
         // Required empty public constructor
@@ -55,25 +56,29 @@ public class ConfigServerFragment extends Fragment {
     }
 
     private void initUi(View view) {
-        onEtLlParameterClickListener = new OnEtLlParameterClickListener(getContext());
+        onLlParameterClickListener = new OnLlParameterClickListener(getContext());
+
         llServer = view.findViewById(R.id.ll_server);
-        llServer.setOnClickListener(onEtLlParameterClickListener);
+        llServer.setOnClickListener(onLlParameterClickListener);
         llConnectAttempts = view.findViewById(R.id.ll_connect_attempts);
-        llConnectAttempts.setOnClickListener(onEtLlParameterClickListener);
+        llConnectAttempts.setOnClickListener(onLlParameterClickListener);
         llSessionTime = view.findViewById(R.id.ll_session_time);
-        llSessionTime.setOnClickListener(onEtLlParameterClickListener);
+        llSessionTime.setOnClickListener(onLlParameterClickListener);
         llPacketTout = view.findViewById(R.id.ll_packet_tout);
-        llPacketTout.setOnClickListener(onEtLlParameterClickListener);
+        llPacketTout.setOnClickListener(onLlParameterClickListener);
         llNormalInt = view.findViewById(R.id.ll_normal_int);
-        llNormalInt.setOnClickListener(onEtLlParameterClickListener);
+        llNormalInt.setOnClickListener(onLlParameterClickListener);
         llAlarmInt = view.findViewById(R.id.ll_alarm_int);
-        llAlarmInt.setOnClickListener(onEtLlParameterClickListener);
+        llAlarmInt.setOnClickListener(onLlParameterClickListener);
         llSmsCenter = view.findViewById(R.id.ll_sms_center);
-        llSmsCenter.setOnClickListener(onEtLlParameterClickListener);
+        llSmsCenter.setOnClickListener(onLlParameterClickListener);
         llCmdNumber = view.findViewById(R.id.ll_cmd_number);
-        llCmdNumber.setOnClickListener(onEtLlParameterClickListener);
+        llCmdNumber.setOnClickListener(onLlParameterClickListener);
         llAnswNumber = view.findViewById(R.id.ll_answ_number);
-        llAnswNumber.setOnClickListener(onEtLlParameterClickListener);
+        llAnswNumber.setOnClickListener(onLlParameterClickListener);
+        llPriorityChnl = view.findViewById(R.id.ll_priority_chnl);
+        llPriorityChnl.setOnClickListener(onLlParameterClickListener);
+
         etServer = view.findViewById(R.id.et_server);
         etServer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

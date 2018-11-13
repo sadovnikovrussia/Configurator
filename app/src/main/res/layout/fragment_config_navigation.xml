@@ -227,7 +227,9 @@
                 style="@style/btn_command"
                 android:text="@string/rcv_coldstart" />
 
-            <LinearLayout style="@style/ll_for_classic_parameter_without_subtitle">
+            <LinearLayout
+                android:id="@+id/ll_satellite_system"
+                style="@style/ll_for_classic_parameter_without_subtitle">
 
                 <TextView
                     android:id="@+id/tv_satellite_system"

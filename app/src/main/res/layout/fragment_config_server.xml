@@ -93,7 +93,9 @@
                 style="@style/tv_subtitle"
                 android:text="@string/subtitle_intervals" />
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_priority_chnl"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_priority_chnl"

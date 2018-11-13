@@ -31,7 +31,7 @@ public class ConfigBuoyFragment extends Fragment {
     Button btnDefaultSettings;
     LinearLayout llId;
 
-    OnEtLlParameterClickListener onEtLlParameterClickListener;
+    OnLlParameterClickListener onLlParameterClickListener;
 
     public ConfigBuoyFragment() {
         // Required empty public constructor
@@ -50,9 +50,9 @@ public class ConfigBuoyFragment extends Fragment {
     }
 
     private void initUi(View view) {
-        onEtLlParameterClickListener = new OnEtLlParameterClickListener(getContext());
+        onLlParameterClickListener = new OnLlParameterClickListener(getContext());
         llId = view.findViewById(R.id.ll_id);
-        llId.setOnClickListener(onEtLlParameterClickListener);
+        llId.setOnClickListener(onLlParameterClickListener);
         tvId = view.findViewById(R.id.tv_id);
         etId = view.findViewById(R.id.et_id);
         // TODO <Сделать отслеживание закрытия клавиатуры>

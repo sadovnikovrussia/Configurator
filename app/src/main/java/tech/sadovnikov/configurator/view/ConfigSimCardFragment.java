@@ -42,14 +42,14 @@ public class ConfigSimCardFragment extends Fragment {
     LinearLayout llPin;
     LinearLayout llSimAttempts;
     LinearLayout llDelivTimeOut;
-    OnEtLlParameterClickListener onEtLlParameterClickListener;
+    OnLlParameterClickListener onLlParameterClickListener;
 
     public ConfigSimCardFragment() {
         // Required empty public constructor
     }
 
     private void initUi(View view) {
-        onEtLlParameterClickListener = new OnEtLlParameterClickListener(getContext());
+        onLlParameterClickListener = new OnLlParameterClickListener(getContext());
 
         llApn = view.findViewById(R.id.ll_apn);
         llLogin = view.findViewById(R.id.ll_login);
@@ -58,12 +58,12 @@ public class ConfigSimCardFragment extends Fragment {
         llSimAttempts = view.findViewById(R.id.ll_sim_attempts);
         llDelivTimeOut = view.findViewById(R.id.ll_deliv_timeout);
 
-        llApn.setOnClickListener(onEtLlParameterClickListener);
-        llLogin.setOnClickListener(onEtLlParameterClickListener);
-        llPassword.setOnClickListener(onEtLlParameterClickListener);
-        llPin.setOnClickListener(onEtLlParameterClickListener);
-        llSimAttempts.setOnClickListener(onEtLlParameterClickListener);
-        llDelivTimeOut.setOnClickListener(onEtLlParameterClickListener);
+        llApn.setOnClickListener(onLlParameterClickListener);
+        llLogin.setOnClickListener(onLlParameterClickListener);
+        llPassword.setOnClickListener(onLlParameterClickListener);
+        llPin.setOnClickListener(onLlParameterClickListener);
+        llSimAttempts.setOnClickListener(onLlParameterClickListener);
+        llDelivTimeOut.setOnClickListener(onLlParameterClickListener);
 
 
         etApn = view.findViewById(R.id.et_apn);

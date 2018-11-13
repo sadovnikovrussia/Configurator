@@ -44,8 +44,9 @@ public class ConfigNavigationFragment extends Fragment {
     LinearLayout llLongDeviation;
     LinearLayout llHdop;
     LinearLayout llFixDelay;
+    LinearLayout llSatelliteSystem;
 
-    OnEtLlParameterClickListener onEtLlParameterClickListener;
+    OnLlParameterClickListener onLlParameterClickListener;
 
     public ConfigNavigationFragment() {
         // Required empty public constructor
@@ -62,19 +63,21 @@ public class ConfigNavigationFragment extends Fragment {
     }
 
     private void initUi(View view) {
-        onEtLlParameterClickListener = new OnEtLlParameterClickListener(getContext());
+        onLlParameterClickListener = new OnLlParameterClickListener(getContext());
         llBaseLatitude = view.findViewById(R.id.ll_base_latitude);
-        llBaseLatitude.setOnClickListener(onEtLlParameterClickListener);
+        llBaseLatitude.setOnClickListener(onLlParameterClickListener);
         llBaseLongitude = view.findViewById(R.id.ll_base_longitude);
-        llBaseLongitude.setOnClickListener(onEtLlParameterClickListener);
+        llBaseLongitude.setOnClickListener(onLlParameterClickListener);
         llLatDeviation = view.findViewById(R.id.ll_lat_deviation);
-        llLatDeviation.setOnClickListener(onEtLlParameterClickListener);
+        llLatDeviation.setOnClickListener(onLlParameterClickListener);
         llLongDeviation = view.findViewById(R.id.ll_long_deviation);
-        llLongDeviation.setOnClickListener(onEtLlParameterClickListener);
+        llLongDeviation.setOnClickListener(onLlParameterClickListener);
         llHdop = view.findViewById(R.id.ll_hdop);
-        llHdop.setOnClickListener(onEtLlParameterClickListener);
+        llHdop.setOnClickListener(onLlParameterClickListener);
         llFixDelay = view.findViewById(R.id.ll_fix_delay);
-        llFixDelay.setOnClickListener(onEtLlParameterClickListener);
+        llFixDelay.setOnClickListener(onLlParameterClickListener);
+        llSatelliteSystem = view.findViewById(R.id.ll_satellite_system);
+        llSatelliteSystem.setOnClickListener(onLlParameterClickListener);
 
         etLongitude = view.findViewById(R.id.et_longitude);
         etLatitude = view.findViewById(R.id.et_latitude);
