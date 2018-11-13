@@ -20,7 +20,9 @@
                 style="@style/tv_subtitle"
                 android:text="@string/subtitle_server" />
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_server"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     style="@style/tv_parameter_name"
@@ -36,7 +38,9 @@
 
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_connect_attempts"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     style="@style/tv_parameter_name"
@@ -51,7 +55,9 @@
 
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_session_time"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     style="@style/tv_parameter_name"
@@ -66,7 +72,9 @@
 
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_packet_tout"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     style="@style/tv_parameter_name"
@@ -100,7 +108,9 @@
                     android:entries="@array/priority_chnl_list" />
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_normal_int"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_normal_int"
@@ -116,7 +126,9 @@
 
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_alarm_int"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_alarm_int"
@@ -141,7 +153,9 @@
                 style="@style/tv_subtitle"
                 android:text="@string/phones" />
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_sms_center"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     style="@style/tv_parameter_name"
@@ -157,7 +171,9 @@
 
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_cmd_number"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     style="@style/tv_parameter_name"
@@ -173,7 +189,9 @@
 
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_answ_number"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     style="@style/tv_parameter_name"

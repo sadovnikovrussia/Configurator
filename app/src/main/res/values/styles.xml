@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Base.Theme.MaterialComponents.Light.DarkActionBar">
@@ -84,6 +84,7 @@
         <item name="android:layout_gravity">center_vertical|end</item>
         <item name="android:textAlignment">viewEnd</item>
         <item name="android:inputType">number</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@android:color/transparent</item>
     </style>
 
     <style name="et_parameter_value_uneditable">

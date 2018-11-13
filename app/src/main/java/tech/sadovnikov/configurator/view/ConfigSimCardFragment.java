@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import tech.sadovnikov.configurator.R;
 
@@ -35,13 +36,36 @@ public class ConfigSimCardFragment extends Fragment {
     Button btnClearPin;
     EditText etSimAttempts;
     EditText etDelivTimeOut;
-
+    LinearLayout llApn;
+    LinearLayout llLogin;
+    LinearLayout llPassword;
+    LinearLayout llPin;
+    LinearLayout llSimAttempts;
+    LinearLayout llDelivTimeOut;
+    OnEtLlParameterClickListener onEtLlParameterClickListener;
 
     public ConfigSimCardFragment() {
         // Required empty public constructor
     }
 
     private void initUi(View view) {
+        onEtLlParameterClickListener = new OnEtLlParameterClickListener(getContext());
+
+        llApn = view.findViewById(R.id.ll_apn);
+        llLogin = view.findViewById(R.id.ll_login);
+        llPassword = view.findViewById(R.id.ll_password);
+        llPin = view.findViewById(R.id.ll_pin);
+        llSimAttempts = view.findViewById(R.id.ll_sim_attempts);
+        llDelivTimeOut = view.findViewById(R.id.ll_deliv_timeout);
+
+        llApn.setOnClickListener(onEtLlParameterClickListener);
+        llLogin.setOnClickListener(onEtLlParameterClickListener);
+        llPassword.setOnClickListener(onEtLlParameterClickListener);
+        llPin.setOnClickListener(onEtLlParameterClickListener);
+        llSimAttempts.setOnClickListener(onEtLlParameterClickListener);
+        llDelivTimeOut.setOnClickListener(onEtLlParameterClickListener);
+
+
         etApn = view.findViewById(R.id.et_apn);
         etApn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

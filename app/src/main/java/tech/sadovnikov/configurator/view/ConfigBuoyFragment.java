@@ -5,14 +5,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import tech.sadovnikov.configurator.R;
@@ -21,7 +20,7 @@ import tech.sadovnikov.configurator.R;
 public class ConfigBuoyFragment extends Fragment {
     private static final String TAG = "ConfigBuoyFragment";
 
-    ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener onConfigBuoyFragmentInteractionListener;
+    ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener listener;
 
     // UI
     TextView tvId;
@@ -30,6 +29,9 @@ public class ConfigBuoyFragment extends Fragment {
     EditText etVersion;
     Button btnRestart;
     Button btnDefaultSettings;
+    LinearLayout llId;
+
+    OnEtLlParameterClickListener onEtLlParameterClickListener;
 
     public ConfigBuoyFragment() {
         // Required empty public constructor
@@ -48,13 +50,16 @@ public class ConfigBuoyFragment extends Fragment {
     }
 
     private void initUi(View view) {
+        onEtLlParameterClickListener = new OnEtLlParameterClickListener(getContext());
+        llId = view.findViewById(R.id.ll_id);
+        llId.setOnClickListener(onEtLlParameterClickListener);
         tvId = view.findViewById(R.id.tv_id);
         etId = view.findViewById(R.id.et_id);
         // TODO <Сделать отслеживание закрытия клавиатуры>
         etId.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                onConfigBuoyFragmentInteractionListener.onEtIdFocusChange(hasFocus);
+                listener.onEtIdFocusChange(hasFocus);
             }
         });
         tvVersion = view.findViewById(R.id.tv_version);
@@ -63,14 +68,14 @@ public class ConfigBuoyFragment extends Fragment {
         btnRestart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onConfigBuoyFragmentInteractionListener.onBtnRestartClick();
+                listener.onBtnRestartClick();
             }
         });
         btnDefaultSettings = view.findViewById(R.id.btn_default_settings);
         btnDefaultSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onConfigBuoyFragmentInteractionListener.onBtnDefaultSettingsClick();
+                listener.onBtnDefaultSettingsClick();
             }
         });
     }
@@ -93,7 +98,7 @@ public class ConfigBuoyFragment extends Fragment {
         super.onAttach(context);
         Log.v(TAG, "onAttach");
         if (context instanceof ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener) {
-            onConfigBuoyFragmentInteractionListener = (ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener) context;
+            listener = (ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnConfigBuoyFragmentInteractionListener");
@@ -110,7 +115,7 @@ public class ConfigBuoyFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        onConfigBuoyFragmentInteractionListener.onConfigBuoyFragmentStart();
+        listener.onConfigBuoyFragmentStart();
     }
 
     @Override
@@ -157,6 +162,8 @@ public class ConfigBuoyFragment extends Fragment {
         void onBtnRestartClick();
 
         void onBtnDefaultSettingsClick();
+
+        void onLlBuoyParameterClick(EditText editText);
     }
 
 }

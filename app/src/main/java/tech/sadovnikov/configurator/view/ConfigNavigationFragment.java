@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import tech.sadovnikov.configurator.R;
@@ -37,6 +38,14 @@ public class ConfigNavigationFragment extends Fragment {
     Button btnShowMapCurrentPos;
     Button btnShowMapBasePos;
     CheckBox cbTruePos;
+    LinearLayout llBaseLatitude;
+    LinearLayout llBaseLongitude;
+    LinearLayout llLatDeviation;
+    LinearLayout llLongDeviation;
+    LinearLayout llHdop;
+    LinearLayout llFixDelay;
+
+    OnEtLlParameterClickListener onEtLlParameterClickListener;
 
     public ConfigNavigationFragment() {
         // Required empty public constructor
@@ -53,6 +62,20 @@ public class ConfigNavigationFragment extends Fragment {
     }
 
     private void initUi(View view) {
+        onEtLlParameterClickListener = new OnEtLlParameterClickListener(getContext());
+        llBaseLatitude = view.findViewById(R.id.ll_base_latitude);
+        llBaseLatitude.setOnClickListener(onEtLlParameterClickListener);
+        llBaseLongitude = view.findViewById(R.id.ll_base_longitude);
+        llBaseLongitude.setOnClickListener(onEtLlParameterClickListener);
+        llLatDeviation = view.findViewById(R.id.ll_lat_deviation);
+        llLatDeviation.setOnClickListener(onEtLlParameterClickListener);
+        llLongDeviation = view.findViewById(R.id.ll_long_deviation);
+        llLongDeviation.setOnClickListener(onEtLlParameterClickListener);
+        llHdop = view.findViewById(R.id.ll_hdop);
+        llHdop.setOnClickListener(onEtLlParameterClickListener);
+        llFixDelay = view.findViewById(R.id.ll_fix_delay);
+        llFixDelay.setOnClickListener(onEtLlParameterClickListener);
+
         etLongitude = view.findViewById(R.id.et_longitude);
         etLatitude = view.findViewById(R.id.et_latitude);
         etBaseLongitude = view.findViewById(R.id.et_base_longitude);
@@ -216,7 +239,7 @@ public class ConfigNavigationFragment extends Fragment {
     }
     // ---------------------------------------------------------------------------------------------
 
-    interface OnConfigNavigationFragmentInteractionListener{
+    interface OnConfigNavigationFragmentInteractionListener {
         void onConfigNavigationFragmentStart();
 
         void onBtnRcvColdStartClick();
@@ -242,5 +265,7 @@ public class ConfigNavigationFragment extends Fragment {
         void onEtBaseLongitudeFocusChange(boolean hasFocus);
 
         void onEtBaseLatitudeFocusChange(boolean hasFocus);
+
+        void onLlNavigationParameterClick(EditText editText);
     }
 }

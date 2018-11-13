@@ -21,7 +21,9 @@
                 style="@style/tv_subtitle"
                 android:text="@string/sim_config" />
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_apn"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     style="@style/tv_parameter_name"
@@ -51,7 +53,9 @@
                     android:text="@string/clear" />
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_login"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     style="@style/tv_parameter_name"
@@ -81,7 +85,9 @@
                     android:text="@string/clear" />
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_password"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     style="@style/tv_parameter_name"
@@ -115,7 +121,9 @@
                 style="@style/tv_subtitle"
                 android:text="@string/pin" />
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_pin"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     style="@style/tv_parameter_name"
@@ -145,7 +153,9 @@
                     android:text="@string/close_pin_request" />
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter_without_subtitle">
+            <LinearLayout
+                android:id="@+id/ll_sim_attempts"
+                style="@style/ll_for_classic_parameter_without_subtitle">
 
                 <TextView
                     style="@style/tv_parameter_name"
@@ -160,7 +170,9 @@
 
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_deliv_timeout"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     style="@style/tv_parameter_name"

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import tech.sadovnikov.configurator.R;
@@ -37,7 +38,16 @@ public class ConfigServerFragment extends Fragment {
     EditText etPacketsPercents;
     Button btnClearArchive;
     Button btnCloseConnect;
-
+    LinearLayout llServer;
+    LinearLayout llConnectAttempts;
+    LinearLayout llSessionTime;
+    LinearLayout llPacketTout;
+    LinearLayout llNormalInt;
+    LinearLayout llAlarmInt;
+    LinearLayout llSmsCenter;
+    LinearLayout llCmdNumber;
+    LinearLayout llAnswNumber;
+    OnEtLlParameterClickListener onEtLlParameterClickListener;
 
     public ConfigServerFragment() {
         // Required empty public constructor
@@ -45,6 +55,25 @@ public class ConfigServerFragment extends Fragment {
     }
 
     private void initUi(View view) {
+        onEtLlParameterClickListener = new OnEtLlParameterClickListener(getContext());
+        llServer = view.findViewById(R.id.ll_server);
+        llServer.setOnClickListener(onEtLlParameterClickListener);
+        llConnectAttempts = view.findViewById(R.id.ll_connect_attempts);
+        llConnectAttempts.setOnClickListener(onEtLlParameterClickListener);
+        llSessionTime = view.findViewById(R.id.ll_session_time);
+        llSessionTime.setOnClickListener(onEtLlParameterClickListener);
+        llPacketTout = view.findViewById(R.id.ll_packet_tout);
+        llPacketTout.setOnClickListener(onEtLlParameterClickListener);
+        llNormalInt = view.findViewById(R.id.ll_normal_int);
+        llNormalInt.setOnClickListener(onEtLlParameterClickListener);
+        llAlarmInt = view.findViewById(R.id.ll_alarm_int);
+        llAlarmInt.setOnClickListener(onEtLlParameterClickListener);
+        llSmsCenter = view.findViewById(R.id.ll_sms_center);
+        llSmsCenter.setOnClickListener(onEtLlParameterClickListener);
+        llCmdNumber = view.findViewById(R.id.ll_cmd_number);
+        llCmdNumber.setOnClickListener(onEtLlParameterClickListener);
+        llAnswNumber = view.findViewById(R.id.ll_answ_number);
+        llAnswNumber.setOnClickListener(onEtLlParameterClickListener);
         etServer = view.findViewById(R.id.et_server);
         etServer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

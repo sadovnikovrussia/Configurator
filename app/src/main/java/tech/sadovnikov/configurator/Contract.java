@@ -3,6 +3,7 @@ package tech.sadovnikov.configurator;
 import android.content.Intent;
 import android.os.Message;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 
@@ -157,6 +158,8 @@ public interface Contract {
         String getStateCbTruePos();
 
         String getBasePos();
+
+        void setFocusOnEt(EditText editText);
     }
 
     interface Presenter {
@@ -341,6 +344,8 @@ public interface Contract {
         void onEtBaseLongitudeFocusChange(boolean hasFocus);
 
         void onEtBaseLatitudeFocusChange(boolean hasFocus);
+
+        void onLlParameterClick(EditText editText);
     }
 
     interface Logs {

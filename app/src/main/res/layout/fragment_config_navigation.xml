@@ -88,7 +88,9 @@
                 style="@style/tv_subtitle"
                 android:text="@string/base_pos" />
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_base_latitude"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_base_latitude"
@@ -104,7 +106,9 @@
 
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_base_longitude"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_base_longitude"
@@ -142,22 +146,9 @@
                 style="@style/tv_subtitle"
                 android:text="@string/long_and_lat_deviation" />
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
-
-                <TextView
-                    android:id="@+id/tv_long_deviation"
-                    style="@style/tv_parameter_name"
-                    android:layout_weight="1"
-                    android:text="@string/by_long" />
-
-                <EditText
-                    android:id="@+id/et_long_deviation"
-                    style="@style/et_parameter_value"
-                    android:layout_weight="5"
-                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_lat_deviation"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_lat_deviation"
@@ -173,12 +164,31 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/ll_long_deviation"
+                style="@style/ll_for_classic_parameter">
+
+                <TextView
+                    android:id="@+id/tv_long_deviation"
+                    style="@style/tv_parameter_name"
+                    android:layout_weight="1"
+                    android:text="@string/by_long" />
+
+                <EditText
+                    android:id="@+id/et_long_deviation"
+                    style="@style/et_parameter_value"
+                    android:layout_weight="5"
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_filters"
                 style="@style/tv_subtitle"
                 android:text="@string/filters" />
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_hdop"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_hdop"
@@ -194,7 +204,9 @@
 
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_fix_delay"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_fix_delay"

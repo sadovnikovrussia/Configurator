@@ -25,7 +25,9 @@
                 style="@style/tv_subtitle"
                 android:text="@string/config_probleskator" />
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_blinker_mode"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_diod_light_mode"
@@ -41,7 +43,9 @@
 
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_blinker_brightness"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_blinker_brightness"
@@ -56,7 +60,9 @@
                     android:entries="@array/blinker_brightness_list" />
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_blinker_lx"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_blinker_lx"
@@ -78,7 +84,9 @@
                 style="@style/tv_subtitle"
                 android:text="@string/porogi_trevog" />
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_max_deviation"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_max_deviation"
@@ -95,7 +103,9 @@
                     tools:targetApi="o" />
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_tilt_angle"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_tilt_angle"
@@ -112,7 +122,9 @@
                     tools:targetApi="o" />
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_impact_pow"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_impact_pow"
@@ -129,7 +141,9 @@
                     tools:targetApi="o" />
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_upower_thld"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_upower_thld"
@@ -146,7 +160,9 @@
                     tools:targetApi="o" />
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter_without_subtitle">
+            <LinearLayout
+                android:id="@+id/ll_deviation_int"
+                style="@style/ll_for_classic_parameter_without_subtitle">
 
                 <TextView
                     android:id="@+id/tv_deviation_int"
@@ -163,7 +179,9 @@
                     tools:targetApi="o" />
             </LinearLayout>
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_max_active"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_max_active"

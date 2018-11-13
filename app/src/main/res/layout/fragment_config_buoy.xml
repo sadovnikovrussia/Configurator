@@ -21,7 +21,9 @@
                 style="@style/tv_subtitle"
                 android:text="@string/tv_config_buoy" />
 
-            <LinearLayout style="@style/ll_for_classic_parameter">
+            <LinearLayout
+                android:id="@+id/ll_id"
+                style="@style/ll_for_classic_parameter">
 
                 <TextView
                     android:id="@+id/tv_id"
@@ -33,9 +35,7 @@
                     android:id="@+id/et_id"
                     style="@style/et_parameter_value"
                     android:layout_weight="2"
-                    android:importantForAutofill="no"
-                    tools:ignore="LabelFor"
-                    tools:targetApi="o" />
+                    tools:ignore="Autofill,LabelFor" />
             </LinearLayout>
 
             <LinearLayout style="@style/ll_for_classic_parameter">

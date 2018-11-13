@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -40,6 +41,17 @@ public class ConfigMainFragment extends Fragment {
     EditText etMaxActive;
     TextView tvUpower;
     EditText etUpower;
+    LinearLayout llBlinkerLx;
+    LinearLayout llMaxDeviation;
+    LinearLayout llTiltAngle;
+    LinearLayout llImpactPow;
+    LinearLayout llUpowerThld;
+    LinearLayout llDeviationInt;
+    LinearLayout llMaxActive;
+    LinearLayout llBlinkerMode;
+    LinearLayout llBlinkerBrightness;
+
+    OnEtLlParameterClickListener onEtLlParameterClickListener;
 
 
     public ConfigMainFragment() {
@@ -58,6 +70,23 @@ public class ConfigMainFragment extends Fragment {
     }
 
     private void initUi(View view) {
+        onEtLlParameterClickListener = new OnEtLlParameterClickListener(getContext());
+        llBlinkerMode = view.findViewById(R.id.ll_blinker_mode);
+        llBlinkerBrightness = view.findViewById(R.id.ll_blinker_brightness);
+        llBlinkerLx = view.findViewById(R.id.ll_blinker_lx);
+        llBlinkerLx.setOnClickListener(onEtLlParameterClickListener);
+        llMaxDeviation = view.findViewById(R.id.ll_max_deviation);
+        llMaxDeviation.setOnClickListener(onEtLlParameterClickListener);
+        llTiltAngle = view.findViewById(R.id.ll_tilt_angle);
+        llTiltAngle.setOnClickListener(onEtLlParameterClickListener);
+        llImpactPow = view.findViewById(R.id.ll_impact_pow);
+        llImpactPow.setOnClickListener(onEtLlParameterClickListener);
+        llUpowerThld = view.findViewById(R.id.ll_upower_thld);
+        llUpowerThld.setOnClickListener(onEtLlParameterClickListener);
+        llDeviationInt = view.findViewById(R.id.ll_deviation_int);
+        llDeviationInt.setOnClickListener(onEtLlParameterClickListener);
+        llMaxActive = view.findViewById(R.id.ll_max_active);
+        llMaxActive.setOnClickListener(onEtLlParameterClickListener);
         spinBlinkerMode = view.findViewById(R.id.spin_blinker_mode);
         spinBlinkerMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -237,6 +266,8 @@ public class ConfigMainFragment extends Fragment {
         void onEtMaxActiveFocusChange(boolean hasFocus);
 
         void onEtBlinkerLxFocusChange(boolean hasFocus);
+
+        void onLlMainParameterClick(EditText etBlinkerLx);
     }
 
 }

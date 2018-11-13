@@ -4,7 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="tv_classic_padding_bottom">16dp</dimen>
-    <dimen name="tv_classic_padding_end">8dp</dimen>
+    <dimen name="tv_classic_padding_end">16dp</dimen>
     <dimen name="tv_classic_padding_start">0dp</dimen>
     <dimen name="tv_classic_padding_top">16dp</dimen>
     <dimen name="ll_layout_margin_top">1dp</dimen>

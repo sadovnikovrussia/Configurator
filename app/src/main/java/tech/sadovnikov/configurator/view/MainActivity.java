@@ -1,6 +1,7 @@
 package tech.sadovnikov.configurator.view;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -557,8 +560,26 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public String getBasePos() {
-        return configNavigationFragment.etBaseLatitude.getText().toString() + ","
-                + configNavigationFragment.etBaseLongitude.getText().toString();
+        String lat = configNavigationFragment.etBaseLatitude.getText().toString();
+        String lon = configNavigationFragment.etBaseLongitude.getText().toString();
+        if (lat.isEmpty() && lon.isEmpty()) {
+            return "";
+        } else return lat + "," + lon;
+    }
+
+    @Override
+    public void setFocusOnEt(final EditText editText) {
+        editText.requestFocus();
+        editText.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (inputMethodManager != null) {
+                    inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+                }
+            }
+        }, 300);
+        editText.setSelection(editText.getText().length());
     }
 
     @Override
@@ -722,13 +743,15 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public void showConfigActionsMenu() {
-        if (configurationActionsMenu != null) configurationActionsMenu.setGroupVisible(R.id.group_configuration_actions_menu, true);
+        if (configurationActionsMenu != null)
+            configurationActionsMenu.setGroupVisible(R.id.group_configuration_actions_menu, true);
 
     }
 
     @Override
     public void hideConfigActionsMenu() {
-        if (configurationActionsMenu != null) configurationActionsMenu.setGroupVisible(R.id.group_configuration_actions_menu, false);
+        if (configurationActionsMenu != null)
+            configurationActionsMenu.setGroupVisible(R.id.group_configuration_actions_menu, false);
     }
 
 
@@ -837,6 +860,11 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
+    public void onLlBuoyParameterClick(EditText editText) {
+        presenter.onLlParameterClick(editText);
+    }
+
+    @Override
     public void onConfigBuoyFragmentStart() {
         presenter.onConfigBuoyFragmentStart();
     }
@@ -887,6 +915,11 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     @Override
     public void onEtBlinkerLxFocusChange(boolean hasFocus) {
         presenter.onEtBlinkerLxFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onLlMainParameterClick(EditText editText) {
+        presenter.onLlParameterClick(editText);
     }
 
     // Lifecycle
@@ -956,6 +989,11 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     @Override
     public void onEtBaseLatitudeFocusChange(boolean hasFocus) {
         presenter.onEtBaseLatitudeFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onLlNavigationParameterClick(EditText editText) {
+        presenter.onLlParameterClick(editText);
     }
 
     // Lifecycle

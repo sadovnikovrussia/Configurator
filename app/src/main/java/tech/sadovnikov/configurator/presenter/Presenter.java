@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -472,6 +473,11 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     public void onEtBaseLatitudeFocusChange(boolean hasFocus) {
         if (!hasFocus)
             repositoryConfiguration.setParameterFromUi(BASE_POS, mainView.getBasePos());
+    }
+
+    @Override
+    public void onLlParameterClick(EditText editText) {
+        mainView.setFocusOnEt(editText);
     }
 
 
