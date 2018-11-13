@@ -27,6 +27,8 @@ public class Configuration {
     public static final String DEVIATION_INT = "deviation int";
     public static final String MAX_ACTIVE = "max active";
     public static final String UPOWER = "upower";
+    public static final String CURRENT_POS = "current pos";
+    public static final String TRUE_POS = "true pos";
     public static final String BASE_POS = "base pos";
     public static final String LONG_DEVIATION = "long deviation";
     public static final String LAT_DEVIATION = "lat deviation";
@@ -54,7 +56,8 @@ public class Configuration {
     // TODO <ДОБАВИТЬ ПАРАМЕТР>
     public static final String[] PARAMETER_NAMES = new String[]{
             ID, FIRMWARE_VERSION, BLINKER_MODE, BLINKER_BRIGHTNESS, BLINKER_LX, MAX_DEVIATION,
-            TILT_ANGLE, IMPACT_POW, UPOWER_THLD, DEVIATION_INT, MAX_ACTIVE, UPOWER, BASE_POS,
+            TILT_ANGLE, IMPACT_POW, UPOWER_THLD, DEVIATION_INT, MAX_ACTIVE, UPOWER,  TRUE_POS,
+            CURRENT_POS, BASE_POS,
             LONG_DEVIATION, LAT_DEVIATION, HDOP, FIX_DELAY, SATELLITE_SYSTEM, EVENTS_MASK, SERVER,
             CONNECT_ATTEMPTS, SESSION_TIME, PACKET_TOUT, PRIORITY_CHNL, NORMAL_INT, ALARM_INT,
             SMS_CENTER, CMD_NUMBER, ANSW_NUMBER, PACKETS, APN, LOGIN, PASSWORD, SIM_ATTEMPTS,
@@ -99,7 +102,7 @@ public class Configuration {
         }
         configuration.removeParameter(new Parameter(FIRMWARE_VERSION));
         configuration.removeParameter(new Parameter(UPOWER));
-        configuration.removeParameter(new Parameter(BASE_POS));
+        configuration.removeParameter(new Parameter(CURRENT_POS));
         configuration.removeParameter(new Parameter(PACKETS));
         Log.i(TAG, "getConfigurationForSave() returned: " + configuration);
         return configuration;
@@ -185,7 +188,7 @@ public class Configuration {
             boolean isAlp = name.equals(APN) || name.equals(LOGIN) || name.equals(PASSWORD);
             boolean containsDefault = value.toLowerCase().contains("cellular operator defaults");
             boolean nonEmpty = !value.isEmpty();
-            boolean changeable = !name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER) && !name.equals(BASE_POS) && !name.equals(PACKETS);
+            boolean changeable = !name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER) && !name.equals(CURRENT_POS) && !name.equals(PACKETS);
             if (changeable && nonEmpty) {
                 if (isAlp && containsDefault) value = "\"\"";
                 commandListForSetConfiguration.add(name + "=" + value);

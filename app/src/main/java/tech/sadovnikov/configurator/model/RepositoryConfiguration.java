@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import tech.sadovnikov.configurator.Contract;
 
 import static tech.sadovnikov.configurator.model.Configuration.BASE_POS;
+import static tech.sadovnikov.configurator.model.Configuration.CURRENT_POS;
 import static tech.sadovnikov.configurator.model.Configuration.FIRMWARE_VERSION;
 import static tech.sadovnikov.configurator.model.Configuration.PACKETS;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
@@ -71,7 +72,7 @@ public class RepositoryConfiguration implements Contract.RepositoryConfiguration
         Log.d(TAG, "resetConfiguration: Ресетим");
         for (Parameter parameter : uiConfiguration.getParametersList()) {
             String name = parameter.getName();
-            if (!name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER) && !name.equals(BASE_POS) && !name.equals(PACKETS)) {
+            if (!name.equals(FIRMWARE_VERSION) && !name.equals(UPOWER) && !name.equals(CURRENT_POS) && !name.equals(PACKETS)) {
                 setParameter(new Parameter(name));
             }
         }

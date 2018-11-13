@@ -37,6 +37,7 @@ import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.CMD_NUMBER;
 import static tech.sadovnikov.configurator.model.Configuration.CONNECT_ATTEMPTS;
+import static tech.sadovnikov.configurator.model.Configuration.CURRENT_POS;
 import static tech.sadovnikov.configurator.model.Configuration.DELIV_TIMEOUT;
 import static tech.sadovnikov.configurator.model.Configuration.DEVIATION_INT;
 import static tech.sadovnikov.configurator.model.Configuration.EVENTS_MASK;
@@ -61,6 +62,7 @@ import static tech.sadovnikov.configurator.model.Configuration.SESSION_TIME;
 import static tech.sadovnikov.configurator.model.Configuration.SIM_ATTEMPTS;
 import static tech.sadovnikov.configurator.model.Configuration.SMS_CENTER;
 import static tech.sadovnikov.configurator.model.Configuration.TILT_ANGLE;
+import static tech.sadovnikov.configurator.model.Configuration.TRUE_POS;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER_THLD;
 
@@ -184,6 +186,27 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                 if (configMainFragment != null && configMainFragment.etUpower != null)
                     configMainFragment.etUpower.setText(value);
                 break;
+            case CURRENT_POS:
+                if (configNavigationFragment != null && configNavigationFragment.etLatitude != null && configNavigationFragment.etLongitude != null) {
+                    if (value.isEmpty()) {
+                        configNavigationFragment.etLatitude.setText("");
+                        configNavigationFragment.etLongitude.setText("");
+                    } else {
+                        String[] strings = value.split(",");
+                        configNavigationFragment.etLatitude.setText(strings[0].trim());
+                        configNavigationFragment.etLongitude.setText(strings[1].trim());
+                    }
+                }
+                break;
+            case TRUE_POS:
+                if (configNavigationFragment != null && configNavigationFragment.cbTruePos != null) {
+                    if (value.equals("1")) {
+                        configNavigationFragment.cbTruePos.setChecked(true);
+                    } else {
+                        configNavigationFragment.cbTruePos.setChecked(false);
+                    }
+                }
+                break;
             case BASE_POS:
                 if (configNavigationFragment != null && configNavigationFragment.etBaseLongitude != null && configNavigationFragment.etBaseLatitude != null) {
                     if (value.isEmpty()) {
@@ -191,8 +214,8 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                         configNavigationFragment.etBaseLatitude.setText("");
                     } else {
                         String[] strings = value.split(",");
-                        configNavigationFragment.etBaseLongitude.setText(strings[0].trim());
-                        configNavigationFragment.etBaseLatitude.setText(strings[1].trim());
+                        configNavigationFragment.etBaseLatitude.setText(strings[0].trim());
+                        configNavigationFragment.etBaseLongitude.setText(strings[1].trim());
                     }
                 }
                 break;
@@ -521,6 +544,21 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     @Override
     public String getEtBaseLatitude() {
         return configNavigationFragment.etBaseLatitude.getText().toString();
+    }
+
+    @Override
+    public String getStateCbTruePos() {
+        String state;
+        if (configNavigationFragment.cbTruePos.isChecked()) {
+            state = "1";
+        } else state = "0";
+        return state;
+    }
+
+    @Override
+    public String getBasePos() {
+        return configNavigationFragment.etBaseLatitude.getText().toString() + ","
+                + configNavigationFragment.etBaseLongitude.getText().toString();
     }
 
     @Override
@@ -903,6 +941,21 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     @Override
     public void onBtnShowMapBasePosClick() {
         presenter.onBtnShowMapBasePosClick();
+    }
+
+    @Override
+    public void onCbTruePosClick() {
+        presenter.onCbTruePosClick();
+    }
+
+    @Override
+    public void onEtBaseLongitudeFocusChange(boolean hasFocus) {
+        presenter.onEtBaseLongitudeFocusChange(hasFocus);
+    }
+
+    @Override
+    public void onEtBaseLatitudeFocusChange(boolean hasFocus) {
+        presenter.onEtBaseLatitudeFocusChange(hasFocus);
     }
 
     // Lifecycle

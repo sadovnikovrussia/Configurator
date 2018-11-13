@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -35,6 +36,7 @@ public class ConfigNavigationFragment extends Fragment {
     Button btnRequestBasePos;
     Button btnShowMapCurrentPos;
     Button btnShowMapBasePos;
+    CheckBox cbTruePos;
 
     public ConfigNavigationFragment() {
         // Required empty public constructor
@@ -54,7 +56,19 @@ public class ConfigNavigationFragment extends Fragment {
         etLongitude = view.findViewById(R.id.et_longitude);
         etLatitude = view.findViewById(R.id.et_latitude);
         etBaseLongitude = view.findViewById(R.id.et_base_longitude);
+        etBaseLongitude.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                listener.onEtBaseLongitudeFocusChange(hasFocus);
+            }
+        });
         etBaseLatitude = view.findViewById(R.id.et_base_latitude);
+        etBaseLatitude.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                listener.onEtBaseLatitudeFocusChange(hasFocus);
+            }
+        });
         btnRcvColdStart = view.findViewById(R.id.btn_rcv_coldstart);
         btnRcvColdStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +135,13 @@ public class ConfigNavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 listener.onBtnShowMapBasePosClick();
+            }
+        });
+        cbTruePos = view.findViewById(R.id.cb_true_pos);
+        cbTruePos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onCbTruePosClick();
             }
         });
     }
@@ -215,5 +236,11 @@ public class ConfigNavigationFragment extends Fragment {
         void onBtnShowMapCurrentPosClick();
 
         void onBtnShowMapBasePosClick();
+
+        void onCbTruePosClick();
+
+        void onEtBaseLongitudeFocusChange(boolean hasFocus);
+
+        void onEtBaseLatitudeFocusChange(boolean hasFocus);
     }
 }

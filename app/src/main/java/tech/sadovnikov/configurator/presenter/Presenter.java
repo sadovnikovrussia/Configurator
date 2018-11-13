@@ -33,6 +33,7 @@ import static tech.sadovnikov.configurator.model.Configuration.BLINKER_LX;
 import static tech.sadovnikov.configurator.model.Configuration.BLINKER_MODE;
 import static tech.sadovnikov.configurator.model.Configuration.CMD_NUMBER;
 import static tech.sadovnikov.configurator.model.Configuration.CONNECT_ATTEMPTS;
+import static tech.sadovnikov.configurator.model.Configuration.CURRENT_POS;
 import static tech.sadovnikov.configurator.model.Configuration.DELIV_TIMEOUT;
 import static tech.sadovnikov.configurator.model.Configuration.DEVIATION_INT;
 import static tech.sadovnikov.configurator.model.Configuration.EVENTS_MASK;
@@ -57,6 +58,7 @@ import static tech.sadovnikov.configurator.model.Configuration.SESSION_TIME;
 import static tech.sadovnikov.configurator.model.Configuration.SIM_ATTEMPTS;
 import static tech.sadovnikov.configurator.model.Configuration.SMS_CENTER;
 import static tech.sadovnikov.configurator.model.Configuration.TILT_ANGLE;
+import static tech.sadovnikov.configurator.model.Configuration.TRUE_POS;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER;
 import static tech.sadovnikov.configurator.model.Configuration.UPOWER_THLD;
 import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_COMMAND_DATA;
@@ -456,6 +458,24 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // ---------------------------------------------------------------------------------------------
     // ConfigNavigationFragment events
     @Override
+    public void onCbTruePosClick() {
+        repositoryConfiguration.setParameterFromUi(TRUE_POS, mainView.getStateCbTruePos());
+    }
+
+    @Override
+    public void onEtBaseLongitudeFocusChange(boolean hasFocus) {
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(BASE_POS, mainView.getBasePos());
+    }
+
+    @Override
+    public void onEtBaseLatitudeFocusChange(boolean hasFocus) {
+        if (!hasFocus)
+            repositoryConfiguration.setParameterFromUi(BASE_POS, mainView.getBasePos());
+    }
+
+
+    @Override
     public void onBtnRcvColdStartClick() {
         bluetoothService.sendData("@rcv coldstart");
     }
@@ -507,6 +527,9 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onConfigNavigationFragmentStart() {
         mainView.setTitle("Конфигурация");
+        mainView.showParameter(CURRENT_POS, repositoryConfiguration.getParameterValue(CURRENT_POS));
+        mainView.showParameter(TRUE_POS, repositoryConfiguration.getParameterValue(TRUE_POS));
+        mainView.showParameter(BASE_POS, repositoryConfiguration.getParameterValue(BASE_POS));
         mainView.showParameter(LONG_DEVIATION, repositoryConfiguration.getParameterValue(LONG_DEVIATION));
         mainView.showParameter(LAT_DEVIATION, repositoryConfiguration.getParameterValue(LAT_DEVIATION));
         mainView.showParameter(HDOP, repositoryConfiguration.getParameterValue(HDOP));

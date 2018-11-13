@@ -24,21 +24,6 @@
             <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
-                    android:id="@+id/tv_longitude"
-                    style="@style/tv_parameter_name"
-                    android:layout_weight="1"
-                    android:text="@string/tv_longitude" />
-
-                <EditText
-                    android:id="@+id/et_longitude"
-                    style="@style/et_parameter_value_uneditable"
-                    android:layout_weight="2"
-                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/ll_for_classic_parameter">
-
-                <TextView
                     android:id="@+id/tv_latitude"
                     style="@style/tv_parameter_name"
                     android:layout_weight="1"
@@ -52,6 +37,21 @@
 
             </LinearLayout>
 
+            <LinearLayout style="@style/ll_for_classic_parameter">
+
+                <TextView
+                    android:id="@+id/tv_longitude"
+                    style="@style/tv_parameter_name"
+                    android:layout_weight="1"
+                    android:text="@string/tv_longitude" />
+
+                <EditText
+                    android:id="@+id/et_longitude"
+                    style="@style/et_parameter_value_uneditable"
+                    android:layout_weight="2"
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
+            </LinearLayout>
+
             <LinearLayout
                 style="@style/ll_for_classic_parameter"
                 android:layout_width="match_parent"
@@ -60,12 +60,8 @@
                 android:paddingEnd="16dp">
 
                 <CheckBox
-                    android:id="@+id/cb_new_command"
-                    style="@style/cb_list_item"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
+                    android:id="@+id/cb_true_pos"
+                    style="@style/cb"
                     android:text="@string/display_real_point" />
             </LinearLayout>
 
@@ -95,21 +91,6 @@
             <LinearLayout style="@style/ll_for_classic_parameter">
 
                 <TextView
-                    android:id="@+id/tv_base_longitude"
-                    style="@style/tv_parameter_name"
-                    android:layout_weight="1"
-                    android:text="@string/tv_longitude" />
-
-                <EditText
-                    android:id="@+id/et_base_longitude"
-                    style="@style/et_parameter_value"
-                    android:layout_weight="2"
-                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/ll_for_classic_parameter">
-
-                <TextView
                     android:id="@+id/tv_base_latitude"
                     style="@style/tv_parameter_name"
                     android:layout_weight="1"
@@ -121,6 +102,21 @@
                     android:layout_weight="2"
                     tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
+            </LinearLayout>
+
+            <LinearLayout style="@style/ll_for_classic_parameter">
+
+                <TextView
+                    android:id="@+id/tv_base_longitude"
+                    style="@style/tv_parameter_name"
+                    android:layout_weight="1"
+                    android:text="@string/tv_longitude" />
+
+                <EditText
+                    android:id="@+id/et_base_longitude"
+                    style="@style/et_parameter_value"
+                    android:layout_weight="2"
+                    tools:ignore="Autofill,LabelFor,UnusedAttribute" />
             </LinearLayout>
 
             <LinearLayout

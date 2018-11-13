@@ -153,6 +153,10 @@ public interface Contract {
         String getEtBaseLongitude();
 
         String getEtBaseLatitude();
+
+        String getStateCbTruePos();
+
+        String getBasePos();
     }
 
     interface Presenter {
@@ -331,6 +335,12 @@ public interface Contract {
         void onBtnShowMapCurrentPosClick();
 
         void onBtnShowMapBasePosClick();
+
+        void onCbTruePosClick();
+
+        void onEtBaseLongitudeFocusChange(boolean hasFocus);
+
+        void onEtBaseLatitudeFocusChange(boolean hasFocus);
     }
 
     interface Logs {
