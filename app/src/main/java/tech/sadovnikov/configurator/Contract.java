@@ -25,7 +25,8 @@ public interface Contract {
         String CONFIG_EVENTS_FRAGMENT = "События";
         String CONFIG_SERVER_FRAGMENT = "Сервер";
         String CONFIG_SIM_CARD_FRAGMENT = "SIM карта";
-        int FILE_MANAGER_REQUEST_CODE = 1;
+        int OPEN_FILE_MANAGER_REQUEST_CODE = 1;
+        int SAVE_FILE_MANAGER_REQUEST_CODE = 2;
 
         // Показать (установить фрагмент в MainActivity)
         void showFragment(String fragment);
@@ -65,7 +66,9 @@ public interface Contract {
 
         String getEtIdText();
 
-        void startFileManagerActivityWithRequestPermission();
+        void startOpenFileManagerActivityWithRequestPermission();
+
+        void startSaveFileActivityWithRequestPermission();
 
         void startBluetoothDiscoveryWithRequestPermission();
 
@@ -91,7 +94,9 @@ public interface Contract {
 
         void requestBluetoothPermission();
 
-        void startFileManagerActivity();
+        void startOpenFileManagerActivity();
+
+        void showSaveFileDialog();
 
         String getEtLongDeviationText();
 
@@ -160,6 +165,7 @@ public interface Contract {
         String getBasePos();
 
         void setFocusOnEt(EditText editText);
+
     }
 
     interface Presenter {
@@ -346,6 +352,8 @@ public interface Contract {
         void onEtBaseLatitudeFocusChange(boolean hasFocus);
 
         void onLlParameterClick(EditText editText);
+
+        void onSaveFileDialogPositiveClick(String fileName);
     }
 
     interface Logs {

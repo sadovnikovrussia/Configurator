@@ -79,7 +79,8 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener,
         ConfigEventsFragment.OnConfigEventsFragmentInteractionListener,
         ConfigServerFragment.OnConfigServerFragmentInteractionListener,
-        ConfigSimCardFragment.OnConfigSimCardFragmentInteractionListener {
+        ConfigSimCardFragment.OnConfigSimCardFragmentInteractionListener,
+        SaveFileDialogFragment.OnSaveFileDialogFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -1265,8 +1266,13 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public void startFileManagerActivityWithRequestPermission() {
+    public void startOpenFileManagerActivityWithRequestPermission() {
         requestReadPermission();
+    }
+
+    @Override
+    public void startSaveFileActivityWithRequestPermission() {
+        requestWritePermission();
     }
 
     @Override
@@ -1275,10 +1281,21 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public void startFileManagerActivity() {
+    public void startOpenFileManagerActivity() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
-        startActivityForResult(intent, FILE_MANAGER_REQUEST_CODE);
+        startActivityForResult(intent, OPEN_FILE_MANAGER_REQUEST_CODE);
+    }
+
+    @Override
+    public void onSaveFileDialogPositiveClick(String fileName) {
+        presenter.onSaveFileDialogPositiveClick(fileName);
+    }
+
+    @Override
+    public void showSaveFileDialog() {
+        SaveFileDialogFragment dialog = new SaveFileDialogFragment();
+        dialog.show(getSupportFragmentManager(), "SaveFileDialogFragment");
     }
 
     @Override

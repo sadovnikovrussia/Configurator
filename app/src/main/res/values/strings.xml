@@ -130,4 +130,8 @@
     <string name="status">Status</string>
     <string name="display_real_point">Отображать реальную точку</string>
     <string name="show_on_map">Отобразить на карте</string>
+    <string name="file_name">Имя файла</string>
+    <string name="saving_configuration">Сохранение конфигурации</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
 </resources>

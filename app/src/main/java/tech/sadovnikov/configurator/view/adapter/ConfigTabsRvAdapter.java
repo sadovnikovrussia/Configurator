@@ -19,7 +19,7 @@ public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapte
 
 
     public ConfigTabsRvAdapter(ConfigurationFragment.OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener) {
-        // Logs.d(TAG, "onConstructor, " + bluetoothDevices.toString());
+        // Logs.d(TAG, "onConstructor, " 1+ bluetoothDevices.toString());
         this.onConfigurationFragmentInteractionListener = onConfigurationFragmentInteractionListener;
         }
 

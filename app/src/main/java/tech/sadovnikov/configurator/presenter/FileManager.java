@@ -24,6 +24,12 @@ import static tech.sadovnikov.configurator.model.Configuration.PARAMETER_NAMES_L
 public class FileManager {
     private static final String TAG = "FileManager";
 
+    FileManagerListener listener;
+
+    public FileManager(FileManagerListener fileManagerListener) {
+        listener = fileManagerListener;
+    }
+
     // TODO <Добавить эти проверки при чтении/записи файла>
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
@@ -37,14 +43,14 @@ public class FileManager {
     }
 
     // TODO <Отрефакторить код с учетом возвращаемых значений createFile() и обработать события>
-    public File getFile() {
+    private File getFile(String fileName) {
         // Get the directory for the user's public download directory.
         // File dir = Environment.getExternalStorageDirectory();
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         Date currentTime = Calendar.getInstance().getTime();
         String date = currentTime.toString();
         Log.d(TAG, "getFile: dir = " + dir.getAbsolutePath());
-        File file = new File(dir, "Configuration(" + date + ").cfg");
+        File file = new File(dir, fileName + ".cfg");
         if (!file.exists()) {
             // Log.d(TAG, "File does not exist");
             try {
@@ -69,8 +75,8 @@ public class FileManager {
         return file;
     }
 
-    void saveConfiguration(Configuration configuration) {
-        File file = getFile();
+    void saveConfiguration(Configuration configuration, String fileName) {
+        File file = getFile(fileName);
         // Log.d(TAG, "saveConfiguration: " + String.valueOf(file.isDirectory()) + ", " +  String.valueOf(file.isFile()));
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
@@ -80,6 +86,7 @@ public class FileManager {
                     outputStreamWriter.write(configuration.getSettingCommand(i) + "\r\n");
                 }
                 // Log.d(TAG, "saveConfiguration: ok");
+                listener.onSaveConfigurationSuccess(fileName+".cfg");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -140,4 +147,8 @@ public class FileManager {
         return configuration;
     }
 
+    interface FileManagerListener{
+
+        void onSaveConfigurationSuccess(String fileName);
+    }
 }

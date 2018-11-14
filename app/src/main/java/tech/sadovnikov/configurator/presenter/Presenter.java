@@ -68,7 +68,8 @@ import static tech.sadovnikov.configurator.presenter.Loader.WHAT_LOADING_END;
 import static tech.sadovnikov.configurator.presenter.UiHandler.WHAT_CONNECTING_ERROR;
 
 public class Presenter implements Contract.Presenter, RepositoryConfiguration.OnRepositoryConfigurationEventsListener, Loader.OnLoaderEventsListener,
-        BluetoothBroadcastReceiver.OnBluetoothBroadcastReceiverEventsListener, BluetoothService.OnBluetoothServiceEventsListener {
+        BluetoothBroadcastReceiver.OnBluetoothBroadcastReceiverEventsListener, BluetoothService.OnBluetoothServiceEventsListener,
+        FileManager.FileManagerListener {
     private static final String TAG = "Presenter";
 
     private Contract.View mainView;
@@ -88,7 +89,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         bluetoothService = new BluetoothService(this, uiHandler);
         bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver(this);
         loader = new Loader(this, bluetoothService, uiHandler);
-        fileManager = new FileManager();
+        fileManager = new FileManager(this);
         repositoryConfiguration = new RepositoryConfiguration(this);
         registerBluetoothBroadcastReceiver((Context) mainView);
     }
@@ -160,9 +161,16 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onMainActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case MainActivity.FILE_MANAGER_REQUEST_CODE:
+            case MainActivity.OPEN_FILE_MANAGER_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     repositoryConfiguration.setUiConfiguration(fileManager.openConfiguration(Objects.requireNonNull(data.getData()).getPath()));
+                }
+            case MainActivity.SAVE_FILE_MANAGER_REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    // repositoryConfiguration.setUiConfiguration(fileManager.openConfiguration(Objects.requireNonNull(data.getData()).getPath()));
+                    fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSave(),
+                            Objects.requireNonNull(data.getData()).getPath());
+
                 }
         }
     }
@@ -178,7 +186,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onPositiveRequestReadExternalStoragePermissionRequestResult() {
-        mainView.startFileManagerActivity();
+        mainView.startOpenFileManagerActivity();
     }
 
     @Override
@@ -188,8 +196,16 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onPositiveRequestWriteExternalStoragePermissionRequestResult() {
-        fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSave());
+        mainView.showSaveFileDialog();
+        // fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSave());
     }
+
+    @Override
+    public void onSaveFileDialogPositiveClick(String fileName) {
+        fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSave(), fileName);
+
+    }
+
 
     @Override
     public void onNegativeRequestWriteExternalStoragePermissionRequestResult() {
@@ -332,9 +348,11 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
             //loader.loadConfiguration(repositoryConfiguration.getUiConfiguration(), Loader.READ);
             loader.loadCommandList(repositoryConfiguration.getCommandListForReadConfiguration());
         } else if (itemId == R.id.item_open) {
-            mainView.startFileManagerActivityWithRequestPermission();
+            mainView.startOpenFileManagerActivityWithRequestPermission();
         } else if (itemId == R.id.item_save) {
-            mainView.requestWritePermission();
+            //mainView.requestWritePermission();
+            mainView.startSaveFileActivityWithRequestPermission();
+
         }
     }
 
@@ -828,5 +846,10 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onErrorToConnect() {
         mainView.showToast("Не удалось подключиться");
+    }
+
+    @Override
+    public void onSaveConfigurationSuccess(String fileName) {
+        mainView.showToast("Конфигурация " + fileName + "\r\nсохранена в папку \"Загрузки\"(Downloads)");
     }
 }
