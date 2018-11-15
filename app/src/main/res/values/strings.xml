@@ -27,27 +27,24 @@
     <string name="btn_request_coordinates">Запросить координаты</string>
     <string name="buoy_address">38:1C:4A:2C:C8:09</string>
     <string name="auto_scroll">Автоматическая прокрутка</string>
-    <string-array name="config_list">
-        <item>Буй</item>
-        <item>Основные</item>
-        <item>Навигация</item>
-        <item>События</item>
-    </string-array>
     <string-array name="blinker_brightness_list">
+        <item>Не выбрано</item>
         <item>50%</item>
         <item>100%</item>
     </string-array>
     <string-array name="priority_chnl_list">
+        <item>Не выбрано</item>
         <item>SMS</item>
         <item>GPRS</item>
     </string-array>
     <string-array name="satellite_system_list">
+        <item>Не выбрано</item>
         <item>ГЛОНАСС и GPS</item>
         <item>GPS</item>
         <item>ГЛОНАСС</item>
     </string-array>
     <string-array name="blinker_mode_list">
-        <item>Постоянный</item>
+        <item>Не выбрано</item>
         <item>Однопроблесковый</item>
         <item>Двухпроблесковый</item>
         <item>Частопроблесковый</item>
@@ -55,11 +52,11 @@
         <item>Пульсирующий</item>
         <item>Прерывистый пульсирующий</item>
         <item>Затмевающийся</item>
-        <item>Пользовательский</item>
+        <item>Постоянный</item>
     </string-array>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="device_name">Device name</string>
-    <string name="device_address">Device adddress</string>
+    <string name="device_address">Device address</string>
     <string name="tab">Tab</string>
     <string name="paired_devices">Подключенные</string>
     <string name="available_devices">Доступные</string>

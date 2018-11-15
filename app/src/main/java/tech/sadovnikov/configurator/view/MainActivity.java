@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     Contract.Presenter presenter;
 
+    // TODO <Добавить кнопку "Обновить устройства">
     // UI
     FrameLayout container;
     BottomNavigationView navigation;
@@ -143,17 +144,52 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                     configBuoyFragment.etVersion.setText(value);
                 break;
             case BLINKER_MODE:
-                if (!value.isEmpty()) {
-                    if (configMainFragment != null && configMainFragment.spinBlinkerMode != null) {
-                        configMainFragment.spinBlinkerMode.setSelection(Integer.valueOf(value));
+                if (configMainFragment != null && configMainFragment.spinBlinkerMode != null) {
+                    if (value.isEmpty()) {
+                        configMainFragment.spinBlinkerMode.setSelection(0);
+                    } else {
+                        switch (value) {
+                            case "0":
+                                configMainFragment.spinBlinkerMode.setSelection(1);
+                                break;
+                            case "1":
+                                configMainFragment.spinBlinkerMode.setSelection(2);
+                                break;
+                            case "2":
+                                configMainFragment.spinBlinkerMode.setSelection(3);
+                                break;
+                            case "3":
+                                configMainFragment.spinBlinkerMode.setSelection(4);
+                                break;
+                            case "4":
+                                configMainFragment.spinBlinkerMode.setSelection(7);
+                                break;
+                            case "5":
+                                configMainFragment.spinBlinkerMode.setSelection(6);
+                                break;
+                            case "6":
+                                configMainFragment.spinBlinkerMode.setSelection(5);
+                                break;
+                            case "7":
+                                configMainFragment.spinBlinkerMode.setSelection(8);
+                                break;
+                        }
                     }
                 }
                 break;
             case BLINKER_BRIGHTNESS:
-                // Log.d(TAG, "showParameter: case BLINKER_BRIGHTNESS: value = " + value + ".isEmpty() = " + value.isEmpty());
-                if (!value.isEmpty()) {
-                    if (configMainFragment != null && configMainFragment.spinBlinkerBrightness != null) {
-                        configMainFragment.spinBlinkerBrightness.setSelection(Integer.valueOf(value));
+                if (configMainFragment != null && configMainFragment.spinBlinkerBrightness != null) {
+                    if (value.isEmpty()) {
+                        configMainFragment.spinBlinkerBrightness.setSelection(0);
+                    } else {
+                        switch (value) {
+                            case "0":
+                                configMainFragment.spinBlinkerBrightness.setSelection(1);
+                                break;
+                            case "1":
+                                configMainFragment.spinBlinkerBrightness.setSelection(2);
+                                break;
+                        }
                     }
                 }
                 break;
@@ -240,9 +276,21 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                     configNavigationFragment.etFixDelay.setText(value);
                 break;
             case SATELLITE_SYSTEM:
-                if (!value.isEmpty()) {
-                    if (configNavigationFragment != null && configNavigationFragment.spinSatelliteSystem != null) {
-                        configNavigationFragment.spinSatelliteSystem.setSelection(Integer.valueOf(value));
+                if (configNavigationFragment != null && configNavigationFragment.spinSatelliteSystem != null) {
+                    if (value.isEmpty()) {
+                        configNavigationFragment.spinSatelliteSystem.setSelection(0);
+                    } else {
+                        switch (value) {
+                            case "0":
+                                configNavigationFragment.spinSatelliteSystem.setSelection(1);
+                                break;
+                            case "1":
+                                configNavigationFragment.spinSatelliteSystem.setSelection(2);
+                                break;
+                            case "2":
+                                configNavigationFragment.spinSatelliteSystem.setSelection(2);
+                                break;
+                        }
                     }
                 }
                 break;
@@ -269,9 +317,18 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
                     configServerFragment.etPacketTout.setText(value);
                 break;
             case PRIORITY_CHNL:
-                if (!value.isEmpty()) {
-                    if (configServerFragment != null && configServerFragment.spinPriorityChnl != null) {
-                        configServerFragment.spinPriorityChnl.setSelection(Integer.valueOf(value));
+                if (configServerFragment != null && configServerFragment.spinPriorityChnl != null) {
+                    if (value.isEmpty()) {
+                        configServerFragment.spinPriorityChnl.setSelection(0);
+                    } else {
+                        switch (value) {
+                            case "0":
+                                configServerFragment.spinPriorityChnl.setSelection(1);
+                                break;
+                            case "1":
+                                configServerFragment.spinPriorityChnl.setSelection(2);
+                                break;
+                        }
                     }
                 }
                 break;

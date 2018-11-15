@@ -30,7 +30,6 @@ public class ConfigBuoyFragment extends Fragment {
     Button btnRestart;
     Button btnDefaultSettings;
     LinearLayout llId;
-
     OnLlParameterClickListener onLlParameterClickListener;
 
     public ConfigBuoyFragment() {

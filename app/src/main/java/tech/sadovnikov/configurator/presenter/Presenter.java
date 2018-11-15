@@ -395,8 +395,50 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     // ConfigMainFragment events
     @Override
     public void onSpinBlinkerModeItemSelected(int position) {
-        // Log.d(TAG, "onSpinBlinkerModeItemSelected: position = " + position);
-        repositoryConfiguration.setParameterFromUi(BLINKER_MODE, String.valueOf(position));
+        switch (position) {
+            case 0:
+                repositoryConfiguration.setParameterFromUi(BLINKER_MODE, "");
+                break;
+            case 1:
+                repositoryConfiguration.setParameterFromUi(BLINKER_MODE, String.valueOf(0));
+                break;
+            case 2:
+                repositoryConfiguration.setParameterFromUi(BLINKER_MODE, String.valueOf(1));
+                break;
+            case 3:
+                repositoryConfiguration.setParameterFromUi(BLINKER_MODE, String.valueOf(2));
+                break;
+            case 4:
+                repositoryConfiguration.setParameterFromUi(BLINKER_MODE, String.valueOf(3));
+                break;
+            case 5:
+                repositoryConfiguration.setParameterFromUi(BLINKER_MODE, String.valueOf(6));
+                break;
+            case 6:
+                repositoryConfiguration.setParameterFromUi(BLINKER_MODE, String.valueOf(5));
+                break;
+            case 7:
+                repositoryConfiguration.setParameterFromUi(BLINKER_MODE, String.valueOf(4));
+                break;
+            case 8:
+                repositoryConfiguration.setParameterFromUi(BLINKER_MODE, String.valueOf(7));
+                break;
+        }
+    }
+
+    @Override
+    public void onSpinBlinkerBrightnessItemSelected(int position) {
+        switch (position) {
+            case 0:
+                repositoryConfiguration.setParameterFromUi(BLINKER_BRIGHTNESS, "");
+                break;
+            case 1:
+                repositoryConfiguration.setParameterFromUi(BLINKER_BRIGHTNESS, String.valueOf(0));
+                break;
+            case 2:
+                repositoryConfiguration.setParameterFromUi(BLINKER_BRIGHTNESS, String.valueOf(1));
+                break;
+        }
     }
 
     @Override
@@ -448,12 +490,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     public void onEtMaxActiveFocusChange(boolean hasFocus) {
         if (!hasFocus)
             repositoryConfiguration.setParameterFromUi(MAX_ACTIVE, mainView.getEtMaxActiveText());
-    }
-
-    @Override
-    public void onSpinBlinkerBrightnessItemSelected(int position) {
-        // Log.d(TAG, "onSpinBlinkerBrightnessItemSelected: position = " + position);
-        repositoryConfiguration.setParameterFromUi(BLINKER_BRIGHTNESS, String.valueOf(position));
     }
 
     // Lifecycle
@@ -529,7 +565,20 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onSpinSatelliteSystemItemSelected(int position) {
-        repositoryConfiguration.setParameterFromUi(SATELLITE_SYSTEM, String.valueOf(position));
+        switch (position) {
+            case 0:
+                repositoryConfiguration.setParameterFromUi(SATELLITE_SYSTEM, "");
+                break;
+            case 1:
+                repositoryConfiguration.setParameterFromUi(SATELLITE_SYSTEM, String.valueOf(0));
+                break;
+            case 2:
+                repositoryConfiguration.setParameterFromUi(SATELLITE_SYSTEM, String.valueOf(1));
+                break;
+            case 3:
+                repositoryConfiguration.setParameterFromUi(SATELLITE_SYSTEM, String.valueOf(2));
+                break;
+        }
     }
 
     @Override
@@ -611,7 +660,17 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onSpinPriorityChnlItemClick(int position) {
-        repositoryConfiguration.setParameterFromUi(PRIORITY_CHNL, String.valueOf(position));
+        switch (position) {
+            case 0:
+                repositoryConfiguration.setParameterFromUi(PRIORITY_CHNL, "");
+                break;
+            case 1:
+                repositoryConfiguration.setParameterFromUi(PRIORITY_CHNL, String.valueOf(0));
+                break;
+            case 2:
+                repositoryConfiguration.setParameterFromUi(PRIORITY_CHNL, String.valueOf(1));
+                break;
+        }
     }
 
     @Override
