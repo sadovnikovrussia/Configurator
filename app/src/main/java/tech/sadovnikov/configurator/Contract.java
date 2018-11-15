@@ -146,7 +146,7 @@ public interface Contract {
 
         void showConfigActionsMenu();
 
-        void hideConfigActionsMenu();
+        void hideConfigActionsMenuGroup();
 
         boolean isBluetoothFragmentResumed();
 
@@ -166,6 +166,11 @@ public interface Contract {
 
         void setFocusOnEt(EditText editText);
 
+        void showItemUpdateAvailableDevices();
+
+        void hideItemUpdateAvailableDevices();
+
+        boolean isAvailableDevicesFragmentResumed();
     }
 
     interface Presenter {
@@ -354,6 +359,12 @@ public interface Contract {
         void onLlParameterClick(EditText editText);
 
         void onSaveFileDialogPositiveClick(String fileName);
+
+        void onAvailableDevicesFragmentStart();
+
+        void onAvailableDevicesFragmentPause();
+
+        void onAvailableDevicesFragmentResume();
     }
 
     interface Logs {

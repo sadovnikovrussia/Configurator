@@ -95,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     FrameLayout container;
     BottomNavigationView navigation;
     ProgressBar progressBar;
-    Menu configurationActionsMenu;
+    Menu actionBarMenu;
+    MenuItem itemUpdateAvailableDevices;
 
     // Fragments
     BluetoothFragment bluetoothFragment;
@@ -641,6 +642,25 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
+    public void showItemUpdateAvailableDevices() {
+        Log.d(TAG, "showItemUpdateAvailableDevices: ");
+        if (actionBarMenu != null)
+            actionBarMenu.setGroupVisible(R.id.group_update_available_devices, true);
+    }
+
+    @Override
+    public void hideItemUpdateAvailableDevices() {
+        Log.d(TAG, "hideItemUpdateAvailableDevices: ");
+        if (actionBarMenu != null)
+            actionBarMenu.setGroupVisible(R.id.group_update_available_devices, false);
+    }
+
+    @Override
+    public boolean isAvailableDevicesFragmentResumed() {
+        return bluetoothFragment.isAvailableDevicesFragmentResumed();
+    }
+
+    @Override
     public void requestReadPermission() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -801,15 +821,15 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public void showConfigActionsMenu() {
-        if (configurationActionsMenu != null)
-            configurationActionsMenu.setGroupVisible(R.id.group_configuration_actions_menu, true);
+        if (actionBarMenu != null)
+            actionBarMenu.setGroupVisible(R.id.group_configuration_actions_menu, true);
 
     }
 
     @Override
-    public void hideConfigActionsMenu() {
-        if (configurationActionsMenu != null)
-            configurationActionsMenu.setGroupVisible(R.id.group_configuration_actions_menu, false);
+    public void hideConfigActionsMenuGroup() {
+        if (actionBarMenu != null)
+            actionBarMenu.setGroupVisible(R.id.group_configuration_actions_menu, false);
     }
 
 
@@ -837,7 +857,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public boolean isBluetoothFragmentResumed() {
-        Log.d(TAG, "isBluetoothFragmentResumed: ");
         return bluetoothFragment.isResumed();
     }
 
@@ -884,6 +903,21 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     @Override
     public int onGetItemCountOfAvailableDevicesRvAdapter() {
         return presenter.onGetItemCountOfAvailableDevicesRvAdapter();
+    }
+
+    @Override
+    public void onAvailableDevicesFragmentStart() {
+        presenter.onAvailableDevicesFragmentStart();
+    }
+
+    @Override
+    public void onAvailableDevicesFragmentPause() {
+        presenter.onAvailableDevicesFragmentPause();
+    }
+
+    @Override
+    public void onAvailableDevicesFragmentResume() {
+        presenter.onAvailableDevicesFragmentResume();
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -1295,10 +1329,17 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d(TAG, "onCreateOptionsMenu: ");
-        configurationActionsMenu = menu;
-        getMenuInflater().inflate(R.menu.menu_configuration_options, configurationActionsMenu);
+        actionBarMenu = menu;
+        getMenuInflater().inflate(R.menu.menu_configuration_options, actionBarMenu);
+        itemUpdateAvailableDevices = actionBarMenu.findItem(R.id.item_update_available_devices);
         presenter.onCreateOptionsMenu();
-        return super.onCreateOptionsMenu(configurationActionsMenu);
+        return super.onCreateOptionsMenu(actionBarMenu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Log.v(TAG, "onPrepareOptionsMenu: ");
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override

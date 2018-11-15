@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,12 +21,12 @@ public class AvailableDevicesFragment extends Fragment {
     RecyclerView rvAvailableDevices;
     AvailableDevicesRvAdapter availableDevicesRvAdapter;
 
-    BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
+    BluetoothFragment.OnBluetoothFragmentInteractionListener listener;
 
     private static AvailableDevicesFragment availableDevicesFragment;
 
     public AvailableDevicesFragment() {
-        Log.v(TAG, "onConstructor");
+        Log.i(TAG, "onConstructor");
     }
 
     public static AvailableDevicesFragment getInstance(){
@@ -37,17 +38,17 @@ public class AvailableDevicesFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "onCreate");
+        Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView");
+        Log.i(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_paired_devices, container, false);
         rvAvailableDevices = view.findViewById(R.id.rv_paired_devices);
-        availableDevicesRvAdapter = new AvailableDevicesRvAdapter(onBluetoothFragmentInteractionListener);
+        availableDevicesRvAdapter = new AvailableDevicesRvAdapter(listener);
         // TODO <Узнать, какой контекст подавать в аргумент LL>
         rvAvailableDevices.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         rvAvailableDevices.setAdapter(availableDevicesRvAdapter);
@@ -56,7 +57,7 @@ public class AvailableDevicesFragment extends Fragment {
     }
 
     public void updateAvailableDevices() {
-        availableDevicesRvAdapter.updateAvailableBluetoothDevices();
+        if (availableDevicesRvAdapter != null) availableDevicesRvAdapter.updateAvailableBluetoothDevices();
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -64,9 +65,9 @@ public class AvailableDevicesFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.v(TAG, "onAttach");
+        Log.i(TAG, "onAttach");
         if (context instanceof BluetoothFragment.OnBluetoothFragmentInteractionListener) {
-            onBluetoothFragmentInteractionListener = (BluetoothFragment.OnBluetoothFragmentInteractionListener) context;
+            listener = (BluetoothFragment.OnBluetoothFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnBluetoothFragmentInteractionListener");
@@ -76,52 +77,62 @@ public class AvailableDevicesFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.v(TAG, "onActivityCreated");
+        Log.i(TAG, "onActivityCreated");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.v(TAG, "onStart");
+        listener.onAvailableDevicesFragmentStart();
+        Log.i(TAG, "onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume");
-        // availableDevicesRvAdapter.updateAvailableBluetoothDevices();
+        Log.i(TAG, "onResume");
+        listener.onAvailableDevicesFragmentResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.v(TAG, "onPause");
+        Log.i(TAG, "onPause");
+        listener.onAvailableDevicesFragmentPause();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.v(TAG, "onStop");
+        Log.i(TAG, "onStop");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.v(TAG, "onDestroyView");
-        onBluetoothFragmentInteractionListener.onAvailableDevicesFragmentDestroyView();
+        Log.i(TAG, "onDestroyView");
+        listener.onAvailableDevicesFragmentDestroyView();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.v(TAG, "onDestroy");
+        Log.i(TAG, "onDestroy");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.i(TAG, "onDetach");
     }
-
     // ---------------------------------------------------------------------------------------------
+
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        Log.i(TAG, "onPrepareOptionsMenu: " + menu);
+        menu.setGroupVisible(R.id.group_update_available_devices, true);
+        super.onPrepareOptionsMenu(menu);
+    }
 
 }

@@ -178,9 +178,14 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onCreateOptionsMenu() {
         if (mainView.isBluetoothFragmentResumed()) {
-            mainView.hideConfigActionsMenu();
+            mainView.hideConfigActionsMenuGroup();
         } else {
             mainView.showConfigActionsMenu();
+        }
+        if (mainView.isAvailableDevicesFragmentResumed()) {
+            mainView.showItemUpdateAvailableDevices();
+        } else {
+            mainView.hideItemUpdateAvailableDevices();
         }
     }
 
@@ -205,7 +210,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSave(), fileName);
 
     }
-
 
     @Override
     public void onNegativeRequestWriteExternalStoragePermissionRequestResult() {
@@ -252,7 +256,9 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         if (position == 0) {
             bluetoothService.cancelDiscovery();
             mainView.updatePairedDevices();
+            mainView.hideItemUpdateAvailableDevices();
         } else if (position == 1) {
+            mainView.showItemUpdateAvailableDevices();
             mainView.startBluetoothDiscoveryWithRequestPermission();
         }
     }
@@ -276,7 +282,7 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onBluetoothFragmentStart() {
         mainView.setTitle("Bluetooth");
-        mainView.hideConfigActionsMenu();
+        mainView.hideConfigActionsMenuGroup();
         mainView.setSwitchBtState(bluetoothService.isEnabled());
         mainView.setNavigationPosition(Contract.View.BLUETOOTH_FRAGMENT);
         if (bluetoothService.isEnabled()) {
@@ -296,6 +302,20 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onBluetoothFragmentDestroy() {
 
+    }
+
+    @Override
+    public void onAvailableDevicesFragmentStart() {
+    }
+
+    @Override
+    public void onAvailableDevicesFragmentPause() {
+        mainView.hideItemUpdateAvailableDevices();
+    }
+
+    @Override
+    public void onAvailableDevicesFragmentResume() {
+        mainView.showItemUpdateAvailableDevices();
     }
 
     @Override
@@ -340,19 +360,17 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
             // TODO? <Что делать со спинерами, когда эти параметр не трогали?>
             // TODO <Поставить условие на подключение к устройству>
             // TODO <Показать бегунок загрузки>
-            //loader.loadConfiguration(repositoryConfiguration.getConfigurationForSave(), Loader.SET);
             loader.loadCommandList(repositoryConfiguration.getCommandListForSetConfiguration());
         } else if (itemId == R.id.item_load) {
             // TODO <Поставить условие на подключение к устройству>
             // TODO <Показать бегунок загрузки>
-            //loader.loadConfiguration(repositoryConfiguration.getUiConfiguration(), Loader.READ);
             loader.loadCommandList(repositoryConfiguration.getCommandListForReadConfiguration());
         } else if (itemId == R.id.item_open) {
             mainView.startOpenFileManagerActivityWithRequestPermission();
         } else if (itemId == R.id.item_save) {
-            //mainView.requestWritePermission();
             mainView.startSaveFileActivityWithRequestPermission();
-
+        } else if (itemId == R.id.item_update_available_devices){
+            mainView.updateAvailableDevices();
         }
     }
 
@@ -868,9 +886,6 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     @Override
     public void onBluetoothServiceActionFound(BluetoothDevice bluetoothDevice) {
         bluetoothService.addAvailableDevice(bluetoothDevice);
-        String name = bluetoothDevice.getName();
-        String address = bluetoothDevice.getAddress();
-        Log.d(TAG, "onBluetoothServiceActionFound: name = " + name + ", address = " + address);
         mainView.updateAvailableDevices();
     }
 

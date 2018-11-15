@@ -184,13 +184,15 @@ public class BluetoothFragment extends Fragment {
     }
 
     // ---------------------------------------------------------------------------------------------
-
-
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        Log.d(TAG, "onPrepareOptionsMenu: " + menu);
+        Log.e(TAG, "onPrepareOptionsMenu: " + menu);
         menu.setGroupVisible(R.menu.menu_configuration_options, false);
         super.onPrepareOptionsMenu(menu);
+    }
+
+    public boolean isAvailableDevicesFragmentResumed() {
+        return devicesFragmentPagerAdapter.isAvailableDevicesFragmentResumed();
     }
 
     /**
@@ -230,6 +232,11 @@ public class BluetoothFragment extends Fragment {
 
         void onAvailableDevicesFragmentDestroyView();
 
+        void onAvailableDevicesFragmentStart();
+
+        void onAvailableDevicesFragmentPause();
+
+        void onAvailableDevicesFragmentResume();
     }
 
 }

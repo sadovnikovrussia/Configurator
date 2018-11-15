@@ -11,11 +11,15 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
     // private static final String TAG = "DevicesFragPagerAdapter";
 
     private String tabTitles[] = new String[]{"Подключенные", "Доступные"};
+
+    private FragmentManager fragmentManager;
+
     private PairedDevicesFragment pairedDevicesFragment;
     private AvailableDevicesFragment availableDevicesFragment;
 
     public DevicesFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
+        fragmentManager = fm;
         // Log.d(TAG, "onConstructor");
         // TODO <Надо ли здесь получать фрагменты?>
         pairedDevicesFragment = PairedDevicesFragment.getInstance();
@@ -33,9 +37,11 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
         if (position == 0) {
             return pairedDevicesFragment;
         } else {
+            availableDevicesFragment = new AvailableDevicesFragment();
             return availableDevicesFragment;
         }
     }
+
 
     @Override
     public CharSequence getPageTitle(int position) {
@@ -49,5 +55,9 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public void updatePairedDevices() {
         pairedDevicesFragment.updatePairedDevices();
+    }
+
+    public boolean isAvailableDevicesFragmentResumed() {
+        return availableDevicesFragment.isResumed();
     }
 }
