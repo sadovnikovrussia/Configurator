@@ -52,9 +52,8 @@ public class BluetoothFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         Log.v(TAG, "onCreateView");
-        final View inflate = inflater.inflate(R.layout.fragment_bluetooth, container, false);
+        View inflate = inflater.inflate(R.layout.fragment_bluetooth, container, false);
         initUi(inflate);
         listener.onBluetoothFragmentCreateView();
         return inflate;
@@ -70,18 +69,6 @@ public class BluetoothFragment extends Fragment {
         });
         tabLayout = inflate.findViewById(R.id.tabLayout);
         viewPager = inflate.findViewById(R.id.viewPager);
-        // openDevices();
-    }
-
-    void closeDevices(){
-        devicesFragmentPagerAdapter = null;
-        viewPager.setAdapter(null);
-        // viewPager.removeOnPageChangeListener();
-        tabLayout.setupWithViewPager(null);
-    }
-    void openDevices() {
-        devicesFragmentPagerAdapter = new DevicesFragmentPagerAdapter(getChildFragmentManager());
-        viewPager.setAdapter(devicesFragmentPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -99,6 +86,18 @@ public class BluetoothFragment extends Fragment {
 
             }
         });
+
+        devicesFragmentPagerAdapter = new DevicesFragmentPagerAdapter(getChildFragmentManager());
+    }
+
+    void closeDevices(){
+        //devicesFragmentPagerAdapter = null;
+        viewPager.setAdapter(null);
+        // viewPager.removeOnPageChangeListener();
+        tabLayout.setupWithViewPager(null);
+    }
+    void openDevices() {
+        viewPager.setAdapter(devicesFragmentPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -196,7 +195,6 @@ public class BluetoothFragment extends Fragment {
     // ---------------------------------------------------------------------------------------------
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        Log.e(TAG, "onPrepareOptionsMenu: " + menu);
         menu.setGroupVisible(R.menu.menu_configuration_options, false);
         super.onPrepareOptionsMenu(menu);
     }
@@ -206,7 +204,7 @@ public class BluetoothFragment extends Fragment {
     }
 
     public int getSelectedPageOfViewPager() {
-        Log.d(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
+        // Log.d(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
         return viewPager.getCurrentItem();
     }
 
