@@ -57,6 +57,7 @@ public class AvailableDevicesFragment extends Fragment {
     }
 
     public void updateAvailableDevices() {
+        Log.d(TAG, "updateAvailableDevices: availableDevicesRvAdapter = " + availableDevicesRvAdapter);
         if (availableDevicesRvAdapter != null) availableDevicesRvAdapter.updateAvailableBluetoothDevices();
     }
 

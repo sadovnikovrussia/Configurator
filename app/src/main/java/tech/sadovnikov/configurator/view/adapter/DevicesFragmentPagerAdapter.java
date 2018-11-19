@@ -3,12 +3,13 @@ package tech.sadovnikov.configurator.view.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import tech.sadovnikov.configurator.view.AvailableDevicesFragment;
 import tech.sadovnikov.configurator.view.PairedDevicesFragment;
 
 public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
-    // private static final String TAG = "DevicesFragPagerAdapter";
+    private static final String TAG = "DevicesFragPagerAdapter";
 
     private String tabTitles[] = new String[]{"Подключенные", "Доступные"};
 
@@ -19,6 +20,7 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public DevicesFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
+        Log.v(TAG, "DevicesFragmentPagerAdapter: ");
         fragmentManager = fm;
         // Log.d(TAG, "onConstructor");
         // TODO <Надо ли здесь получать фрагменты?>
@@ -37,7 +39,6 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
         if (position == 0) {
             return pairedDevicesFragment;
         } else {
-            availableDevicesFragment = new AvailableDevicesFragment();
             return availableDevicesFragment;
         }
     }
@@ -50,6 +51,7 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
     }
 
     public void updateAvailableDevices() {
+        Log.d(TAG, "updateAvailableDevices: ");
         availableDevicesFragment.updateAvailableDevices();
     }
 

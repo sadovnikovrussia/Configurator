@@ -2,6 +2,7 @@ package tech.sadovnikov.configurator.view.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,7 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.view.BluetoothFragment;
 
 public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDevicesRvAdapter.BluetoothDeviceViewHolder> {
-    // private static final String TAG = "AvailDevicesRvAdapter";
+    private static final String TAG = "AvailDevicesRvAdapter";
 
     private BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
 
@@ -47,7 +48,7 @@ public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDev
     }
 
     public void updateAvailableBluetoothDevices() {
-        // Log.d(TAG, "updateAvailableBluetoothDevices");
+        Log.d(TAG, "updateAvailableBluetoothDevices");
         notifyDataSetChanged();
     }
 

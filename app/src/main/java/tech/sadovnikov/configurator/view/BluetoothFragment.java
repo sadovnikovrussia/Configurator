@@ -70,6 +70,16 @@ public class BluetoothFragment extends Fragment {
         });
         tabLayout = inflate.findViewById(R.id.tabLayout);
         viewPager = inflate.findViewById(R.id.viewPager);
+        // openDevices();
+    }
+
+    void closeDevices(){
+        devicesFragmentPagerAdapter = null;
+        viewPager.setAdapter(null);
+        // viewPager.removeOnPageChangeListener();
+        tabLayout.setupWithViewPager(null);
+    }
+    void openDevices() {
         devicesFragmentPagerAdapter = new DevicesFragmentPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(devicesFragmentPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -99,7 +109,6 @@ public class BluetoothFragment extends Fragment {
     }
 
     public void showDevices() {
-        // TODO <Или здесь нужно создание компонентов, а не изменение их видимости?>
         viewPager.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
     }
@@ -111,11 +120,12 @@ public class BluetoothFragment extends Fragment {
     }
 
     public void updateAvailableDevices() {
-        devicesFragmentPagerAdapter.updateAvailableDevices();
+        Log.d(TAG, "updateAvailableDevices: ");
+        if (devicesFragmentPagerAdapter != null) devicesFragmentPagerAdapter.updateAvailableDevices();
     }
 
     public void updatePairedDevices() {
-        devicesFragmentPagerAdapter.updatePairedDevices();
+        if (devicesFragmentPagerAdapter != null) devicesFragmentPagerAdapter.updatePairedDevices();
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -192,19 +202,15 @@ public class BluetoothFragment extends Fragment {
     }
 
     public boolean isAvailableDevicesFragmentResumed() {
-        return devicesFragmentPagerAdapter.isAvailableDevicesFragmentResumed();
+        return (devicesFragmentPagerAdapter != null && devicesFragmentPagerAdapter.isAvailableDevicesFragmentResumed());
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    public int getSelectedPageOfViewPager() {
+        Log.d(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
+        return viewPager.getCurrentItem();
+    }
+
+
     public interface OnBluetoothFragmentInteractionListener {
         void onSwitchBtStateChanged(boolean state);
 

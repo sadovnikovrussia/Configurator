@@ -180,10 +180,11 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         if (mainView.isBluetoothFragmentResumed()) {
             mainView.hideConfigActionsMenuGroup();
         } else {
-            mainView.showConfigActionsMenu();
+            mainView.showConfigActionsMenuGroup();
         }
         if (mainView.isAvailableDevicesFragmentResumed()) {
-            mainView.showItemUpdateAvailableDevices();
+            int page = mainView.getSelectedPageOfViewPager();
+            if (page == 1) mainView.showItemUpdateAvailableDevices();
         } else {
             mainView.hideItemUpdateAvailableDevices();
         }
@@ -258,8 +259,8 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
             mainView.updatePairedDevices();
             mainView.hideItemUpdateAvailableDevices();
         } else if (position == 1) {
-            mainView.showItemUpdateAvailableDevices();
             mainView.startBluetoothDiscoveryWithRequestPermission();
+            mainView.showItemUpdateAvailableDevices();
         }
     }
 
@@ -287,16 +288,18 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
         mainView.setNavigationPosition(Contract.View.BLUETOOTH_FRAGMENT);
         if (bluetoothService.isEnabled()) {
             mainView.setSwitchBtText("Включено");
-            mainView.showDevices();
+            // mainView.showDevices();
+            mainView.openDevices();
         } else {
             mainView.setSwitchBtText("Выключено");
-            mainView.hideDevices();
+            // mainView.hideDevices();
+            mainView.closeDevices();
         }
     }
 
     @Override
     public void onBluetoothFragmentDestroyView() {
-        mainView.showConfigActionsMenu();
+        mainView.showConfigActionsMenuGroup();
     }
 
     @Override
@@ -315,7 +318,16 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
 
     @Override
     public void onAvailableDevicesFragmentResume() {
-        mainView.showItemUpdateAvailableDevices();
+        int page = mainView.getSelectedPageOfViewPager();
+        if (page == 1) {
+            mainView.showItemUpdateAvailableDevices();
+        }
+    }
+
+    @Override
+    public void onItemUpdateAvailableDevicesClick() {
+        bluetoothService.cancelDiscovery();
+        bluetoothService.startDiscovery();
     }
 
     @Override
@@ -864,7 +876,8 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     public void onBluetoothServiceStateOn() {
         mainView.setSwitchBtText("Включено");
         mainView.setSwitchBtState(bluetoothService.isEnabled());
-        mainView.showDevices();
+        // mainView.showDevices();
+        mainView.openDevices();
         mainView.updatePairedDevices();
         mainView.updateAvailableDevices();
 
@@ -874,8 +887,9 @@ public class Presenter implements Contract.Presenter, RepositoryConfiguration.On
     public void onBluetoothServiceStateOff() {
         mainView.setSwitchBtText("Выключено");
         mainView.setSwitchBtState(bluetoothService.isEnabled());
-        mainView.hideDevices();
         bluetoothService.closeAllConnections();
+        //mainView.hideDevices();
+        mainView.closeDevices();
     }
 
     @Override

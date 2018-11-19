@@ -661,6 +661,21 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
+    public void openDevices() {
+        bluetoothFragment.openDevices();
+    }
+
+    @Override
+    public void closeDevices() {
+        bluetoothFragment.closeDevices();
+    }
+
+    @Override
+    public int getSelectedPageOfViewPager() {
+        return bluetoothFragment.getSelectedPageOfViewPager();
+    }
+
+    @Override
     public void requestReadPermission() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -820,7 +835,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     }
 
     @Override
-    public void showConfigActionsMenu() {
+    public void showConfigActionsMenuGroup() {
         if (actionBarMenu != null)
             actionBarMenu.setGroupVisible(R.id.group_configuration_actions_menu, true);
 
@@ -1328,10 +1343,17 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
     // Activity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG, "onCreateOptionsMenu: ");
+        Log.v(TAG, "onCreateOptionsMenu: ");
         actionBarMenu = menu;
         getMenuInflater().inflate(R.menu.menu_configuration_options, actionBarMenu);
         itemUpdateAvailableDevices = actionBarMenu.findItem(R.id.item_update_available_devices);
+        itemUpdateAvailableDevices.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                presenter.onItemUpdateAvailableDevicesClick();
+                return false;
+            }
+        });
         presenter.onCreateOptionsMenu();
         return super.onCreateOptionsMenu(actionBarMenu);
     }

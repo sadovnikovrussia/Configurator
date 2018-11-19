@@ -144,7 +144,7 @@ public interface Contract {
 
         void setSwitchBtText(String text);
 
-        void showConfigActionsMenu();
+        void showConfigActionsMenuGroup();
 
         void hideConfigActionsMenuGroup();
 
@@ -171,6 +171,12 @@ public interface Contract {
         void hideItemUpdateAvailableDevices();
 
         boolean isAvailableDevicesFragmentResumed();
+
+        void openDevices();
+
+        void closeDevices();
+
+        int getSelectedPageOfViewPager();
     }
 
     interface Presenter {
@@ -365,6 +371,8 @@ public interface Contract {
         void onAvailableDevicesFragmentPause();
 
         void onAvailableDevicesFragmentResume();
+
+        void onItemUpdateAvailableDevicesClick();
     }
 
     interface Logs {
