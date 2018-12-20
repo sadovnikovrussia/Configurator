@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.model;
+package tech.sadovnikov.configurator.entities;
 
 import android.support.annotation.NonNull;
 
@@ -9,7 +9,7 @@ public class Parameter {
     private final String name;
     private String value;
 
-    Parameter(String name) {
+    public Parameter(String name) {
         this.name = name;
         this.value = "";
     }

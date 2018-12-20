@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.model;
+package tech.sadovnikov.configurator.entities;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -70,7 +70,7 @@ public class Configuration {
 
     private ArrayList<Parameter> parametersList = new ArrayList<>();
 
-    Configuration() {
+    public Configuration() {
         init();
         // Log.d(TAG, "Configuration: " + name + " = " + configurationMap.get(name));
     }
@@ -93,7 +93,7 @@ public class Configuration {
     }
 
 
-    Configuration getConfigurationForSave() {
+    public Configuration getConfigurationForSave() {
         Configuration configuration = Configuration.getEmptyConfiguration();
         for (Parameter parameter : getParametersList()) {
             if (!parameter.isEmpty()) {
@@ -108,7 +108,7 @@ public class Configuration {
         return configuration;
     }
 
-    ArrayList<Parameter> getParametersList() {
+    public ArrayList<Parameter> getParametersList() {
         return parametersList;
     }
 
@@ -120,7 +120,7 @@ public class Configuration {
         return parametersList.get(index).getName() + "=" + parametersList.get(index).getValue();
     }
 
-    String getParameterValue(String parameterName) {
+    public String getParameterValue(String parameterName) {
         // Log.d(TAG, "getParameterValue(): " + parameterName + "=" + configurationMap.get(parameterName));
         Parameter parameter = new Parameter(parameterName);
         if (parametersList.contains(parameter)) {
@@ -131,7 +131,7 @@ public class Configuration {
         }
     }
 
-    void setParameter(Parameter parameter) {
+    public void setParameter(Parameter parameter) {
         if (PARAMETER_NAMES_LIST.contains(parameter.getName())) {
             if (parametersList.contains(parameter)) {
                 int index = parametersList.indexOf(parameter);
@@ -163,7 +163,7 @@ public class Configuration {
         return "Configuration{<" + getSize() + ">" + parametersList + '}';
     }
 
-    ArrayList<String> getCommandListForReadConfiguration() {
+    public ArrayList<String> getCommandListForReadConfiguration() {
         ArrayList<String> commandListForReadConfiguration = new ArrayList<>();
         for (String parameterName : PARAMETER_NAMES_LIST) {
             switch (parameterName) {
@@ -180,7 +180,7 @@ public class Configuration {
         return commandListForReadConfiguration;
     }
 
-    ArrayList<String> getCommandListForSetConfiguration() {
+    public ArrayList<String> getCommandListForSetConfiguration() {
         ArrayList<String> commandListForSetConfiguration = new ArrayList<>();
         for (Parameter parameter : parametersList) {
             String value = parameter.getValue();

@@ -7,7 +7,9 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
-import tech.sadovnikov.configurator.model.Parameter;
+import tech.sadovnikov.configurator.entities.Configuration;
+import tech.sadovnikov.configurator.entities.Parameter;
+
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
@@ -383,9 +385,9 @@ public interface Contract {
 
     interface RepositoryConfiguration {
 
-        void setUiConfiguration(tech.sadovnikov.configurator.model.Configuration uiConfiguration);
+        void setUiConfiguration(Configuration uiConfiguration);
 
-        tech.sadovnikov.configurator.model.Configuration getConfigurationForSave();
+        Configuration getConfigurationForSave();
 
         String getParameterValue(String name);
 

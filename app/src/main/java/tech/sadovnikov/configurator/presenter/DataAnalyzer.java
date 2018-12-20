@@ -5,7 +5,7 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-import static tech.sadovnikov.configurator.model.Configuration.PARAMETER_NAMES;
+import static tech.sadovnikov.configurator.entities.Configuration.PARAMETER_NAMES;
 
 
 /**
