@@ -14,7 +14,7 @@ public class Configuration {
     private static final String TAG = "Configuration";
 
     // TODO <ДОБАВИТЬ ПАРАМЕТР>
-    // Parameter names
+    // ParameterNew names
     public static final String ID = "id";
     public static final String FIRMWARE_VERSION = "firmware version";
     public static final String BLINKER_MODE = "blinker mode";

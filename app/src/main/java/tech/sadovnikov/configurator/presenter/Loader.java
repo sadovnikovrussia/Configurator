@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import tech.sadovnikov.configurator.model.AppBluetoothService;
+
 /**
  * Класс, отвечающий за отправку списка команд (установка и считывание параметров из устройства)
  * Например:
@@ -30,10 +32,10 @@ class Loader {
     private TimerTask task;
 
     private OnLoaderEventsListener onLoaderEventsListener;
-    private BluetoothService bluetoothService;
+    private AppBluetoothService bluetoothService;
     UiHandler handler;
 
-    Loader(OnLoaderEventsListener onLoaderEventsListener, final BluetoothService bluetoothService, UiHandler uiHandler) {
+    Loader(OnLoaderEventsListener onLoaderEventsListener, final AppBluetoothService bluetoothService, UiHandler uiHandler) {
         handler = uiHandler;
         this.onLoaderEventsListener = onLoaderEventsListener;
         this.bluetoothService = bluetoothService;

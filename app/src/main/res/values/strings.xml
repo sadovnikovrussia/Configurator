@@ -133,4 +133,6 @@
     <string name="cancel">Отмена</string>
     <string name="update_list_of_available_devices">Обновить</string>
     <string name="pb_loading">Загрузка</string>
+    <string name="error">Произошла ошибка!</string>
+
 </resources>

@@ -11,8 +11,8 @@ import tech.sadovnikov.configurator.entities.Configuration;
 import tech.sadovnikov.configurator.entities.Parameter;
 
 import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
-import tech.sadovnikov.configurator.view.adapter.AvailableDevicesItemView;
-import tech.sadovnikov.configurator.view.adapter.PairedDevicesItemView;
+import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesItemView;
+import tech.sadovnikov.configurator.ui.adapter.PairedDevicesItemView;
 
 
 public interface Contract {
@@ -30,7 +30,7 @@ public interface Contract {
         int OPEN_FILE_MANAGER_REQUEST_CODE = 1;
         int SAVE_FILE_MANAGER_REQUEST_CODE = 2;
 
-        // Показать (установить фрагмент в MainActivity)
+        // Показать (установить фрагмент в MainView)
         void showFragment(String fragment);
 
         // Вывести сообщение лога в консоль

@@ -130,9 +130,9 @@ public class FileManager {
                         if (PARAMETER_NAMES_LIST.contains(name)) {
                             value = line.substring(indexOfRavno + 1).trim();
                             Parameter parameter = new Parameter(name, value);
-                            Log.d(TAG, "openConfiguration: read Parameter: " + parameter);
+                            Log.d(TAG, "openConfiguration: read ParameterNew: " + parameter);
                             configuration.addParameter(parameter);
-                            // Log.d(TAG, "openConfiguration: Parameter name =" + name + ", " + "value = " + value);
+                            // Log.d(TAG, "openConfiguration: ParameterNew name =" + name + ", " + "value = " + value);
                         }
                     }
                 }

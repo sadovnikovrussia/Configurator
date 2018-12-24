@@ -7,7 +7,7 @@ import android.os.Message;
 import java.lang.ref.WeakReference;
 
 import tech.sadovnikov.configurator.Contract;
-import tech.sadovnikov.configurator.view.MainActivity;
+import tech.sadovnikov.configurator.ui.MainActivity;
 
 public class UiHandler extends Handler {
     static final int WHAT_CONNECTING_ERROR = 13;

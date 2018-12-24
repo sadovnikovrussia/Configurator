@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.BluetoothFragment">
+    tools:context=".ui.bluetooth.BluetoothFragment">
 
     <Switch
         android:id="@+id/sw_bluetooth"
@@ -26,7 +26,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.TabLayout
-        android:id="@+id/tabLayout"
+        android:id="@+id/tab_layout_devices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/colorBackground"
@@ -36,11 +36,13 @@
         app:layout_constraintTop_toBottomOf="@+id/sw_bluetooth">
 
         <android.support.design.widget.TabItem
+            android:id="@+id/tab_item_paired_devices"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/paired_devices" />
 
         <android.support.design.widget.TabItem
+            android:id="@+id/tab_item_available_devices"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/available_devices" />
@@ -48,14 +50,14 @@
     </android.support.design.widget.TabLayout>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager"
+        android:id="@+id/view_pager_devices"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout">
+        app:layout_constraintTop_toBottomOf="@+id/tab_layout_devices">
 
     </android.support.v4.view.ViewPager>
 

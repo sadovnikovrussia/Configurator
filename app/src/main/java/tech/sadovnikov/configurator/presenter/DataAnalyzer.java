@@ -11,7 +11,7 @@ import static tech.sadovnikov.configurator.entities.Configuration.PARAMETER_NAME
 /**
  * Класс, предназначенный для парсинга данных из лога
  */
-class DataAnalyzer {
+public class DataAnalyzer {
     private static final String TAG = "DataAnalyzer";
 
     private final static char LOG_SYMBOL = 0x7F;
@@ -20,7 +20,7 @@ class DataAnalyzer {
     private static final String OK = "OK";
 
     static final String PARAMETER_VALUE = "Data";
-    static final String PARAMETER_NAME = "Parameter's name";
+    static final String PARAMETER_NAME = "ParameterNew's name";
 
     static final int WHAT_COMMAND_DATA = 1;
     static final int WHAT_MAIN_LOG = 0;
@@ -32,11 +32,11 @@ class DataAnalyzer {
 
     private DataParser dataParser = new DataParser();
 
-    DataAnalyzer(UiHandler handler) {
+    public DataAnalyzer(UiHandler handler) {
         uiHandler = handler;
     }
 
-    void analyze(String line) {
+    public void analyze(String line) {
         sendLogs(line);
         buffer = buffer + line + "\r\n";
         if (buffer.startsWith(String.valueOf(LOG_SYMBOL))) {
