@@ -29,7 +29,7 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
 
     @Override
     public void onStart() {
-        Log.e(TAG, "onStart:" );
+        Log.e(TAG, "onStart:");
         ifViewAttached(view -> view.displayBluetoothState(bluetoothService.isEnabled()));
         if (bluetoothService.isEnabled()) ifViewAttached(BluetoothMvp.View::showDevicesContainer);
         else ifViewAttached(BluetoothMvp.View::hideDevicesContainer);
@@ -39,18 +39,20 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer -> {
-                    Log.d(TAG, "ПРИЛЕТЕЛО: " + integer);
-                    switch (integer) {
-                        case BluetoothAdapter.STATE_ON:
-                            ifViewAttached(view -> view.displayBluetoothState(true));
-                            ifViewAttached(BluetoothMvp.View::showDevicesContainer);
-                            break;
-                        case BluetoothAdapter.STATE_OFF:
-                            ifViewAttached(view -> view.displayBluetoothState(false));
-                            ifViewAttached(BluetoothMvp.View::hideDevicesContainer);
-                            break;
-                    }
-                });
+                            Log.d(TAG, "ПРИЛЕТЕЛО: " + integer);
+                            switch (integer) {
+                                case BluetoothAdapter.STATE_ON:
+                                    ifViewAttached(view -> view.displayBluetoothState(true));
+                                    ifViewAttached(BluetoothMvp.View::showDevicesContainer);
+                                    break;
+                                case BluetoothAdapter.STATE_OFF:
+                                    ifViewAttached(view -> view.displayBluetoothState(false));
+                                    ifViewAttached(BluetoothMvp.View::hideDevicesContainer);
+                                    break;
+                            }
+                        },
+                        throwable -> Log.w(TAG, "onStart: ", throwable),
+                        () -> Log.i(TAG, "onStart: Усе"));
         compositeDisposable.add(disposable);
     }
 
