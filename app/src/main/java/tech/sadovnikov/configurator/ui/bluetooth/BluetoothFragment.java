@@ -25,8 +25,7 @@ import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.ui.adapter.DevicesFragmentPagerAdapter;
 import tech.sadovnikov.configurator.ui.adapter.PairedDevicesItemView;
 
-
-public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothPresenter> implements BluetoothMvp.View {
+public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothMvp.Presenter> implements BluetoothMvp.View {
     public static final String TAG = BluetoothFragment.class.getSimpleName();
 
     // UI
@@ -40,8 +39,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
     @Inject
     DevicesFragmentPagerAdapter devicesFragmentPagerAdapter;
     FragmentComponent fragmentComponent;
-
-
+    
     private OnBluetoothFragmentInteractionListener listener;
 
     public static BluetoothFragment newInstance() {
@@ -58,7 +56,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
 
     @NonNull
     @Override
-    public BluetoothPresenter createPresenter() {
+    public BluetoothMvp.Presenter createPresenter() {
         return new BluetoothPresenter();
     }
 
@@ -78,7 +76,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
                 .builder()
                 .fragmentModule(new FragmentModule(this))
                 .build();
-        fragmentComponent.injectBluetoothFargment(this);
+        fragmentComponent.injectBluetoothFragment(this);
     }
 
     private void setUp() {
@@ -93,7 +91,6 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
             @Override
             public void onPageSelected(int position) {
                 Log.d(TAG, "onPageSelected: " + String.valueOf(position));
-                //listener.onDevicesPageSelected(position);
             }
 
             @Override
@@ -112,20 +109,21 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
 
     @Override
     public void showDevicesContainer() {
-//        viewPager.setVisibility(View.VISIBLE);
-//        tabLayout.setVisibility(View.VISIBLE);
+        Log.d(TAG, "showDevicesContainer: ");
+        //viewPager.setVisibility(View.VISIBLE);
+        //tabLayout.setVisibility(View.VISIBLE);
         //devicesFragmentPagerAdapter
-        viewPager.setAdapter(devicesFragmentPagerAdapter);
+        viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
     public void hideDevicesContainer() {
-//        viewPager.setVisibility(View.INVISIBLE);
-//        tabLayout.setVisibility(View.INVISIBLE);
-
+        Log.d(TAG, "hideDevicesContainer: ");
+        //viewPager.setVisibility(View.INVISIBLE);
+        //tabLayout.setVisibility(View.INVISIBLE);
         viewPager.setAdapter(null);
-        tabLayout.setupWithViewPager(null);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     public void closeDevices() {
@@ -191,7 +189,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        //bluetoothPresenter.onStart();
+        getPresenter().onStart();
     }
 
     @Override

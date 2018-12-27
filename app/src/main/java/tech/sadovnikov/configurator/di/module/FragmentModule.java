@@ -2,7 +2,6 @@ package tech.sadovnikov.configurator.di.module;
 
 import android.support.v7.widget.LinearLayoutManager;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.hannesdorfmann.mosby3.mvp.MvpFragment;
 
 import dagger.Module;

@@ -3,12 +3,11 @@ package tech.sadovnikov.configurator.ui.bluetooth;
 import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
-import com.hannesdorfmann.mosby3.mvp.MvpPresenter;
 
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
-public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> implements MvpPresenter<BluetoothMvp.View> {
+public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> implements BluetoothMvp.Presenter {
     private static final String TAG = BluetoothPresenter.class.getSimpleName();
 
     private BluetoothService bluetoothService = App.getBluetoothService();
@@ -16,7 +15,14 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
     @Override
     public void attachView(@NonNull BluetoothMvp.View view) {
         super.attachView(view);
-        ifViewAttached(view1 -> view1.displayBluetoothState(bluetoothService.isEnabled()));
+
+    }
+
+    @Override
+    public void onStart() {
+        ifViewAttached(view -> view.displayBluetoothState(bluetoothService.isEnabled()));
+        if (bluetoothService.isEnabled()) ifViewAttached(BluetoothMvp.View::showDevicesContainer);
+        else ifViewAttached(BluetoothMvp.View::hideDevicesContainer);
     }
 
     @Override
@@ -29,11 +35,13 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
         super.destroy();
     }
 
-    void onBtSwitchClick(boolean isChecked) {
+    @Override
+    public void onBtSwitchClick(boolean isChecked) {
         if (isChecked) {
             bluetoothService.enable();
         } else {
             bluetoothService.disable();
         }
     }
+
 }

@@ -11,9 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpAppCompatFragment;
-import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.hannesdorfmann.mosby3.mvp.MvpFragment;
 
 import java.util.List;
 
@@ -27,13 +25,9 @@ import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
 import tech.sadovnikov.configurator.ui.adapter.PairedDevicesRvAdapter;
 
-public class PairedDevicesFragment extends MvpAppCompatFragment
-        implements PairedDevicesView,
-        PairedDevicesRvAdapter.Listener {
+public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, PairedDevicesMvp.Presenter>
+        implements PairedDevicesMvp.View, PairedDevicesRvAdapter.Listener {
     private static final String TAG = PairedDevicesFragment.class.getSimpleName();
-
-    @InjectPresenter
-    PairedDevicesPresenter presenter;
 
     @BindView(R.id.rv_paired_devices)
     RecyclerView rvPairedDevices;
@@ -44,9 +38,14 @@ public class PairedDevicesFragment extends MvpAppCompatFragment
     @Inject
     LinearLayoutManager linearLayoutManager;
 
-
     public PairedDevicesFragment() {
         Log.d(TAG, "onConstructor");
+    }
+
+    @NonNull
+    @Override
+    public PairedDevicesMvp.Presenter createPresenter() {
+        return new PairedDevicesPresenter();
     }
 
     public static PairedDevicesFragment newInstance() {

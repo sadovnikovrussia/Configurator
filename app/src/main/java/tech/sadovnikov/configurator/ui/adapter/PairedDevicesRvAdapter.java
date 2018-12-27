@@ -9,7 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,17 +23,18 @@ import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
 public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRvAdapter.BluetoothDeviceViewHolder> {
     private static final String TAG = PairedDevicesRvAdapter.class.getSimpleName();
 
-    private BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener;
     private Listener listener;
-    private List<BluetoothDevice> devices;
+    private List<BluetoothDevice> devices = new ArrayList<>();
 
     public PairedDevicesRvAdapter(BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener) {
         // Logs.d(TAG, "onConstructor");
-        this.onBluetoothFragmentInteractionListener = onBluetoothFragmentInteractionListener;
     }
 
     public PairedDevicesRvAdapter(List<BluetoothDevice> devices) {
         this.devices = devices;
+    }
+
+    public PairedDevicesRvAdapter() {
     }
 
     public void setListener(Listener listener) {
@@ -46,7 +50,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
 
     @Override
     public void onBindViewHolder(@NonNull final BluetoothDeviceViewHolder holder, final int position) {
-        Log.d(TAG, "onBind: " + position);
+        //Log.d(TAG, "onBind: " + position);
         // Logs.d(TAG, "onBindViewHolder");
         holder.onBind(position);
 //        onBluetoothFragmentInteractionListener.onBindViewHolderOfPairedDevicesRvAdapter(holder, position);
@@ -61,7 +65,12 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
     @Override
     public int getItemCount() {
         // Logs.d(TAG, "getItemCount: " + String.valueOf(count));
-        return onBluetoothFragmentInteractionListener.onGetItemCountOfPairedDevicesRvAdapter();
+        return devices.size();
+    }
+
+    public void setDevices(List<BluetoothDevice> devices) {
+        this.devices = devices;
+        notifyDataSetChanged();
     }
 
     public void updatePairedBluetoothDevices() {
@@ -81,7 +90,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
             ButterKnife.bind(this, itemView);
         }
 
-        public void onBind(int position){
+        public void onBind(int position) {
             super.onBind(position);
             final BluetoothDevice device = devices.get(position);
             tvDeviceName.setText(device.getName());
@@ -95,7 +104,6 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
         }
 
     }
-
 
     public interface Listener {
         void onDeviceClicked(BluetoothDevice device);

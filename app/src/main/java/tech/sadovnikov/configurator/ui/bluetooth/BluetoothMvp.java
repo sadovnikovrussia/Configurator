@@ -18,6 +18,11 @@ public interface BluetoothMvp {
 
     }
 
-    interface BluetoothPresenter extends MvpPresenter<View> {
+    interface Presenter extends MvpPresenter<View> {
+
+        void onBtSwitchClick(boolean isChecked);
+
+        void onStart();
     }
+
 }

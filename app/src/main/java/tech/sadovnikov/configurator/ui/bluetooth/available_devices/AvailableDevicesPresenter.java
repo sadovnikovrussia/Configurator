@@ -1,27 +1,41 @@
 package tech.sadovnikov.configurator.ui.bluetooth.available_devices;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
+import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 
-@InjectViewState
-public class AvailableDevicesPresenter extends MvpPresenter<AvailableDevicesView> {
+import tech.sadovnikov.configurator.App;
+import tech.sadovnikov.configurator.model.BluetoothService;
+
+public class AvailableDevicesPresenter extends MvpBasePresenter<AvailableDevicesMvp.View>
+        implements AvailableDevicesMvp.Presenter {
     private static final String TAG = AvailableDevicesPresenter.class.getSimpleName();
 
-    public AvailableDevicesPresenter() {
+    BluetoothService bluetoothService = App.getBluetoothService();
+
+    AvailableDevicesPresenter() {
         Log.i(TAG, "AvailableDevicesPresenter: ");
     }
 
     @Override
-    protected void onFirstViewAttach() {
-        super.onFirstViewAttach();
-        Log.i(TAG, "onFirstViewAttach: ");
+    public void onStartView() {
+
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "onDestroy: ");
+    public void attachView(@NonNull AvailableDevicesMvp.View view) {
+        super.attachView(view);
     }
+
+    @Override
+    public void detachView() {
+        super.detachView();
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+    }
+
 }

@@ -7,21 +7,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.ui.ConfigurationFragment;
+import tech.sadovnikov.configurator.ui.configuration.ConfigurationFragment;
 
 public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapter.ConfigTabsViewHolder> {
-    // private static final String TAG = "RvBtDevicesAdapter";
+    private static final String TAG = ConfigTabsRvAdapter.class.getSimpleName();
 
     private ConfigurationFragment.OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener;
 
     private String[] configTabs = new String[]{"Буй", "Основные", "Навигация", "События", "Сервер", "SIM карта"};
 
+    public ConfigTabsRvAdapter() {
+    }
 
     public ConfigTabsRvAdapter(ConfigurationFragment.OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener) {
         // Logs.d(TAG, "onConstructor, " 1+ bluetoothDevices.toString());
         this.onConfigurationFragmentInteractionListener = onConfigurationFragmentInteractionListener;
         }
+
 
     @NonNull
     @Override
@@ -34,13 +39,7 @@ public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapte
     @Override
     public void onBindViewHolder(@NonNull final ConfigTabsViewHolder holder, int position) {
         // Logs.d(TAG, "onBindViewHolder");
-        holder.bind(position);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onConfigurationFragmentInteractionListener.onConfigTabsRvItemClick((String) holder.tvConfigTabName.getText());
-            }
-        });
+        holder.onBind(position);
     }
 
     @Override
@@ -50,14 +49,15 @@ public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapte
     }
 
     class ConfigTabsViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvConfigTabName;
+        @BindView(R.id.tv_config_tab_name)
+        TextView tvConfigTabName;
 
         ConfigTabsViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvConfigTabName = itemView.findViewById(R.id.tv_config_tab_name);
+            ButterKnife.bind(this, itemView);
         }
 
-        void bind(int position) {
+        void onBind(int position) {
             tvConfigTabName.setText(configTabs[position]);
         }
     }

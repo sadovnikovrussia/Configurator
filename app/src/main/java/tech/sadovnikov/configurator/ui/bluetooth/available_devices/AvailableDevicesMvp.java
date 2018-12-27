@@ -11,6 +11,7 @@ public interface AvailableDevicesMvp {
 
     interface Presenter extends MvpPresenter<View> {
 
+        void onStartView();
     }
 
 }
