@@ -11,9 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.hannesdorfmann.mosby3.mvp.MvpFragment;
 
 import java.util.List;
 
@@ -21,15 +21,20 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import tech.sadovnikov.configurator.ConfiguratorApplication;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
 import tech.sadovnikov.configurator.ui.adapter.PairedDevicesRvAdapter;
 
-public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, PairedDevicesPresenter>
-        implements PairedDevicesMvp.View, PairedDevicesRvAdapter.Listener {
+public class PairedDevicesFragment extends MvpAppCompatFragment
+        implements PairedDevicesView,
+        PairedDevicesRvAdapter.Listener {
     private static final String TAG = PairedDevicesFragment.class.getSimpleName();
+
+    @InjectPresenter
+    PairedDevicesPresenter presenter;
 
     @BindView(R.id.rv_paired_devices)
     RecyclerView rvPairedDevices;
@@ -43,11 +48,6 @@ public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, Pa
 
     public PairedDevicesFragment() {
         Log.d(TAG, "onConstructor");
-    }
-
-    @Override
-    public PairedDevicesPresenter createPresenter() {
-        return null;
     }
 
     public static PairedDevicesFragment newInstance() {
@@ -100,11 +100,6 @@ public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, Pa
     @Override
     public void showPairedDevices(List<BluetoothDevice> devices ) {
         pairedDevicesRvAdapter.setDevices(devices);
-    }
-
-    @Override
-    public void showPairedDevices() {
-
     }
 
     @Override

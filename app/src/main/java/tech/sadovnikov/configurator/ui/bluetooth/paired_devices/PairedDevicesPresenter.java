@@ -4,13 +4,12 @@ import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
-import com.hannesdorfmann.mosby3.mvp.MvpPresenter;
 
 import tech.sadovnikov.configurator.ConfiguratorApplication;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
 @InjectViewState
-public class PairedDevicesPresenter implements MvpPresenter<PairedDevicesMvp.View> {
+public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
     private static final String TAG = PairedDevicesPresenter.class.getSimpleName();
 
     private BluetoothService bluetoothService;

@@ -12,55 +12,87 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
+import tech.sadovnikov.configurator.di.component.FragmentComponent;
+import tech.sadovnikov.configurator.di.module.FragmentModule;
 import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesRvAdapter;
 import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
 
-public class AvailableDevicesFragment extends Fragment {
-    private static final String TAG = "AvailableDeviceFragment";
+public class AvailableDevicesFragment extends MvpAppCompatFragment
+        implements AvailableDevicesView {
+    private static final String TAG = AvailableDevicesFragment.class.getSimpleName();
 
+    @InjectPresenter
+    AvailableDevicesPresenter presenter;
+
+    @BindView(R.id.rv_available_devices)
     RecyclerView rvAvailableDevices;
+
+    FragmentComponent fragmentComponent;
+    @Inject
     AvailableDevicesRvAdapter availableDevicesRvAdapter;
+    @Inject
+    LinearLayoutManager linearLayoutManager;
 
-    BluetoothFragment.OnBluetoothFragmentInteractionListener listener;
-
-    private static AvailableDevicesFragment availableDevicesFragment;
 
     public AvailableDevicesFragment() {
         Log.i(TAG, "onConstructor");
     }
 
-    public static AvailableDevicesFragment getInstance(){
-        if (availableDevicesFragment == null) {
-            availableDevicesFragment = new AvailableDevicesFragment();
-        }
-        return availableDevicesFragment;
+    public static AvailableDevicesFragment newInstance() {
+        Log.i(TAG, "newInstance: ");
+        Bundle args = new Bundle();
+        AvailableDevicesFragment fragment = new AvailableDevicesFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate");
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView");
-        View view = inflater.inflate(R.layout.fragment_paired_devices, container, false);
-        rvAvailableDevices = view.findViewById(R.id.rv_paired_devices);
-        availableDevicesRvAdapter = new AvailableDevicesRvAdapter(listener);
-        // TODO <Узнать, какой контекст подавать в аргумент LL>
-        rvAvailableDevices.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        rvAvailableDevices.setAdapter(availableDevicesRvAdapter);
-
+        View view = inflater.inflate(R.layout.fragment_available_devices, container, false);
+        //rvAvailableDevices = view.findViewById(R.id.rv_available_devices);
+        ButterKnife.bind(this, view);
+        initDaggerAndInject();
+        setUp();
         return view;
     }
 
-    public void updateAvailableDevices() {
-        Log.d(TAG, "updateAvailableDevices: availableDevicesRvAdapter = " + availableDevicesRvAdapter);
-        if (availableDevicesRvAdapter != null) availableDevicesRvAdapter.updateAvailableBluetoothDevices();
+    private void initDaggerAndInject() {
+        fragmentComponent = DaggerFragmentComponent
+                .builder()
+                .fragmentModule(new FragmentModule(this))
+                .build();
+        fragmentComponent.injectAvailableDevicesFragment(this);
     }
+
+    private void setUp() {
+        rvAvailableDevices.setLayoutManager(linearLayoutManager);
+        rvAvailableDevices.setAdapter(availableDevicesRvAdapter);
+    }
+
+    public void updateAvailableDevices() {
+//        Log.i(TAG, "updateAvailableDevices: availableDevicesRvAdapter = " + availableDevicesRvAdapter);
+//        if (availableDevicesRvAdapter != null)
+//            availableDevicesRvAdapter.updateAvailableBluetoothDevices();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.i(TAG, "onHiddenChanged: " + hidden);
+    }
+
 
     // ---------------------------------------------------------------------------------------------
     // States
@@ -68,6 +100,12 @@ public class AvailableDevicesFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.i(TAG, "onAttach");
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate");
     }
 
     @Override
@@ -79,6 +117,7 @@ public class AvailableDevicesFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        //listener.onAvailableDevicesFragmentStart();
         Log.i(TAG, "onStart");
     }
 
@@ -120,4 +159,20 @@ public class AvailableDevicesFragment extends Fragment {
     // ---------------------------------------------------------------------------------------------
 
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        Log.i(TAG, "onPrepareOptionsMenu: " + menu);
+        //menu.setGroupVisible(R.id.group_update_available_devices, true);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void showDevices() {
+
+    }
+
+    @Override
+    public void hideDevices() {
+
+    }
 }

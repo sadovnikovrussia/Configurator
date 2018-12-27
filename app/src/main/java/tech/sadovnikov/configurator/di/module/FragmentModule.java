@@ -1,26 +1,23 @@
 package tech.sadovnikov.configurator.di.module;
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 
-import com.hannesdorfmann.mosby3.mvp.MvpFragment;
+import com.arellomobile.mvp.MvpAppCompatFragment;
 
 import dagger.Module;
 import dagger.Provides;
-import tech.sadovnikov.configurator.di.ActivityContext;
 import tech.sadovnikov.configurator.di.PerFragment;
+import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesRvAdapter;
+import tech.sadovnikov.configurator.ui.adapter.ConfigTabsRvAdapter;
 import tech.sadovnikov.configurator.ui.adapter.DevicesFragmentPagerAdapter;
-import tech.sadovnikov.configurator.ui.bluetooth.paired_devices.PairedDevicesMvp;
-import tech.sadovnikov.configurator.ui.bluetooth.paired_devices.PairedDevicesPresenter;
+import tech.sadovnikov.configurator.ui.adapter.PairedDevicesRvAdapter;
 
 @Module
 public class FragmentModule {
 
-    private MvpFragment fragment;
+    private MvpAppCompatFragment fragment;
 
-    public FragmentModule(MvpFragment fragment) {
+    public FragmentModule(MvpAppCompatFragment fragment) {
         this.fragment = fragment;
     }
 
@@ -30,12 +27,29 @@ public class FragmentModule {
         return new DevicesFragmentPagerAdapter(fragment.getChildFragmentManager());
     }
 
-//    @Provides
-//    @PerFragment
-//    PairedDevicesMvp.Presenter providePairedDevicesMvpPresenter(PairedDevicesMvp.Presenter presenter){
-//        return presenter;
-//    }
+    @Provides
+    @PerFragment
+    LinearLayoutManager provideLinearLayoutManager(){
+        return new LinearLayoutManager(fragment.requireContext());
+    }
 
+    @Provides
+    @PerFragment
+    PairedDevicesRvAdapter providePairedDevicesRvAdapter(){
+        return new PairedDevicesRvAdapter();
+    }
+
+    @Provides
+    @PerFragment
+    AvailableDevicesRvAdapter provideAvailableDevicesRvAdapter(){
+        return new AvailableDevicesRvAdapter();
+    }
+
+    @Provides
+    @PerFragment
+    ConfigTabsRvAdapter provideConfigTabsRvAdapter(){
+        return new ConfigTabsRvAdapter();
+    }
 
 
 }
