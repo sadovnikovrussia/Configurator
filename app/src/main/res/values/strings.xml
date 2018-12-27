@@ -37,6 +37,10 @@
         <item>SMS</item>
         <item>GPRS</item>
     </string-array>
+    <string-array name="bluetooth_devices_types">
+        <item>Подключенные</item>
+        <item>Доступные</item>
+    </string-array>
     <string-array name="satellite_system_list">
         <item>Не выбрано</item>
         <item>ГЛОНАСС и GPS</item>

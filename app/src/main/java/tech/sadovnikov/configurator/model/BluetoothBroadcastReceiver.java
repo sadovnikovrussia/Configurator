@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.presenter;
+package tech.sadovnikov.configurator.model;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -7,14 +7,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import javax.inject.Inject;
+
+import io.reactivex.subjects.PublishSubject;
+
 public class BluetoothBroadcastReceiver extends BroadcastReceiver {
+    private static final String TAG = BluetoothBroadcastReceiver.class.getSimpleName();
 
-    private static final String TAG = "BluetoothBroadReceiver";
+    BluetoothService bluetoothService;
 
-    OnBluetoothBroadcastReceiverEventsListener listener;
+    public void setBluetoothService(BluetoothService bluetoothService) {
+        this.bluetoothService = bluetoothService;
+    }
 
-    public BluetoothBroadcastReceiver(OnBluetoothBroadcastReceiverEventsListener onBluetoothBroadcastReceiverEventsListener) {
-        listener = onBluetoothBroadcastReceiverEventsListener;
+    public BluetoothBroadcastReceiver(BluetoothService bluetoothService) {
+        this.bluetoothService = bluetoothService;
     }
 
     @Override
@@ -26,14 +33,14 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                 case BluetoothDevice.ACTION_FOUND:
                     Log.w(TAG, "ACTION_FOUND");
                     Log.w(TAG, "onReceive: " + intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) );
-                    listener.onBluetoothServiceActionFound((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
+                    //listener.onBluetoothServiceActionFound((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
                     break;
                 case BluetoothDevice.ACTION_PAIRING_REQUEST:
                     Log.w(TAG, "BluetoothDevice.ACTION_PAIRING_REQUEST");
                     break;
                 case BluetoothDevice.ACTION_ACL_CONNECTED:
                     Log.w(TAG, "BluetoothDevice.ACTION_ACL_CONNECTED");
-                    listener.onStateConnected((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
+                    //listener.onStateConnected((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
                     break;
                 case BluetoothDevice.ACTION_ACL_DISCONNECTED:
                     Log.w(TAG, "BluetoothDevice.ACTION_ACL_DISCONNECTED");
@@ -49,20 +56,21 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                     break;
                 case BluetoothAdapter.ACTION_STATE_CHANGED:
                     int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
+                    bluetoothService.setBluetoothState(state);
                     switch (state) {
                         // BT включился
                         case BluetoothAdapter.STATE_ON:
                             Log.w(TAG, "BluetoothAdapter.STATE_ON");
-                            listener.onBluetoothServiceStateOn();
+                            //listener.onBluetoothServiceStateOn();
                             break;
                         case BluetoothAdapter.STATE_CONNECTED:
                             Log.w(TAG, "BluetoothAdapter.STATE_CONNECTED");
-                            listener.onStateConnected((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
+                            //listener.onStateConnected((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
                             break;
                         // BT выключился
                         case BluetoothAdapter.STATE_OFF:
                             Log.w(TAG, "BluetoothAdapter.STATE_OFF");
-                            listener.onBluetoothServiceStateOff();
+                            //listener.onBluetoothServiceStateOff();
                             break;
                         // BT включается
                         case BluetoothAdapter.STATE_TURNING_ON:

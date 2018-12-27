@@ -9,6 +9,7 @@ import dagger.Component;
 import tech.sadovnikov.configurator.di.ActivityContext;
 import tech.sadovnikov.configurator.di.ApplicationContext;
 import tech.sadovnikov.configurator.di.module.ApplicationModule;
+import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.DataManager;
 
@@ -19,12 +20,14 @@ public interface ApplicationComponent {
     void inject(Application application);
 
     @ApplicationContext
-    Context context();
+    Context getContext();
 
     Application getApplication();
 
     DataManager getDataManager();
 
     BluetoothService getBluetoothService();
+
+    BluetoothBroadcastReceiver getBluetoothBroadcastReceiver();
 
 }

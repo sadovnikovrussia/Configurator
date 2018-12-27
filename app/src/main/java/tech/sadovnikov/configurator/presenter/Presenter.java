@@ -19,6 +19,7 @@
 //
 //import tech.sadovnikov.configurator.Contract;
 //import tech.sadovnikov.configurator.R;
+//import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 //import tech.sadovnikov.configurator.model.BluetoothService;
 //import tech.sadovnikov.configurator.model.Logs;
 //import tech.sadovnikov.configurator.model.RepositoryConfiguration;
@@ -97,7 +98,7 @@
 //
 //
 //    // Регистрация ресиверов
-//    private void registerBluetoothBroadcastReceiver(Context context) {
+//    private void registerBluetoothBroadcastReceiver(Context getContext) {
 //        IntentFilter intentFilter = new IntentFilter();
 //        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
 //        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
@@ -106,7 +107,7 @@
 //        intentFilter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST);
 //        intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
 //        intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
-//        context.registerReceiver(bluetoothBroadcastReceiver, intentFilter);
+//        getContext.registerReceiver(bluetoothBroadcastReceiver, intentFilter);
 //    }
 //
 //    @Override

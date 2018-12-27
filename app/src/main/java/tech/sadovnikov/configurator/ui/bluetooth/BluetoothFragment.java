@@ -4,17 +4,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 
-import com.hannesdorfmann.mosby3.mvp.MvpFragment;
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import javax.inject.Inject;
 
@@ -23,21 +22,17 @@ import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
-import tech.sadovnikov.configurator.di.module.BluetoothFragmentModule;
+import tech.sadovnikov.configurator.di.module.FragmentModule;
 import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.ui.adapter.DevicesFragmentPagerAdapter;
 import tech.sadovnikov.configurator.ui.adapter.PairedDevicesItemView;
 
-/**
- * Фрагмент для отображения спаренных и доступных bluetooth устройств
- * <p>
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnBluetoothFragmentInteractionListener} interface
- * to handle interaction events.
- */
-public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothPresenter> implements BluetoothMvp.View {
+
+public class BluetoothFragment extends MvpAppCompatFragment implements BluetoothView {
     public static final String TAG = BluetoothFragment.class.getSimpleName();
+
+    @InjectPresenter
+    BluetoothPresenter bluetoothPresenter;
 
     // UI
     @BindView(R.id.sw_bluetooth)
@@ -52,24 +47,25 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
 
     FragmentComponent fragmentComponent;
 
+    private static final BluetoothFragment fragment = new BluetoothFragment();
+
     private OnBluetoothFragmentInteractionListener listener;
 
     public static BluetoothFragment newInstance() {
+        Log.v(TAG, "newInstance: ");
         Bundle args = new Bundle();
         BluetoothFragment fragment = new BluetoothFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    @NonNull
-    @Override
-    public BluetoothPresenter createPresenter() {
-        return new BluetoothPresenter();
+    public static BluetoothFragment getInstance() {
+        Log.e(TAG, "getInstance: " + fragment);
+        return fragment;
     }
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.v(TAG, "onCreate");
+    public BluetoothFragment() {
+        Log.v(TAG, "BluetoothFragment: ");
     }
 
     @Override
@@ -78,32 +74,22 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
         Log.v(TAG, "onCreateView");
         View inflate = inflater.inflate(R.layout.fragment_bluetooth, container, false);
         ButterKnife.bind(this, inflate);
-        initComponent();
+        initDaggerAndInject();
         setUp();
         return inflate;
-
     }
 
-    private void initComponent() {
-        getActivity()
+    private void initDaggerAndInject() {
         fragmentComponent = DaggerFragmentComponent
                 .builder()
-
-                .applicationComponent( getApplication()).getComponent())
-                .bluetoothFragmentModule(new BluetoothFragmentModule(getChildFragmentManager()))
+                .fragmentModule(new FragmentModule(this))
                 .build();
+        fragmentComponent.injectBluetoothFragment(this);
     }
 
     private void setUp() {
+        switchBt.setOnCheckedChangeListener((buttonView, isChecked) -> bluetoothPresenter.onBtSwitchClick(isChecked));
         devicesFragmentPagerAdapter.setTabsCount(tabLayout.getTabCount());
-
-        switchBt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // todo
-                //listener.onSwitchBtStateChanged(isChecked);
-            }
-        });
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -121,21 +107,47 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
 
             }
         });
+        viewPager.setAdapter(devicesFragmentPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
-    public void closeDevices(){
+    @Override
+    public void displayBluetoothState(boolean state) {
+        switchBt.setChecked(state);
+    }
+
+    @Override
+    public void showDevicesContainer() {
+//        viewPager.setVisibility(View.VISIBLE);
+//        tabLayout.setVisibility(View.VISIBLE);
+        //devicesFragmentPagerAdapter
+        viewPager.setAdapter(devicesFragmentPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    public void hideDevicesContainer() {
+//        viewPager.setVisibility(View.INVISIBLE);
+//        tabLayout.setVisibility(View.INVISIBLE);
+
+        viewPager.setAdapter(null);
+        tabLayout.setupWithViewPager(null);
+    }
+
+    public void closeDevices() {
         //devicesFragmentPagerAdapter = null;
         viewPager.setAdapter(null);
         // viewPager.removeOnPageChangeListener();
         tabLayout.setupWithViewPager(null);
     }
+
     public void openDevices() {
         viewPager.setAdapter(devicesFragmentPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
 
     public void setSwitchBtState(boolean state) {
-        if (switchBt != null){
+        if (switchBt != null) {
             switchBt.setChecked(state);
         }
     }
@@ -153,7 +165,8 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
 
     public void updateAvailableDevices() {
         Log.d(TAG, "updateAvailableDevices: ");
-        if (devicesFragmentPagerAdapter != null) devicesFragmentPagerAdapter.updateAvailableDevices();
+        if (devicesFragmentPagerAdapter != null)
+            devicesFragmentPagerAdapter.updateAvailableDevices();
     }
 
     public void updatePairedDevices() {
@@ -166,12 +179,12 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.v(TAG, "onAttach");
-//        if (context instanceof OnBluetoothFragmentInteractionListener) {
-//            listener = (OnBluetoothFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnBluetoothFragmentInteractionListener");
-//        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.v(TAG, "onCreate: ");
     }
 
     @Override
@@ -184,7 +197,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        //listener.onBluetoothFragmentStart();
+        bluetoothPresenter.onStart();
     }
 
     @Override
@@ -207,22 +220,23 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
 
     @Override
     public void onDestroyView() {
-        listener.onBluetoothFragmentDestroyView();
         Log.v(TAG, "onDestroyView");
         super.onDestroyView();
+        //listener.onBluetoothFragmentDestroyView();
     }
 
     @Override
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
-        listener.onBluetoothFragmentDestroy();
         super.onDestroy();
+        //listener.onBluetoothFragmentDestroy();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        listener = null;
+        Log.v(TAG, "onDetach: ");
+        //listener = null;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -232,28 +246,13 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothP
         super.onPrepareOptionsMenu(menu);
     }
 
-    public boolean isAvailableDevicesFragmentResumed() {
-        return (devicesFragmentPagerAdapter != null && devicesFragmentPagerAdapter.isAvailableDevicesFragmentResumed());
-    }
+//    public boolean isAvailableDevicesFragmentResumed() {
+//        return (devicesFragmentPagerAdapter != null && devicesFragmentPagerAdapter.isAvailableDevicesFragmentResumed());
+//    }
 
     public int getSelectedPageOfViewPager() {
         // Log.d(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
         return viewPager.getCurrentItem();
-    }
-
-    @Override
-    public void displayBluetoothState(boolean state) {
-
-    }
-
-    @Override
-    public void showDevicesContainer() {
-
-    }
-
-    @Override
-    public void hideDevicesContainer() {
-
     }
 
 

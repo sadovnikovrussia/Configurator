@@ -52,10 +52,10 @@
 //    }
 //
 //    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof BaseActivity) {
-//            BaseActivity activity = (BaseActivity) context;
+//    public void onStart(Context getContext) {
+//        super.onStart(getContext);
+//        if (getContext instanceof BaseActivity) {
+//            BaseActivity activity = (BaseActivity) getContext;
 //            this.mActivity = activity;
 //            activity.onFragmentAttached();
 //        }

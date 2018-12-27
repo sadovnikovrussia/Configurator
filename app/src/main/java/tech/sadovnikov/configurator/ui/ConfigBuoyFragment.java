@@ -95,7 +95,7 @@ public class ConfigBuoyFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.v(TAG, "onAttach");
+        Log.v(TAG, "onStart");
         if (context instanceof ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener) {
             listener = (ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener) context;
         } else {

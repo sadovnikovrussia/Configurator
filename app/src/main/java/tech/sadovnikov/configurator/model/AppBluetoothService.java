@@ -3,6 +3,10 @@ package tech.sadovnikov.configurator.model;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.net.wifi.aware.PublishConfig;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -14,6 +18,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.subjects.PublishSubject;
 import rx.Observable;
 import rx.Subscriber;
 import rx.observables.StringObservable;
@@ -38,6 +43,8 @@ public class AppBluetoothService implements BluetoothService {
     //private Observable<List<BluetoothDevice>> availableDevices;
     private Observable<String> inputStream;
 
+    private PublishSubject<Integer> bluetoothState = PublishSubject.create();
+
     private OnBluetoothServiceEventsListener listener;
 
     // Потоки
@@ -54,7 +61,6 @@ public class AppBluetoothService implements BluetoothService {
         dataAnalyzer = new DataAnalyzer(handler);
     }
 
-    @Inject
     public AppBluetoothService() {
     }
 
@@ -80,6 +86,17 @@ public class AppBluetoothService implements BluetoothService {
         onConnecting(device);
     }
 
+    @Override
+    public void setBluetoothState(Integer state) {
+        Log.w(TAG, "setBluetoothState: " + state);
+        bluetoothState.onNext(state);
+    }
+
+    @Override
+    public PublishSubject getBluetoothStateObservable() {
+        return bluetoothState;
+    }
+
     private void clearAvailableDevices() {
         //this.availableDevices.clear();
         //pairedDevices.
@@ -99,6 +116,7 @@ public class AppBluetoothService implements BluetoothService {
         //Logs.d(TAG, "getPairedDevices: " + pairedDevices.toString());
         return new ArrayList<>(bluetoothAdapter.getBondedDevices());
     }
+
 
 //    void connectTo(String address) {
 //        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
@@ -326,4 +344,17 @@ public class AppBluetoothService implements BluetoothService {
 
         void onErrorToConnect();
     }
+
+
+    interface OnBluetoothBroadcastReceiverEventsListener {
+        void onStateConnected(BluetoothDevice device);
+
+        void onBluetoothServiceActionFound(BluetoothDevice device);
+
+        void onBluetoothServiceStateOn();
+
+        void onBluetoothServiceStateOff();
+    }
+
+
 }

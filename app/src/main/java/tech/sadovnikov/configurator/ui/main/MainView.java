@@ -1,23 +1,14 @@
 package tech.sadovnikov.configurator.ui.main;
 
-import android.widget.EditText;
+import com.arellomobile.mvp.MvpView;
 
-import com.hannesdorfmann.mosby3.mvp.MvpPresenter;
-import com.hannesdorfmann.mosby3.mvp.MvpView;
+interface MainView extends MvpView {
 
-import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
+    void showBluetoothView();
 
-public interface MainMvp {
+    void showConsoleView();
 
-    interface MainView extends MvpView {
-
-        void showBluetoothView();
-
-        void showConsoleView();
-
-        void showConfigurationView();
-
-
+    void showConfigurationView();
 
 //        // Вывести сообщение лога в консоль
 //        void showLog(String logsMessages);
@@ -166,8 +157,4 @@ public interface MainMvp {
 //
 //        int getSelectedPageOfViewPager();
 
-    }
-
-    interface MainPresenter extends MvpPresenter<MainView> {
-    }
 }

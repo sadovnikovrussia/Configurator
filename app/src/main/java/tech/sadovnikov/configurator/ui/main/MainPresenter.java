@@ -1,26 +1,45 @@
 package tech.sadovnikov.configurator.ui.main;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
 
-public class MainPresenter extends MvpBasePresenter<MainMvp.MainView> implements MainMvp.MainPresenter {
+@InjectViewState
+public class MainPresenter extends MvpPresenter<MainView> {
     private static final String TAG = MainPresenter.class.getSimpleName();
 
-    @Override
-    public void attachView(@NonNull MainMvp.MainView view) {
-        super.attachView(view);
-        ifViewAttached(MainMvp.MainView::showBluetoothView);
+    public MainPresenter() {
+        Log.e(TAG, "MainPresenter: ");
     }
 
     @Override
-    public void detachView() {
-        super.detachView();
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+        Log.e(TAG, "onFirstViewAttach: ");
+        getViewState().showBluetoothView();
     }
 
+    public void onBluetoothNavigationItemSelected() {
+        Log.e(TAG, "onBluetoothNavigationItemSelected: ");
+        //getViewState().showBluetoothView();
+    }
+
+    public void onNavNavigationItemSelected() {
+        // getViewState().showConfigurationView();
+    }
+
+    public void onConsoleNavigationItemSelected() {
+        // getViewState().showConfigurationView();
+    }
+
+    public void onStart() {
+    }
+
+
     @Override
-    public void destroy() {
-        super.destroy();
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy: ");
     }
 }

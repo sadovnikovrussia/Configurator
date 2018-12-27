@@ -10,6 +10,7 @@ import dagger.Provides;
 import tech.sadovnikov.configurator.di.ApplicationContext;
 import tech.sadovnikov.configurator.di.PreferenceInfo;
 import tech.sadovnikov.configurator.model.AppBluetoothService;
+import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.AppDataManager;
 import tech.sadovnikov.configurator.model.data.DataManager;
@@ -46,9 +47,17 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    BluetoothService provideBluetoothService(AppBluetoothService appBluetoothService){
-        return appBluetoothService;
+    BluetoothService provideBluetoothService(){
+        return new AppBluetoothService();
     }
+
+    @Provides
+    @Singleton
+    BluetoothBroadcastReceiver provideBluetoothReceiver(BluetoothService bluetoothService){
+        return new BluetoothBroadcastReceiver(bluetoothService);
+    }
+
+
 
 
 

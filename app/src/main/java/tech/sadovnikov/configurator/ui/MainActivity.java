@@ -25,7 +25,7 @@ import java.util.Objects;
 
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
+import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 //import tech.sadovnikov.configurator.presenter.Presenter;
 import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.ui.adapter.PairedDevicesItemView;
@@ -658,7 +658,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public boolean isAvailableDevicesFragmentResumed() {
-        return bluetoothFragment.isAvailableDevicesFragmentResumed();
+        return false;
     }
 
     @Override

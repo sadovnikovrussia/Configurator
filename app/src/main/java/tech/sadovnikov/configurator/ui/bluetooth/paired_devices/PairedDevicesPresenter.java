@@ -1,27 +1,23 @@
 package tech.sadovnikov.configurator.ui.bluetooth.paired_devices;
 
-import android.support.annotation.NonNull;
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
 
-import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
-
-import javax.inject.Inject;
-
-import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
+import tech.sadovnikov.configurator.ConfiguratorApplication;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
-public class PairedDevicesPresenter extends MvpBasePresenter<PairedDevicesMvp.View> implements PairedDevicesMvp.Presenter {
+@InjectViewState
+public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
+    private static final String TAG = PairedDevicesPresenter.class.getSimpleName();
 
     private BluetoothService bluetoothService;
 
-    public PairedDevicesPresenter(BluetoothService bluetoothService) {
-        this.bluetoothService = bluetoothService;
-    }
-
     public PairedDevicesPresenter() {
+        bluetoothService = ConfiguratorApplication.getApplicationComponent().getBluetoothService();
     }
 
-    @Override
-    public void attachView(@NonNull PairedDevicesMvp.View view) {
-        super.attachView(view);
+
+    public void onStartView() {
+        getViewState().showPairedDevices(bluetoothService.getPairedDevices());
     }
 }

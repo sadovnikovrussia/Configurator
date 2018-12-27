@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import tech.sadovnikov.configurator.entities.Configuration;
 import tech.sadovnikov.configurator.entities.Parameter;
 
-import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
+import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.ui.adapter.PairedDevicesItemView;
 
