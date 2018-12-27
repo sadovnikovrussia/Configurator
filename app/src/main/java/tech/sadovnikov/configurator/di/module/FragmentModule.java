@@ -3,6 +3,7 @@ package tech.sadovnikov.configurator.di.module;
 import android.support.v7.widget.LinearLayoutManager;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.hannesdorfmann.mosby3.mvp.MvpFragment;
 
 import dagger.Module;
 import dagger.Provides;
@@ -15,9 +16,9 @@ import tech.sadovnikov.configurator.ui.adapter.PairedDevicesRvAdapter;
 @Module
 public class FragmentModule {
 
-    private MvpAppCompatFragment fragment;
+    private MvpFragment fragment;
 
-    public FragmentModule(MvpAppCompatFragment fragment) {
+    public FragmentModule(MvpFragment fragment) {
         this.fragment = fragment;
     }
 

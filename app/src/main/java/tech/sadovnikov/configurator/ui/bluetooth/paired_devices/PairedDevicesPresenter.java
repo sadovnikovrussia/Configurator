@@ -5,7 +5,7 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import tech.sadovnikov.configurator.ConfiguratorApplication;
+import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
 @InjectViewState
@@ -16,7 +16,7 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
 
     public PairedDevicesPresenter() {
         Log.d(TAG, "PairedDevicesPresenter: ");
-        bluetoothService = ConfiguratorApplication.getApplicationComponent().getBluetoothService();
+        bluetoothService = App.getApplicationComponent().getBluetoothService();
     }
 
 

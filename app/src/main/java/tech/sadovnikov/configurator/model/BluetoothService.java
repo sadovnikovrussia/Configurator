@@ -1,10 +1,19 @@
 package tech.sadovnikov.configurator.model;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.net.wifi.aware.PublishConfig;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import io.reactivex.subjects.PublishSubject;
 import rx.Observable;
 
 
@@ -23,5 +32,9 @@ public interface BluetoothService {
     void closeAllConnections();
 
     List<BluetoothDevice> getPairedDevices();
+
+    PublishSubject<Integer> getBluetoothStateObservable();
+
+    void setBluetoothState(Integer state);
 
 }

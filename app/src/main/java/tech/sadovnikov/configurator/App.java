@@ -12,7 +12,7 @@ import tech.sadovnikov.configurator.di.module.ApplicationModule;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.DataManager;
 
-public class ConfiguratorApplication extends Application {
+public class App extends Application {
     private static final String TAG = "ConfiguratorApplication";
 
     @Inject
@@ -22,7 +22,7 @@ public class ConfiguratorApplication extends Application {
 
     ApplicationComponent applicationComponent;
 
-    public ConfiguratorApplication() {
+    public App() {
         super();
         Log.d(TAG, "ConfiguratorApplication: ");
         initializeInjection();
