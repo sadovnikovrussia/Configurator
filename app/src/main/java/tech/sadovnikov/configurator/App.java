@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import tech.sadovnikov.configurator.di.component.ApplicationComponent;
 import tech.sadovnikov.configurator.di.component.DaggerApplicationComponent;
 import tech.sadovnikov.configurator.di.module.ApplicationModule;
+import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.DataManager;
 
@@ -17,6 +18,8 @@ public class App extends Application {
 
     @Inject
     DataManager dataManager;
+    @Inject
+    BluetoothBroadcastReceiver receiver;
 
     private static BluetoothService bluetoothService;
 
@@ -28,6 +31,11 @@ public class App extends Application {
         initializeInjection();
         bluetoothService = applicationComponent.getBluetoothService();
         applicationComponent.inject(this);
+        registerBluetoothReceiver(receiver);
+
+    }
+
+    private void registerBluetoothReceiver(BluetoothBroadcastReceiver receiver) {
 
     }
 
