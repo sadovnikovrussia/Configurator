@@ -658,7 +658,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public boolean isAvailableDevicesFragmentResumed() {
-        return bluetoothFragment.isAvailableDevicesFragmentResumed();
+        return true;
     }
 
     @Override
@@ -673,7 +673,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public int getSelectedPageOfViewPager() {
-        return bluetoothFragment.getSelectedPageOfViewPager();
+        return 0;
     }
 
     @Override

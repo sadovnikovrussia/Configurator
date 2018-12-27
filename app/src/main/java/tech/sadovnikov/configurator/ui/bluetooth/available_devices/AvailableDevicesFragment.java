@@ -68,12 +68,6 @@ public class AvailableDevicesFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.i(TAG, "onAttach");
-        if (context instanceof BluetoothFragment.OnBluetoothFragmentInteractionListener) {
-            listener = (BluetoothFragment.OnBluetoothFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnBluetoothFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -85,7 +79,6 @@ public class AvailableDevicesFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        listener.onAvailableDevicesFragmentStart();
         Log.i(TAG, "onStart");
     }
 
@@ -93,14 +86,12 @@ public class AvailableDevicesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
-        listener.onAvailableDevicesFragmentResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.i(TAG, "onPause");
-        listener.onAvailableDevicesFragmentPause();
     }
 
     @Override
@@ -113,7 +104,6 @@ public class AvailableDevicesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.i(TAG, "onDestroyView");
-        listener.onAvailableDevicesFragmentDestroyView();
     }
 
     @Override
@@ -129,12 +119,5 @@ public class AvailableDevicesFragment extends Fragment {
     }
     // ---------------------------------------------------------------------------------------------
 
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        Log.i(TAG, "onPrepareOptionsMenu: " + menu);
-        menu.setGroupVisible(R.id.group_update_available_devices, true);
-        super.onPrepareOptionsMenu(menu);
-    }
 
 }

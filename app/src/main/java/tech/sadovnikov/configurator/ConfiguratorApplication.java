@@ -18,12 +18,7 @@ public class ConfiguratorApplication extends Application {
     @Inject
     DataManager dataManager;
 
-    @Inject
-    BluetoothService bluetoothService;
-
-    public BluetoothService getBluetoothService() {
-        return bluetoothService;
-    }
+    private static BluetoothService bluetoothService;
 
     ApplicationComponent applicationComponent;
 
@@ -31,7 +26,9 @@ public class ConfiguratorApplication extends Application {
         super();
         Log.d(TAG, "ConfiguratorApplication: ");
         initializeInjection();
+        bluetoothService = applicationComponent.getBluetoothService();
         applicationComponent.inject(this);
+
     }
 
     private void initializeInjection() {
@@ -39,6 +36,10 @@ public class ConfiguratorApplication extends Application {
                 .builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
+    }
+
+    public static BluetoothService getBluetoothService() {
+        return bluetoothService;
     }
 
     @Override

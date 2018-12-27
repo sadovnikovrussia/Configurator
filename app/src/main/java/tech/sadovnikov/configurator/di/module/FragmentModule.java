@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.hannesdorfmann.mosby3.mvp.MvpFragment;
+
 import dagger.Module;
 import dagger.Provides;
 import tech.sadovnikov.configurator.di.ActivityContext;
@@ -14,18 +16,18 @@ import tech.sadovnikov.configurator.ui.bluetooth.paired_devices.PairedDevicesMvp
 import tech.sadovnikov.configurator.ui.bluetooth.paired_devices.PairedDevicesPresenter;
 
 @Module
-public class BluetoothFragmentModule {
+public class FragmentModule {
 
-    private FragmentManager fragmentManager;
+    private MvpFragment fragment;
 
-    public BluetoothFragmentModule(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
+    public FragmentModule(MvpFragment fragment) {
+        this.fragment = fragment;
     }
 
     @Provides
     @PerFragment
     DevicesFragmentPagerAdapter provideDevicesFragmentPagerAdapter(){
-        return new DevicesFragmentPagerAdapter(fragmentManager);
+        return new DevicesFragmentPagerAdapter(fragment.getChildFragmentManager());
     }
 
 //    @Provides
