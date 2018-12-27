@@ -47,13 +47,20 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    BluetoothService provideBluetoothService(){
-        return new AppBluetoothService();
+    BluetoothService provideBluetoothService(AppBluetoothService appBluetoothService){
+        return appBluetoothService;
     }
 
     @Provides
     @Singleton
-    BluetoothBroadcastReceiver provideBluetoothReceiver(BluetoothService bluetoothService){
+    BluetoothBroadcastReceiver.Listener provideListener(AppBluetoothService appBluetoothService){
+        return appBluetoothService;
+    }
+
+
+    @Provides
+    @Singleton
+    BluetoothBroadcastReceiver provideBluetoothReceiver(BluetoothBroadcastReceiver.Listener bluetoothService){
         return new BluetoothBroadcastReceiver(bluetoothService);
     }
 

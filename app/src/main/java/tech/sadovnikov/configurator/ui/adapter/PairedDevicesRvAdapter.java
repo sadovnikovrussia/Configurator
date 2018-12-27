@@ -69,6 +69,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
     }
 
     public void setDevices(List<BluetoothDevice> devices) {
+        Log.d(TAG, "setDevices: ");
         this.devices = devices;
         notifyDataSetChanged();
     }

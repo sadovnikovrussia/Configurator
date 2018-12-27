@@ -37,4 +37,8 @@ public interface BluetoothService {
 
     void setBluetoothState(Integer state);
 
+    void setPairedDevices(List<BluetoothDevice> pairedDevices);
+
+    PublishSubject<List<BluetoothDevice>> getPairedDevicesObservable();
+
 }

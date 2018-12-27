@@ -29,7 +29,7 @@ import tech.sadovnikov.configurator.presenter.UiHandler;
 /**
  * Класс, прденазначенный для работы с Bluetooth соединением
  */
-public class AppBluetoothService implements BluetoothService {
+public class AppBluetoothService implements BluetoothService, BluetoothBroadcastReceiver.Listener {
     private static final String TAG = BluetoothService.class.getSimpleName();
 
     private static final java.util.UUID UUID = java.util.UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -44,6 +44,7 @@ public class AppBluetoothService implements BluetoothService {
     private Observable<String> inputStream;
 
     private PublishSubject<Integer> bluetoothState = PublishSubject.create();
+    private PublishSubject<List<BluetoothDevice>> pairedDevices = PublishSubject.create();
 
     private OnBluetoothServiceEventsListener listener;
 
@@ -61,7 +62,11 @@ public class AppBluetoothService implements BluetoothService {
         dataAnalyzer = new DataAnalyzer(handler);
     }
 
+    @Inject
     public AppBluetoothService() {
+//        if (bluetoothAdapter.isEnabled()){
+//            pairedDevices
+//        }
     }
 
     @Override
@@ -93,8 +98,18 @@ public class AppBluetoothService implements BluetoothService {
     }
 
     @Override
-    public PublishSubject getBluetoothStateObservable() {
+    public PublishSubject<Integer> getBluetoothStateObservable() {
         return bluetoothState;
+    }
+
+    @Override
+    public void setPairedDevices(List<BluetoothDevice> pairedDevices) {
+        this.pairedDevices.onNext(pairedDevices);
+    }
+
+    @Override
+    public PublishSubject<List<BluetoothDevice>> getPairedDevicesObservable() {
+        return pairedDevices;
     }
 
     private void clearAvailableDevices() {
@@ -124,6 +139,20 @@ public class AppBluetoothService implements BluetoothService {
 //        onConnecting(device);
 //
 //    }
+
+
+    @Override
+    public void onStateChanged() {
+        Log.d(TAG, "onStateChanged: ");
+        bluetoothState.onNext(bluetoothAdapter.getState());
+        pairedDevices.onNext(new ArrayList<>(bluetoothAdapter.getBondedDevices()));
+    }
+
+    @Override
+    public void onBondStateChanged() {
+        Log.d(TAG, "onBondStateChanged: ");
+        pairedDevices.onNext(new ArrayList<>(bluetoothAdapter.getBondedDevices()));
+    }
 
     private synchronized void onConnecting(BluetoothDevice device) {
         //Log.d(TAG, "Connecting to: " + device);

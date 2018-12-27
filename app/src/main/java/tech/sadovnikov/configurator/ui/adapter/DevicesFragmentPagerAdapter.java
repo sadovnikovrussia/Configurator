@@ -13,7 +13,6 @@ import tech.sadovnikov.configurator.ui.bluetooth.paired_devices.PairedDevicesFra
 public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
     private static final String TAG = "DevicesFragPagerAdapter";
 
-    private int tabsCount;
     private String[] tabNames = new String[]{"Подключенные", "Доступные"};
 
     public DevicesFragmentPagerAdapter(FragmentManager fm) {
@@ -23,7 +22,7 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return tabsCount;
+        return tabNames.length;
     }
 
     @Nullable
@@ -47,15 +46,12 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
     }
 
     public void updatePairedDevices() {
+        notifyDataSetChanged();
         //pairedDevicesFragment.updatePairedDevices();
     }
 
 //    public boolean isAvailableDevicesFragmentResumed() {
 //        return availableDevicesFragment.isResumed();
 //    }
-
-    public void setTabsCount(int count) {
-        tabsCount = count;
-    }
 
 }

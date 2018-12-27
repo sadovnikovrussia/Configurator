@@ -81,7 +81,6 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
 
     private void setUp() {
         switchBt.setOnCheckedChangeListener((buttonView, isChecked) -> getPresenter().onBtSwitchClick(isChecked));
-        devicesFragmentPagerAdapter.setTabsCount(tabLayout.getTabCount());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -110,20 +109,21 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
     @Override
     public void showDevicesContainer() {
         Log.d(TAG, "showDevicesContainer: ");
-        //viewPager.setVisibility(View.VISIBLE);
-        //tabLayout.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.VISIBLE);
+        tabLayout.setVisibility(View.VISIBLE);
         //devicesFragmentPagerAdapter
-        viewPager.setAdapter(new DevicesFragmentPagerAdapter(getChildFragmentManager()));
-        tabLayout.setupWithViewPager(viewPager);
+        //DevicesFragmentPagerAdapter devicesFragmentPagerAdapter = new DevicesFragmentPagerAdapter(getChildFragmentManager());
+        //viewPager.setAdapter(devicesFragmentPagerAdapter);
+        //tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
     public void hideDevicesContainer() {
         Log.d(TAG, "hideDevicesContainer: ");
-        //viewPager.setVisibility(View.INVISIBLE);
-        //tabLayout.setVisibility(View.INVISIBLE);
-        viewPager.setAdapter(null);
-        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setVisibility(View.INVISIBLE);
+        tabLayout.setVisibility(View.INVISIBLE);
+        //viewPager.setAdapter(null);
+        //tabLayout.setupWithViewPager(viewPager);
     }
 
     public void closeDevices() {

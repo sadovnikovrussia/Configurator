@@ -2,6 +2,7 @@ package tech.sadovnikov.configurator.ui.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 
@@ -34,6 +35,7 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer -> {
+                    Log.d(TAG, "onStart: " + integer);
                     switch (integer) {
                         case BluetoothAdapter.STATE_ON:
                             ifViewAttached(view -> view.displayBluetoothState(true));

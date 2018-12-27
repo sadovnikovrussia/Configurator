@@ -7,20 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import javax.inject.Inject;
-
-import io.reactivex.subjects.PublishSubject;
-
 public class BluetoothBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = BluetoothBroadcastReceiver.class.getSimpleName();
 
-    BluetoothService bluetoothService;
+    Listener bluetoothService;
 
-    public void setBluetoothService(BluetoothService bluetoothService) {
-        this.bluetoothService = bluetoothService;
-    }
-
-    public BluetoothBroadcastReceiver(BluetoothService bluetoothService) {
+    public BluetoothBroadcastReceiver(Listener bluetoothService) {
         this.bluetoothService = bluetoothService;
     }
 
@@ -47,6 +39,7 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                     break;
                 case BluetoothDevice.ACTION_BOND_STATE_CHANGED:
                     Log.w(TAG, "BluetoothDevice.ACTION_BOND_STATE_CHANGED");
+                    bluetoothService.onBondStateChanged();
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
                     Log.w(TAG, "BluetoothAdapter.ACTION_DISCOVERY_STARTED");
@@ -56,7 +49,7 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                     break;
                 case BluetoothAdapter.ACTION_STATE_CHANGED:
                     int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
-                    bluetoothService.setBluetoothState(state);
+                    bluetoothService.onStateChanged();
                     switch (state) {
                         // BT включился
                         case BluetoothAdapter.STATE_ON:
@@ -84,6 +77,13 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
             }
         }
 
+    }
+
+    public interface Listener{
+
+        void onStateChanged();
+
+        void onBondStateChanged();
     }
 
     interface OnBluetoothBroadcastReceiverEventsListener{

@@ -5,6 +5,10 @@ import android.util.Log;
 
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
@@ -12,6 +16,8 @@ public class PairedDevicesPresenter extends MvpBasePresenter<PairedDevicesMvp.Vi
     private static final String TAG = PairedDevicesPresenter.class.getSimpleName();
 
     private BluetoothService bluetoothService = App.getBluetoothService();
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
 
     PairedDevicesPresenter() {
         Log.d(TAG, "PairedDevicesPresenter: ");
@@ -19,24 +25,34 @@ public class PairedDevicesPresenter extends MvpBasePresenter<PairedDevicesMvp.Vi
 
     @Override
     public void onStartView() {
-        if (bluetoothService.isEnabled()) {
-            ifViewAttached(view -> view.showPairedDevices(bluetoothService.getPairedDevices()));
-        }
+        Disposable subscribe = bluetoothService.getPairedDevicesObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bluetoothDevices -> {
+                    Log.d(TAG, "onStartView: " + bluetoothDevices);
+                    ifViewAttached(view -> view.showPairedDevices(bluetoothDevices));
+                });
+        compositeDisposable.add(subscribe);
     }
 
     @Override
     public void attachView(@NonNull PairedDevicesMvp.View view) {
         super.attachView(view);
+        Log.d(TAG, "attachView: ");
     }
 
     @Override
     public void detachView() {
         super.detachView();
+        compositeDisposable.dispose();
+        compositeDisposable.clear();
+        Log.d(TAG, "detachView: ");
     }
 
     @Override
     public void destroy() {
         super.destroy();
+        Log.d(TAG, "destroy: ");
     }
 
 }
