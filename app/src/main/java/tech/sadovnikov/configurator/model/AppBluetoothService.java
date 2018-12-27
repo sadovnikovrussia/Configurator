@@ -144,8 +144,12 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     @Override
     public void onStateChanged() {
         Log.d(TAG, "onStateChanged: ");
-        bluetoothState.onNext(bluetoothAdapter.getState());
-        pairedDevices.onNext(new ArrayList<>(bluetoothAdapter.getBondedDevices()));
+
+        int state = bluetoothAdapter.getState();
+        ArrayList<BluetoothDevice> bluetoothDevices = new ArrayList<>(bluetoothAdapter.getBondedDevices());
+        Log.w(TAG, "onStateChanged: " + state + "," + bluetoothDevices );
+        bluetoothState.onNext(state);
+        pairedDevices.onNext(bluetoothDevices);
     }
 
     @Override
