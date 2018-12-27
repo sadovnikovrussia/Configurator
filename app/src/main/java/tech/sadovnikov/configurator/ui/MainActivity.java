@@ -30,6 +30,7 @@ import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.ui.adapter.PairedDevicesItemView;
 import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
+import tech.sadovnikov.configurator.ui.configuration.ConfigurationFragment;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 import static tech.sadovnikov.configurator.entities.Configuration.ALARM_INT;
@@ -673,7 +674,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
 
     @Override
     public int getSelectedPageOfViewPager() {
-        return bluetoothFragment.getSelectedPageOfViewPager();
+        return 0;
     }
 
     @Override

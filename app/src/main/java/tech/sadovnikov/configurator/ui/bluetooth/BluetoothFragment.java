@@ -14,6 +14,7 @@ import android.widget.Switch;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.PresenterType;
 
 import javax.inject.Inject;
 
@@ -197,7 +198,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        bluetoothPresenter.onStart();
+        //bluetoothPresenter.onStart();
     }
 
     @Override
@@ -240,20 +241,20 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     }
 
     // ---------------------------------------------------------------------------------------------
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        menu.setGroupVisible(R.menu.menu_configuration_options, false);
-        super.onPrepareOptionsMenu(menu);
-    }
+//    @Override
+//    public void onPrepareOptionsMenu(Menu menu) {
+//        menu.setGroupVisible(R.menu.menu_configuration_options, false);
+//        super.onPrepareOptionsMenu(menu);
+//    }
 
 //    public boolean isAvailableDevicesFragmentResumed() {
 //        return (devicesFragmentPagerAdapter != null && devicesFragmentPagerAdapter.isAvailableDevicesFragmentResumed());
 //    }
 
-    public int getSelectedPageOfViewPager() {
-        // Log.d(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
-        return viewPager.getCurrentItem();
-    }
+//    public int getSelectedPageOfViewPager() {
+//        // Log.d(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
+//        return viewPager.getCurrentItem();
+//    }
 
 
     public interface OnBluetoothFragmentInteractionListener {

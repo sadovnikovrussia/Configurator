@@ -18,19 +18,23 @@ public class MainPresenter extends MvpPresenter<MainView> {
         super.onFirstViewAttach();
         Log.e(TAG, "onFirstViewAttach: ");
         getViewState().showBluetoothView();
+        getViewState().setBluetoothNavigationPosition();
     }
 
     public void onBluetoothNavigationItemSelected() {
         Log.e(TAG, "onBluetoothNavigationItemSelected: ");
-        //getViewState().showBluetoothView();
+        getViewState().showBluetoothView();
+        getViewState().setBluetoothNavigationPosition();
     }
 
-    public void onNavNavigationItemSelected() {
-        // getViewState().showConfigurationView();
+    public void onConfigurationNavigationItemSelected() {
+        Log.e(TAG, "onConfigurationNavigationItemSelected: ");
+        getViewState().showConfigurationView();
+        getViewState().setConfigurationNavigationPosition();
     }
 
     public void onConsoleNavigationItemSelected() {
-        // getViewState().showConfigurationView();
+        //getViewState().showConfigurationView();
     }
 
     public void onStart() {

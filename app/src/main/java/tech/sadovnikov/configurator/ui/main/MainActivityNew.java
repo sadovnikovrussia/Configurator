@@ -11,6 +11,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
+import tech.sadovnikov.configurator.ui.configuration.ConfigurationFragment;
 
 public class MainActivityNew extends MvpAppCompatActivity implements MainView {
     private static final String TAG = MainActivityNew.class.getSimpleName();
@@ -19,7 +20,7 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
     MainPresenter presenter;
 
     @BindView(R.id.navigation)
-    BottomNavigationView navigationView;
+    BottomNavigationView navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +32,13 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
     }
 
     private void setUp() {
-        navigationView.setOnNavigationItemSelectedListener(menuItem -> {
+        navigation.setOnNavigationItemSelectedListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.navigation_bluetooth:
                     presenter.onBluetoothNavigationItemSelected();
                     break;
                 case R.id.navigation_configuration:
-                    presenter.onNavNavigationItemSelected();
+                    presenter.onConfigurationNavigationItemSelected();
                     break;
                 case R.id.navigation_console:
                     presenter.onConsoleNavigationItemSelected();
@@ -54,7 +55,18 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, BluetoothFragment.newInstance())
-                .commitAllowingStateLoss();
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void showConfigurationView() {
+        Log.e(TAG, "showConfigurationView: ");
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, ConfigurationFragment.newInstance())
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -66,12 +78,13 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
     }
 
     @Override
-    public void showConfigurationView() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                //.replace(R.id.container, ConsoleFragment.newInstance(), ConsoleFragment.TAG)
-                .commit();
+    public void setBluetoothNavigationPosition() {
+        navigation.getMenu().getItem(0).setChecked(true);
+    }
 
+    @Override
+    public void setConfigurationNavigationPosition() {
+        navigation.getMenu().getItem(1).setChecked(true);
     }
 
     @Override

@@ -8,6 +8,7 @@ import dagger.Module;
 import dagger.Provides;
 import tech.sadovnikov.configurator.di.PerFragment;
 import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesRvAdapter;
+import tech.sadovnikov.configurator.ui.adapter.ConfigTabsRvAdapter;
 import tech.sadovnikov.configurator.ui.adapter.DevicesFragmentPagerAdapter;
 import tech.sadovnikov.configurator.ui.adapter.PairedDevicesRvAdapter;
 
@@ -42,6 +43,12 @@ public class FragmentModule {
     @PerFragment
     AvailableDevicesRvAdapter provideAvailableDevicesRvAdapter(){
         return new AvailableDevicesRvAdapter();
+    }
+
+    @Provides
+    @PerFragment
+    ConfigTabsRvAdapter provideConfigTabsRvAdapter(){
+        return new ConfigTabsRvAdapter();
     }
 
 

@@ -1,6 +1,8 @@
 package tech.sadovnikov.configurator.ui.main;
 
 import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.*;
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 interface MainView extends MvpView {
 
@@ -9,6 +11,10 @@ interface MainView extends MvpView {
     void showConsoleView();
 
     void showConfigurationView();
+
+    void setBluetoothNavigationPosition();
+
+    void setConfigurationNavigationPosition();
 
 //        // Вывести сообщение лога в консоль
 //        void showLog(String logsMessages);

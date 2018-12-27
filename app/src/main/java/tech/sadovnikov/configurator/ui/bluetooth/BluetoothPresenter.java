@@ -31,6 +31,12 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         Log.v(TAG, "onFirstViewAttach: ");
+        getViewState().displayBluetoothState(bluetoothService.isEnabled());
+        if (bluetoothService.isEnabled()) {
+            getViewState().showDevicesContainer();
+        } else {
+            getViewState().hideDevicesContainer();
+        }
         Disposable disposable = bluetoothService.getBluetoothStateObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -50,12 +56,7 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     }
 
     public void onStart() {
-        getViewState().displayBluetoothState(bluetoothService.isEnabled());
-        if (bluetoothService.isEnabled()) {
-            getViewState().showDevicesContainer();
-        } else {
-            getViewState().hideDevicesContainer();
-        }
+
     }
 
     @Override
