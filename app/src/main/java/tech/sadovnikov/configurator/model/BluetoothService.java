@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.subjects.PublishSubject;
 import rx.Observable;
 
@@ -41,4 +42,11 @@ public interface BluetoothService {
 
     PublishSubject<List<BluetoothDevice>> getPairedDevicesObservable();
 
+    List<BluetoothDevice> getAvailableDevices();
+
+    PublishSubject<List<BluetoothDevice>> getAvailableDevicesObservable();
+
+    void startDiscovery();
+
+    void cancelDiscovery();
 }

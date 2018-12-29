@@ -19,6 +19,7 @@ public class PairedDevicesPresenter extends MvpBasePresenter<PairedDevicesMvp.Vi
 
 
     PairedDevicesPresenter(BluetoothService bluetoothService) {
+        super();
         Log.d(TAG, "PairedDevicesPresenter: ");
         this.bluetoothService = bluetoothService;
     }

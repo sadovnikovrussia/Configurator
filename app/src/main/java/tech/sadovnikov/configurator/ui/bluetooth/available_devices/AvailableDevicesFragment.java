@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.ui.bluetooth.available_devices;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,11 +8,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hannesdorfmann.mosby3.mvp.MvpFragment;
+
+import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -21,7 +24,7 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
-import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesRvAdapter;
+import tech.sadovnikov.configurator.ui.main.MainActivityNew;
 
 public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.View, AvailableDevicesMvp.Presenter>
         implements AvailableDevicesMvp.View {
@@ -43,7 +46,7 @@ public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.Vi
     @NonNull
     @Override
     public AvailableDevicesMvp.Presenter createPresenter() {
-        return new AvailableDevicesPresenter();
+        return new AvailableDevicesPresenter(((MainActivityNew) Objects.requireNonNull(getActivity())).getActivityComponent().getBluetoothService());
     }
 
     public static AvailableDevicesFragment newInstance() {
@@ -77,6 +80,11 @@ public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.Vi
     private void setUp() {
         rvAvailableDevices.setLayoutManager(linearLayoutManager);
         rvAvailableDevices.setAdapter(availableDevicesRvAdapter);
+    }
+
+    @Override
+    public void showAvailableDevices(List<BluetoothDevice> availableDevices) {
+
     }
 
     public void updateAvailableDevices() {
@@ -154,5 +162,6 @@ public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.Vi
         super.onDetach();
         Log.i(TAG, "onDetach");
     }
+
     // ---------------------------------------------------------------------------------------------
 }

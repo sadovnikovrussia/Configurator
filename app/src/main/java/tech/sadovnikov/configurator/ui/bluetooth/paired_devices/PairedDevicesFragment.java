@@ -23,7 +23,6 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
-import tech.sadovnikov.configurator.ui.adapter.PairedDevicesRvAdapter;
 import tech.sadovnikov.configurator.ui.main.MainActivityNew;
 
 public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, PairedDevicesMvp.Presenter>

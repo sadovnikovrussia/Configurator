@@ -25,16 +25,16 @@ public class DataAnalyzer {
     static final int WHAT_COMMAND_DATA = 1;
     static final int WHAT_MAIN_LOG = 0;
 
-    private UiHandler uiHandler;
+    //private UiHandler uiHandler;
 
     private String buffer = "";
     private String logType;
 
     private DataParser dataParser = new DataParser();
 
-    public DataAnalyzer(UiHandler handler) {
-        uiHandler = handler;
-    }
+//    public DataAnalyzer(UiHandler handler) {
+//        uiHandler = handler;
+//    }
 
     public void analyze(String line) {
         sendLogs(line);
@@ -75,14 +75,14 @@ public class DataAnalyzer {
         msgObj.put(PARAMETER_NAME, parameter);
         msg.obj = msgObj;
         // Log.d(TAG, "sendCommand: " + ((HashMap)msg.obj).get(DataAnalyzer.PARAMETER_VALUE).toString());
-        uiHandler.sendMessage(msg);
+//        uiHandler.sendMessage(msg);
     }
 
     private void sendLogs(String line) {
         Message msg = new Message();
         msg.what = WHAT_MAIN_LOG;
         msg.obj = line;
-        uiHandler.sendMessage(msg);
+        //uiHandler.sendMessage(msg);
     }
 
 }

@@ -21,7 +21,6 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
-import tech.sadovnikov.configurator.ui.adapter.ConfigTabsRvAdapter;
 
 
 public class ConfigurationFragment extends MvpFragment<ConfigurationMvp.View, ConfigurationPresenter> implements ConfigurationMvp.View {

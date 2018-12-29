@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.util.Log;
 
 import javax.inject.Inject;
@@ -29,6 +30,7 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
             // Logs.w(TAG, action);
             switch (action) {
                 case BluetoothDevice.ACTION_FOUND:
+                    listener.onFoundDevice(intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
                     Log.w(TAG, "ACTION_FOUND");
                     Log.w(TAG, "onReceive: " + intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) );
                     //listener.onBluetoothServiceActionFound((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
@@ -48,6 +50,7 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                     listener.onBondStateChanged();
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
+                    listener.onDiscoveryStarted();
                     Log.w(TAG, "BluetoothAdapter.ACTION_DISCOVERY_STARTED");
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
@@ -92,6 +95,10 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
         void onStateChanged();
 
         void onBondStateChanged();
+
+        void onFoundDevice(BluetoothDevice device);
+
+        void onDiscoveryStarted();
     }
 
 }

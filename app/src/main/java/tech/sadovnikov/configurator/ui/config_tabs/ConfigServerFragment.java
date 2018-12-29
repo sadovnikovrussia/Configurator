@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.ui;
+package tech.sadovnikov.configurator.ui.config_tabs;
 
 
 import android.content.Context;
@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.ui.OnLlParameterClickListener;
 
 
 public class ConfigServerFragment extends Fragment {
@@ -252,7 +253,7 @@ public class ConfigServerFragment extends Fragment {
     }
     // ---------------------------------------------------------------------------------------------
 
-    interface OnConfigServerFragmentInteractionListener {
+    public interface OnConfigServerFragmentInteractionListener {
         void onConfigServerFragmentStart();
 
         void onEtServerFocusChange(boolean hasFocus);

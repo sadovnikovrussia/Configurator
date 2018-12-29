@@ -14,7 +14,7 @@ public class OnLlParameterClickListener implements OnClickListener {
 
     Context context;
 
-    OnLlParameterClickListener(Context context) {
+    public OnLlParameterClickListener(Context context) {
         this.context = context;
     }
 

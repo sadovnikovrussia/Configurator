@@ -23,6 +23,7 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
         implements MainMvp.MainView {
     private static final String TAG = MainActivityNew.class.getSimpleName();
 
+    @NonNull
     private ActivityComponent activityComponent;
 
     @BindView(R.id.navigation)
@@ -31,9 +32,11 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
     FragmentTransaction fragmentTransaction = getSupportFragmentManager()
             .beginTransaction().addToBackStack(null);
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.w(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initializeDaggerComponent();
@@ -49,13 +52,14 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
 
     @NonNull
     @Override
-    public MainPresenter createPresenter() {
+    public MainMvp.MainPresenter createPresenter() {
         return new MainPresenter();
     }
 
 
     @Override
     public void showBluetoothView() {
+        Log.d(TAG, "showBluetoothView: ");
         fragmentTransaction
                 .replace(R.id.container, BluetoothFragment.newInstance(), BluetoothFragment.TAG)
                 .commit();
@@ -78,35 +82,57 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
 
     public MainActivityNew() {
         super();
+        Log.w(TAG, "onConstructor: ");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.w(TAG, "onDestroy: ");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.w(TAG, "onPause: ");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.w(TAG, "onResume: ");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Log.w(TAG, "onStart: ");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        Log.w(TAG, "onStop: ");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
+        Log.w(TAG, "onRestart: ");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.w(TAG, "onSaveInstanceState: " + outState);
+        outState.putBoolean("restart", true);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        boolean restart = savedInstanceState.getBoolean("restart");
+        Log.w(TAG, "onRestoreInstanceState: " + restart);
+        getPresenter().onRestoreInstanceState(restart);
+        super.onRestoreInstanceState(savedInstanceState);
     }
 }

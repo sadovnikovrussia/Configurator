@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.ui;
+package tech.sadovnikov.configurator.ui.config_tabs;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -239,7 +239,7 @@ public class ConfigEventsFragment extends Fragment {
     }
     // ---------------------------------------------------------------------------------------------
 
-    interface OnConfigEventsFragmentInteractionListener {
+    public interface OnConfigEventsFragmentInteractionListener {
 
         void onConfigEventsFragmentStart();
 

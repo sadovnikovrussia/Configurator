@@ -165,5 +165,6 @@ public interface MainMvp {
     }
 
     interface MainPresenter extends MvpPresenter<MainView> {
+        void onRestoreInstanceState(boolean restart);
     }
 }

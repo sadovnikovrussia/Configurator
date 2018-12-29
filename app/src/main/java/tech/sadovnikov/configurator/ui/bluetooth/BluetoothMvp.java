@@ -27,6 +27,10 @@ public interface BluetoothMvp {
         void onBtSwitchClick(boolean isChecked);
 
         void onStart();
+
+        void onAvailableDevicesViewShown();
+
+        void onPairedDevicesViewShown();
     }
 
 }

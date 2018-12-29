@@ -2,6 +2,7 @@ package tech.sadovnikov.configurator.ui.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
@@ -17,20 +18,19 @@ import tech.sadovnikov.configurator.model.BluetoothService;
 
 public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> implements BluetoothMvp.Presenter {
     private static final String TAG = BluetoothPresenter.class.getSimpleName();
-
     private BluetoothService bluetoothService;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     BluetoothPresenter(BluetoothService bluetoothService) {
-        Log.d(TAG, "BluetoothPresenter: " + bluetoothService);
+        Log.v(TAG, "onConstructor");
         this.bluetoothService = bluetoothService;
     }
 
     @Override
     public void attachView(@NonNull BluetoothMvp.View view) {
         super.attachView(view);
-
+        Log.v(TAG, "attachView: ");
     }
 
     @Override
@@ -62,15 +62,30 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
     }
 
     @Override
+    public void onAvailableDevicesViewShown() {
+        // Todo Обработать permission
+        // ifViewAttached(view -> ((AppCompatActivity) view).permis);
+        bluetoothService.startDiscovery();
+    }
+
+    @Override
+    public void onPairedDevicesViewShown() {
+        bluetoothService.cancelDiscovery();
+    }
+
+    @Override
     public void detachView() {
         super.detachView();
+        Log.v(TAG, "detachView: ");
         compositeDisposable.dispose();
         compositeDisposable.clear();
+
     }
 
     @Override
     public void destroy() {
         super.destroy();
+        Log.v(TAG, "destroy: ");
     }
 
     @Override

@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.ui.adapter;
+package tech.sadovnikov.configurator.ui.bluetooth;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,7 +17,7 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public DevicesFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
-        Log.v(TAG, "DevicesFragmentPagerAdapter: ");
+        Log.v(TAG, "onConstructor: ");
     }
 
     @Override
