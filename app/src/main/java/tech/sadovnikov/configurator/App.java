@@ -19,7 +19,7 @@ import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.DataManager;
 
 public class App extends Application {
-    private static final String TAG = "ConfiguratorApplication";
+    private static final String TAG = App.class.getSimpleName();
 
     @Inject
     DataManager dataManager;
@@ -61,11 +61,16 @@ public class App extends Application {
         return bluetoothService;
     }
 
+    public ApplicationComponent getApplicationComponent() {
+        return applicationComponent;
+    }
+
+
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate: ");
-        Log.d(TAG, "App: " + this + "," + bluetoothService + "," + receiver);
+        Log.d(TAG, "App: " + bluetoothService);
         registerBluetoothReceiver(receiver);
         bluetoothService.getBluetoothStateObservable()
                 .subscribeOn(Schedulers.io())

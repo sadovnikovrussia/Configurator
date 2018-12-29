@@ -32,7 +32,7 @@ import tech.sadovnikov.configurator.presenter.UiHandler;
  * Класс, прденазначенный для работы с Bluetooth соединением
  */
 public class AppBluetoothService implements BluetoothService, BluetoothBroadcastReceiver.Listener {
-    private static final String TAG = BluetoothService.class.getSimpleName();
+    private static final String TAG = AppBluetoothService.class.getSimpleName();
 
     private static final java.util.UUID UUID = java.util.UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -69,6 +69,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 //        if (bluetoothAdapter.isEnabled()){
 //            pairedDevices
 //        }
+        Log.d(TAG, "AppBluetoothService: Constructor: " + this);
         bluetoothState
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -150,6 +151,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         int state = bluetoothAdapter.getState();
         ArrayList<BluetoothDevice> bluetoothDevices = new ArrayList<>(bluetoothAdapter.getBondedDevices());
         Log.w(TAG, "onStateChanged: " + Thread.currentThread().getName() + "," + state + "," + bluetoothDevices);
+        Log.d(TAG, "onStateChanged: " + this);
         bluetoothState.onNext(state);
         pairedDevices.onNext(bluetoothDevices);
     }

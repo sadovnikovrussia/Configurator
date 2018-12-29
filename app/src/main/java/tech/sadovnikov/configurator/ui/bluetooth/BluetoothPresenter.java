@@ -36,6 +36,7 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
         else ifViewAttached(BluetoothMvp.View::hideDevicesContainer);
         PublishSubject<Integer> bluetoothStateObservable = bluetoothService.getBluetoothStateObservable();
         Log.d(TAG, "onStart: " + bluetoothStateObservable);
+        Log.d(TAG, "onStart: " + bluetoothService);
         Disposable disposable = bluetoothStateObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
