@@ -12,7 +12,7 @@ public class AvailableDevicesPresenter extends MvpBasePresenter<AvailableDevices
         implements AvailableDevicesMvp.Presenter {
     private static final String TAG = AvailableDevicesPresenter.class.getSimpleName();
 
-    BluetoothService bluetoothService = App.getBluetoothService();
+    //BluetoothService bluetoothService = App.getBluetoothService();
 
     AvailableDevicesPresenter() {
         Log.i(TAG, "AvailableDevicesPresenter: ");

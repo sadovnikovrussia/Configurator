@@ -18,9 +18,14 @@ import tech.sadovnikov.configurator.model.BluetoothService;
 public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> implements BluetoothMvp.Presenter {
     private static final String TAG = BluetoothPresenter.class.getSimpleName();
 
-    private BluetoothService bluetoothService = App.getBluetoothService();
+    private BluetoothService bluetoothService;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    BluetoothPresenter(BluetoothService bluetoothService) {
+        Log.d(TAG, "BluetoothPresenter: " + bluetoothService);
+        this.bluetoothService = bluetoothService;
+    }
 
     @Override
     public void attachView(@NonNull BluetoothMvp.View view) {
@@ -30,22 +35,20 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
 
     @Override
     public void onStart() {
-        Log.e(TAG, "onStart:");
         ifViewAttached(view -> view.displayBluetoothState(bluetoothService.isEnabled()));
         if (bluetoothService.isEnabled()) ifViewAttached(BluetoothMvp.View::showDevicesContainer);
         else ifViewAttached(BluetoothMvp.View::hideDevicesContainer);
         PublishSubject<Integer> bluetoothStateObservable = bluetoothService.getBluetoothStateObservable();
-        Log.d(TAG, "onStart: " + bluetoothStateObservable);
-        Log.d(TAG, "onStart: " + bluetoothService);
         Disposable disposable = bluetoothStateObservable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer -> {
-                            Log.d(TAG, "ПРИЛЕТЕЛО: " + integer + "," + Thread.currentThread().getName());
                             switch (integer) {
+                                case BluetoothAdapter.STATE_TURNING_ON:
+                                    ifViewAttached(BluetoothMvp.View::showTurningOn);
+                                    break;
                                 case BluetoothAdapter.STATE_ON:
                                     ifViewAttached(view -> view.displayBluetoothState(true));
                                     ifViewAttached(BluetoothMvp.View::showDevicesContainer);
+                                    ifViewAttached(BluetoothMvp.View::hideTurningOn);
                                     break;
                                 case BluetoothAdapter.STATE_OFF:
                                     ifViewAttached(view -> view.displayBluetoothState(false));

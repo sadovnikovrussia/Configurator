@@ -7,14 +7,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import javax.inject.Inject;
+
 public class BluetoothBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = BluetoothBroadcastReceiver.class.getSimpleName();
 
-    Listener bluetoothService;
+    private Listener listener;
 
-    public BluetoothBroadcastReceiver(Listener bluetoothService) {
-        this.bluetoothService = bluetoothService;
-        Log.d(TAG, "BluetoothBroadcastReceiver: " + bluetoothService);
+
+    public BluetoothBroadcastReceiver() {
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -40,7 +45,7 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                     break;
                 case BluetoothDevice.ACTION_BOND_STATE_CHANGED:
                     Log.w(TAG, "BluetoothDevice.ACTION_BOND_STATE_CHANGED");
-                    bluetoothService.onBondStateChanged();
+                    listener.onBondStateChanged();
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
                     Log.w(TAG, "BluetoothAdapter.ACTION_DISCOVERY_STARTED");
@@ -51,8 +56,8 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                 case BluetoothAdapter.ACTION_STATE_CHANGED:
                     int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
                     Log.d(TAG, "onReceive: " + Thread.currentThread().getName());
-                    Log.d(TAG, "onReceive: " + bluetoothService);
-                    bluetoothService.onStateChanged();
+                    Log.d(TAG, "onReceive: " + listener);
+                    listener.onStateChanged();
                     switch (state) {
                         // BT включился
                         case BluetoothAdapter.STATE_ON:
@@ -89,13 +94,4 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
         void onBondStateChanged();
     }
 
-    interface OnBluetoothBroadcastReceiverEventsListener{
-        void onStateConnected(BluetoothDevice device);
-
-        void onBluetoothServiceActionFound(BluetoothDevice device);
-
-        void onBluetoothServiceStateOn();
-
-        void onBluetoothServiceStateOff();
-    }
 }

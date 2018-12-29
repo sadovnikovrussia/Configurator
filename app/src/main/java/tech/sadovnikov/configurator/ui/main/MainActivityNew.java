@@ -14,12 +14,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.model.BluetoothService;
+import tech.sadovnikov.configurator.di.component.ActivityComponent;
+import tech.sadovnikov.configurator.di.component.DaggerActivityComponent;
+import tech.sadovnikov.configurator.di.module.ActivityModule;
 import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
 
 public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainPresenter>
         implements MainMvp.MainView {
     private static final String TAG = MainActivityNew.class.getSimpleName();
+
+    private ActivityComponent activityComponent;
 
     @BindView(R.id.navigation)
     BottomNavigationView navigationView;
@@ -32,12 +36,15 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Log.d(TAG, "onCreate: " + App.getBluetoothService());
-        App.getBluetoothService().getBluetoothStateObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(integer -> Log.i(TAG, "onCreate: АЛЛИЛУЯ"));
+        initializeDaggerComponent();
+    }
 
+    private void initializeDaggerComponent() {
+        activityComponent = DaggerActivityComponent
+                .builder()
+                .applicationComponent(((App) getApplication()).getApplicationComponent())
+                .activityModule(new ActivityModule(this))
+                .build();
     }
 
     @NonNull
@@ -45,6 +52,7 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
     public MainPresenter createPresenter() {
         return new MainPresenter();
     }
+
 
     @Override
     public void showBluetoothView() {
@@ -63,8 +71,10 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
 
     }
 
-
-
+    @NonNull
+    public ActivityComponent getActivityComponent() {
+        return activityComponent;
+    }
 
     public MainActivityNew() {
         super();

@@ -7,11 +7,15 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.hannesdorfmann.mosby3.mvp.MvpFragment;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -24,9 +28,11 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
+import tech.sadovnikov.configurator.ui.MainActivity;
 import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.ui.adapter.DevicesFragmentPagerAdapter;
 import tech.sadovnikov.configurator.ui.adapter.PairedDevicesItemView;
+import tech.sadovnikov.configurator.ui.main.MainActivityNew;
 
 public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothMvp.Presenter> implements BluetoothMvp.View {
     public static final String TAG = BluetoothFragment.class.getSimpleName();
@@ -38,12 +44,19 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
     TabLayout tabLayout;
     @BindView(R.id.view_pager_devices)
     ViewPager viewPager;
+    @BindView(R.id.tv_bluetooth_turning_on)
+    TextView tvTurningOn;
 
     @Inject
     DevicesFragmentPagerAdapter devicesFragmentPagerAdapter;
+
     FragmentComponent fragmentComponent;
-    
+
     private OnBluetoothFragmentInteractionListener listener;
+
+    public BluetoothFragment() {
+        Log.v(TAG, "BluetoothFragment: ");
+    }
 
     public static BluetoothFragment newInstance() {
         Log.v(TAG, "newInstance: ");
@@ -53,14 +66,10 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
         return fragment;
     }
 
-    public BluetoothFragment() {
-        Log.v(TAG, "BluetoothFragment: ");
-    }
-
     @NonNull
     @Override
     public BluetoothMvp.Presenter createPresenter() {
-        return new BluetoothPresenter();
+        return new BluetoothPresenter(((MainActivityNew) Objects.requireNonNull(getActivity())).getActivityComponent().getBluetoothService());
     }
 
     @Override
@@ -71,10 +80,6 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
         ButterKnife.bind(this, inflate);
         initDaggerAndInject();
         setUp();
-        App.getBluetoothService().getBluetoothStateObservable()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.newThread())
-                .subscribe(integer -> Log.i(TAG, "onCreateView: АЛЛИЛУЯ" + Thread.currentThread().getName()));
         return inflate;
     }
 
@@ -97,6 +102,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
             @Override
             public void onPageSelected(int position) {
                 Log.d(TAG, "onPageSelected: " + String.valueOf(position));
+                //listener.onDevicesPageSelected(position);
             }
 
             @Override
@@ -115,61 +121,24 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
 
     @Override
     public void showDevicesContainer() {
-        Log.d(TAG, "showDevicesContainer: ");
-        viewPager.setVisibility(View.VISIBLE);
-        tabLayout.setVisibility(View.VISIBLE);
-        //devicesFragmentPagerAdapter
-        //DevicesFragmentPagerAdapter devicesFragmentPagerAdapter = new DevicesFragmentPagerAdapter(getChildFragmentManager());
-        //viewPager.setAdapter(devicesFragmentPagerAdapter);
-        //tabLayout.setupWithViewPager(viewPager);
-    }
-
-    @Override
-    public void hideDevicesContainer() {
-        Log.d(TAG, "hideDevicesContainer: ");
-        viewPager.setVisibility(View.INVISIBLE);
-        tabLayout.setVisibility(View.INVISIBLE);
-        //viewPager.setAdapter(null);
-        //tabLayout.setupWithViewPager(viewPager);
-    }
-
-    public void closeDevices() {
-        //devicesFragmentPagerAdapter = null;
-        viewPager.setAdapter(null);
-        // viewPager.removeOnPageChangeListener();
-        tabLayout.setupWithViewPager(null);
-    }
-
-    public void openDevices() {
         viewPager.setAdapter(devicesFragmentPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    public void setSwitchBtState(boolean state) {
-        if (switchBt != null) {
-            switchBt.setChecked(state);
-        }
+    @Override
+    public void hideDevicesContainer() {
+        viewPager.setAdapter(null);
+        tabLayout.setupWithViewPager(null);
     }
 
-    public void showDevices() {
-        viewPager.setVisibility(View.VISIBLE);
-        tabLayout.setVisibility(View.VISIBLE);
+    @Override
+    public void showTurningOn() {
+        tvTurningOn.setVisibility(View.VISIBLE);
     }
 
-    public void hideDevices() {
-        Log.d(TAG, "hideDevices: ");
-        viewPager.setVisibility(View.INVISIBLE);
-        tabLayout.setVisibility(View.INVISIBLE);
-    }
-
-    public void updateAvailableDevices() {
-        Log.d(TAG, "updateAvailableDevices: ");
-        if (devicesFragmentPagerAdapter != null)
-            devicesFragmentPagerAdapter.updateAvailableDevices();
-    }
-
-    public void updatePairedDevices() {
-        if (devicesFragmentPagerAdapter != null) devicesFragmentPagerAdapter.updatePairedDevices();
+    @Override
+    public void hideTurningOn() {
+        tvTurningOn.setVisibility(View.GONE);
     }
 
     // ---------------------------------------------------------------------------------------------

@@ -25,8 +25,8 @@ import java.util.Objects;
 
 import tech.sadovnikov.configurator.Contract;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 //import tech.sadovnikov.configurator.presenter.Presenter;
+import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesItemView;
 import tech.sadovnikov.configurator.ui.adapter.PairedDevicesItemView;
 import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
@@ -72,7 +72,7 @@ import static tech.sadovnikov.configurator.entities.Configuration.UPOWER;
 import static tech.sadovnikov.configurator.entities.Configuration.UPOWER_THLD;
 
 
-public class MainActivity extends AppCompatActivity implements Contract.View,
+public abstract class MainActivity extends AppCompatActivity implements Contract.View,
         BluetoothFragment.OnBluetoothFragmentInteractionListener,
         ConfigurationFragment.OnConfigurationFragmentInteractionListener,
         ConsoleFragment.OnConsoleFragmentInteractionListener,
@@ -508,7 +508,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View,
         bluetoothFragment.hideDevices();
     }
 
-    @Override
+
     public void unregisterBluetoothBroadcastReceiver(BluetoothBroadcastReceiver bluetoothBroadcastReceiver) {
         unregisterReceiver(bluetoothBroadcastReceiver);
     }

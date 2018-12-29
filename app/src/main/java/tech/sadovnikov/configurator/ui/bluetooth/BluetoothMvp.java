@@ -16,6 +16,10 @@ public interface BluetoothMvp {
 
         void hideDevicesContainer();
 
+        void showTurningOn();
+
+        void hideTurningOn();
+
     }
 
     interface Presenter extends MvpPresenter<View> {

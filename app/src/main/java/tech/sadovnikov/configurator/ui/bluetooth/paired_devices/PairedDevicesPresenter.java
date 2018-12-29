@@ -9,22 +9,23 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
 public class PairedDevicesPresenter extends MvpBasePresenter<PairedDevicesMvp.View> implements PairedDevicesMvp.Presenter {
     private static final String TAG = PairedDevicesPresenter.class.getSimpleName();
 
-    private BluetoothService bluetoothService = App.getBluetoothService();
+    private BluetoothService bluetoothService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
-    PairedDevicesPresenter() {
+    PairedDevicesPresenter(BluetoothService bluetoothService) {
         Log.d(TAG, "PairedDevicesPresenter: ");
+        this.bluetoothService = bluetoothService;
     }
 
     @Override
     public void onStartView() {
+        ifViewAttached(view -> view.showPairedDevices(bluetoothService.getPairedDevices()));
         Disposable subscribe = bluetoothService.getPairedDevicesObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

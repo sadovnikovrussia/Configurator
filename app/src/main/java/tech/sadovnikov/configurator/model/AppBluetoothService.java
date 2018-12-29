@@ -3,10 +3,6 @@ package tech.sadovnikov.configurator.model;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.net.wifi.aware.PublishConfig;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -16,14 +12,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
+import io.reactivex.*;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
-import rx.Observable;
-import rx.Subscriber;
-import rx.observables.StringObservable;
 import tech.sadovnikov.configurator.presenter.DataAnalyzer;
 import tech.sadovnikov.configurator.presenter.UiHandler;
 
@@ -45,7 +37,8 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     //private Observable<List<BluetoothDevice>> availableDevices;
     private Observable<String> inputStream;
 
-    public PublishSubject<Integer> bluetoothState = PublishSubject.create();
+    private Emitter<Integer> stateEmitter;
+    public PublishSubject<Integer> bluetoothState;
     private PublishSubject<List<BluetoothDevice>> pairedDevices = PublishSubject.create();
 
     private OnBluetoothServiceEventsListener listener;
@@ -64,16 +57,10 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         dataAnalyzer = new DataAnalyzer(handler);
     }
 
-    @Inject
+
     public AppBluetoothService() {
-//        if (bluetoothAdapter.isEnabled()){
-//            pairedDevices
-//        }
         Log.d(TAG, "AppBluetoothService: Constructor: " + this);
-        bluetoothState
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(integer -> Log.i(TAG, "AppBluetoothService: " + integer + ", " + Thread.currentThread().getName()));
+        bluetoothState = PublishSubject.create();
     }
 
     @Override
@@ -133,27 +120,13 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 
     @Override
     public List<BluetoothDevice> getPairedDevices() {
-        //Logs.d(TAG, "getPairedDevices: " + pairedDevices.toString());
         return new ArrayList<>(bluetoothAdapter.getBondedDevices());
     }
 
-
-//    void connectTo(String address) {
-//        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
-//        listener.onConnectingTo(device.getName());
-//        onConnecting(device);
-//
-//    }
-
-
     @Override
     public void onStateChanged() {
-        int state = bluetoothAdapter.getState();
-        ArrayList<BluetoothDevice> bluetoothDevices = new ArrayList<>(bluetoothAdapter.getBondedDevices());
-        Log.w(TAG, "onStateChanged: " + Thread.currentThread().getName() + "," + state + "," + bluetoothDevices);
-        Log.d(TAG, "onStateChanged: " + this);
-        bluetoothState.onNext(state);
-        pairedDevices.onNext(bluetoothDevices);
+        bluetoothState.onNext(bluetoothAdapter.getState());
+        // pairedDevices.onNext(new ArrayList<>(bluetoothAdapter.getBondedDevices()));
     }
 
     @Override
@@ -202,7 +175,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     }
 
     @Override
-    public Observable<String> outputStream() {
+    public rx.Observable<String> outputStream() {
         return null;
     }
 
@@ -310,24 +283,24 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
                 // Log.d(TAG, "Не удалось получить InputStream: " + e.getMessage());
             }
             readerSerial = tmpReaderSerial;
-            inputStream = StringObservable.from(readerSerial);
-            inputStream.subscribe(new Subscriber<String>() {
-
-                @Override
-                public void onCompleted() {
-
-                }
-
-                @Override
-                public void onError(Throwable e) {
-
-                }
-
-                @Override
-                public void onNext(String s) {
-
-                }
-            });
+//            inputStream = StringObservable.from(readerSerial);
+//            inputStream.subscribe(new Subscriber<String>() {
+//
+//                @Override
+//                public void onCompleted() {
+//
+//                }
+//
+//                @Override
+//                public void onError(Throwable e) {
+//
+//                }
+//
+//                @Override
+//                public void onNext(String s) {
+//
+//                }
+//            });
 
             try {
                 // Log.d(TAG, "Пытаемся создать OutputStream");

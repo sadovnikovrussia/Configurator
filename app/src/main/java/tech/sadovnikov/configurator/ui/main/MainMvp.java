@@ -1,11 +1,7 @@
 package tech.sadovnikov.configurator.ui.main;
 
-import android.widget.EditText;
-
 import com.hannesdorfmann.mosby3.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby3.mvp.MvpView;
-
-import tech.sadovnikov.configurator.presenter.BluetoothBroadcastReceiver;
 
 public interface MainMvp {
 

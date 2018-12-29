@@ -23,19 +23,39 @@ public class App extends Application {
 
     @Inject
     DataManager dataManager;
+    @Inject
+    BluetoothBroadcastReceiver receiver;
+    @Inject
+    BluetoothService bluetoothService;
 
-    private BluetoothBroadcastReceiver receiver;
-    private static BluetoothService bluetoothService;
-
-    ApplicationComponent applicationComponent;
+    private ApplicationComponent applicationComponent;
 
     public App() {
         super();
         Log.d(TAG, "ConfiguratorApplication: ");
-        initializeInjection();
-        bluetoothService = applicationComponent.getBluetoothService();
-        receiver = applicationComponent.getBluetoothBroadcastReceiver();
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initializeDaggerComponent();
+        //bluetoothService = applicationComponent.getBluetoothService();
+        //receiver = applicationComponent.getBluetoothBroadcastReceiver();
         applicationComponent.inject(this);
+        receiver.setListener((BluetoothBroadcastReceiver.Listener) bluetoothService);
+        registerBluetoothReceiver(receiver);
+        Log.d(TAG, "onCreate: " + bluetoothService + receiver + dataManager);
+        bluetoothService.getBluetoothStateObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> Log.i(TAG, "APP: АЛЛИЛУЯ"));
+    }
+
+    private void initializeDaggerComponent() {
+        applicationComponent = DaggerApplicationComponent
+                .builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
     }
 
     private void registerBluetoothReceiver(BluetoothBroadcastReceiver receiver) {
@@ -50,34 +70,17 @@ public class App extends Application {
         getApplicationContext().registerReceiver(receiver, intentFilter);
     }
 
-    private void initializeInjection() {
-        applicationComponent = DaggerApplicationComponent
-                .builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
-    }
-
-    public static BluetoothService getBluetoothService() {
-        return bluetoothService;
-    }
 
     public ApplicationComponent getApplicationComponent() {
         return applicationComponent;
     }
 
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d(TAG, "onCreate: ");
-        Log.d(TAG, "App: " + bluetoothService);
-        registerBluetoothReceiver(receiver);
-        bluetoothService.getBluetoothStateObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(integer -> Log.i(TAG, "APP: АЛЛИЛУЯ"));
-
+    public BluetoothService getBluetoothService() {
+        return bluetoothService;
     }
+
+
 
     @Override
     public void onTerminate() {

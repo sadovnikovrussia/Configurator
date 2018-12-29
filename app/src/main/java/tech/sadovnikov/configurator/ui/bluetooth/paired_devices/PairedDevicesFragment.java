@@ -24,6 +24,7 @@ import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
 import tech.sadovnikov.configurator.ui.adapter.PairedDevicesRvAdapter;
+import tech.sadovnikov.configurator.ui.main.MainActivityNew;
 
 public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, PairedDevicesMvp.Presenter>
         implements PairedDevicesMvp.View, PairedDevicesRvAdapter.Listener {
@@ -45,7 +46,7 @@ public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, Pa
     @NonNull
     @Override
     public PairedDevicesMvp.Presenter createPresenter() {
-        return new PairedDevicesPresenter();
+        return new PairedDevicesPresenter(((MainActivityNew) getActivity()).getActivityComponent().getBluetoothService());
     }
 
     public static PairedDevicesFragment newInstance() {
