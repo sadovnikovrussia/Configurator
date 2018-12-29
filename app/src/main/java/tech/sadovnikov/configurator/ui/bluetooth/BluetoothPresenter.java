@@ -12,6 +12,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.App;
+import tech.sadovnikov.configurator.model.AppBluetoothService;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
 public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> implements BluetoothMvp.Presenter {
@@ -36,10 +37,10 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
         PublishSubject<Integer> bluetoothStateObservable = bluetoothService.getBluetoothStateObservable();
         Log.d(TAG, "onStart: " + bluetoothStateObservable);
         Disposable disposable = bluetoothStateObservable
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer -> {
-                            Log.d(TAG, "ПРИЛЕТЕЛО: " + integer);
+                            Log.d(TAG, "ПРИЛЕТЕЛО: " + integer + "," + Thread.currentThread().getName());
                             switch (integer) {
                                 case BluetoothAdapter.STATE_ON:
                                     ifViewAttached(view -> view.displayBluetoothState(true));

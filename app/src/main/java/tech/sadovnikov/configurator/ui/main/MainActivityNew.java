@@ -10,6 +10,9 @@ import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
 
@@ -28,7 +31,11 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Log.d(TAG, "onCreate: " + navigationView);
+        App.getBluetoothService().getBluetoothStateObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> Log.i(TAG, "onCreate: АЛЛИЛУЯ"));
+
     }
 
     @NonNull

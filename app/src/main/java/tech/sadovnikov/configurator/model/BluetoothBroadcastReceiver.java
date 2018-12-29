@@ -49,6 +49,7 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                     break;
                 case BluetoothAdapter.ACTION_STATE_CHANGED:
                     int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
+                    Log.d(TAG, "onReceive: " + Thread.currentThread().getName());
                     bluetoothService.onStateChanged();
                     switch (state) {
                         // BT включился

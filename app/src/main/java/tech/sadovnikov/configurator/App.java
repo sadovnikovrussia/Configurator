@@ -9,6 +9,8 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.di.component.ApplicationComponent;
 import tech.sadovnikov.configurator.di.component.DaggerApplicationComponent;
 import tech.sadovnikov.configurator.di.module.ApplicationModule;
@@ -65,6 +67,10 @@ public class App extends Application {
         Log.d(TAG, "onCreate: ");
         Log.d(TAG, "App: " + this + "," + bluetoothService + "," + receiver);
         registerBluetoothReceiver(receiver);
+        bluetoothService.getBluetoothStateObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> Log.i(TAG, "APP: АЛЛИЛУЯ"));
 
     }
 

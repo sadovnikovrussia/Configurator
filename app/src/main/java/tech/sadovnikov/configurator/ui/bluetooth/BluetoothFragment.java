@@ -17,6 +17,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
@@ -68,6 +71,10 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
         ButterKnife.bind(this, inflate);
         initDaggerAndInject();
         setUp();
+        App.getBluetoothService().getBluetoothStateObservable()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.newThread())
+                .subscribe(integer -> Log.i(TAG, "onCreateView: АЛЛИЛУЯ" + Thread.currentThread().getName()));
         return inflate;
     }
 

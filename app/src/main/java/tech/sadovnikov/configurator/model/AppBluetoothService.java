@@ -18,6 +18,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import rx.Observable;
 import rx.Subscriber;
@@ -43,7 +45,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     //private Observable<List<BluetoothDevice>> availableDevices;
     private Observable<String> inputStream;
 
-    private PublishSubject<Integer> bluetoothState = PublishSubject.create();
+    public PublishSubject<Integer> bluetoothState = PublishSubject.create();
     private PublishSubject<List<BluetoothDevice>> pairedDevices = PublishSubject.create();
 
     private OnBluetoothServiceEventsListener listener;
@@ -67,17 +69,19 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 //        if (bluetoothAdapter.isEnabled()){
 //            pairedDevices
 //        }
+        bluetoothState
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> Log.i(TAG, "AppBluetoothService: " + integer + ", " + Thread.currentThread().getName()));
     }
 
     @Override
     public boolean enable() {
-        // Logs.d(TAG, "enable");
         return bluetoothAdapter.enable();
     }
 
     @Override
     public boolean disable() {
-        // Logs.d(TAG, "disable");
         return bluetoothAdapter.disable();
     }
 
@@ -143,11 +147,9 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 
     @Override
     public void onStateChanged() {
-        Log.d(TAG, "onStateChanged: ");
-
         int state = bluetoothAdapter.getState();
         ArrayList<BluetoothDevice> bluetoothDevices = new ArrayList<>(bluetoothAdapter.getBondedDevices());
-        Log.w(TAG, "onStateChanged: " + state + "," + bluetoothDevices );
+        Log.w(TAG, "onStateChanged: " + Thread.currentThread().getName() + "," + state + "," + bluetoothDevices);
         bluetoothState.onNext(state);
         pairedDevices.onNext(bluetoothDevices);
     }
