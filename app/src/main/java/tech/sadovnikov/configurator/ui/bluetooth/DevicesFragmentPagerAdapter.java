@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
-import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.ui.bluetooth.available_devices.AvailableDevicesFragment;
 import tech.sadovnikov.configurator.ui.bluetooth.paired_devices.PairedDevicesFragment;
 

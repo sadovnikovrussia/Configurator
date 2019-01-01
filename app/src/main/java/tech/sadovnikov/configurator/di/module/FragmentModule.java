@@ -3,8 +3,6 @@ package tech.sadovnikov.configurator.di.module;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 
-import com.hannesdorfmann.mosby3.mvp.MvpFragment;
-
 import dagger.Module;
 import dagger.Provides;
 import tech.sadovnikov.configurator.di.PerFragment;

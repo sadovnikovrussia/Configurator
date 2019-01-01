@@ -2,12 +2,10 @@ package tech.sadovnikov.configurator.ui.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
-import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -76,21 +74,6 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
         bluetoothService.startDiscovery();
     }
 
-    public void setBluetoothPresenterListener(Listener listener) {
-        this.listener = listener;
-    }
-
-    
-    public void detachView() {
-        Log.v(TAG, "detachView: ");
-        compositeDisposable.dispose();
-        compositeDisposable.clear();
-    }
-
-    
-    public void destroy() {
-        Log.v(TAG, "destroy: ");
-    }
 
     @Override
     public void onDestroy() {

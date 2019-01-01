@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import java.util.Objects;
 
@@ -29,7 +28,7 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
-import tech.sadovnikov.configurator.ui.main.MainActivityNew;
+
 import com.arellomobile.mvp.MvpAppCompatFragment;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
@@ -173,7 +172,8 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
         for (String permission : permissions) {
             if (permission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 for (int result : grantResults) {
-                    if (result == PERMISSION_GRANTED) bluetoothPresenter.onPositiveBtRequestResult();
+                    if (result == PERMISSION_GRANTED)
+                        bluetoothPresenter.onPositiveBtRequestResult();
                 }
             }
         }
