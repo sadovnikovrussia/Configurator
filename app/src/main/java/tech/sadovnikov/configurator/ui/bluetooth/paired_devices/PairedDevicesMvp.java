@@ -10,9 +10,8 @@ import java.util.List;
 public interface PairedDevicesMvp {
 
     interface View extends MvpView {
-        void showPairedDevices(List<BluetoothDevice> pairedDevices);
 
-        void hidePairedDevices();
+        void showPairedDevices(List<BluetoothDevice> pairedDevices);
 
     }
 

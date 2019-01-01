@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.hannesdorfmann.mosby3.mvp.MvpFragment;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -45,7 +46,7 @@ public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, Pa
     @NonNull
     @Override
     public PairedDevicesMvp.Presenter createPresenter() {
-        return new PairedDevicesPresenter(((MainActivityNew) getActivity()).getActivityComponent().getBluetoothService());
+        return new PairedDevicesPresenter(((MainActivityNew) Objects.requireNonNull(getActivity())).getActivityComponent().getBluetoothService());
     }
 
     public static PairedDevicesFragment newInstance() {
@@ -59,7 +60,7 @@ public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, Pa
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
+        Log.d(TAG, "onCreateView: " + savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_paired_devices, container, false);
         ButterKnife.bind(this, view);
         initDaggerAndInject();
@@ -85,24 +86,9 @@ public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, Pa
 
     }
 
-    public void updatePairedDevices() {
-        pairedDevicesRvAdapter.updatePairedBluetoothDevices();
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        Log.d(TAG, "onHiddenChanged: " + hidden);
-    }
-
     @Override
     public void showPairedDevices(List<BluetoothDevice> devices ) {
         pairedDevicesRvAdapter.setDevices(devices);
-    }
-
-    @Override
-    public void hidePairedDevices() {
-
     }
 
 
@@ -118,6 +104,7 @@ public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, Pa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: ");
+        setRetainInstance(true);
     }
 
     @Override

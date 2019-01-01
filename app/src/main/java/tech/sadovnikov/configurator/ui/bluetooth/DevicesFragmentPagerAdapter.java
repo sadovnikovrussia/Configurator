@@ -40,18 +40,4 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
-    public void updateAvailableDevices() {
-        Log.d(TAG, "updateAvailableDevices: ");
-        //availableDevicesFragment.updateAvailableDevices();
-    }
-
-    public void updatePairedDevices() {
-        notifyDataSetChanged();
-        //pairedDevicesFragment.updatePairedDevices();
-    }
-
-//    public boolean isAvailableDevicesFragmentResumed() {
-//        return availableDevicesFragment.isResumed();
-//    }
-
 }

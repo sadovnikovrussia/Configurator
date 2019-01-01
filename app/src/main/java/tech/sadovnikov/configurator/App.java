@@ -9,8 +9,6 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.di.component.ApplicationComponent;
 import tech.sadovnikov.configurator.di.component.DaggerApplicationComponent;
 import tech.sadovnikov.configurator.di.module.ApplicationModule;
@@ -39,16 +37,9 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         initializeDaggerComponent();
-        //bluetoothService = applicationComponent.getBluetoothService();
-        //receiver = applicationComponent.getBluetoothBroadcastReceiver();
         applicationComponent.inject(this);
         receiver.setListener((BluetoothBroadcastReceiver.Listener) bluetoothService);
         registerBluetoothReceiver(receiver);
-        Log.d(TAG, "onCreate: " + bluetoothService + receiver + dataManager);
-        bluetoothService.getBluetoothStateObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(integer -> Log.i(TAG, "APP: АЛЛИЛУЯ"));
     }
 
     private void initializeDaggerComponent() {
@@ -73,11 +64,6 @@ public class App extends Application {
 
     public ApplicationComponent getApplicationComponent() {
         return applicationComponent;
-    }
-
-
-    public BluetoothService getBluetoothService() {
-        return bluetoothService;
     }
 
 

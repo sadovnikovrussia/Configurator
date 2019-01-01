@@ -1,19 +1,15 @@
 package tech.sadovnikov.configurator.ui.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
+import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
-import tech.sadovnikov.configurator.App;
-import tech.sadovnikov.configurator.model.AppBluetoothService;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
 public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> implements BluetoothMvp.Presenter {
@@ -41,6 +37,7 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
         PublishSubject<Integer> bluetoothStateObservable = bluetoothService.getBluetoothStateObservable();
         Disposable disposable = bluetoothStateObservable
                 .subscribe(integer -> {
+                            Log.d(TAG, "onNext: " + integer + bluetoothService);
                             switch (integer) {
                                 case BluetoothAdapter.STATE_TURNING_ON:
                                     ifViewAttached(BluetoothMvp.View::showTurningOn);
@@ -64,8 +61,14 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
     @Override
     public void onAvailableDevicesViewShown() {
         // Todo Обработать permission
-        // ifViewAttached(view -> ((AppCompatActivity) view).permis);
-        bluetoothService.startDiscovery();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ifViewAttached(view1 -> {
+                if (view1.checkBtPermission()) bluetoothService.startDiscovery();
+                else view1.requestBtPermission();
+            });
+
+        }
+
     }
 
     @Override
@@ -74,12 +77,17 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
     }
 
     @Override
+    public void onPositiveBtRequestResult() {
+        bluetoothService.startDiscovery();
+    }
+
+
+    @Override
     public void detachView() {
         super.detachView();
         Log.v(TAG, "detachView: ");
         compositeDisposable.dispose();
         compositeDisposable.clear();
-
     }
 
     @Override

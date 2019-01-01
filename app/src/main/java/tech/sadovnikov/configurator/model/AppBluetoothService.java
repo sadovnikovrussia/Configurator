@@ -120,16 +120,12 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 
     @Override
     public List<BluetoothDevice> getAvailableDevices() {
-        return null;
+        return availableDevices;
     }
 
     @Override
     public PublishSubject<List<BluetoothDevice>> getAvailableDevicesObservable() {
         return availableDevicesObservable;
-    }
-
-    private void clearAvailableDevices() {
-        this.availableDevices.clear();
     }
 
     @Override
@@ -140,7 +136,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     @Override
     public void onStateChanged() {
         bluetoothState.onNext(bluetoothAdapter.getState());
-        // pairedDevices.onNext(new ArrayList<>(bluetoothAdapter.getBondedDevices()));
     }
 
     @Override

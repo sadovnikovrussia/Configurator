@@ -27,7 +27,7 @@ import tech.sadovnikov.configurator.di.module.FragmentModule;
 import tech.sadovnikov.configurator.ui.main.MainActivityNew;
 
 public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.View, AvailableDevicesMvp.Presenter>
-        implements AvailableDevicesMvp.View {
+        implements AvailableDevicesMvp.View, AvailableDevicesRvAdapter.Listener {
     private static final String TAG = AvailableDevicesFragment.class.getSimpleName();
 
     @BindView(R.id.rv_available_devices)
@@ -61,7 +61,7 @@ public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.Vi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView");
+        Log.i(TAG, "onCreateView: " + savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_available_devices, container, false);
         ButterKnife.bind(this, view);
         initDaggerAndInject();
@@ -84,21 +84,13 @@ public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.Vi
 
     @Override
     public void showAvailableDevices(List<BluetoothDevice> availableDevices) {
-
-    }
-
-    public void updateAvailableDevices() {
-//        Log.i(TAG, "updateAvailableDevices: availableDevicesRvAdapter = " + availableDevicesRvAdapter);
-//        if (availableDevicesRvAdapter != null)
-//            availableDevicesRvAdapter.updateAvailableBluetoothDevices();
+        availableDevicesRvAdapter.setDevices(availableDevices);
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        Log.i(TAG, "onHiddenChanged: " + hidden);
+    public void onDeviceClicked(BluetoothDevice device) {
+        getPresenter().onDeviceClicked(device);
     }
-
 
     // ---------------------------------------------------------------------------------------------
     // States
@@ -112,6 +104,7 @@ public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.Vi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
+        setRetainInstance(true);
     }
 
     @Override

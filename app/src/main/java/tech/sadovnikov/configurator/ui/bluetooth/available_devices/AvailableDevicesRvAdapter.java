@@ -32,36 +32,21 @@ public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDev
     @Override
     public BluetoothDeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View deviceView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bluetooth_device, parent, false);
-        // Logs.d(TAG, "onCreateBluetoothDeviceViewHolder");
         return new BluetoothDeviceViewHolder(deviceView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final BluetoothDeviceViewHolder holder, final int position) {
-        // Logs.d(TAG, "onBindViewHolder");
         holder.onBind(position);
-//
-//        onBluetoothFragmentInteractionListener.onBindViewHolderOfAvailableDevicesRvAdapter(holder, position);
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onBluetoothFragmentInteractionListener.onAvailableDevicesRvItemClicked(String.valueOf(holder.tvDeviceAddress.getText()));
-//            }
-//        });
     }
 
     @Override
     public int getItemCount() {
-        // Logs.d(TAG, "getItemCount: " + String.valueOf(count));
         return devices.size();
     }
 
-    public void setDevices(List<BluetoothDevice> devices) {
+    void setDevices(List<BluetoothDevice> devices) {
         this.devices = devices;
-    }
-
-    public void updateAvailableBluetoothDevices() {
-        Log.d(TAG, "updateAvailableBluetoothDevices");
         notifyDataSetChanged();
     }
 
@@ -75,13 +60,12 @@ public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDev
 
         BluetoothDeviceViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Log.d(TAG, "onConstructor");
             ButterKnife.bind(this, itemView);
         }
 
         public void onBind(int position) {
             super.onBind(position);
-            final BluetoothDevice device = devices.get(position);
+            BluetoothDevice device = devices.get(position);
             tvDeviceName.setText(device.getName());
             tvDeviceAddress.setText(device.getAddress());
             itemView.setOnClickListener(v -> listener.onDeviceClicked(device));

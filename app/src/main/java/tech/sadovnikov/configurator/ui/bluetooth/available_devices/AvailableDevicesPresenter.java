@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.ui.bluetooth.available_devices;
 
+import android.bluetooth.BluetoothDevice;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -31,12 +32,21 @@ public class AvailableDevicesPresenter extends MvpBasePresenter<AvailableDevices
         Disposable subscribe = bluetoothService.getAvailableDevicesObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(bluetoothDevices -> {
-                    Log.d(TAG, "onStartView: " + bluetoothDevices);
-                    ifViewAttached(view -> view.showAvailableDevices(bluetoothDevices));
-                });
+                .subscribe(
+                        bluetoothDevices -> {
+                            Log.d(TAG, "onNext: " + bluetoothDevices);
+                            ifViewAttached(view -> view.showAvailableDevices(bluetoothDevices));
+                        },
+                        throwable -> Log.w(TAG, "onError: ", throwable),
+                        () -> Log.d(TAG, "onComplete: "),
+                        disposable -> Log.d(TAG, "onSubscribe: "));
         compositeDisposable.add(subscribe);
 
+    }
+
+    @Override
+    public void onDeviceClicked(BluetoothDevice device) {
+        bluetoothService.connectToDevice(device);
     }
 
     @Override
@@ -49,14 +59,14 @@ public class AvailableDevicesPresenter extends MvpBasePresenter<AvailableDevices
     public void detachView() {
         super.detachView();
         Log.i(TAG, "detachView: ");
+        compositeDisposable.dispose();
+        compositeDisposable.clear();
     }
 
     @Override
     public void destroy() {
         super.destroy();
         Log.i(TAG, "destroy: ");
-        compositeDisposable.dispose();
-        compositeDisposable.clear();
     }
 
 }

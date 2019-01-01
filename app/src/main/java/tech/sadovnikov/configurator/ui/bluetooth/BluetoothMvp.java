@@ -20,6 +20,9 @@ public interface BluetoothMvp {
 
         void hideTurningOn();
 
+        void requestBtPermission();
+
+        boolean checkBtPermission();
     }
 
     interface Presenter extends MvpPresenter<View> {
@@ -31,6 +34,8 @@ public interface BluetoothMvp {
         void onAvailableDevicesViewShown();
 
         void onPairedDevicesViewShown();
+
+        void onPositiveBtRequestResult();
     }
 
 }

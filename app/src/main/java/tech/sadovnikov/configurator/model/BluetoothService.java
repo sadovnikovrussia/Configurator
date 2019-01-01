@@ -28,7 +28,7 @@ public interface BluetoothService {
 
     Observable<String> outputStream();
 
-    void connectToDevice(BluetoothDevice device) throws IOException;
+    void connectToDevice(BluetoothDevice device);
 
     void closeAllConnections();
 

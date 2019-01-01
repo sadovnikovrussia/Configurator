@@ -31,8 +31,7 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
             switch (action) {
                 case BluetoothDevice.ACTION_FOUND:
                     listener.onFoundDevice(intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
-                    Log.w(TAG, "ACTION_FOUND");
-                    Log.w(TAG, "onReceive: " + intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) );
+                    Log.w(TAG, "ACTION_FOUND: " + intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) );
                     //listener.onBluetoothServiceActionFound((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
                     break;
                 case BluetoothDevice.ACTION_PAIRING_REQUEST:

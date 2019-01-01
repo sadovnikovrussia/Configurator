@@ -1,9 +1,12 @@
 package tech.sadovnikov.configurator.ui.bluetooth;
 
+import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,8 +29,14 @@ import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
 import tech.sadovnikov.configurator.ui.main.MainActivityNew;
 
+import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
+import static android.support.v4.content.PermissionChecker.checkSelfPermission;
+
 public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothMvp.Presenter> implements BluetoothMvp.View {
     public static final String TAG = BluetoothFragment.class.getSimpleName();
+
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
+
 
     // UI
     @BindView(R.id.sw_bluetooth)
@@ -45,7 +54,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
     FragmentComponent fragmentComponent;
 
     private OnBluetoothFragmentInteractionListener listener;
-    private int page;
+    private int pagerPage;
 
     public BluetoothFragment() {
         Log.v(TAG, "onConstructor: ");
@@ -68,12 +77,19 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView");
+        Log.d(TAG, "onCreateView: " + savedInstanceState);
         View inflate = inflater.inflate(R.layout.fragment_bluetooth, container, false);
         ButterKnife.bind(this, inflate);
         initDaggerAndInject();
         setUp();
         return inflate;
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onViewStateRestored: " + savedInstanceState);
+        super.onViewStateRestored(savedInstanceState);
+
     }
 
     private void initDaggerAndInject() {
@@ -96,7 +112,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
             public void onPageSelected(int position) {
                 Log.d(TAG, "onPageSelected: " + String.valueOf(position));
                 // Todo Сделать восстоновление состояния adapter
-                page = position;
+                pagerPage = viewPager.getCurrentItem();
                 if (position == 1) getPresenter().onAvailableDevicesViewShown();
                 else getPresenter().onPairedDevicesViewShown();
             }
@@ -108,6 +124,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
         });
         viewPager.setAdapter(devicesFragmentPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+        //viewPager.setCurrentItem(pagerPage);
     }
 
     @Override
@@ -119,16 +136,12 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
     public void showDevicesContainer() {
         viewPager.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
-        //        viewPager.setAdapter(devicesFragmentPagerAdapter);
-        //        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
     public void hideDevicesContainer() {
         viewPager.setVisibility(View.GONE);
         tabLayout.setVisibility(View.GONE);
-//        viewPager.setAdapter(null);
-//        tabLayout.setupWithViewPager(null);
     }
 
     @Override
@@ -139,6 +152,31 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
     @Override
     public void hideTurningOn() {
         tvTurningOn.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void requestBtPermission() {
+        ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+    }
+
+    @Override
+    public boolean checkBtPermission() {
+        int permission = checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_COARSE_LOCATION);
+        return permission == PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        for (String permission : permissions) {
+            if (permission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                for (int result : grantResults) {
+                    if (result == PERMISSION_GRANTED) getPresenter().onPositiveBtRequestResult();
+                }
+            }
+        }
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -153,6 +191,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate: ");
+        setRetainInstance(true);
     }
 
     @Override
@@ -209,7 +248,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt("page", page);
+        //outState.putInt("pagerPage", pagerPage);
         super.onSaveInstanceState(outState);
     }
 

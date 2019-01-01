@@ -23,7 +23,6 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
         implements MainMvp.MainView {
     private static final String TAG = MainActivityNew.class.getSimpleName();
 
-    @NonNull
     private ActivityComponent activityComponent;
 
     @BindView(R.id.navigation)
@@ -59,7 +58,7 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
 
     @Override
     public void showBluetoothView() {
-        Log.d(TAG, "showBluetoothView: ");
+        Log.w(TAG, "showBluetoothView: ");
         fragmentTransaction
                 .replace(R.id.container, BluetoothFragment.newInstance(), BluetoothFragment.TAG)
                 .commit();
@@ -123,16 +122,16 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.w(TAG, "onSaveInstanceState: " + outState);
-        outState.putBoolean("restart", true);
+//        Log.w(TAG, "onSaveInstanceState: " + outState);
+//        outState.putBoolean("restart", true);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        boolean restart = savedInstanceState.getBoolean("restart");
-        Log.w(TAG, "onRestoreInstanceState: " + restart);
-        getPresenter().onRestoreInstanceState(restart);
+//        boolean restart = savedInstanceState.getBoolean("restart");
+//        Log.w(TAG, "onRestoreInstanceState: " + restart);
+//        getPresenter().onRestoreInstanceState(restart);
         super.onRestoreInstanceState(savedInstanceState);
     }
 }
