@@ -5,13 +5,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.ActivityComponent;
@@ -27,6 +27,11 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
 
     @BindView(R.id.navigation)
     BottomNavigationView navigationView;
+    @BindView(R.id.group_configuration_actions_menu)
+    Menu actionBarMenu;
+    @BindView(R.id.item_update_available_devices)
+    MenuItem itemUpdateAvailableDevices;
+
 
     FragmentTransaction fragmentTransaction = getSupportFragmentManager()
             .beginTransaction().addToBackStack(null);

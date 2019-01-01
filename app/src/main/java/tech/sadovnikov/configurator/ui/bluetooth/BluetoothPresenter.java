@@ -18,6 +18,8 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    private Listener listener;
+
     BluetoothPresenter(BluetoothService bluetoothService) {
         Log.v(TAG, "onConstructor");
         this.bluetoothService = bluetoothService;
@@ -63,7 +65,10 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
         // Todo Обработать permission
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ifViewAttached(view1 -> {
-                if (view1.checkBtPermission()) bluetoothService.startDiscovery();
+                if (view1.checkBtPermission()) {
+                    listener.onAvailableDevicesViewShown();
+                    bluetoothService.startDiscovery();
+                }
                 else view1.requestBtPermission();
             });
 
@@ -81,6 +86,9 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
         bluetoothService.startDiscovery();
     }
 
+    public void setBluetoothPresenterListener(Listener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public void detachView() {
@@ -105,4 +113,7 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
         }
     }
 
+    interface Listener {
+        void onAvailableDevicesViewShown();
+    }
 }

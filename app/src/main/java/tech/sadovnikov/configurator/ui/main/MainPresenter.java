@@ -20,9 +20,9 @@ public class MainPresenter extends MvpBasePresenter<MainMvp.MainView> implements
         Log.w(TAG, "attachView: ");
         if (!restart) {
             ifViewAttached(MainMvp.MainView::showBluetoothView);
+
             restart = true;
         }
-
     }
 
     @Override
