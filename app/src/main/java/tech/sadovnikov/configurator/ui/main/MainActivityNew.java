@@ -32,7 +32,6 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
     @BindView(R.id.item_update_available_devices)
     MenuItem itemUpdateAvailableDevices;
 
-
     FragmentTransaction fragmentTransaction = getSupportFragmentManager()
             .beginTransaction().addToBackStack(null);
 

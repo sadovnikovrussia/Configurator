@@ -8,10 +8,6 @@ public interface BluetoothMvp {
     interface View extends MvpView {
         void displayBluetoothState(boolean state);
 
-    //    void showPairedDevices(List<BluetoothDevice> bluetoothDevices);
-    //
-    //    void showAvailableDevices(List<BluetoothDevice> bluetoothDevices);
-
         void showDevicesContainer();
 
         void hideDevicesContainer();

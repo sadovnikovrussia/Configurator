@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.di.module;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 
 import com.hannesdorfmann.mosby3.mvp.MvpFragment;
@@ -15,9 +16,9 @@ import tech.sadovnikov.configurator.ui.bluetooth.paired_devices.PairedDevicesRvA
 @Module
 public class FragmentModule {
 
-    private MvpFragment fragment;
+    private Fragment fragment;
 
-    public FragmentModule(MvpFragment fragment) {
+    public FragmentModule(Fragment fragment) {
         this.fragment = fragment;
     }
 

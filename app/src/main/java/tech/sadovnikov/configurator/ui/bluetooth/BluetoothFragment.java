@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.hannesdorfmann.mosby3.mvp.MvpFragment;
+
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import java.util.Objects;
 
@@ -28,15 +30,19 @@ import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
 import tech.sadovnikov.configurator.ui.main.MainActivityNew;
+import com.arellomobile.mvp.MvpAppCompatFragment;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
-public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothMvp.Presenter> implements BluetoothMvp.View {
+
+public class BluetoothFragment extends MvpAppCompatFragment implements BluetoothView {
     public static final String TAG = BluetoothFragment.class.getSimpleName();
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
 
+    @InjectPresenter
+    BluetoothPresenter bluetoothPresenter;
 
     // UI
     @BindView(R.id.sw_bluetooth)
@@ -68,12 +74,6 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
         return fragment;
     }
 
-    @NonNull
-    @Override
-    public BluetoothMvp.Presenter createPresenter() {
-        return new BluetoothPresenter(((MainActivityNew) Objects.requireNonNull(getActivity())).getActivityComponent().getBluetoothService());
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -101,7 +101,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
     }
 
     private void setUp() {
-        switchBt.setOnCheckedChangeListener((buttonView, isChecked) -> getPresenter().onBtSwitchClick(isChecked));
+        switchBt.setOnCheckedChangeListener((buttonView, isChecked) -> bluetoothPresenter.onBtSwitchClick(isChecked));
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -113,8 +113,8 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
                 Log.d(TAG, "onPageSelected: " + String.valueOf(position));
                 // Todo Сделать восстоновление состояния adapter
                 pagerPage = viewPager.getCurrentItem();
-                if (position == 1) getPresenter().onAvailableDevicesViewShown();
-                else getPresenter().onPairedDevicesViewShown();
+                if (position == 1) bluetoothPresenter.onAvailableDevicesViewShown();
+                else bluetoothPresenter.onPairedDevicesViewShown();
             }
 
             @Override
@@ -173,7 +173,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
         for (String permission : permissions) {
             if (permission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 for (int result : grantResults) {
-                    if (result == PERMISSION_GRANTED) getPresenter().onPositiveBtRequestResult();
+                    if (result == PERMISSION_GRANTED) bluetoothPresenter.onPositiveBtRequestResult();
                 }
             }
         }
@@ -204,7 +204,7 @@ public class BluetoothFragment extends MvpFragment<BluetoothMvp.View, BluetoothM
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        getPresenter().onStart();
+        bluetoothPresenter.onStart();
     }
 
     @Override

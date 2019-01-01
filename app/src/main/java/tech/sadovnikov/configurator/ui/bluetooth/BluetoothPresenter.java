@@ -5,6 +5,8 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -12,7 +14,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
-public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> implements BluetoothMvp.Presenter {
+@InjectViewState
+public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     private static final String TAG = BluetoothPresenter.class.getSimpleName();
     private BluetoothService bluetoothService;
 
@@ -25,33 +28,26 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
         this.bluetoothService = bluetoothService;
     }
 
-    @Override
-    public void attachView(@NonNull BluetoothMvp.View view) {
-        super.attachView(view);
-        Log.v(TAG, "attachView: ");
-    }
-
-    @Override
     public void onStart() {
-        ifViewAttached(view -> view.displayBluetoothState(bluetoothService.isEnabled()));
-        if (bluetoothService.isEnabled()) ifViewAttached(BluetoothMvp.View::showDevicesContainer);
-        else ifViewAttached(BluetoothMvp.View::hideDevicesContainer);
+        getViewState().displayBluetoothState(bluetoothService.isEnabled());
+        if (bluetoothService.isEnabled()) getViewState().showDevicesContainer();
+        else getViewState().hideDevicesContainer();
         PublishSubject<Integer> bluetoothStateObservable = bluetoothService.getBluetoothStateObservable();
         Disposable disposable = bluetoothStateObservable
                 .subscribe(integer -> {
                             Log.d(TAG, "onNext: " + integer + bluetoothService);
                             switch (integer) {
                                 case BluetoothAdapter.STATE_TURNING_ON:
-                                    ifViewAttached(BluetoothMvp.View::showTurningOn);
+                                    getViewState().showTurningOn();
                                     break;
                                 case BluetoothAdapter.STATE_ON:
-                                    ifViewAttached(view -> view.displayBluetoothState(true));
-                                    ifViewAttached(BluetoothMvp.View::showDevicesContainer);
-                                    ifViewAttached(BluetoothMvp.View::hideTurningOn);
+                                    getViewState().displayBluetoothState(true);
+                                    getViewState().showDevicesContainer();
+                                    getViewState().hideTurningOn();
                                     break;
                                 case BluetoothAdapter.STATE_OFF:
-                                    ifViewAttached(view -> view.displayBluetoothState(false));
-                                    ifViewAttached(BluetoothMvp.View::hideDevicesContainer);
+                                    getViewState().displayBluetoothState(false);
+                                    getViewState().hideDevicesContainer();
                                     break;
                             }
                         },
@@ -60,29 +56,23 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
         compositeDisposable.add(disposable);
     }
 
-    @Override
-    public void onAvailableDevicesViewShown() {
+    void onAvailableDevicesViewShown() {
         // Todo Обработать permission
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ifViewAttached(view1 -> {
-                if (view1.checkBtPermission()) {
-                    listener.onAvailableDevicesViewShown();
-                    bluetoothService.startDiscovery();
-                }
-                else view1.requestBtPermission();
-            });
-
+            if (getViewState().checkBtPermission()) {
+                listener.onAvailableDevicesViewShown();
+                bluetoothService.startDiscovery();
+            } else getViewState().requestBtPermission();
         }
-
     }
 
-    @Override
-    public void onPairedDevicesViewShown() {
+    
+    void onPairedDevicesViewShown() {
         bluetoothService.cancelDiscovery();
     }
 
-    @Override
-    public void onPositiveBtRequestResult() {
+    
+    void onPositiveBtRequestResult() {
         bluetoothService.startDiscovery();
     }
 
@@ -90,22 +80,25 @@ public class BluetoothPresenter extends MvpBasePresenter<BluetoothMvp.View> impl
         this.listener = listener;
     }
 
-    @Override
+    
     public void detachView() {
-        super.detachView();
         Log.v(TAG, "detachView: ");
         compositeDisposable.dispose();
         compositeDisposable.clear();
     }
 
-    @Override
+    
     public void destroy() {
-        super.destroy();
         Log.v(TAG, "destroy: ");
     }
 
     @Override
-    public void onBtSwitchClick(boolean isChecked) {
+    public void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.clear();
+    }
+
+    void onBtSwitchClick(boolean isChecked) {
         if (isChecked) {
             bluetoothService.enable();
         } else {
