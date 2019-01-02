@@ -1,60 +1,65 @@
 package tech.sadovnikov.configurator.ui.bluetooth.paired_devices;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
+
+import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import tech.sadovnikov.configurator.App;
+import tech.sadovnikov.configurator.di.component.BluetoothComponent;
+import tech.sadovnikov.configurator.di.component.DaggerBluetoothComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
-public class PairedDevicesPresenter extends MvpBasePresenter<PairedDevicesMvp.View> implements PairedDevicesMvp.Presenter {
+@InjectViewState
+public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
     private static final String TAG = PairedDevicesPresenter.class.getSimpleName();
 
-    private BluetoothService bluetoothService;
+    private BluetoothComponent bluetoothComponent;
+    @Inject
+    BluetoothService bluetoothService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
-    PairedDevicesPresenter(BluetoothService bluetoothService) {
+    PairedDevicesPresenter() {
         super();
-        Log.d(TAG, "PairedDevicesPresenter: ");
-        this.bluetoothService = bluetoothService;
+        Log.d(TAG, "onConstructor: ");
+        initDaggerComponent();
+        bluetoothComponent.injectPairedDevicesPresenter(this);
+    }
+
+    private void initDaggerComponent() {
+        bluetoothComponent = DaggerBluetoothComponent
+        .builder()
+        .applicationComponent(App.getApplicationComponent())
+        .build();
     }
 
     @Override
-    public void onStartView() {
-        ifViewAttached(view -> view.showPairedDevices(bluetoothService.getPairedDevices()));
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+        Log.d(TAG, "onFirstViewAttach: ");
+        getViewState().setPairedDevices(bluetoothService.getPairedDevices());
         Disposable subscribe = bluetoothService.getPairedDevicesObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bluetoothDevices -> {
                     Log.d(TAG, "onStartView: " + bluetoothDevices);
-                    ifViewAttached(view -> view.showPairedDevices(bluetoothDevices));
+                    getViewState().setPairedDevices(bluetoothDevices);
                 });
         compositeDisposable.add(subscribe);
     }
 
     @Override
-    public void attachView(@NonNull PairedDevicesMvp.View view) {
-        super.attachView(view);
-        Log.d(TAG, "attachView: ");
-    }
-
-    @Override
-    public void detachView() {
-        super.detachView();
+    public void onDestroy() {
+        super.onDestroy();
         compositeDisposable.dispose();
         compositeDisposable.clear();
-        Log.d(TAG, "detachView: ");
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-        Log.d(TAG, "destroy: ");
     }
 
 }

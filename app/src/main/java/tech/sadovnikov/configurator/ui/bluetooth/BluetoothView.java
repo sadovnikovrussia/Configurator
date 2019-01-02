@@ -17,4 +17,10 @@ public interface BluetoothView extends MvpView {
 
     void requestBtPermission();
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void hideUpdateDevicesView();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showUpdateDevicesView();
+
 }

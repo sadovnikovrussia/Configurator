@@ -23,7 +23,6 @@ import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     private static final String TAG = BluetoothPresenter.class.getSimpleName();
 
-
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private BluetoothComponent bluetoothComponent;
@@ -47,7 +46,6 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
                 .build();
     }
 
-
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
@@ -66,31 +64,41 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
                                     getViewState().displayBluetoothState(true);
                                     getViewState().showDevicesContainer();
                                     getViewState().hideTurningOn();
+                                    getViewState().showUpdateDevicesView();
                                     break;
                                 case BluetoothAdapter.STATE_OFF:
                                     getViewState().displayBluetoothState(false);
                                     getViewState().hideDevicesContainer();
+                                    getViewState().hideUpdateDevicesView();
                                     break;
                             }
                         },
-                        throwable -> Log.w(TAG, "onStart: ", throwable),
+                        throwable -> Log.w(TAG, "onError: ", throwable),
                         () -> Log.i(TAG, "onStart: Усе"));
         compositeDisposable.add(disposable);
     }
 
-    public void onStart() {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.clear();
     }
 
-    void onAvailableDevicesViewShown() {
+    private void updateDevices() {
+        bluetoothService.cancelDiscovery();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (bluetoothPermission == PERMISSION_GRANTED) {
                 bluetoothService.startDiscovery();
             } else getViewState().requestBtPermission();
-        }
+        } else bluetoothService.startDiscovery();
+    }
+
+    void onAvailableDevicesViewShown() {
+
     }
 
     void onPairedDevicesViewShown() {
-        bluetoothService.cancelDiscovery();
+
     }
 
     void onPositiveBtRequestResult() {
@@ -105,10 +113,12 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
         }
     }
 
+    void onCreateOptionsMenu() {
+        if (bluetoothService.isEnabled()) getViewState().showUpdateDevicesView();
+        else getViewState().hideUpdateDevicesView();
+    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        compositeDisposable.clear();
+    void onUpdateDevicesClick() {
+        updateDevices();
     }
 }

@@ -8,13 +8,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hannesdorfmann.mosby3.mvp.MvpFragment;
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -24,14 +27,16 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
-import tech.sadovnikov.configurator.ui.main.MainActivityNew;
 
-public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.View, AvailableDevicesMvp.Presenter>
-        implements AvailableDevicesMvp.View, AvailableDevicesRvAdapter.Listener {
+public class AvailableDevicesFragment extends MvpAppCompatFragment implements AvailableDevicesView, AvailableDevicesRvAdapter.Listener {
     private static final String TAG = AvailableDevicesFragment.class.getSimpleName();
 
     @BindView(R.id.rv_available_devices)
     RecyclerView rvAvailableDevices;
+    Menu menu;
+
+    @InjectPresenter
+    AvailableDevicesPresenter presenter;
 
     FragmentComponent fragmentComponent;
     @Inject
@@ -43,12 +48,6 @@ public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.Vi
         Log.i(TAG, "onConstructor");
     }
 
-    @NonNull
-    @Override
-    public AvailableDevicesMvp.Presenter createPresenter() {
-        return new AvailableDevicesPresenter(((MainActivityNew) Objects.requireNonNull(getActivity())).getActivityComponent().getBluetoothService());
-    }
-
     public static AvailableDevicesFragment newInstance() {
         Log.i(TAG, "newInstance: ");
         Bundle args = new Bundle();
@@ -56,7 +55,6 @@ public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.Vi
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -83,17 +81,18 @@ public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.Vi
     }
 
     @Override
-    public void showAvailableDevices(List<BluetoothDevice> availableDevices) {
+    public void setAvailableDevices(List<BluetoothDevice> availableDevices) {
         availableDevicesRvAdapter.setDevices(availableDevices);
     }
 
     @Override
     public void onDeviceClicked(BluetoothDevice device) {
-        getPresenter().onDeviceClicked(device);
+        presenter.onDeviceClicked(device);
     }
 
     // ---------------------------------------------------------------------------------------------
     // States
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -117,7 +116,6 @@ public class AvailableDevicesFragment extends MvpFragment<AvailableDevicesMvp.Vi
     public void onStart() {
         super.onStart();
         Log.i(TAG, "onStart");
-        getPresenter().onStartView();
     }
 
     @Override

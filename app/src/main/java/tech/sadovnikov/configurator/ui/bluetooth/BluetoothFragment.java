@@ -10,12 +10,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
+import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.Objects;
@@ -29,10 +32,7 @@ import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
-
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
-import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 
 public class BluetoothFragment extends MvpAppCompatFragment implements BluetoothView {
@@ -58,8 +58,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 
     FragmentComponent fragmentComponent;
 
-    private OnBluetoothFragmentInteractionListener listener;
-    private int pagerPage;
+    private Menu menu;
 
     public BluetoothFragment() {
         Log.v(TAG, "onConstructor: ");
@@ -76,7 +75,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: " + savedInstanceState);
+        Log.v(TAG, "onCreateView: " + savedInstanceState);
         View inflate = inflater.inflate(R.layout.fragment_bluetooth, container, false);
         ButterKnife.bind(this, inflate);
         initDaggerAndInject();
@@ -86,7 +85,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onViewStateRestored: " + savedInstanceState);
+        Log.v(TAG, "onViewStateRestored: " + savedInstanceState);
         super.onViewStateRestored(savedInstanceState);
 
     }
@@ -109,9 +108,8 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 
             @Override
             public void onPageSelected(int position) {
-                Log.d(TAG, "onPageSelected: " + String.valueOf(position));
+                Log.v(TAG, "onPageSelected: " + String.valueOf(position));
                 // Todo Сделать восстоновление состояния adapter
-                pagerPage = viewPager.getCurrentItem();
                 if (position == 1) bluetoothPresenter.onAvailableDevicesViewShown();
                 else bluetoothPresenter.onPairedDevicesViewShown();
             }
@@ -123,7 +121,6 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
         });
         viewPager.setAdapter(devicesFragmentPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-        //viewPager.setCurrentItem(pagerPage);
     }
 
     @Override
@@ -154,6 +151,16 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     }
 
     @Override
+    public void hideUpdateDevicesView() {
+        menu.setGroupVisible(R.id.group_update_available_devices, false);
+    }
+
+    @Override
+    public void showUpdateDevicesView() {
+        menu.setGroupVisible(R.id.group_update_available_devices, true);
+    }
+
+    @Override
     public void requestBtPermission() {
         ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -175,6 +182,41 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 
     // ---------------------------------------------------------------------------------------------
     // States
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        this.menu = menu;
+        inflater.inflate(R.menu.menu_bluetooth, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+        Log.v(TAG, "onCreateOptionsMenu: ");
+        bluetoothPresenter.onCreateOptionsMenu();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        Log.v(TAG, "onPrepareOptionsMenu: ");
+    }
+
+    @Override
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+        Log.v(TAG, "onDestroyOptionsMenu: ");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.v(TAG, "onOptionsItemSelected: ");
+        bluetoothPresenter.onUpdateDevicesClick();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onOptionsMenuClosed(Menu menu) {
+        super.onOptionsMenuClosed(menu);
+        Log.v(TAG, "onOptionsMenuClosed: ");
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -186,6 +228,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate: ");
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -198,7 +241,6 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        bluetoothPresenter.onStart();
     }
 
     @Override
@@ -259,7 +301,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 //    }
 
 //    public int getSelectedPageOfViewPager() {
-//        // Log.d(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
+//        // Log.v(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
 //        return viewPager.getCurrentItem();
 //    }
 

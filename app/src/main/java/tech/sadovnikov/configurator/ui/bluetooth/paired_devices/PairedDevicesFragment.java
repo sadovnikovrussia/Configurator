@@ -11,10 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hannesdorfmann.mosby3.mvp.MvpFragment;
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -24,14 +24,15 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
-import tech.sadovnikov.configurator.ui.main.MainActivityNew;
 
-public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, PairedDevicesMvp.Presenter>
-        implements PairedDevicesMvp.View, PairedDevicesRvAdapter.Listener {
+public class PairedDevicesFragment extends MvpAppCompatFragment implements PairedDevicesView, PairedDevicesRvAdapter.Listener {
     private static final String TAG = PairedDevicesFragment.class.getSimpleName();
 
     @BindView(R.id.rv_paired_devices)
     RecyclerView rvPairedDevices;
+
+    @InjectPresenter
+    PairedDevicesPresenter presenter;
 
     FragmentComponent fragmentComponent;
     @Inject
@@ -41,12 +42,6 @@ public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, Pa
 
     public PairedDevicesFragment() {
         Log.d(TAG, "onConstructor");
-    }
-
-    @NonNull
-    @Override
-    public PairedDevicesMvp.Presenter createPresenter() {
-        return new PairedDevicesPresenter(((MainActivityNew) Objects.requireNonNull(getActivity())).getActivityComponent().getBluetoothService());
     }
 
     public static PairedDevicesFragment newInstance() {
@@ -87,7 +82,7 @@ public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, Pa
     }
 
     @Override
-    public void showPairedDevices(List<BluetoothDevice> devices ) {
+    public void setPairedDevices(List<BluetoothDevice> devices) {
         pairedDevicesRvAdapter.setDevices(devices);
     }
 
@@ -117,7 +112,6 @@ public class PairedDevicesFragment extends MvpFragment<PairedDevicesMvp.View, Pa
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
-        presenter.onStartView();
     }
 
     @Override

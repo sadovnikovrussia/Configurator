@@ -5,10 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import com.hannesdorfmann.mosby3.mvp.MvpActivity;
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,8 +20,7 @@ import tech.sadovnikov.configurator.di.component.DaggerActivityComponent;
 import tech.sadovnikov.configurator.di.module.ActivityModule;
 import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
 
-public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainPresenter>
-        implements MainMvp.MainView {
+public class MainActivityNew extends MvpAppCompatActivity implements MainView {
     private static final String TAG = MainActivityNew.class.getSimpleName();
 
     private ActivityComponent activityComponent;
@@ -31,6 +31,9 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
 //    Menu actionBarMenu;
 //    @BindView(R.id.item_update_available_devices)
 //    MenuItem itemUpdateAvailableDevices;
+
+    @InjectPresenter
+    MainPresenter presenter;
 
     FragmentTransaction fragmentTransaction = getSupportFragmentManager()
             .beginTransaction().addToBackStack(null);
@@ -53,19 +56,13 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
                 .build();
     }
 
-    @NonNull
-    @Override
-    public MainMvp.MainPresenter createPresenter() {
-        return new MainPresenter();
-    }
-
-
     @Override
     public void showBluetoothView() {
         Log.w(TAG, "showBluetoothView: ");
         fragmentTransaction
                 .replace(R.id.container, BluetoothFragment.newInstance(), BluetoothFragment.TAG)
                 .commit();
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_bluetooth);
     }
 
     @Override
@@ -82,6 +79,7 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
     public ActivityComponent getActivityComponent() {
         return activityComponent;
     }
+
 
     public MainActivityNew() {
         super();

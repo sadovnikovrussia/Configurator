@@ -1,13 +1,13 @@
 package tech.sadovnikov.configurator.ui.main;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
 
-public class MainPresenter extends MvpBasePresenter<MainMvp.MainView> implements MainMvp.MainPresenter {
+@InjectViewState
+public class MainPresenter extends MvpPresenter<MainView> {
     private static final String TAG = MainPresenter.class.getSimpleName();
-    private boolean restart;
 
     MainPresenter() {
         super();
@@ -15,29 +15,10 @@ public class MainPresenter extends MvpBasePresenter<MainMvp.MainView> implements
     }
 
     @Override
-    public void attachView(@NonNull MainMvp.MainView view) {
-        super.attachView(view);
-        Log.w(TAG, "attachView: ");
-        if (!restart) {
-            ifViewAttached(MainMvp.MainView::showBluetoothView);
-
-            restart = true;
-        }
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+        Log.w(TAG, "onFirstViewAttach: ");
+        getViewState().showBluetoothView();
     }
 
-    @Override
-    public void detachView() {
-        super.detachView();
-        Log.w(TAG, "detachView: ");
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-        Log.w(TAG, "destroy: ");
-    }
-
-    @Override
-    public void onRestoreInstanceState(boolean restart) {
-    }
 }
