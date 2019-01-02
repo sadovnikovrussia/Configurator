@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.subjects.PublishSubject;
 import rx.Observable;
 
@@ -27,7 +28,7 @@ public interface BluetoothService {
 
     Observable<String> outputStream();
 
-    void connectToDevice(BluetoothDevice device) throws IOException;
+    void connectToDevice(BluetoothDevice device);
 
     void closeAllConnections();
 
@@ -37,4 +38,15 @@ public interface BluetoothService {
 
     void setBluetoothState(Integer state);
 
+    void setPairedDevices(List<BluetoothDevice> pairedDevices);
+
+    PublishSubject<List<BluetoothDevice>> getPairedDevicesObservable();
+
+    List<BluetoothDevice> getAvailableDevices();
+
+    PublishSubject<List<BluetoothDevice>> getAvailableDevicesObservable();
+
+    void startDiscovery();
+
+    void cancelDiscovery();
 }

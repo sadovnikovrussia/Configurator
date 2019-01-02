@@ -11,8 +11,6 @@ import tech.sadovnikov.configurator.entities.Configuration;
 import tech.sadovnikov.configurator.entities.Parameter;
 
 import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
-import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesItemView;
-import tech.sadovnikov.configurator.ui.adapter.PairedDevicesItemView;
 
 
 public interface Contract {
@@ -212,11 +210,7 @@ public interface Contract {
 
         void onDevicesPageSelected(int position);
 
-        void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesItemView holder, int position);
-
         int onGetItemCountOfAvailableDevicesRvAdapter();
-
-        void onBindViewHolderOfPairedDevicesRvAdapter(PairedDevicesItemView holder, int position);
 
         int onGetItemCountOfPairedDevicesRvAdapter();
 

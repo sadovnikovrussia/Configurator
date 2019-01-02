@@ -16,50 +16,40 @@ import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.DataManager;
 
-public class ConfiguratorApplication extends Application {
-    private static final String TAG = ConfiguratorApplication.class.getSimpleName();
-
-    static private ApplicationComponent applicationComponent;
+public class App extends Application {
+    private static final String TAG = App.class.getSimpleName();
 
     @Inject
     DataManager dataManager;
-
+    @Inject
+    BluetoothBroadcastReceiver receiver;
     @Inject
     BluetoothService bluetoothService;
 
-    @Inject
-    BluetoothBroadcastReceiver bluetoothReceiver;
+    private static ApplicationComponent applicationComponent;
 
-
-    public ConfiguratorApplication() {
+    public App() {
         super();
-        Log.v(TAG, "ConfiguratorApplication: ");
+        Log.d(TAG, "ConfiguratorApplication: ");
     }
 
-    private void initializeInjection() {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initializeDaggerComponent();
+        applicationComponent.inject(this);
+        receiver.setListener((BluetoothBroadcastReceiver.Listener) bluetoothService);
+        registerBluetoothReceiver(receiver);
+    }
+
+    private void initializeDaggerComponent() {
         applicationComponent = DaggerApplicationComponent
                 .builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
     }
 
-    public static ApplicationComponent getApplicationComponent() {
-        return applicationComponent;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.v(TAG, "onCreate: ");
-        initializeInjection();
-        bluetoothService = applicationComponent.getBluetoothService();
-        bluetoothReceiver = applicationComponent.getBluetoothBroadcastReceiver();
-        Log.d(TAG, "onCreate: " + bluetoothService);
-        //applicationComponent.inject(this);
-        registerReceiver();
-    }
-
-    private void registerReceiver() {
+    private void registerBluetoothReceiver(BluetoothBroadcastReceiver receiver) {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
@@ -68,21 +58,27 @@ public class ConfiguratorApplication extends Application {
         intentFilter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST);
         intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
-        registerReceiver(bluetoothReceiver, intentFilter);
+        getApplicationContext().registerReceiver(receiver, intentFilter);
     }
+
+
+    public static ApplicationComponent getApplicationComponent() {
+        return applicationComponent;
+    }
+
+
 
     @Override
     public void onTerminate() {
-        unregisterReceiver(bluetoothReceiver);
-        Log.v(TAG, "onTerminate: ");
         super.onTerminate();
+        Log.d(TAG, "onTerminate: ");
+        unregisterReceiver(receiver);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.v(TAG, "onConfigurationChanged: " + bluetoothService);
-
+        Log.d(TAG, "onConfigurationChanged: ");
     }
 
 

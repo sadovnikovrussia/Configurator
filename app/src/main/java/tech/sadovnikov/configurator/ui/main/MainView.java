@@ -1,20 +1,19 @@
 package tech.sadovnikov.configurator.ui.main;
 
-import com.arellomobile.mvp.MvpView;
-import com.arellomobile.mvp.viewstate.strategy.*;
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
+import com.hannesdorfmann.mosby3.mvp.MvpPresenter;
+import com.hannesdorfmann.mosby3.mvp.MvpView;
 
-interface MainView extends MvpView {
+public interface MainMvp {
 
-    void showBluetoothView();
+    interface MainView extends MvpView {
 
-    void showConsoleView();
+        void showBluetoothView();
 
-    void showConfigurationView();
+        void showConsoleView();
 
-    void setBluetoothNavigationPosition();
+        void showConfigurationView();
 
-    void setConfigurationNavigationPosition();
+
 
 //        // Вывести сообщение лога в консоль
 //        void showLog(String logsMessages);
@@ -163,4 +162,9 @@ interface MainView extends MvpView {
 //
 //        int getSelectedPageOfViewPager();
 
+    }
+
+    interface MainPresenter extends MvpPresenter<MainView> {
+        void onRestoreInstanceState(boolean restart);
+    }
 }

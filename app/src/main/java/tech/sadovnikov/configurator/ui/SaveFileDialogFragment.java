@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.ui.config_tabs.ConfigMainFragment;
 
 
 public class SaveFileDialogFragment extends DialogFragment {

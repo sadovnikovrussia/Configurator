@@ -3,10 +3,6 @@ package tech.sadovnikov.configurator.model;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.net.wifi.aware.PublishConfig;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -14,23 +10,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-import javax.inject.Inject;
-
+import io.reactivex.*;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
-import rx.Observable;
-import rx.Subscriber;
-import rx.observables.StringObservable;
 import tech.sadovnikov.configurator.presenter.DataAnalyzer;
-import tech.sadovnikov.configurator.presenter.UiHandler;
+//import tech.sadovnikov.configurator.presenter.UiHandler;
 
 
 /**
  * Класс, прденазначенный для работы с Bluetooth соединением
  */
-public class AppBluetoothService implements BluetoothService {
-    private static final String TAG = BluetoothService.class.getSimpleName();
+public class AppBluetoothService implements BluetoothService, BluetoothBroadcastReceiver.Listener {
+    private static final String TAG = AppBluetoothService.class.getSimpleName();
 
     private static final java.util.UUID UUID = java.util.UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -43,7 +38,12 @@ public class AppBluetoothService implements BluetoothService {
     //private Observable<List<BluetoothDevice>> availableDevices;
     private Observable<String> inputStream;
 
-    private PublishSubject<Integer> bluetoothState = PublishSubject.create();
+    private PublishSubject<Integer> bluetoothState;
+
+    private PublishSubject<List<BluetoothDevice>> pairedDevices = PublishSubject.create();
+
+    private List<BluetoothDevice> availableDevices = new ArrayList<>();
+    private PublishSubject<List<BluetoothDevice>> availableDevicesObservable = PublishSubject.create();
 
     private OnBluetoothServiceEventsListener listener;
 
@@ -51,34 +51,45 @@ public class AppBluetoothService implements BluetoothService {
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
 
-    private UiHandler handler;
+    // private UiHandler handler;
     private DataAnalyzer dataAnalyzer;
 
-    public AppBluetoothService(OnBluetoothServiceEventsListener onBluetoothServiceEventsListener, UiHandler handler) {
-        // Log.v(TAG, "OnConstructor");
-        listener = onBluetoothServiceEventsListener;
-        this.handler = handler;
-        dataAnalyzer = new DataAnalyzer(handler);
-    }
+//    public AppBluetoothService(OnBluetoothServiceEventsListener onBluetoothServiceEventsListener, UiHandler handler) {
+//        // Log.v(TAG, "OnConstructor");
+//        listener = onBluetoothServiceEventsListener;
+//        this.handler = handler;
+//        dataAnalyzer = new DataAnalyzer(handler);
+//    }
+//
 
     public AppBluetoothService() {
+        Log.d(TAG, "AppBluetoothService: Constructor: " + this);
+        bluetoothState = PublishSubject.create();
     }
 
     @Override
     public boolean enable() {
-        // Logs.d(TAG, "enable");
         return bluetoothAdapter.enable();
     }
 
     @Override
     public boolean disable() {
-        // Logs.d(TAG, "disable");
         return bluetoothAdapter.disable();
     }
 
     @Override
     public boolean isEnabled() {
         return bluetoothAdapter.isEnabled();
+    }
+
+    @Override
+    public void startDiscovery() {
+        bluetoothAdapter.startDiscovery();
+    }
+
+    @Override
+    public void cancelDiscovery() {
+        bluetoothAdapter.cancelDiscovery();
     }
 
     @Override
@@ -93,37 +104,58 @@ public class AppBluetoothService implements BluetoothService {
     }
 
     @Override
-    public PublishSubject getBluetoothStateObservable() {
+    public PublishSubject<Integer> getBluetoothStateObservable() {
         return bluetoothState;
     }
 
-    private void clearAvailableDevices() {
-        //this.availableDevices.clear();
-        //pairedDevices.
+    @Override
+    public void setPairedDevices(List<BluetoothDevice> pairedDevices) {
+        this.pairedDevices.onNext(pairedDevices);
     }
 
-//    void addAvailableDevice(BluetoothDevice bluetoothDevice) {
-//        this.availableDevices.add(bluetoothDevice);
-//    }
+    @Override
+    public PublishSubject<List<BluetoothDevice>> getPairedDevicesObservable() {
+        return pairedDevices;
+    }
 
-//    ArrayList<BluetoothDevice> getAvailableDevices() {
-//        //Logs.d(TAG, "getAvailableDevices: " + availableDevices.toString());
-//        return availableDevices;
-//    }
+    @Override
+    public List<BluetoothDevice> getAvailableDevices() {
+        return availableDevices;
+    }
+
+    @Override
+    public PublishSubject<List<BluetoothDevice>> getAvailableDevicesObservable() {
+        return availableDevicesObservable;
+    }
 
     @Override
     public List<BluetoothDevice> getPairedDevices() {
-        //Logs.d(TAG, "getPairedDevices: " + pairedDevices.toString());
         return new ArrayList<>(bluetoothAdapter.getBondedDevices());
     }
 
+    @Override
+    public void onStateChanged() {
+        bluetoothState.onNext(bluetoothAdapter.getState());
+    }
 
-//    void connectTo(String address) {
-//        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
-//        listener.onConnectingTo(device.getName());
-//        onConnecting(device);
-//
-//    }
+    @Override
+    public void onBondStateChanged() {
+        Log.d(TAG, "onBondStateChanged: ");
+        pairedDevices.onNext(new ArrayList<>(bluetoothAdapter.getBondedDevices()));
+    }
+
+    @Override
+    public void onDiscoveryStarted() {
+        availableDevices.clear();
+        availableDevicesObservable.onNext(availableDevices);
+    }
+
+    @Override
+    public void onFoundDevice(BluetoothDevice device) {
+        availableDevices.add(device);
+        availableDevicesObservable.onNext(availableDevices);
+    }
+
 
     private synchronized void onConnecting(BluetoothDevice device) {
         //Log.d(TAG, "Connecting to: " + device);
@@ -165,7 +197,7 @@ public class AppBluetoothService implements BluetoothService {
     }
 
     @Override
-    public Observable<String> outputStream() {
+    public rx.Observable<String> outputStream() {
         return null;
     }
 
@@ -180,17 +212,6 @@ public class AppBluetoothService implements BluetoothService {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
-    }
-
-    void startDiscovery() {
-        // Log.d(TAG, "onTestButtonClick");
-        clearAvailableDevices();
-        bluetoothAdapter.startDiscovery();
-    }
-
-    void cancelDiscovery() {
-        // Log.d(TAG, "cancelDiscovery");
-        bluetoothAdapter.cancelDiscovery();
     }
 
     private class ConnectThread extends Thread {
@@ -273,24 +294,24 @@ public class AppBluetoothService implements BluetoothService {
                 // Log.d(TAG, "Не удалось получить InputStream: " + e.getMessage());
             }
             readerSerial = tmpReaderSerial;
-            inputStream = StringObservable.from(readerSerial);
-            inputStream.subscribe(new Subscriber<String>() {
-
-                @Override
-                public void onCompleted() {
-
-                }
-
-                @Override
-                public void onError(Throwable e) {
-
-                }
-
-                @Override
-                public void onNext(String s) {
-
-                }
-            });
+//            inputStream = StringObservable.from(readerSerial);
+//            inputStream.subscribe(new Subscriber<String>() {
+//
+//                @Override
+//                public void onCompleted() {
+//
+//                }
+//
+//                @Override
+//                public void onError(Throwable e) {
+//
+//                }
+//
+//                @Override
+//                public void onNext(String s) {
+//
+//                }
+//            });
 
             try {
                 // Log.d(TAG, "Пытаемся создать OutputStream");

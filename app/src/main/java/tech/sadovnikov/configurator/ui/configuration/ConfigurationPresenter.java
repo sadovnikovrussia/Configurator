@@ -1,27 +1,29 @@
 package tech.sadovnikov.configurator.ui.configuration;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
+import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 
-@InjectViewState
-public class ConfigurationPresenter extends MvpPresenter<ConfigurationView> {
+public class ConfigurationPresenter extends MvpBasePresenter<ConfigurationMvp.View> implements ConfigurationMvp.Presenter {
     private static final String TAG = ConfigurationPresenter.class.getSimpleName();
 
-    public ConfigurationPresenter() {
+    ConfigurationPresenter() {
         Log.v(TAG, "ConfigurationPresenter: " + this);
     }
 
     @Override
-    protected void onFirstViewAttach() {
-        super.onFirstViewAttach();
-        Log.v(TAG, "onFirstViewAttach: ");
+    public void attachView(@NonNull ConfigurationMvp.View view) {
+        super.attachView(view);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.v(TAG, "onDestroy: " + this);
+    public void detachView() {
+        super.detachView();
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
     }
 }

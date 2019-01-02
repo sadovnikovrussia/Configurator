@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.ui.adapter;
+package tech.sadovnikov.configurator.ui.bluetooth.available_devices;
 
 import android.bluetooth.BluetoothDevice;
 import android.support.annotation.NonNull;
@@ -9,35 +9,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.ui.base.BaseViewHolder;
-import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
 
-public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRvAdapter.BluetoothDeviceViewHolder> {
-    private static final String TAG = PairedDevicesRvAdapter.class.getSimpleName();
+public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDevicesRvAdapter.BluetoothDeviceViewHolder> {
+    private static final String TAG = AvailableDevicesRvAdapter.class.getSimpleName();
 
     private Listener listener;
-    private List<BluetoothDevice> devices;
 
-    public PairedDevicesRvAdapter(BluetoothFragment.OnBluetoothFragmentInteractionListener onBluetoothFragmentInteractionListener) {
-        // Logs.d(TAG, "onConstructor");
-    }
+    private List<BluetoothDevice> devices = new ArrayList<>();
 
-    public PairedDevicesRvAdapter(List<BluetoothDevice> devices) {
-        this.devices = devices;
-    }
-
-    public PairedDevicesRvAdapter() {
-    }
-
-    public void setListener(Listener listener) {
-        this.listener = listener;
+    public AvailableDevicesRvAdapter() {
+        Log.i(TAG, "onConstructor: ");
     }
 
     @NonNull
@@ -49,35 +37,22 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
 
     @Override
     public void onBindViewHolder(@NonNull final BluetoothDeviceViewHolder holder, final int position) {
-        //Log.d(TAG, "onBind: " + position);
-        // Logs.d(TAG, "onBindViewHolder");
         holder.onBind(position);
-//        onBluetoothFragmentInteractionListener.onBindViewHolderOfPairedDevicesRvAdapter(holder, position);
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onBluetoothFragmentInteractionListener.onPairedDevicesRvItemClicked(String.valueOf(holder.tvDeviceAddress.getText()));
-//            }
-//        });
     }
 
     @Override
     public int getItemCount() {
-        // Logs.d(TAG, "getItemCount: " + String.valueOf(count));
         return devices.size();
     }
 
-    public void setDevices(List<BluetoothDevice> devices) {
+    void setDevices(List<BluetoothDevice> devices) {
         this.devices = devices;
-    }
-
-    public void updatePairedBluetoothDevices() {
-        Log.d(TAG, "updatePairedBluetoothDevices()");
         notifyDataSetChanged();
     }
 
-
-    class BluetoothDeviceViewHolder extends BaseViewHolder {
+    // ViewHolder
+    public class BluetoothDeviceViewHolder extends BaseViewHolder {
+        // private static final String TAG = "AvailDevAdaptViewHolder";
         @BindView(R.id.tv_device_name)
         TextView tvDeviceName;
         @BindView(R.id.tv_device_address)
@@ -88,9 +63,9 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
             ButterKnife.bind(this, itemView);
         }
 
-        public void onBind(int position){
+        public void onBind(int position) {
             super.onBind(position);
-            final BluetoothDevice device = devices.get(position);
+            BluetoothDevice device = devices.get(position);
             tvDeviceName.setText(device.getName());
             tvDeviceAddress.setText(device.getAddress());
             itemView.setOnClickListener(v -> listener.onDeviceClicked(device));
@@ -106,4 +81,6 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
     public interface Listener {
         void onDeviceClicked(BluetoothDevice device);
     }
+
+
 }

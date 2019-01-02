@@ -5,23 +5,22 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.util.Log;
 
 import javax.inject.Inject;
 
-import io.reactivex.subjects.PublishSubject;
-
 public class BluetoothBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = BluetoothBroadcastReceiver.class.getSimpleName();
 
-    BluetoothService bluetoothService;
+    private Listener listener;
 
-    public void setBluetoothService(BluetoothService bluetoothService) {
-        this.bluetoothService = bluetoothService;
+
+    public BluetoothBroadcastReceiver() {
     }
 
-    public BluetoothBroadcastReceiver(BluetoothService bluetoothService) {
-        this.bluetoothService = bluetoothService;
+    public void setListener(Listener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -31,8 +30,8 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
             // Logs.w(TAG, action);
             switch (action) {
                 case BluetoothDevice.ACTION_FOUND:
-                    Log.w(TAG, "ACTION_FOUND");
-                    Log.w(TAG, "onReceive: " + intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) );
+                    listener.onFoundDevice(intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
+                    Log.w(TAG, "ACTION_FOUND: " + intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) );
                     //listener.onBluetoothServiceActionFound((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
                     break;
                 case BluetoothDevice.ACTION_PAIRING_REQUEST:
@@ -47,8 +46,10 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                     break;
                 case BluetoothDevice.ACTION_BOND_STATE_CHANGED:
                     Log.w(TAG, "BluetoothDevice.ACTION_BOND_STATE_CHANGED");
+                    listener.onBondStateChanged();
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
+                    listener.onDiscoveryStarted();
                     Log.w(TAG, "BluetoothAdapter.ACTION_DISCOVERY_STARTED");
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
@@ -56,7 +57,9 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                     break;
                 case BluetoothAdapter.ACTION_STATE_CHANGED:
                     int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
-                    bluetoothService.setBluetoothState(state);
+                    Log.d(TAG, "onReceive: " + Thread.currentThread().getName());
+                    Log.d(TAG, "onReceive: " + listener);
+                    listener.onStateChanged();
                     switch (state) {
                         // BT включился
                         case BluetoothAdapter.STATE_ON:
@@ -86,13 +89,15 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
 
     }
 
-    interface OnBluetoothBroadcastReceiverEventsListener{
-        void onStateConnected(BluetoothDevice device);
+    public interface Listener{
 
-        void onBluetoothServiceActionFound(BluetoothDevice device);
+        void onStateChanged();
 
-        void onBluetoothServiceStateOn();
+        void onBondStateChanged();
 
-        void onBluetoothServiceStateOff();
+        void onFoundDevice(BluetoothDevice device);
+
+        void onDiscoveryStarted();
     }
+
 }

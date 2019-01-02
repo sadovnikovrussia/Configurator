@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.ui;
+package tech.sadovnikov.configurator.ui.config_tabs;
 
 
 import android.content.Context;
@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.ui.OnLlParameterClickListener;
 
 public class ConfigMainFragment extends Fragment {
     private static final String TAG = "ConfigMainFragment";

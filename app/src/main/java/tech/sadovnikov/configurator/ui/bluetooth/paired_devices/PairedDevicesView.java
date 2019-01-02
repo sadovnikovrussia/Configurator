@@ -3,15 +3,14 @@ package tech.sadovnikov.configurator.ui.bluetooth.paired_devices;
 import android.bluetooth.BluetoothDevice;
 
 import com.arellomobile.mvp.MvpView;
-import com.arellomobile.mvp.viewstate.strategy.SingleStateStrategy;
-import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
+import com.arellomobile.mvp.viewstate.strategy.*;
 
 import java.util.List;
 
-interface PairedDevicesView extends MvpView {
+@StateStrategyType(SkipStrategy.class)
+public interface PairedDevicesView extends MvpView {
 
-    void showPairedDevices(List<BluetoothDevice> devices);
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setPairedDevices(List<BluetoothDevice> pairedDevices);
 
-    void hidePairedDevices();
 }

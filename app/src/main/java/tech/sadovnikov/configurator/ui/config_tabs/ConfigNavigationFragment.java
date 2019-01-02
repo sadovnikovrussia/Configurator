@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.ui;
+package tech.sadovnikov.configurator.ui.config_tabs;
 
 
 import android.content.Context;
@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.ui.OnLlParameterClickListener;
 
 public class ConfigNavigationFragment extends Fragment {
     private static final String TAG = "ConfigNavigationFragmen";
@@ -242,7 +243,7 @@ public class ConfigNavigationFragment extends Fragment {
     }
     // ---------------------------------------------------------------------------------------------
 
-    interface OnConfigNavigationFragmentInteractionListener {
+    public interface OnConfigNavigationFragmentInteractionListener {
         void onConfigNavigationFragmentStart();
 
         void onBtnRcvColdStartClick();

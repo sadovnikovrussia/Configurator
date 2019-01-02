@@ -1,20 +1,27 @@
 package tech.sadovnikov.configurator.ui.bluetooth;
 
+import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.arellomobile.mvp.presenter.PresenterType;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -24,13 +31,14 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
-import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesItemView;
-import tech.sadovnikov.configurator.ui.adapter.DevicesFragmentPagerAdapter;
-import tech.sadovnikov.configurator.ui.adapter.PairedDevicesItemView;
+
+import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
 
 public class BluetoothFragment extends MvpAppCompatFragment implements BluetoothView {
     public static final String TAG = BluetoothFragment.class.getSimpleName();
+
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
 
     @InjectPresenter
     BluetoothPresenter bluetoothPresenter;
@@ -42,15 +50,19 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     TabLayout tabLayout;
     @BindView(R.id.view_pager_devices)
     ViewPager viewPager;
+    @BindView(R.id.tv_bluetooth_turning_on)
+    TextView tvTurningOn;
 
     @Inject
     DevicesFragmentPagerAdapter devicesFragmentPagerAdapter;
 
     FragmentComponent fragmentComponent;
 
-    private static final BluetoothFragment fragment = new BluetoothFragment();
+    private Menu menu;
 
-    private OnBluetoothFragmentInteractionListener listener;
+    public BluetoothFragment() {
+        Log.v(TAG, "onConstructor: ");
+    }
 
     public static BluetoothFragment newInstance() {
         Log.v(TAG, "newInstance: ");
@@ -60,24 +72,22 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
         return fragment;
     }
 
-    public static BluetoothFragment getInstance() {
-        Log.e(TAG, "getInstance: " + fragment);
-        return fragment;
-    }
-
-    public BluetoothFragment() {
-        Log.v(TAG, "BluetoothFragment: ");
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView");
+        Log.v(TAG, "onCreateView: " + savedInstanceState);
         View inflate = inflater.inflate(R.layout.fragment_bluetooth, container, false);
         ButterKnife.bind(this, inflate);
         initDaggerAndInject();
         setUp();
         return inflate;
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        Log.v(TAG, "onViewStateRestored: " + savedInstanceState);
+        super.onViewStateRestored(savedInstanceState);
+
     }
 
     private void initDaggerAndInject() {
@@ -90,7 +100,6 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 
     private void setUp() {
         switchBt.setOnCheckedChangeListener((buttonView, isChecked) -> bluetoothPresenter.onBtSwitchClick(isChecked));
-        devicesFragmentPagerAdapter.setTabsCount(tabLayout.getTabCount());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -99,8 +108,10 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 
             @Override
             public void onPageSelected(int position) {
-                Log.d(TAG, "onPageSelected: " + String.valueOf(position));
-                //listener.onDevicesPageSelected(position);
+                Log.v(TAG, "onPageSelected: " + String.valueOf(position));
+                // Todo Сделать восстоновление состояния adapter
+                if (position == 1) bluetoothPresenter.onAvailableDevicesViewShown();
+                else bluetoothPresenter.onPairedDevicesViewShown();
             }
 
             @Override
@@ -119,63 +130,93 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 
     @Override
     public void showDevicesContainer() {
-//        viewPager.setVisibility(View.VISIBLE);
-//        tabLayout.setVisibility(View.VISIBLE);
-        //devicesFragmentPagerAdapter
-        viewPager.setAdapter(devicesFragmentPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-    }
-
-    @Override
-    public void hideDevicesContainer() {
-//        viewPager.setVisibility(View.INVISIBLE);
-//        tabLayout.setVisibility(View.INVISIBLE);
-
-        viewPager.setAdapter(null);
-        tabLayout.setupWithViewPager(null);
-    }
-
-    public void closeDevices() {
-        //devicesFragmentPagerAdapter = null;
-        viewPager.setAdapter(null);
-        // viewPager.removeOnPageChangeListener();
-        tabLayout.setupWithViewPager(null);
-    }
-
-    public void openDevices() {
-        viewPager.setAdapter(devicesFragmentPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-    }
-
-    public void setSwitchBtState(boolean state) {
-        if (switchBt != null) {
-            switchBt.setChecked(state);
-        }
-    }
-
-    public void showDevices() {
         viewPager.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
     }
 
-    public void hideDevices() {
-        Log.d(TAG, "hideDevices: ");
-        viewPager.setVisibility(View.INVISIBLE);
-        tabLayout.setVisibility(View.INVISIBLE);
+    @Override
+    public void hideDevicesContainer() {
+        viewPager.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
     }
 
-    public void updateAvailableDevices() {
-        Log.d(TAG, "updateAvailableDevices: ");
-        if (devicesFragmentPagerAdapter != null)
-            devicesFragmentPagerAdapter.updateAvailableDevices();
+    @Override
+    public void showTurningOn() {
+        tvTurningOn.setVisibility(View.VISIBLE);
     }
 
-    public void updatePairedDevices() {
-        if (devicesFragmentPagerAdapter != null) devicesFragmentPagerAdapter.updatePairedDevices();
+    @Override
+    public void hideTurningOn() {
+        tvTurningOn.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideUpdateDevicesView() {
+        menu.setGroupVisible(R.id.group_update_available_devices, false);
+    }
+
+    @Override
+    public void showUpdateDevicesView() {
+        menu.setGroupVisible(R.id.group_update_available_devices, true);
+    }
+
+    @Override
+    public void requestBtPermission() {
+        ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        for (String permission : permissions) {
+            if (permission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                for (int result : grantResults) {
+                    if (result == PERMISSION_GRANTED)
+                        bluetoothPresenter.onPositiveBtRequestResult();
+                }
+            }
+        }
     }
 
     // ---------------------------------------------------------------------------------------------
     // States
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        this.menu = menu;
+        inflater.inflate(R.menu.menu_bluetooth, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+        Log.v(TAG, "onCreateOptionsMenu: ");
+        bluetoothPresenter.onCreateOptionsMenu();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        Log.v(TAG, "onPrepareOptionsMenu: ");
+    }
+
+    @Override
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+        Log.v(TAG, "onDestroyOptionsMenu: ");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.v(TAG, "onOptionsItemSelected: ");
+        bluetoothPresenter.onUpdateDevicesClick();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onOptionsMenuClosed(Menu menu) {
+        super.onOptionsMenuClosed(menu);
+        Log.v(TAG, "onOptionsMenuClosed: ");
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -186,6 +227,8 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate: ");
+        setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -198,7 +241,6 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        //bluetoothPresenter.onStart();
     }
 
     @Override
@@ -240,6 +282,13 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
         //listener = null;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //outState.putInt("pagerPage", pagerPage);
+        super.onSaveInstanceState(outState);
+    }
+
+
     // ---------------------------------------------------------------------------------------------
 //    @Override
 //    public void onPrepareOptionsMenu(Menu menu) {
@@ -252,7 +301,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 //    }
 
 //    public int getSelectedPageOfViewPager() {
-//        // Log.d(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
+//        // Log.v(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
 //        return viewPager.getCurrentItem();
 //    }
 
@@ -274,11 +323,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 
         void onDevicesPageSelected(int position);
 
-        void onBindViewHolderOfAvailableDevicesRvAdapter(AvailableDevicesItemView holder, int position);
-
         int onGetItemCountOfAvailableDevicesRvAdapter();
-
-        void onBindViewHolderOfPairedDevicesRvAdapter(PairedDevicesItemView holder, int position);
 
         int onGetItemCountOfPairedDevicesRvAdapter();
 

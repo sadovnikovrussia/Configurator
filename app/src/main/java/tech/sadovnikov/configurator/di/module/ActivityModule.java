@@ -9,12 +9,11 @@ import tech.sadovnikov.configurator.di.ActivityContext;
 
 @Module
 public class ActivityModule {
-    AppCompatActivity activity;
+    private AppCompatActivity activity;
 
     public ActivityModule(AppCompatActivity activity) {
         this.activity = activity;
     }
-
 
     @Provides
     AppCompatActivity provideActivity() {

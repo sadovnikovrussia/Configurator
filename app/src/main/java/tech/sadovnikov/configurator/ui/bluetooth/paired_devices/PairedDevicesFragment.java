@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
@@ -21,30 +20,25 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import tech.sadovnikov.configurator.ConfiguratorApplication;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
-import tech.sadovnikov.configurator.ui.adapter.PairedDevicesRvAdapter;
 
-public class PairedDevicesFragment extends MvpAppCompatFragment
-        implements PairedDevicesView,
-        PairedDevicesRvAdapter.Listener {
+public class PairedDevicesFragment extends MvpAppCompatFragment implements PairedDevicesView, PairedDevicesRvAdapter.Listener {
     private static final String TAG = PairedDevicesFragment.class.getSimpleName();
-
-    @InjectPresenter
-    PairedDevicesPresenter presenter;
 
     @BindView(R.id.rv_paired_devices)
     RecyclerView rvPairedDevices;
+
+    @InjectPresenter
+    PairedDevicesPresenter presenter;
 
     FragmentComponent fragmentComponent;
     @Inject
     PairedDevicesRvAdapter pairedDevicesRvAdapter;
     @Inject
     LinearLayoutManager linearLayoutManager;
-
 
     public PairedDevicesFragment() {
         Log.d(TAG, "onConstructor");
@@ -61,7 +55,7 @@ public class PairedDevicesFragment extends MvpAppCompatFragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
+        Log.d(TAG, "onCreateView: " + savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_paired_devices, container, false);
         ButterKnife.bind(this, view);
         initDaggerAndInject();
@@ -87,24 +81,9 @@ public class PairedDevicesFragment extends MvpAppCompatFragment
 
     }
 
-    public void updatePairedDevices() {
-        pairedDevicesRvAdapter.updatePairedBluetoothDevices();
-    }
-
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        Log.d(TAG, "onHiddenChanged: " + hidden);
-    }
-
-    @Override
-    public void showPairedDevices(List<BluetoothDevice> devices ) {
+    public void setPairedDevices(List<BluetoothDevice> devices) {
         pairedDevicesRvAdapter.setDevices(devices);
-    }
-
-    @Override
-    public void hidePairedDevices() {
-
     }
 
 
@@ -120,6 +99,7 @@ public class PairedDevicesFragment extends MvpAppCompatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: ");
+        setRetainInstance(true);
     }
 
     @Override
@@ -132,7 +112,6 @@ public class PairedDevicesFragment extends MvpAppCompatFragment
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
-        presenter.onStartView();
     }
 
     @Override

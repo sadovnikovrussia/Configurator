@@ -1,19 +1,23 @@
 package tech.sadovnikov.configurator.ui.bluetooth.available_devices;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -23,25 +27,22 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
-import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesRvAdapter;
-import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
 
-public class AvailableDevicesFragment extends MvpAppCompatFragment
-        implements AvailableDevicesView {
+public class AvailableDevicesFragment extends MvpAppCompatFragment implements AvailableDevicesView, AvailableDevicesRvAdapter.Listener {
     private static final String TAG = AvailableDevicesFragment.class.getSimpleName();
-
-    @InjectPresenter
-    AvailableDevicesPresenter presenter;
 
     @BindView(R.id.rv_available_devices)
     RecyclerView rvAvailableDevices;
+    Menu menu;
+
+    @InjectPresenter
+    AvailableDevicesPresenter presenter;
 
     FragmentComponent fragmentComponent;
     @Inject
     AvailableDevicesRvAdapter availableDevicesRvAdapter;
     @Inject
     LinearLayoutManager linearLayoutManager;
-
 
     public AvailableDevicesFragment() {
         Log.i(TAG, "onConstructor");
@@ -55,13 +56,11 @@ public class AvailableDevicesFragment extends MvpAppCompatFragment
         return fragment;
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView");
+        Log.i(TAG, "onCreateView: " + savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_available_devices, container, false);
-        //rvAvailableDevices = view.findViewById(R.id.rv_available_devices);
         ButterKnife.bind(this, view);
         initDaggerAndInject();
         setUp();
@@ -81,21 +80,19 @@ public class AvailableDevicesFragment extends MvpAppCompatFragment
         rvAvailableDevices.setAdapter(availableDevicesRvAdapter);
     }
 
-    public void updateAvailableDevices() {
-//        Log.i(TAG, "updateAvailableDevices: availableDevicesRvAdapter = " + availableDevicesRvAdapter);
-//        if (availableDevicesRvAdapter != null)
-//            availableDevicesRvAdapter.updateAvailableBluetoothDevices();
+    @Override
+    public void setAvailableDevices(List<BluetoothDevice> availableDevices) {
+        availableDevicesRvAdapter.setDevices(availableDevices);
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        Log.i(TAG, "onHiddenChanged: " + hidden);
+    public void onDeviceClicked(BluetoothDevice device) {
+        presenter.onDeviceClicked(device);
     }
-
 
     // ---------------------------------------------------------------------------------------------
     // States
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -106,6 +103,7 @@ public class AvailableDevicesFragment extends MvpAppCompatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
+        setRetainInstance(true);
     }
 
     @Override
@@ -117,7 +115,6 @@ public class AvailableDevicesFragment extends MvpAppCompatFragment
     @Override
     public void onStart() {
         super.onStart();
-        //listener.onAvailableDevicesFragmentStart();
         Log.i(TAG, "onStart");
     }
 
@@ -156,23 +153,6 @@ public class AvailableDevicesFragment extends MvpAppCompatFragment
         super.onDetach();
         Log.i(TAG, "onDetach");
     }
+
     // ---------------------------------------------------------------------------------------------
-
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        Log.i(TAG, "onPrepareOptionsMenu: " + menu);
-        //menu.setGroupVisible(R.id.group_update_available_devices, true);
-        super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public void showDevices() {
-
-    }
-
-    @Override
-    public void hideDevices() {
-
-    }
 }

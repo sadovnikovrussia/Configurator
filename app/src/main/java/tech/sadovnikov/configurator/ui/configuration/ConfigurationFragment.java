@@ -11,8 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
-import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.hannesdorfmann.mosby3.mvp.MvpFragment;
 
 import javax.inject.Inject;
 
@@ -22,14 +21,10 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerFragmentComponent;
 import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
-import tech.sadovnikov.configurator.ui.adapter.ConfigTabsRvAdapter;
 
 
-public class ConfigurationFragment extends MvpAppCompatFragment implements ConfigurationView {
+public class ConfigurationFragment extends MvpFragment<ConfigurationMvp.View, ConfigurationPresenter> implements ConfigurationMvp.View {
     private static final String TAG = ConfigurationFragment.class.getSimpleName();
-
-    @InjectPresenter
-    ConfigurationPresenter presenter;
 
     // UI
     @BindView(R.id.rv_config_tabs)
@@ -46,6 +41,12 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
 
     public ConfigurationFragment() {
         Log.v(TAG, "onConstructor");
+    }
+
+    @NonNull
+    @Override
+    public ConfigurationPresenter createPresenter() {
+        return new ConfigurationPresenter();
     }
 
     public static ConfigurationFragment newInstance() {
@@ -67,11 +68,11 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
     }
 
     private void initDaggerAndInject() {
-         fragmentComponent = DaggerFragmentComponent
+        fragmentComponent = DaggerFragmentComponent
                 .builder()
                 .fragmentModule(new FragmentModule(this))
                 .build();
-         fragmentComponent.injectConfigurationFragment(this);
+        fragmentComponent.injectConfigurationFragment(this);
     }
 
     private void setUp() {

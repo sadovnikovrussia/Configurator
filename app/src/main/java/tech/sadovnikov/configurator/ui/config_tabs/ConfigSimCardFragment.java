@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.ui;
+package tech.sadovnikov.configurator.ui.config_tabs;
 
 
 import android.content.Context;
@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.ui.OnLlParameterClickListener;
 
 
 public class ConfigSimCardFragment extends Fragment {
@@ -243,7 +244,7 @@ public class ConfigSimCardFragment extends Fragment {
     }
     // ---------------------------------------------------------------------------------------------
 
-    interface OnConfigSimCardFragmentInteractionListener {
+    public interface OnConfigSimCardFragmentInteractionListener {
 
         void onConfigSimCardFragmentStart();
 

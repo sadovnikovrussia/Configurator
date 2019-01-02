@@ -1,73 +1,124 @@
 package tech.sadovnikov.configurator.ui.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
+import android.os.Build;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import javax.inject.Inject;
+
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import tech.sadovnikov.configurator.ConfiguratorApplication;
+import io.reactivex.subjects.PublishSubject;
+import tech.sadovnikov.configurator.App;
+import tech.sadovnikov.configurator.di.component.BluetoothComponent;
+import tech.sadovnikov.configurator.di.component.DaggerBluetoothComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
+
+import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
 @InjectViewState
 public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     private static final String TAG = BluetoothPresenter.class.getSimpleName();
 
-    private BluetoothService bluetoothService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public BluetoothPresenter() {
-        Log.w(TAG, "BluetoothPresenter: " + this);
-        bluetoothService = ConfiguratorApplication.getApplicationComponent().getBluetoothService();
+    private BluetoothComponent bluetoothComponent;
+
+    @Inject
+    int bluetoothPermission;
+    @Inject
+    BluetoothService bluetoothService;
+
+
+    BluetoothPresenter() {
+        Log.v(TAG, "onConstructor");
+        initDaggerComponent();
+        bluetoothComponent.injectBluetoothPresenter(this);
+    }
+
+    private void initDaggerComponent() {
+        bluetoothComponent = DaggerBluetoothComponent
+                .builder()
+                .applicationComponent(App.getApplicationComponent())
+                .build();
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        Log.v(TAG, "onFirstViewAttach: ");
         getViewState().displayBluetoothState(bluetoothService.isEnabled());
-        if (bluetoothService.isEnabled()) {
-            getViewState().showDevicesContainer();
-        } else {
-            getViewState().hideDevicesContainer();
-        }
-        Disposable disposable = bluetoothService.getBluetoothStateObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        if (bluetoothService.isEnabled()) getViewState().showDevicesContainer();
+        else getViewState().hideDevicesContainer();
+        PublishSubject<Integer> bluetoothStateObservable = bluetoothService.getBluetoothStateObservable();
+        Disposable disposable = bluetoothStateObservable
                 .subscribe(integer -> {
-                    switch (integer) {
-                        case BluetoothAdapter.STATE_ON:
-                            getViewState().displayBluetoothState(true);
-                            getViewState().showDevicesContainer();
-                            break;
-                        case BluetoothAdapter.STATE_OFF:
-                            getViewState().displayBluetoothState(false);
-                            getViewState().hideDevicesContainer();
-                            break;
-                    }
-                });
+                            Log.d(TAG, "onNext: " + integer + bluetoothService);
+                            switch (integer) {
+                                case BluetoothAdapter.STATE_TURNING_ON:
+                                    getViewState().showTurningOn();
+                                    break;
+                                case BluetoothAdapter.STATE_ON:
+                                    getViewState().displayBluetoothState(true);
+                                    getViewState().showDevicesContainer();
+                                    getViewState().hideTurningOn();
+                                    getViewState().showUpdateDevicesView();
+                                    break;
+                                case BluetoothAdapter.STATE_OFF:
+                                    getViewState().displayBluetoothState(false);
+                                    getViewState().hideDevicesContainer();
+                                    getViewState().hideUpdateDevicesView();
+                                    break;
+                            }
+                        },
+                        throwable -> Log.w(TAG, "onError: ", throwable),
+                        () -> Log.i(TAG, "onStart: Усе"));
         compositeDisposable.add(disposable);
-    }
-
-    public void onStart() {
-
     }
 
     @Override
     public void onDestroy() {
-        Log.w(TAG, "onDestroy: " + this);
-        compositeDisposable.dispose();
         super.onDestroy();
+        compositeDisposable.clear();
+    }
+
+    private void updateDevices() {
+        bluetoothService.cancelDiscovery();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (bluetoothPermission == PERMISSION_GRANTED) {
+                bluetoothService.startDiscovery();
+            } else getViewState().requestBtPermission();
+        } else bluetoothService.startDiscovery();
+    }
+
+    void onAvailableDevicesViewShown() {
+
+    }
+
+    void onPairedDevicesViewShown() {
+
+    }
+
+    void onPositiveBtRequestResult() {
+        bluetoothService.startDiscovery();
     }
 
     void onBtSwitchClick(boolean isChecked) {
-        if (isChecked) bluetoothService.enable();
-        else bluetoothService.disable();
+        if (isChecked) {
+            bluetoothService.enable();
+        } else {
+            bluetoothService.disable();
+        }
+    }
+
+    void onCreateOptionsMenu() {
+        if (bluetoothService.isEnabled()) getViewState().showUpdateDevicesView();
+        else getViewState().hideUpdateDevicesView();
+    }
+
+    void onUpdateDevicesClick() {
+        updateDevices();
     }
 }

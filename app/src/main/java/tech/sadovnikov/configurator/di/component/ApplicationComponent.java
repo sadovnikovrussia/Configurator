@@ -6,6 +6,7 @@ import android.content.Context;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.di.ActivityContext;
 import tech.sadovnikov.configurator.di.ApplicationContext;
 import tech.sadovnikov.configurator.di.module.ApplicationModule;
@@ -17,7 +18,7 @@ import tech.sadovnikov.configurator.model.data.DataManager;
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
 
-    void inject(Application application);
+    void inject(App application);
 
     @ApplicationContext
     Context getContext();

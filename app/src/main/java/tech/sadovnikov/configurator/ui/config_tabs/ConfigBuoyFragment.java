@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.ui;
+package tech.sadovnikov.configurator.ui.config_tabs;
 
 
 import android.content.Context;
@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.ui.OnLlParameterClickListener;
 
 
 public class ConfigBuoyFragment extends Fragment {

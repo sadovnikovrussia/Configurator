@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.ui.adapter;
+package tech.sadovnikov.configurator.ui.configuration;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +10,6 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.ui.configuration.ConfigurationFragment;
 
 public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapter.ConfigTabsViewHolder> {
     private static final String TAG = ConfigTabsRvAdapter.class.getSimpleName();

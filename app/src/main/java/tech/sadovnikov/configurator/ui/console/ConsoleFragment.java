@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.ui;
+package tech.sadovnikov.configurator.ui.console;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -167,7 +167,7 @@ public class ConsoleFragment extends Fragment {
 
     // ---------------------------------------------------------------------------------------------
 
-    interface OnConsoleFragmentInteractionListener {
+    public interface OnConsoleFragmentInteractionListener {
 
         void onBtnSendCommandClick(String line);
 
