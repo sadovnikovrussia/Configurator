@@ -7,26 +7,50 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import javax.inject.Inject;
+
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
+import tech.sadovnikov.configurator.App;
+import tech.sadovnikov.configurator.di.component.BluetoothComponent;
+import tech.sadovnikov.configurator.di.component.DaggerBluetoothComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
+
+import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
 @InjectViewState
 public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     private static final String TAG = BluetoothPresenter.class.getSimpleName();
-    private BluetoothService bluetoothService;
+
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private Listener listener;
+    private BluetoothComponent bluetoothComponent;
 
-    BluetoothPresenter(BluetoothService bluetoothService) {
+    @Inject
+    int bluetoothPermission;
+    @Inject
+    BluetoothService bluetoothService;
+
+
+    BluetoothPresenter() {
         Log.v(TAG, "onConstructor");
-        this.bluetoothService = bluetoothService;
+        initDaggerComponent();
+        bluetoothComponent.injectBluetoothPresenter(this);
     }
 
-    public void onStart() {
+    private void initDaggerComponent() {
+        bluetoothComponent = DaggerBluetoothComponent
+                .builder()
+                .applicationComponent(App.getApplicationComponent())
+                .build();
+    }
+
+
+    @Override
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
         getViewState().displayBluetoothState(bluetoothService.isEnabled());
         if (bluetoothService.isEnabled()) getViewState().showDevicesContainer();
         else getViewState().hideDevicesContainer();
@@ -54,31 +78,23 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
         compositeDisposable.add(disposable);
     }
 
+    public void onStart() {
+    }
+
     void onAvailableDevicesViewShown() {
-        // Todo Обработать permission
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getViewState().checkBtPermission()) {
-                listener.onAvailableDevicesViewShown();
+            if (bluetoothPermission == PERMISSION_GRANTED) {
                 bluetoothService.startDiscovery();
             } else getViewState().requestBtPermission();
         }
     }
 
-    
     void onPairedDevicesViewShown() {
         bluetoothService.cancelDiscovery();
     }
 
-    
     void onPositiveBtRequestResult() {
         bluetoothService.startDiscovery();
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        compositeDisposable.clear();
     }
 
     void onBtSwitchClick(boolean isChecked) {
@@ -89,7 +105,10 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
         }
     }
 
-    interface Listener {
-        void onAvailableDevicesViewShown();
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.clear();
     }
 }

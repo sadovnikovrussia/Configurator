@@ -161,12 +161,6 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     }
 
     @Override
-    public boolean checkBtPermission() {
-        int permission = checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_COARSE_LOCATION);
-        return permission == PERMISSION_GRANTED;
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         for (String permission : permissions) {

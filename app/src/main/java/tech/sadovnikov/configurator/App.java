@@ -26,7 +26,7 @@ public class App extends Application {
     @Inject
     BluetoothService bluetoothService;
 
-    private ApplicationComponent applicationComponent;
+    private static ApplicationComponent applicationComponent;
 
     public App() {
         super();
@@ -62,7 +62,7 @@ public class App extends Application {
     }
 
 
-    public ApplicationComponent getApplicationComponent() {
+    public static ApplicationComponent getApplicationComponent() {
         return applicationComponent;
     }
 

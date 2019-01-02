@@ -17,6 +17,4 @@ public interface BluetoothView extends MvpView {
 
     void requestBtPermission();
 
-    boolean checkBtPermission();
-
 }

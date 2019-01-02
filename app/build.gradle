@@ -37,6 +37,7 @@ dependencies {
     // MVP
     implementation 'com.hannesdorfmann.mosby3:mvp:3.1.1'
     implementation 'com.hannesdorfmann.mosby3:viewstate:3.1.1'
+    implementation 'com.arello-mobile:moxy-android:1.5.5'
     implementation 'com.arello-mobile:moxy:1.5.5'
     implementation 'com.arello-mobile:moxy-app-compat:1.5.5'
     annotationProcessor 'com.arello-mobile:moxy-compiler:1.5.5'

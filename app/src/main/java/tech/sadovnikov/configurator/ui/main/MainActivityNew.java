@@ -27,10 +27,10 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
 
     @BindView(R.id.navigation)
     BottomNavigationView navigationView;
-    @BindView(R.id.group_configuration_actions_menu)
-    Menu actionBarMenu;
-    @BindView(R.id.item_update_available_devices)
-    MenuItem itemUpdateAvailableDevices;
+//    @Bind(R.id.group_configuration_actions_menu)
+//    Menu actionBarMenu;
+//    @BindView(R.id.item_update_available_devices)
+//    MenuItem itemUpdateAvailableDevices;
 
     FragmentTransaction fragmentTransaction = getSupportFragmentManager()
             .beginTransaction().addToBackStack(null);
@@ -48,7 +48,7 @@ public class MainActivityNew extends MvpActivity<MainMvp.MainView, MainMvp.MainP
     private void initializeDaggerComponent() {
         activityComponent = DaggerActivityComponent
                 .builder()
-                .applicationComponent(((App) getApplication()).getApplicationComponent())
+                .applicationComponent((App.getApplicationComponent()))
                 .activityModule(new ActivityModule(this))
                 .build();
     }
