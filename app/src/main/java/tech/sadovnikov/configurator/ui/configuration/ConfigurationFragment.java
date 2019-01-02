@@ -11,7 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hannesdorfmann.mosby3.mvp.MvpFragment;
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import javax.inject.Inject;
 
@@ -23,7 +24,7 @@ import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
 
 
-public class ConfigurationFragment extends MvpFragment<ConfigurationMvp.View, ConfigurationPresenter> implements ConfigurationMvp.View {
+public class ConfigurationFragment extends MvpAppCompatFragment implements ConfigurationView {
     private static final String TAG = ConfigurationFragment.class.getSimpleName();
 
     // UI
@@ -31,22 +32,16 @@ public class ConfigurationFragment extends MvpFragment<ConfigurationMvp.View, Co
     RecyclerView rvConfigTabs;
 
     FragmentComponent fragmentComponent;
+    @InjectPresenter
+    ConfigurationPresenter presenter;
     @Inject
     ConfigTabsRvAdapter adapter;
     @Inject
     LinearLayoutManager linearLayoutManager;
 
 
-    OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener;
-
     public ConfigurationFragment() {
         Log.v(TAG, "onConstructor");
-    }
-
-    @NonNull
-    @Override
-    public ConfigurationPresenter createPresenter() {
-        return new ConfigurationPresenter();
     }
 
     public static ConfigurationFragment newInstance() {
@@ -76,6 +71,7 @@ public class ConfigurationFragment extends MvpFragment<ConfigurationMvp.View, Co
     }
 
     private void setUp() {
+        adapter.setListener();
         rvConfigTabs.setLayoutManager(linearLayoutManager);
         rvConfigTabs.setAdapter(adapter);
     }
@@ -142,11 +138,4 @@ public class ConfigurationFragment extends MvpFragment<ConfigurationMvp.View, Co
     }
     // ---------------------------------------------------------------------------------------------
 
-    public interface OnConfigurationFragmentInteractionListener {
-
-        void onConfigTabsRvItemClick(String text);
-
-        void OnConfigurationFragmentStart();
-
-    }
 }

@@ -94,6 +94,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 
     @Override
     public void connectToDevice(BluetoothDevice device) {
+        cancelDiscovery();
         onConnecting(device);
     }
 

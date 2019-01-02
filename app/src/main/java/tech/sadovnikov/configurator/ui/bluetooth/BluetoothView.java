@@ -23,4 +23,7 @@ public interface BluetoothView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void showUpdateDevicesView();
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setSwBluetoothText(String text);
+
 }

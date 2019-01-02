@@ -8,9 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,7 +30,6 @@ public class AvailableDevicesFragment extends MvpAppCompatFragment implements Av
 
     @BindView(R.id.rv_available_devices)
     RecyclerView rvAvailableDevices;
-    Menu menu;
 
     @InjectPresenter
     AvailableDevicesPresenter presenter;
@@ -76,6 +72,7 @@ public class AvailableDevicesFragment extends MvpAppCompatFragment implements Av
     }
 
     private void setUp() {
+        availableDevicesRvAdapter.setListener(this);
         rvAvailableDevices.setLayoutManager(linearLayoutManager);
         rvAvailableDevices.setAdapter(availableDevicesRvAdapter);
     }
@@ -90,9 +87,9 @@ public class AvailableDevicesFragment extends MvpAppCompatFragment implements Av
         presenter.onDeviceClicked(device);
     }
 
+
     // ---------------------------------------------------------------------------------------------
     // States
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -153,6 +150,5 @@ public class AvailableDevicesFragment extends MvpAppCompatFragment implements Av
         super.onDetach();
         Log.i(TAG, "onDetach");
     }
-
     // ---------------------------------------------------------------------------------------------
 }

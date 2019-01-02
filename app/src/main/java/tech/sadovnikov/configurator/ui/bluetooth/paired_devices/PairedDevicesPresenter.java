@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.ui.bluetooth.paired_devices;
 
+import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -49,7 +50,7 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bluetoothDevices -> {
-                    Log.d(TAG, "onStartView: " + bluetoothDevices);
+                    Log.d(TAG, "onNext: " + bluetoothDevices);
                     getViewState().setPairedDevices(bluetoothDevices);
                 });
         compositeDisposable.add(subscribe);
@@ -62,4 +63,7 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
         compositeDisposable.clear();
     }
 
+    void onDeviceClicked(BluetoothDevice device) {
+        bluetoothService.connectToDevice(device);
+    }
 }

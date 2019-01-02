@@ -72,13 +72,14 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     }
 
     private void setUp() {
+        pairedDevicesRvAdapter.setListener(this);
         rvPairedDevices.setLayoutManager(linearLayoutManager);
         rvPairedDevices.setAdapter(pairedDevicesRvAdapter);
     }
 
     @Override
     public void onDeviceClicked(BluetoothDevice device) {
-
+        presenter.onDeviceClicked(device);
     }
 
     @Override

@@ -17,21 +17,15 @@ import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.ActivityComponent;
 import tech.sadovnikov.configurator.di.component.DaggerActivityComponent;
-import tech.sadovnikov.configurator.di.module.ActivityModule;
 import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
 
 public class MainActivityNew extends MvpAppCompatActivity implements MainView {
     private static final String TAG = MainActivityNew.class.getSimpleName();
 
-    private ActivityComponent activityComponent;
-
     @BindView(R.id.navigation)
     BottomNavigationView navigationView;
-//    @Bind(R.id.group_configuration_actions_menu)
-//    Menu actionBarMenu;
-//    @BindView(R.id.item_update_available_devices)
-//    MenuItem itemUpdateAvailableDevices;
 
+    private ActivityComponent activityComponent;
     @InjectPresenter
     MainPresenter presenter;
 
@@ -52,7 +46,6 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
         activityComponent = DaggerActivityComponent
                 .builder()
                 .applicationComponent((App.getApplicationComponent()))
-                .activityModule(new ActivityModule(this))
                 .build();
     }
 
@@ -85,6 +78,7 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
         super();
         Log.w(TAG, "onConstructor: ");
     }
+
 
     @Override
     protected void onDestroy() {

@@ -1,18 +1,14 @@
 package tech.sadovnikov.configurator.ui.main;
 
-import com.hannesdorfmann.mosby3.mvp.MvpPresenter;
-import com.hannesdorfmann.mosby3.mvp.MvpView;
+import com.arellomobile.mvp.MvpView;
 
-public interface MainMvp {
-
-    interface MainView extends MvpView {
+public interface MainView extends MvpView {
 
         void showBluetoothView();
 
         void showConsoleView();
 
         void showConfigurationView();
-
 
 
 //        // Вывести сообщение лога в консоль
@@ -164,7 +160,3 @@ public interface MainMvp {
 
     }
 
-    interface MainPresenter extends MvpPresenter<MainView> {
-        void onRestoreInstanceState(boolean restart);
-    }
-}

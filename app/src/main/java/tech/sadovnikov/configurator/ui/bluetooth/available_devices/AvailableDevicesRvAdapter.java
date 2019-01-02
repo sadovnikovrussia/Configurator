@@ -45,12 +45,16 @@ public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDev
         return devices.size();
     }
 
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
     void setDevices(List<BluetoothDevice> devices) {
         this.devices = devices;
         notifyDataSetChanged();
     }
 
-    // ViewHolder
+
     public class BluetoothDeviceViewHolder extends BaseViewHolder {
         // private static final String TAG = "AvailDevAdaptViewHolder";
         @BindView(R.id.tv_device_name)
@@ -78,9 +82,9 @@ public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDev
 
     }
 
+
     public interface Listener {
         void onDeviceClicked(BluetoothDevice device);
     }
-
 
 }

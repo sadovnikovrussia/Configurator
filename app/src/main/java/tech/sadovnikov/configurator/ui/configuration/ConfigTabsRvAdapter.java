@@ -14,37 +14,32 @@ import tech.sadovnikov.configurator.R;
 public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapter.ConfigTabsViewHolder> {
     private static final String TAG = ConfigTabsRvAdapter.class.getSimpleName();
 
-    private ConfigurationFragment.OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener;
+    private Listener listener;
 
     private String[] configTabs = new String[]{"Буй", "Основные", "Навигация", "События", "Сервер", "SIM карта"};
 
     public ConfigTabsRvAdapter() {
     }
 
-    public ConfigTabsRvAdapter(ConfigurationFragment.OnConfigurationFragmentInteractionListener onConfigurationFragmentInteractionListener) {
-        // Logs.d(TAG, "onConstructor, " 1+ bluetoothDevices.toString());
-        this.onConfigurationFragmentInteractionListener = onConfigurationFragmentInteractionListener;
-        }
-
-
     @NonNull
     @Override
     public ConfigTabsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View configTabView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_config_tab, parent, false);
-        // Logs.d(TAG, "onCreateBluetoothDeviceViewHolder");
         return new ConfigTabsViewHolder(configTabView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ConfigTabsViewHolder holder, int position) {
-        // Logs.d(TAG, "onBindViewHolder");
         holder.onBind(position);
     }
 
     @Override
     public int getItemCount() {
-        // Logs.d(TAG, "getItemCount: " + bluetoothDevices.size());
         return configTabs.length;
+    }
+
+    void setListener() {
+
     }
 
     class ConfigTabsViewHolder extends RecyclerView.ViewHolder {
@@ -61,4 +56,7 @@ public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapte
         }
     }
 
+    interface Listener {
+
+    }
 }

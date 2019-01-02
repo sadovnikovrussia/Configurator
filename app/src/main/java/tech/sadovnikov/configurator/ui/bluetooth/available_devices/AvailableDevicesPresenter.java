@@ -72,8 +72,4 @@ public class AvailableDevicesPresenter extends MvpPresenter<AvailableDevicesView
         compositeDisposable.clear();
     }
 
-    void onUpdateDevicesClick() {
-        Log.i(TAG, "onUpdateDevicesClick: ");
-        bluetoothService.startDiscovery();
-    }
 }

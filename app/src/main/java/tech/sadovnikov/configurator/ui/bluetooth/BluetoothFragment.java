@@ -83,12 +83,6 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
         return inflate;
     }
 
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        Log.v(TAG, "onViewStateRestored: " + savedInstanceState);
-        super.onViewStateRestored(savedInstanceState);
-
-    }
 
     private void initDaggerAndInject() {
         fragmentComponent = DaggerFragmentComponent
@@ -161,6 +155,11 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     }
 
     @Override
+    public void setSwBluetoothText(String text) {
+
+    }
+
+    @Override
     public void requestBtPermission() {
         ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -182,6 +181,11 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 
     // ---------------------------------------------------------------------------------------------
     // States
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        Log.v(TAG, "onViewStateRestored: " + savedInstanceState);
+        super.onViewStateRestored(savedInstanceState);
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
