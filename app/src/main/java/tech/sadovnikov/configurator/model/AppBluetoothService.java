@@ -12,9 +12,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.*;
 import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.Subject;
 //import tech.sadovnikov.configurator.presenter.UiHandler;
 
 
@@ -35,6 +33,8 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     private PublishSubject<List<BluetoothDevice>> pairedDevices = PublishSubject.create();
     private PublishSubject<List<BluetoothDevice>> availableDevicesObservable = PublishSubject.create();
     private List<BluetoothDevice> availableDevices = new ArrayList<>();
+
+    private InputStreamListener inputStreamListener;
 
     // Потоки
     private ConnectThread mConnectThread;
@@ -82,6 +82,11 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     @Override
     public PublishSubject<String> getInputMessagesStream() {
         return inputMessagesStream;
+    }
+
+    @Override
+    public void setInputStreamListener(InputStreamListener listener) {
+
     }
 
     @Override
@@ -314,12 +319,12 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         public void run() {
             setName("ConnectedThread");
             // Log.d(TAG, "Start thread " + getName());
-            inputMessagesStream = PublishSubject.create();
+            // inputMessagesStream = PublishSubject.create();
             String line;
             try {
                 // Log.d(TAG, "Пытаемся прочитать из потока");
                 while ((line = readerSerial.readLine()) != null) {
-                    Log.v(TAG, line);
+                    Log.v(TAG, AppBluetoothService.this + ", " + inputMessagesStream + ", " + Thread.currentThread().getName() + ": " + line);
                     inputMessagesStream.onNext(line);
                     // dataAnalyzer.analyze(line);
                 }

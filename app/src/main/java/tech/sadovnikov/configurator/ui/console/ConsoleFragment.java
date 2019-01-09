@@ -85,7 +85,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     }
 
     void showLog(String logsMessages) {
-        // Logs.d(TAG, "onShowLog: " + logsMessages);
+        // DeviceLogs.d(TAG, "onShowLog: " + logsMessages);
         if (tvLogs != null) {
             tvLogs.setText(logsMessages);
         }

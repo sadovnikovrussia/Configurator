@@ -1,11 +1,10 @@
-package tech.sadovnikov.configurator.model;
+package tech.sadovnikov.configurator.model.entities;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 
 import tech.sadovnikov.configurator.model.exception.NoSettableParameterException;
-import tech.sadovnikov.configurator.utils.ParameterNames;
 import tech.sadovnikov.configurator.utils.Parameters;
 
 public class ParameterNew implements CommandCreating {
@@ -19,13 +18,13 @@ public class ParameterNew implements CommandCreating {
 
     public ParameterNew(Parameters parameters) {
         this.parameters = parameters;
-        this.setable = parameters.isSetable();
+        this.setable = parameters.isSettable();
         this.name = parameters.getName();
     }
 
     public ParameterNew(Parameters parameters, @Nullable String value) {
         this.value = value;
-        this.setable = parameters.isSetable();
+        this.setable = parameters.isSettable();
         name = parameters.getName();
     }
 

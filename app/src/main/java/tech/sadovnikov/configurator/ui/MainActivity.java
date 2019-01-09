@@ -525,7 +525,7 @@
 //
 //    @Override
 //    public void updateAvailableDevices() {
-//        // Logs.d(TAG, "updateAvailableDevices()");
+//        // DeviceLogs.d(TAG, "updateAvailableDevices()");
 //        bluetoothFragment.updateAvailableDevices();
 //    }
 //

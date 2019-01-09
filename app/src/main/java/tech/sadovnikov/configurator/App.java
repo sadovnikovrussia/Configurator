@@ -14,7 +14,7 @@ import tech.sadovnikov.configurator.di.component.DaggerApplicationComponent;
 import tech.sadovnikov.configurator.di.module.ApplicationModule;
 import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
-import tech.sadovnikov.configurator.model.data.DataManager;
+import tech.sadovnikov.configurator.model.DataManager;
 
 public class App extends Application {
     private static final String TAG = App.class.getSimpleName();
@@ -38,6 +38,7 @@ public class App extends Application {
         super.onCreate();
         initDaggerComponent();
         applicationComponent.inject(this);
+        Log.d(TAG, "onCreate: " + bluetoothService + ", " + bluetoothService.getInputMessagesStream());
         receiver.setListener((BluetoothBroadcastReceiver.Listener) bluetoothService);
         registerBluetoothReceiver(receiver);
     }
@@ -71,6 +72,7 @@ public class App extends Application {
         super.onTerminate();
         Log.d(TAG, "onTerminate: ");
         unregisterReceiver(receiver);
+        dataManager.clearSubscribes();
     }
 
     @Override

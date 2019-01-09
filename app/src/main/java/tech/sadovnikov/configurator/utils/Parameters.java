@@ -8,16 +8,16 @@ public enum Parameters {
     FIRMWARE_VERSION("firmware version",false),
     BLINKER_MODE("blinker mode", true);
 
-    private boolean setable;
+    private boolean settable;
     @NonNull private String name;
 
-    Parameters(@NonNull String name, boolean setable) {
+    Parameters(@NonNull String name, boolean settable) {
         this.name = name;
-        this.setable = setable;
+        this.settable = settable;
     }
 
-    public boolean isSetable() {
-        return setable;
+    public boolean isSettable() {
+        return settable;
     }
 
     @NonNull

@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.model;
+package tech.sadovnikov.configurator.model.entities;
 
 import java.util.HashSet;
 

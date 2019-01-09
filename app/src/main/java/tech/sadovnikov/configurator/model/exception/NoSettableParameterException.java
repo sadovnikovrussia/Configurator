@@ -1,6 +1,6 @@
 package tech.sadovnikov.configurator.model.exception;
 
-import tech.sadovnikov.configurator.model.ParameterNew;
+import tech.sadovnikov.configurator.model.entities.ParameterNew;
 
 public class NoSettableParameterException extends Exception {
 

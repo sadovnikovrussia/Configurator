@@ -2,20 +2,20 @@ package tech.sadovnikov.configurator.di.module;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.di.ApplicationContext;
 import tech.sadovnikov.configurator.di.PreferenceInfo;
 import tech.sadovnikov.configurator.model.AppBluetoothService;
+import tech.sadovnikov.configurator.model.AppDataManager;
 import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
-import tech.sadovnikov.configurator.model.data.AppDataManager;
-import tech.sadovnikov.configurator.model.data.DataManager;
+import tech.sadovnikov.configurator.model.DataManager;
+import tech.sadovnikov.configurator.model.DeviceLogs;
+import tech.sadovnikov.configurator.model.Logs;
 import tech.sadovnikov.configurator.model.data.prefs.AppPreferencesHelper;
 import tech.sadovnikov.configurator.model.data.prefs.PreferencesHelper;
 import tech.sadovnikov.configurator.utils.AppConstants;
@@ -31,14 +31,14 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    Application provideApplication(){
+    Application provideApplication() {
         return application;
     }
 
     @Provides
     @Singleton
     @ApplicationContext
-    Context provideAppContext(){
+    Context provideAppContext() {
         return application.getApplicationContext();
     }
 
@@ -50,19 +50,21 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    BluetoothService provideBluetoothService(){
-        //Log.d(TAG, "provideBluetoothService() returned: " + appBluetoothService);
+    BluetoothService provideBluetoothService() {
         return new AppBluetoothService();
     }
 
     @Provides
     @Singleton
-    BluetoothBroadcastReceiver provideBluetoothReceiver(){
+    BluetoothBroadcastReceiver provideBluetoothReceiver() {
         return new BluetoothBroadcastReceiver();
     }
 
-
-
+    @Provides
+    @Singleton
+    Logs provideLogs() {
+        return new DeviceLogs();
+    }
 
 
 
@@ -77,7 +79,6 @@ public class ApplicationModule {
     String providePreferenceName() {
         return AppConstants.PREF_NAME;
     }
-
 
 
 }

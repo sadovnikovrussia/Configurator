@@ -16,8 +16,6 @@
 package tech.sadovnikov.configurator.model.data.prefs;
 
 
-import tech.sadovnikov.configurator.model.data.DataManager;
-
 /**
  * Created by janisharali on 27/01/17.
  */

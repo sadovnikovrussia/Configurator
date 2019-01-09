@@ -1,7 +1,6 @@
 package tech.sadovnikov.configurator.utils;
 
-import tech.sadovnikov.configurator.model.ParameterNew;
-import tech.sadovnikov.configurator.model.exception.NoSettableParameterException;
+import tech.sadovnikov.configurator.model.entities.ParameterNew;
 
 public class CommandCreator {
     private static String endOfCommonReadingCommand = "?";

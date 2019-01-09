@@ -49,4 +49,10 @@ public interface BluetoothService {
     void cancelDiscovery();
 
     PublishSubject<String> getInputMessagesStream();
+
+    void setInputStreamListener(InputStreamListener listener);
+
+    interface InputStreamListener {
+
+    }
 }
