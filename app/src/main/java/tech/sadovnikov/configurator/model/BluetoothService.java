@@ -49,4 +49,6 @@ public interface BluetoothService {
     void startDiscovery();
 
     void cancelDiscovery();
+
+    PublishSubject<String> getInputMessagesStream();
 }

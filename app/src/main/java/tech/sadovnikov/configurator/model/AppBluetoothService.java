@@ -10,14 +10,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.*;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
-import tech.sadovnikov.configurator.presenter.DataAnalyzer;
+import io.reactivex.subjects.Subject;
 //import tech.sadovnikov.configurator.presenter.UiHandler;
 
 
@@ -37,6 +34,8 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     //private Observable<List<BluetoothDevice>> pairedDevices;
     //private Observable<List<BluetoothDevice>> availableDevices;
     private Observable<String> inputStream;
+
+    private PublishSubject<String> inputMessagesStream;
 
     private PublishSubject<Integer> bluetoothState;
 
@@ -90,6 +89,11 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     @Override
     public void cancelDiscovery() {
         bluetoothAdapter.cancelDiscovery();
+    }
+
+    @Override
+    public PublishSubject<String> getInputMessagesStream() {
+        return inputMessagesStream;
     }
 
     @Override
@@ -327,12 +331,14 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         public void run() {
             setName("ConnectedThread");
             // Log.d(TAG, "Start thread " + getName());
+            inputMessagesStream = PublishSubject.create();
             String line;
             try {
                 // Log.d(TAG, "Пытаемся прочитать из потока");
                 while ((line = readerSerial.readLine()) != null) {
                     Log.v(TAG, line);
-                    dataAnalyzer.analyze(line);
+                    inputMessagesStream.onNext(line);
+                    // dataAnalyzer.analyze(line);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Не удалось прочитать из потока", e);

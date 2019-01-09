@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.presenter;
+package tech.sadovnikov.configurator.model;
 
 import android.os.Message;
 import android.util.Log;

@@ -64,8 +64,8 @@
 //import static tech.sadovnikov.configurator.entities.Configuration.TRUE_POS;
 //import static tech.sadovnikov.configurator.entities.Configuration.UPOWER;
 //import static tech.sadovnikov.configurator.entities.Configuration.UPOWER_THLD;
-//import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_COMMAND_DATA;
-//import static tech.sadovnikov.configurator.presenter.DataAnalyzer.WHAT_MAIN_LOG;
+//import static tech.sadovnikov.configurator.model.DataAnalyzer.WHAT_COMMAND_DATA;
+//import static tech.sadovnikov.configurator.model.DataAnalyzer.WHAT_MAIN_LOG;
 //import static tech.sadovnikov.configurator.presenter.Loader.WHAT_LOADING_END;
 //import static tech.sadovnikov.configurator.presenter.UiHandler.WHAT_CONNECTING_ERROR;
 //
