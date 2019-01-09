@@ -15,6 +15,8 @@ import tech.sadovnikov.configurator.model.entities.ConfigurationNew;
 public class AppDataManager implements DataManager {
     private static final String TAG = AppDataManager.class.getSimpleName();
 
+    private BluetoothService bluetoothService;
+
     private Logs logs;
     private ConfigurationNew configuration;
 
@@ -22,14 +24,19 @@ public class AppDataManager implements DataManager {
 
     @Inject
     public AppDataManager(BluetoothService bluetoothService, Logs logs) {
+        this.bluetoothService = bluetoothService;
         this.logs = logs;
+        subscribeOnBluetoothInputStream();
+    }
+
+    private void subscribeOnBluetoothInputStream() {
         PublishSubject<String> inputMessagesStream = bluetoothService.getInputMessagesStream();
         Log.d(TAG, "AppDataManager: " + bluetoothService + ", " + inputMessagesStream + ", " + Thread.currentThread().getName());
         Disposable subscribe = inputMessagesStream
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe(line -> {
-                    //Log.d(TAG, "onNext: " + bluetoothService + ", " + inputMessagesStream + ", " + Thread.currentThread().getName() + ": " + line);
+                    Log.d(TAG, "onNext: " + bluetoothService + ", " + inputMessagesStream + ", " + Thread.currentThread().getName() + ": " + line);
                     this.logs.addLine(line);
                 });
         compositeDisposable.add(subscribe);

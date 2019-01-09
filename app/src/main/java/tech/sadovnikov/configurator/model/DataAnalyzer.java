@@ -1,9 +1,10 @@
 package tech.sadovnikov.configurator.model;
 
-import android.os.Message;
 import android.util.Log;
 
 import java.util.HashMap;
+
+import io.reactivex.subjects.PublishSubject;
 
 import static tech.sadovnikov.configurator.entities.Configuration.PARAMETER_NAMES;
 
@@ -28,9 +29,10 @@ public class DataAnalyzer {
     //private UiHandler uiHandler;
 
     private String buffer = "";
-    private String logType;
 
     private DataParser dataParser = new DataParser();
+
+    private PublishSubject<Message> observableMessages = PublishSubject.create();
 
 //    public DataAnalyzer(UiHandler handler) {
 //        uiHandler = handler;
@@ -46,8 +48,11 @@ public class DataAnalyzer {
                     String message = buffer.substring(0, indexStartNewMessage);
                     buffer = buffer.substring(indexStartNewMessage);
                     String logLevel = message.substring(1, 2);
+                    String logType = message.substring(2, 5);
+                    //
+                    observableMessages.onNext(new Message(message, logLevel, logType, "1", "1", message));
+
                     // TODO <Переделать определение logType>
-                    logType = message.substring(2, 5);
                     if (logType.equals(CMD) & Integer.valueOf(logLevel) == LOG_LEVEL_1) {
                         Log.w(TAG, "analyze: message = " + message);
                         if (message.contains(OK)) {
@@ -60,7 +65,7 @@ public class DataAnalyzer {
                         }
                     }
                 } catch (Exception e) {
-                    Log.w(TAG, "analyze: " + logType, e);
+                    // Log.w(TAG, "analyze: " + logType, e);
                 }
             }
         } else buffer = "";
@@ -68,20 +73,20 @@ public class DataAnalyzer {
 
     private void sendCommand(String value, String parameter) {
         // Log.i(TAG, "sendCommand");
-        Message msg = new Message();
-        msg.what = WHAT_COMMAND_DATA;
-        HashMap<String, Object> msgObj = new HashMap<>();
-        msgObj.put(PARAMETER_VALUE, value);
-        msgObj.put(PARAMETER_NAME, parameter);
-        msg.obj = msgObj;
+//        Message msg = new Message();
+//        msg.what = WHAT_COMMAND_DATA;
+//        HashMap<String, Object> msgObj = new HashMap<>();
+//        msgObj.put(PARAMETER_VALUE, value);
+//        msgObj.put(PARAMETER_NAME, parameter);
+//        msg.obj = msgObj;
         // Log.d(TAG, "sendCommand: " + ((HashMap)msg.obj).get(DataAnalyzer.PARAMETER_VALUE).toString());
 //        uiHandler.sendMessage(msg);
     }
 
     private void sendLogs(String line) {
-        Message msg = new Message();
-        msg.what = WHAT_MAIN_LOG;
-        msg.obj = line;
+//        Message msg = new Message();
+//        msg.what = WHAT_MAIN_LOG;
+//        msg.obj = line;
         //uiHandler.sendMessage(msg);
     }
 
