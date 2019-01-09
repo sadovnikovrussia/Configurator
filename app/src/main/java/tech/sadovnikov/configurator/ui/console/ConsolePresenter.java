@@ -1,6 +1,5 @@
-package tech.sadovnikov.configurator.ui.bluetooth.available_devices;
+package tech.sadovnikov.configurator.ui.console;
 
-import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -18,20 +17,19 @@ import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
 @InjectViewState
-public class AvailableDevicesPresenter extends MvpPresenter<AvailableDevicesView> {
-    private static final String TAG = AvailableDevicesPresenter.class.getSimpleName();
+public class ConsolePresenter extends MvpPresenter<ConsoleView> {
+    private static final String TAG = ConsolePresenter.class.getSimpleName();
 
     private PresenterComponent presenterComponent;
-    @Inject
-    BluetoothService bluetoothService;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    AvailableDevicesPresenter() {
-        super();
-        Log.i(TAG, "onConstructor: ");
+    @Inject
+    BluetoothService bluetoothService;
+
+    ConsolePresenter() {
         initDaggerComponent();
-        presenterComponent.injectAvailableDevicesPresenter(this);
+        presenterComponent.injectConsolePresenter(this);
     }
 
     private void initDaggerComponent() {
@@ -44,31 +42,32 @@ public class AvailableDevicesPresenter extends MvpPresenter<AvailableDevicesView
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        Log.d(TAG, "onFirstViewAttach: ");
-        getViewState().setAvailableDevices(bluetoothService.getAvailableDevices());
-        Disposable subscribe = bluetoothService.getAvailableDevicesObservable()
+        Disposable subscribe = bluetoothService.getInputMessagesStream()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        bluetoothDevices -> {
-                            Log.d(TAG, "onNext: " + bluetoothDevices);
-                            getViewState().setAvailableDevices(bluetoothDevices);
-                        },
-                        throwable -> Log.w(TAG, "onError: ", throwable),
-                        () -> Log.d(TAG, "onComplete: "),
-                        disposable -> Log.d(TAG, "onSubscribe: "));
+                .subscribe(message -> {
+                    Log.d(TAG, "onNext: " + message);
+                    getViewState().addMessageToLog(message);
+                });
         compositeDisposable.add(subscribe);
-    }
-    
-    void onDeviceClicked(BluetoothDevice device) {
-        bluetoothService.connectToDevice(device);
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy: ");
         compositeDisposable.clear();
     }
 
+    void onSendCommandClick() {
+
+    }
+
+    void onLogsLongClick() {
+
+    }
+
+    void onChangeAutoScrollClick() {
+
+    }
 }

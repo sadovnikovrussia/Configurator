@@ -3,7 +3,6 @@ package tech.sadovnikov.configurator.ui.console;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,67 +13,65 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 
 
-public class ConsoleFragment extends Fragment {
+public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView {
+    public static final String TAG = ConsoleFragment.class.getSimpleName();
 
-    private static final String TAG = "ConsoleFragment";
+    @InjectPresenter
+    ConsolePresenter presenter;
 
     // UI
+    @BindView(R.id.tv_logs)
     TextView tvLogs;
+    @BindView(R.id.sv_logs)
     ScrollView svLogs;
+    @BindView(R.id.btn_send_command)
     Button btnSendCommand;
+    @BindView(R.id.et_command_line)
     EditText etCommandLine;
+    @BindView(R.id.sw_auto_scroll)
     Switch swAutoScroll;
 
-    OnConsoleFragmentInteractionListener onConsoleFragmentInteractionListener;
 
     public ConsoleFragment() {
-        // Required empty public constructor
         Log.v(TAG, "onConstructor");
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.v(TAG, "onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.v(TAG, "onCreateView");
-        // Inflate the layout for this fragment
         View inflate = inflater.inflate(R.layout.fragment_console, container, false);
-        initUi(inflate);
-        onConsoleFragmentInteractionListener.onConsoleFragmentCreateView();
+        ButterKnife.bind(this, inflate);
+        setUp();
         return inflate;
     }
 
-    private void initUi(View inflate) {
-        swAutoScroll = inflate.findViewById(R.id.sw_auto_scroll);
+    private void setUp() {
         swAutoScroll.setChecked(true);
-        tvLogs = inflate.findViewById(R.id.tv_logs);
-        svLogs = inflate.findViewById(R.id.sv_logs);
-        etCommandLine = inflate.findViewById(R.id.et_command_line);
-        btnSendCommand = inflate.findViewById(R.id.btn_send_command);
-        btnSendCommand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String command = etCommandLine.getText().toString();
-                if (command.length() != 0) {
-                    onConsoleFragmentInteractionListener.onBtnSendCommandClick(command);
-                }
-            }
+        swAutoScroll.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.onChangeAutoScrollClick());
+        btnSendCommand.setOnClickListener(view -> presenter.onSendCommandClick());
+        tvLogs.setOnLongClickListener(view -> {
+            presenter.onLogsLongClick();
+            return false;
         });
-        tvLogs.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                onConsoleFragmentInteractionListener.onTvLogsLongClick();
-                return false;
-            }
-        });
+    }
+
+    @Override
+    public String getCommandLineText() {
+        return String.valueOf(etCommandLine.getText());
+    }
+
+    @Override
+    public void addMessageToLog(String message) {
+
     }
 
     void showLog(String logsMessages) {
@@ -99,11 +96,6 @@ public class ConsoleFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-    }
 
     // ---------------------------------------------------------------------------------------------
     // States
@@ -111,12 +103,6 @@ public class ConsoleFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.v(TAG, "onStart");
-        if (context instanceof OnConsoleFragmentInteractionListener) {
-            onConsoleFragmentInteractionListener = (OnConsoleFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement onConsoleFragmentInteractionListener");
-        }
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -124,10 +110,15 @@ public class ConsoleFragment extends Fragment {
         Log.v(TAG, "onActivityCreated");
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.v(TAG, "onCreate");
+    }
+
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        onConsoleFragmentInteractionListener.onConsoleFragmentStart();
     }
 
     public void onResume() {
@@ -158,24 +149,7 @@ public class ConsoleFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         Log.v(TAG, "onDetach");
-        onConsoleFragmentInteractionListener = null;
     }
-
-    public String getCommandLineText() {
-        return String.valueOf(etCommandLine.getText());
-    }
-
     // ---------------------------------------------------------------------------------------------
-
-    public interface OnConsoleFragmentInteractionListener {
-
-        void onBtnSendCommandClick(String line);
-
-        void onConsoleFragmentCreateView();
-
-        void onConsoleFragmentStart();
-
-        void onTvLogsLongClick();
-    }
 
 }

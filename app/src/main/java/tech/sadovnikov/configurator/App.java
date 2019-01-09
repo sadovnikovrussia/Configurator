@@ -36,13 +36,13 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        initializeDaggerComponent();
+        initDaggerComponent();
         applicationComponent.inject(this);
         receiver.setListener((BluetoothBroadcastReceiver.Listener) bluetoothService);
         registerBluetoothReceiver(receiver);
     }
 
-    private void initializeDaggerComponent() {
+    private void initDaggerComponent() {
         applicationComponent = DaggerApplicationComponent
                 .builder()
                 .applicationModule(new ApplicationModule(this))
@@ -61,11 +61,9 @@ public class App extends Application {
         getApplicationContext().registerReceiver(receiver, intentFilter);
     }
 
-
     public static ApplicationComponent getApplicationComponent() {
         return applicationComponent;
     }
-
 
 
     @Override
@@ -80,6 +78,5 @@ public class App extends Application {
         super.onConfigurationChanged(newConfig);
         Log.d(TAG, "onConfigurationChanged: ");
     }
-
 
 }

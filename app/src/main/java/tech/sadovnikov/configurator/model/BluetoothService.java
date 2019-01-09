@@ -26,8 +26,6 @@ public interface BluetoothService {
 
     boolean disable();
 
-    Observable<String> outputStream();
-
     void connectToDevice(BluetoothDevice device);
 
     void closeAllConnections();

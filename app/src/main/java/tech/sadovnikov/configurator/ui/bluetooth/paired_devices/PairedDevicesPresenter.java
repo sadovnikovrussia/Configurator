@@ -13,15 +13,15 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.App;
-import tech.sadovnikov.configurator.di.component.BluetoothComponent;
-import tech.sadovnikov.configurator.di.component.DaggerBluetoothComponent;
+import tech.sadovnikov.configurator.di.component.PresenterComponent;
+import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
 @InjectViewState
 public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
     private static final String TAG = PairedDevicesPresenter.class.getSimpleName();
 
-    private BluetoothComponent bluetoothComponent;
+    private PresenterComponent presenterComponent;
     @Inject
     BluetoothService bluetoothService;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -31,11 +31,11 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
         super();
         Log.d(TAG, "onConstructor: ");
         initDaggerComponent();
-        bluetoothComponent.injectPairedDevicesPresenter(this);
+        presenterComponent.injectPairedDevicesPresenter(this);
     }
 
     private void initDaggerComponent() {
-        bluetoothComponent = DaggerBluetoothComponent
+        presenterComponent = DaggerPresenterComponent
         .builder()
         .applicationComponent(App.getApplicationComponent())
         .build();
@@ -59,7 +59,6 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        compositeDisposable.dispose();
         compositeDisposable.clear();
     }
 

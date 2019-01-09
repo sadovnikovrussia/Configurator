@@ -13,4 +13,5 @@ import tech.sadovnikov.configurator.model.BluetoothService;
 public interface ActivityComponent {
 
     BluetoothService getBluetoothService();
+
 }

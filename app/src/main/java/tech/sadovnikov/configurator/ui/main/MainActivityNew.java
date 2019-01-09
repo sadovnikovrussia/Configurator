@@ -18,6 +18,7 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.ActivityComponent;
 import tech.sadovnikov.configurator.di.component.DaggerActivityComponent;
 import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
+import tech.sadovnikov.configurator.ui.console.ConsoleFragment;
 
 public class MainActivityNew extends MvpAppCompatActivity implements MainView {
     private static final String TAG = MainActivityNew.class.getSimpleName();
@@ -65,6 +66,11 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
 
     @Override
     public void showConsoleView() {
+        Log.w(TAG, "showConsoleView: ");
+        fragmentTransaction
+                .replace(R.id.container, BluetoothFragment.newInstance(), ConsoleFragment.TAG)
+                .commit();
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_console);
 
     }
 

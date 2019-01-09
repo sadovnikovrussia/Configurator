@@ -16,7 +16,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.ui.base.BaseViewHolder;
-import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
 
 public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRvAdapter.BluetoothDeviceViewHolder> {
     private static final String TAG = PairedDevicesRvAdapter.class.getSimpleName();

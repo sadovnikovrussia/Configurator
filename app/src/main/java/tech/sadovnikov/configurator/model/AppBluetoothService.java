@@ -29,22 +29,12 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     static final int WHAT_CONNECTING_ERROR = 13;
 
     private static BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    //    private ArrayList<BluetoothDevice> availableDevices = new ArrayList<>();
-//    private ArrayList<BluetoothDevice> pairedDevices = new ArrayList<>();
-    //private Observable<List<BluetoothDevice>> pairedDevices;
-    //private Observable<List<BluetoothDevice>> availableDevices;
-    private Observable<String> inputStream;
 
-    private PublishSubject<String> inputMessagesStream;
-
-    private PublishSubject<Integer> bluetoothState;
-
+    private PublishSubject<String> inputMessagesStream = PublishSubject.create();
+    private PublishSubject<Integer> bluetoothState = PublishSubject.create();
     private PublishSubject<List<BluetoothDevice>> pairedDevices = PublishSubject.create();
-
-    private List<BluetoothDevice> availableDevices = new ArrayList<>();
     private PublishSubject<List<BluetoothDevice>> availableDevicesObservable = PublishSubject.create();
-
-    private OnBluetoothServiceEventsListener listener;
+    private List<BluetoothDevice> availableDevices = new ArrayList<>();
 
     // Потоки
     private ConnectThread mConnectThread;
@@ -62,8 +52,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 //
 
     public AppBluetoothService() {
-        Log.d(TAG, "AppBluetoothService: Constructor: " + this);
-        bluetoothState = PublishSubject.create();
     }
 
     @Override
@@ -199,11 +187,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
-    }
-
-    @Override
-    public rx.Observable<String> outputStream() {
-        return null;
     }
 
     public void closeAllConnections() {

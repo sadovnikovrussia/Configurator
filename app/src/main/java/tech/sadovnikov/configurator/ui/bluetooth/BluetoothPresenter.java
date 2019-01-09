@@ -13,8 +13,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.App;
-import tech.sadovnikov.configurator.di.component.BluetoothComponent;
-import tech.sadovnikov.configurator.di.component.DaggerBluetoothComponent;
+import tech.sadovnikov.configurator.di.component.PresenterComponent;
+import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
@@ -25,7 +25,7 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private BluetoothComponent bluetoothComponent;
+    private PresenterComponent presenterComponent;
 
     @Inject
     int bluetoothPermission;
@@ -36,11 +36,11 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     BluetoothPresenter() {
         Log.v(TAG, "onConstructor");
         initDaggerComponent();
-        bluetoothComponent.injectBluetoothPresenter(this);
+        presenterComponent.injectBluetoothPresenter(this);
     }
 
     private void initDaggerComponent() {
-        bluetoothComponent = DaggerBluetoothComponent
+        presenterComponent = DaggerPresenterComponent
                 .builder()
                 .applicationComponent(App.getApplicationComponent())
                 .build();
