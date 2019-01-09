@@ -3,6 +3,7 @@ package tech.sadovnikov.configurator.ui.console;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+
+import java.text.MessageFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,8 +47,16 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
         Log.v(TAG, "onConstructor");
     }
 
+    public static Fragment newInstance() {
+        Log.v(TAG, "newInstance: ");
+        Bundle args = new Bundle();
+        ConsoleFragment fragment = new ConsoleFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.v(TAG, "onCreateView");
         View inflate = inflater.inflate(R.layout.fragment_console, container, false);
@@ -57,21 +68,20 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     private void setUp() {
         swAutoScroll.setChecked(true);
         swAutoScroll.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.onChangeAutoScrollClick());
-        btnSendCommand.setOnClickListener(view -> presenter.onSendCommandClick());
+        btnSendCommand.setOnClickListener(view -> presenter.onSendCommandClick(etCommandLine.getText().toString()));
         tvLogs.setOnLongClickListener(view -> {
             presenter.onLogsLongClick();
             return false;
         });
     }
 
-    @Override
     public String getCommandLineText() {
-        return String.valueOf(etCommandLine.getText());
+        return etCommandLine.getText().toString();
     }
 
     @Override
     public void addMessageToLog(String message) {
-
+        tvLogs.append(message + "\r\n");
     }
 
     void showLog(String logsMessages) {

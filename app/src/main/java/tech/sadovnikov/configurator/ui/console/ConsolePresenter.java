@@ -28,6 +28,7 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
     BluetoothService bluetoothService;
 
     ConsolePresenter() {
+        Log.v(TAG, "ConsolePresenter: ");
         initDaggerComponent();
         presenterComponent.injectConsolePresenter(this);
     }
@@ -42,6 +43,7 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
+        Log.v(TAG, "onFirstViewAttach: ");
         Disposable subscribe = bluetoothService.getInputMessagesStream()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -50,16 +52,16 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
                     getViewState().addMessageToLog(message);
                 });
         compositeDisposable.add(subscribe);
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.v(TAG, "onDestroy: ");
         compositeDisposable.clear();
     }
 
-    void onSendCommandClick() {
+    void onSendCommandClick(String command) {
 
     }
 

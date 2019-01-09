@@ -21,4 +21,14 @@ public class MainPresenter extends MvpPresenter<MainView> {
         getViewState().showBluetoothView();
     }
 
+    void onBluetoothClick(boolean isFragmentOpened) {
+        if (!isFragmentOpened) getViewState().showBluetoothView();
+    }
+
+    void onConfigurationClick(boolean isFragmentOpened) {
+    }
+
+    void onConsoleClick(boolean isFragmentOpened) {
+        if (!isFragmentOpened) getViewState().showConsoleView();
+    }
 }

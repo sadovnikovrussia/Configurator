@@ -6,5 +6,4 @@ interface ConsoleView extends MvpView {
 
     void addMessageToLog(String message);
 
-    String getCommandLineText();
 }

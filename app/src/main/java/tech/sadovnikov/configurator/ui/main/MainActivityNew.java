@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -25,14 +26,12 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
 
     @BindView(R.id.navigation)
     BottomNavigationView navigationView;
+    @BindView(R.id.container)
+    FrameLayout container;
 
     private ActivityComponent activityComponent;
     @InjectPresenter
     MainPresenter presenter;
-
-    FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-            .beginTransaction().addToBackStack(null);
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +40,25 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initializeDaggerComponent();
+        setUp();
+    }
+
+    private void setUp() {
+        navigationView.setOnNavigationItemSelectedListener(menuItem -> {
+            boolean isFragmentOpened = navigationView.getSelectedItemId() == menuItem.getItemId();
+            switch (menuItem.getItemId()) {
+                case R.id.navigation_bluetooth:
+                    presenter.onBluetoothClick(isFragmentOpened);
+                    return true;
+                case R.id.navigation_configuration:
+                    presenter.onConfigurationClick(isFragmentOpened);
+                    return true;
+                case R.id.navigation_console:
+                    presenter.onConsoleClick(isFragmentOpened);
+                    return true;
+            }
+            return false;
+        });
     }
 
     private void initializeDaggerComponent() {
@@ -50,11 +68,17 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
                 .build();
     }
 
+    @NonNull
+    public ActivityComponent getActivityComponent() {
+        return activityComponent;
+    }
+
     @Override
     public void showBluetoothView() {
         Log.w(TAG, "showBluetoothView: ");
-        fragmentTransaction
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, BluetoothFragment.newInstance(), BluetoothFragment.TAG)
+                .addToBackStack(null)
                 .commit();
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_bluetooth);
     }
@@ -67,16 +91,11 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
     @Override
     public void showConsoleView() {
         Log.w(TAG, "showConsoleView: ");
-        fragmentTransaction
-                .replace(R.id.container, BluetoothFragment.newInstance(), ConsoleFragment.TAG)
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, ConsoleFragment.newInstance(), ConsoleFragment.TAG)
+                .addToBackStack(null)
                 .commit();
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_console);
-
-    }
-
-    @NonNull
-    public ActivityComponent getActivityComponent() {
-        return activityComponent;
     }
 
 
@@ -84,7 +103,6 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
         super();
         Log.w(TAG, "onConstructor: ");
     }
-
 
     @Override
     protected void onDestroy() {
