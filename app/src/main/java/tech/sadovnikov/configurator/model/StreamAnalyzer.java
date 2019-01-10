@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import tech.sadovnikov.configurator.entities.Message;
+import tech.sadovnikov.configurator.model.entities.Message;
 
 
 /**
@@ -20,7 +20,7 @@ public class StreamAnalyzer {
     private static final String OK = "OK";
 
     static final String PARAMETER_VALUE = "Data";
-    static final String PARAMETER_NAME = "ParameterNew's name";
+    static final String PARAMETER_NAME = "Parameter's name";
 
     static final int WHAT_COMMAND_DATA = 1;
     static final int WHAT_MAIN_LOG = 0;

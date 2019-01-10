@@ -4,15 +4,15 @@ import android.support.annotation.NonNull;
 
 import java.text.DecimalFormat;
 
-import static tech.sadovnikov.configurator.entities.Configuration.ANSW_NUMBER;
-import static tech.sadovnikov.configurator.entities.Configuration.APN;
-import static tech.sadovnikov.configurator.entities.Configuration.CMD_NUMBER;
-import static tech.sadovnikov.configurator.entities.Configuration.FIRMWARE_VERSION;
-import static tech.sadovnikov.configurator.entities.Configuration.LOGIN;
-import static tech.sadovnikov.configurator.entities.Configuration.PACKETS;
-import static tech.sadovnikov.configurator.entities.Configuration.PASSWORD;
-import static tech.sadovnikov.configurator.entities.Configuration.SERVER;
-import static tech.sadovnikov.configurator.entities.Configuration.SMS_CENTER;
+import static tech.sadovnikov.configurator.entities.OldConfiguration.ANSW_NUMBER;
+import static tech.sadovnikov.configurator.entities.OldConfiguration.APN;
+import static tech.sadovnikov.configurator.entities.OldConfiguration.CMD_NUMBER;
+import static tech.sadovnikov.configurator.entities.OldConfiguration.FIRMWARE_VERSION;
+import static tech.sadovnikov.configurator.entities.OldConfiguration.LOGIN;
+import static tech.sadovnikov.configurator.entities.OldConfiguration.PACKETS;
+import static tech.sadovnikov.configurator.entities.OldConfiguration.PASSWORD;
+import static tech.sadovnikov.configurator.entities.OldConfiguration.SERVER;
+import static tech.sadovnikov.configurator.entities.OldConfiguration.SMS_CENTER;
 
 class DataParser {
     private static final String TAG = "DataParser";

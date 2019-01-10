@@ -13,10 +13,10 @@ import java.io.OutputStreamWriter;
 import java.util.Calendar;
 import java.util.Date;
 
-import tech.sadovnikov.configurator.entities.Configuration;
-import tech.sadovnikov.configurator.entities.Parameter;
+import tech.sadovnikov.configurator.entities.OldConfiguration;
+import tech.sadovnikov.configurator.entities.OldParameter;
 
-import static tech.sadovnikov.configurator.entities.Configuration.PARAMETER_NAMES_LIST;
+import static tech.sadovnikov.configurator.entities.OldConfiguration.PARAMETER_NAMES_LIST;
 
 /**
  * Класс, предназначенный для работы с файлом конфигурации (открытие, сохранение)
@@ -75,15 +75,15 @@ public class FileManager {
         return file;
     }
 
-    void saveConfiguration(Configuration configuration, String fileName) {
+    void saveConfiguration(OldConfiguration oldConfiguration, String fileName) {
         File file = getFile(fileName);
         // Log.d(TAG, "saveConfiguration: " + String.valueOf(file.isDirectory()) + ", " +  String.valueOf(file.isFile()));
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
             try {
-                for (int i = 0; i < configuration.getSize(); i++) {
-                    outputStreamWriter.write(configuration.getSettingCommand(i) + "\r\n");
+                for (int i = 0; i < oldConfiguration.getSize(); i++) {
+                    outputStreamWriter.write(oldConfiguration.getSettingCommand(i) + "\r\n");
                 }
                 // Log.d(TAG, "saveConfiguration: ok");
                 listener.onSaveConfigurationSuccess(fileName+".cfg");
@@ -102,11 +102,11 @@ public class FileManager {
     }
 
     // TODO <Доделать проверки валидности пути и тд. (.cfg?), добавить выброс исключений>
-    Configuration openConfiguration(String path) {
+    OldConfiguration openConfiguration(String path) {
         Log.d(TAG, "openConfiguration: ");
         FileReader fileReader;
         BufferedReader bufferedReader;
-        Configuration configuration = Configuration.getEmptyConfiguration();
+        OldConfiguration oldConfiguration = OldConfiguration.getEmptyConfiguration();
         File file;
         if (!path.startsWith("/storage") && path.contains("/storage")) {
             String newPath = path.substring(path.indexOf("/storage"));
@@ -129,10 +129,10 @@ public class FileManager {
                         name = line.substring(0, indexOfRavno).trim().toLowerCase();
                         if (PARAMETER_NAMES_LIST.contains(name)) {
                             value = line.substring(indexOfRavno + 1).trim();
-                            Parameter parameter = new Parameter(name, value);
-                            Log.d(TAG, "openConfiguration: read ParameterNew: " + parameter);
-                            configuration.addParameter(parameter);
-                            // Log.d(TAG, "openConfiguration: ParameterNew name =" + name + ", " + "value = " + value);
+                            OldParameter oldParameter = new OldParameter(name, value);
+                            Log.d(TAG, "openConfiguration: read Parameter: " + oldParameter);
+                            oldConfiguration.addParameter(oldParameter);
+                            // Log.d(TAG, "openConfiguration: Parameter name =" + name + ", " + "value = " + value);
                         }
                     }
                 }
@@ -143,8 +143,8 @@ public class FileManager {
         } catch (FileNotFoundException e) {
             Log.e(TAG, "openConfiguration: Файл не найден", e);
         }
-        Log.i(TAG, "openConfiguration() returned: " + configuration);
-        return configuration;
+        Log.i(TAG, "openConfiguration() returned: " + oldConfiguration);
+        return oldConfiguration;
     }
 
     interface FileManagerListener{

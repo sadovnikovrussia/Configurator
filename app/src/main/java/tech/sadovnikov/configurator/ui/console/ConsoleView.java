@@ -4,7 +4,7 @@ import com.arellomobile.mvp.MvpView;
 
 import java.util.List;
 
-import tech.sadovnikov.configurator.entities.Message;
+import tech.sadovnikov.configurator.model.entities.Message;
 
 interface ConsoleView extends MvpView {
 

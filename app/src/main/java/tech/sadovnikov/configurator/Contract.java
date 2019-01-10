@@ -7,8 +7,8 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
-import tech.sadovnikov.configurator.entities.Configuration;
-import tech.sadovnikov.configurator.entities.Parameter;
+import tech.sadovnikov.configurator.entities.OldConfiguration;
+import tech.sadovnikov.configurator.entities.OldParameter;
 
 import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 
@@ -379,13 +379,13 @@ public interface Contract {
 
     interface RepositoryConfiguration {
 
-        void setUiConfiguration(Configuration uiConfiguration);
+        void setUiOldConfiguration(OldConfiguration uiOldConfiguration);
 
-        Configuration getConfigurationForSave();
+        OldConfiguration getConfigurationForSave();
 
         String getParameterValue(String name);
 
-        void setParameter(Parameter parameter);
+        void setParameter(OldParameter oldParameter);
 
         void setParameter(String name, String value);
 

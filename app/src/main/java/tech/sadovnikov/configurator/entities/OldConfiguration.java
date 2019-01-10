@@ -10,11 +10,11 @@ import java.util.Collections;
 /**
  * Класс, представляющий конфигурацию устройства
  */
-public class Configuration {
-    private static final String TAG = "Configuration";
+public class OldConfiguration {
+    private static final String TAG = "OldConfiguration";
 
     // TODO <ДОБАВИТЬ ПАРАМЕТР>
-    // ParameterNew names
+    // Parameter names
     public static final String ID = "id";
     public static final String FIRMWARE_VERSION = "firmware version";
     public static final String BLINKER_MODE = "blinker mode";
@@ -68,23 +68,23 @@ public class Configuration {
         Collections.addAll(PARAMETER_NAMES_LIST, PARAMETER_NAMES);
     }
 
-    private ArrayList<Parameter> parametersList = new ArrayList<>();
+    private ArrayList<OldParameter> parametersList = new ArrayList<>();
 
-    public Configuration() {
+    public OldConfiguration() {
         init();
-        // Log.d(TAG, "Configuration: " + name + " = " + configurationMap.get(name));
+        // Log.d(TAG, "OldConfiguration: " + name + " = " + configurationMap.get(name));
     }
 
-    public static Configuration getEmptyConfiguration() {
-        Configuration configuration = new Configuration();
-        configuration.clear();
-        return configuration;
+    public static OldConfiguration getEmptyConfiguration() {
+        OldConfiguration oldConfiguration = new OldConfiguration();
+        oldConfiguration.clear();
+        return oldConfiguration;
     }
 
     private void init() {
         parametersList.clear();
         for (String name : PARAMETER_NAMES_LIST) {
-            parametersList.add(new Parameter(name));
+            parametersList.add(new OldParameter(name));
         }
     }
 
@@ -93,27 +93,27 @@ public class Configuration {
     }
 
 
-    public Configuration getConfigurationForSave() {
-        Configuration configuration = Configuration.getEmptyConfiguration();
-        for (Parameter parameter : getParametersList()) {
-            if (!parameter.isEmpty()) {
-                configuration.addParameter(parameter);
+    public OldConfiguration getConfigurationForSave() {
+        OldConfiguration oldConfiguration = OldConfiguration.getEmptyConfiguration();
+        for (OldParameter oldParameter : getParametersList()) {
+            if (!oldParameter.isEmpty()) {
+                oldConfiguration.addParameter(oldParameter);
             }
         }
-        configuration.removeParameter(new Parameter(FIRMWARE_VERSION));
-        configuration.removeParameter(new Parameter(UPOWER));
-        configuration.removeParameter(new Parameter(CURRENT_POS));
-        configuration.removeParameter(new Parameter(PACKETS));
-        Log.i(TAG, "getConfigurationForSave() returned: " + configuration);
-        return configuration;
+        oldConfiguration.removeParameter(new OldParameter(FIRMWARE_VERSION));
+        oldConfiguration.removeParameter(new OldParameter(UPOWER));
+        oldConfiguration.removeParameter(new OldParameter(CURRENT_POS));
+        oldConfiguration.removeParameter(new OldParameter(PACKETS));
+        Log.i(TAG, "getConfigurationForSave() returned: " + oldConfiguration);
+        return oldConfiguration;
     }
 
-    public ArrayList<Parameter> getParametersList() {
+    public ArrayList<OldParameter> getParametersList() {
         return parametersList;
     }
 
-    private void removeParameter(Parameter parameter) {
-        parametersList.remove(parameter);
+    private void removeParameter(OldParameter oldParameter) {
+        parametersList.remove(oldParameter);
     }
 
     public String getSettingCommand(int index) {
@@ -122,32 +122,32 @@ public class Configuration {
 
     public String getParameterValue(String parameterName) {
         // Log.d(TAG, "getParameterValue(): " + parameterName + "=" + configurationMap.get(parameterName));
-        Parameter parameter = new Parameter(parameterName);
-        if (parametersList.contains(parameter)) {
-            return parametersList.get(parametersList.indexOf(parameter)).getValue();
+        OldParameter oldParameter = new OldParameter(parameterName);
+        if (parametersList.contains(oldParameter)) {
+            return parametersList.get(parametersList.indexOf(oldParameter)).getValue();
         } else {
             Log.w(TAG, "getParameterValue: Параметр " + parameterName + " не существует в конфигурации");
             return "";
         }
     }
 
-    public void setParameter(Parameter parameter) {
-        if (PARAMETER_NAMES_LIST.contains(parameter.getName())) {
-            if (parametersList.contains(parameter)) {
-                int index = parametersList.indexOf(parameter);
-                parametersList.get(index).setValue(parameter.getValue());
+    public void setParameter(OldParameter oldParameter) {
+        if (PARAMETER_NAMES_LIST.contains(oldParameter.getName())) {
+            if (parametersList.contains(oldParameter)) {
+                int index = parametersList.indexOf(oldParameter);
+                parametersList.get(index).setValue(oldParameter.getValue());
             } else {
-                Log.w(TAG, "setParameter: В конфигурации нет параметра " + parameter + "configuration = " + this);
+                Log.w(TAG, "setParameter: В конфигурации нет параметра " + oldParameter + "configuration = " + this);
             }
         }
     }
 
-    public void addParameter(Parameter parameter) {
-        if (PARAMETER_NAMES_LIST.contains(parameter.getName())) {
-            if (!parametersList.contains(parameter)) {
-                parametersList.add(parameter);
+    public void addParameter(OldParameter oldParameter) {
+        if (PARAMETER_NAMES_LIST.contains(oldParameter.getName())) {
+            if (!parametersList.contains(oldParameter)) {
+                parametersList.add(oldParameter);
             } else {
-                Log.w(TAG, "addParameter: " + parameter + " уже существует в конфигурации " + this);
+                Log.w(TAG, "addParameter: " + oldParameter + " уже существует в конфигурации " + this);
             }
         } else {
             Log.w(TAG, "addParameter: Данного параметра не существует");
@@ -160,7 +160,7 @@ public class Configuration {
 
     @NonNull
     public String toString() {
-        return "Configuration{<" + getSize() + ">" + parametersList + '}';
+        return "OldConfiguration{<" + getSize() + ">" + parametersList + '}';
     }
 
     public ArrayList<String> getCommandListForReadConfiguration() {
@@ -182,9 +182,9 @@ public class Configuration {
 
     public ArrayList<String> getCommandListForSetConfiguration() {
         ArrayList<String> commandListForSetConfiguration = new ArrayList<>();
-        for (Parameter parameter : parametersList) {
-            String value = parameter.getValue();
-            String name = parameter.getName();
+        for (OldParameter oldParameter : parametersList) {
+            String value = oldParameter.getValue();
+            String name = oldParameter.getName();
             boolean isAlp = name.equals(APN) || name.equals(LOGIN) || name.equals(PASSWORD);
             boolean containsDefault = value.toLowerCase().contains("cellular operator defaults");
             boolean nonEmpty = !value.isEmpty();

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.subjects.PublishSubject;
-import tech.sadovnikov.configurator.entities.Message;
+import tech.sadovnikov.configurator.model.entities.Message;
 
 /**
  * Класс, представляющий собой логи устройства

@@ -7,15 +7,15 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
-import tech.sadovnikov.configurator.entities.Message;
-import tech.sadovnikov.configurator.model.entities.ConfigurationNew;
+import tech.sadovnikov.configurator.model.entities.Message;
+import tech.sadovnikov.configurator.model.entities.Configuration;
 
 @Singleton
 public class AppDataManager implements DataManager {
     private static final String TAG = AppDataManager.class.getSimpleName();
 
     private Logs logs;
-    private ConfigurationNew configuration;
+    private Configuration configuration = Configuration.createMainConfiguration();
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 

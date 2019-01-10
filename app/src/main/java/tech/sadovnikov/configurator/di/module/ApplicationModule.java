@@ -19,6 +19,8 @@ import tech.sadovnikov.configurator.model.Logs;
 import tech.sadovnikov.configurator.model.StreamAnalyzer;
 import tech.sadovnikov.configurator.model.data.prefs.AppPreferencesHelper;
 import tech.sadovnikov.configurator.model.data.prefs.PreferencesHelper;
+import tech.sadovnikov.configurator.model.entities.Configuration;
+import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.AppConstants;
 
 @Module
@@ -52,6 +54,12 @@ public class ApplicationModule {
     @Singleton
     Logs provideLogs() {
         return new DeviceLogs();
+    }
+
+    @Provides
+    @Singleton
+    Configuration provideConfiguration() {
+        return new Configuration();
     }
 
     @Provides

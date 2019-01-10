@@ -22,7 +22,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.entities.Message;
+import tech.sadovnikov.configurator.model.entities.Message;
 
 
 public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView {
@@ -79,7 +79,8 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
 
     @Override
     public void addMessageToLogScreen(Message message) {
-        tvLogs.append(message.convertToOriginal() + "\r\n");
+        tvLogs.append(message.convertToOriginal());
+        if (isAutoScrollOn()) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
     @Override
@@ -94,6 +95,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     }
 
     boolean isAutoScrollOn() {
+        Log.d(TAG, "isAutoScrollOn() returned: " + swAutoScroll.isChecked());
         return swAutoScroll.isChecked();
     }
 

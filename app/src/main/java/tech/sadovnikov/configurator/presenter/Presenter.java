@@ -27,43 +27,43 @@
 //import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesItemView;
 //import tech.sadovnikov.configurator.ui.adapter.PairedDevicesItemView;
 //
-//import static tech.sadovnikov.configurator.entities.Configuration.ALARM_INT;
-//import static tech.sadovnikov.configurator.entities.Configuration.ANSW_NUMBER;
-//import static tech.sadovnikov.configurator.entities.Configuration.APN;
-//import static tech.sadovnikov.configurator.entities.Configuration.BASE_POS;
-//import static tech.sadovnikov.configurator.entities.Configuration.BLINKER_BRIGHTNESS;
-//import static tech.sadovnikov.configurator.entities.Configuration.BLINKER_LX;
-//import static tech.sadovnikov.configurator.entities.Configuration.BLINKER_MODE;
-//import static tech.sadovnikov.configurator.entities.Configuration.CMD_NUMBER;
-//import static tech.sadovnikov.configurator.entities.Configuration.CONNECT_ATTEMPTS;
-//import static tech.sadovnikov.configurator.entities.Configuration.CURRENT_POS;
-//import static tech.sadovnikov.configurator.entities.Configuration.DELIV_TIMEOUT;
-//import static tech.sadovnikov.configurator.entities.Configuration.DEVIATION_INT;
-//import static tech.sadovnikov.configurator.entities.Configuration.EVENTS_MASK;
-//import static tech.sadovnikov.configurator.entities.Configuration.FIRMWARE_VERSION;
-//import static tech.sadovnikov.configurator.entities.Configuration.FIX_DELAY;
-//import static tech.sadovnikov.configurator.entities.Configuration.HDOP;
-//import static tech.sadovnikov.configurator.entities.Configuration.ID;
-//import static tech.sadovnikov.configurator.entities.Configuration.IMPACT_POW;
-//import static tech.sadovnikov.configurator.entities.Configuration.LAT_DEVIATION;
-//import static tech.sadovnikov.configurator.entities.Configuration.LOGIN;
-//import static tech.sadovnikov.configurator.entities.Configuration.LONG_DEVIATION;
-//import static tech.sadovnikov.configurator.entities.Configuration.MAX_ACTIVE;
-//import static tech.sadovnikov.configurator.entities.Configuration.MAX_DEVIATION;
-//import static tech.sadovnikov.configurator.entities.Configuration.NORMAL_INT;
-//import static tech.sadovnikov.configurator.entities.Configuration.PACKETS;
-//import static tech.sadovnikov.configurator.entities.Configuration.PACKET_TOUT;
-//import static tech.sadovnikov.configurator.entities.Configuration.PASSWORD;
-//import static tech.sadovnikov.configurator.entities.Configuration.PRIORITY_CHNL;
-//import static tech.sadovnikov.configurator.entities.Configuration.SATELLITE_SYSTEM;
-//import static tech.sadovnikov.configurator.entities.Configuration.SERVER;
-//import static tech.sadovnikov.configurator.entities.Configuration.SESSION_TIME;
-//import static tech.sadovnikov.configurator.entities.Configuration.SIM_ATTEMPTS;
-//import static tech.sadovnikov.configurator.entities.Configuration.SMS_CENTER;
-//import static tech.sadovnikov.configurator.entities.Configuration.TILT_ANGLE;
-//import static tech.sadovnikov.configurator.entities.Configuration.TRUE_POS;
-//import static tech.sadovnikov.configurator.entities.Configuration.UPOWER;
-//import static tech.sadovnikov.configurator.entities.Configuration.UPOWER_THLD;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.ALARM_INT;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.ANSW_NUMBER;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.APN;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.BASE_POS;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.BLINKER_BRIGHTNESS;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.BLINKER_LX;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.BLINKER_MODE;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.CMD_NUMBER;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.CONNECT_ATTEMPTS;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.CURRENT_POS;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.DELIV_TIMEOUT;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.DEVIATION_INT;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.EVENTS_MASK;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.FIRMWARE_VERSION;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.FIX_DELAY;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.HDOP;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.ID;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.IMPACT_POW;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.LAT_DEVIATION;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.LOGIN;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.LONG_DEVIATION;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.MAX_ACTIVE;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.MAX_DEVIATION;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.NORMAL_INT;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.PACKETS;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.PACKET_TOUT;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.PASSWORD;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.PRIORITY_CHNL;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.SATELLITE_SYSTEM;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.SERVER;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.SESSION_TIME;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.SIM_ATTEMPTS;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.SMS_CENTER;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.TILT_ANGLE;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.TRUE_POS;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.UPOWER;
+//import static tech.sadovnikov.configurator.entities.OldConfiguration.UPOWER_THLD;
 //import static tech.sadovnikov.configurator.model.StreamAnalyzer.WHAT_COMMAND_DATA;
 //import static tech.sadovnikov.configurator.model.StreamAnalyzer.WHAT_MAIN_LOG;
 //import static tech.sadovnikov.configurator.presenter.Loader.WHAT_LOADING_END;
@@ -165,11 +165,11 @@
 //        switch (requestCode) {
 //            case MainActivity.OPEN_FILE_MANAGER_REQUEST_CODE:
 //                if (resultCode == Activity.RESULT_OK) {
-//                    repositoryConfiguration.setUiConfiguration(fileManager.openConfiguration(Objects.requireNonNull(data.getData()).getPath()));
+//                    repositoryConfiguration.setUiOldConfiguration(fileManager.openConfiguration(Objects.requireNonNull(data.getData()).getPath()));
 //                }
 //            case MainActivity.SAVE_FILE_MANAGER_REQUEST_CODE:
 //                if (resultCode == Activity.RESULT_OK) {
-//                    // repositoryConfiguration.setUiConfiguration(fileManager.openConfiguration(Objects.requireNonNull(data.getData()).getPath()));
+//                    // repositoryConfiguration.setUiOldConfiguration(fileManager.openConfiguration(Objects.requireNonNull(data.getData()).getPath()));
 //                    fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSave(),
 //                            Objects.requireNonNull(data.getData()).getPath());
 //

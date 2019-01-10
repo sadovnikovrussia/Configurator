@@ -4,17 +4,17 @@ import android.support.annotation.NonNull;
 
 import java.util.Objects;
 
-public class Parameter {
+public class OldParameter {
 
     private final String name;
     private String value;
 
-    public Parameter(String name) {
+    public OldParameter(String name) {
         this.name = name;
         this.value = "";
     }
 
-    public Parameter(String name, String value) {
+    public OldParameter(String name, String value) {
         this.name = name;
         this.value = value;
     }
@@ -34,9 +34,9 @@ public class Parameter {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Parameter)) return false;
-        Parameter parameter = (Parameter) o;
-        return Objects.equals(getName().toLowerCase(), parameter.getName().toLowerCase());
+        if (!(o instanceof OldParameter)) return false;
+        OldParameter oldParameter = (OldParameter) o;
+        return Objects.equals(getName().toLowerCase(), oldParameter.getName().toLowerCase());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class Parameter {
     @NonNull
     @Override
     public String toString() {
-        return "ParameterNew{" + name + "=" + value + "}";
+        return "Parameter{" + name + "=" + value + "}";
     }
 
     boolean isEmpty() {

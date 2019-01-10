@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.entities;
+package tech.sadovnikov.configurator.model.entities;
 
 import android.support.annotation.NonNull;
 

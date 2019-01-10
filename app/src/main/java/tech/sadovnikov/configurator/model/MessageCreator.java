@@ -2,7 +2,7 @@ package tech.sadovnikov.configurator.model;
 
 import android.annotation.SuppressLint;
 
-import tech.sadovnikov.configurator.entities.Message;
+import tech.sadovnikov.configurator.model.entities.Message;
 
 public class MessageCreator {
 
