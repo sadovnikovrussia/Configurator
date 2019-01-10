@@ -1,11 +1,18 @@
 package tech.sadovnikov.configurator.model;
 
+import java.util.List;
+
+import io.reactivex.subjects.PublishSubject;
+import tech.sadovnikov.configurator.entities.Message;
+
 public interface Logs {
 
     void addLine(String line);
 
     void addMessage(Message message);
 
-    String getAllMessages();
+    List<Message> getMainLogMessages();
+
+    PublishSubject<Message> getObservableMainLog();
 
 }

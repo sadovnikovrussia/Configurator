@@ -1,8 +1,10 @@
-package tech.sadovnikov.configurator.model;
+package tech.sadovnikov.configurator.entities;
 
 import android.support.annotation.NonNull;
 
 public class Message {
+    private final static char LOG_SYMBOL = 0x7F;
+
     private String logLevel;
     private String logType;
     private String time;
@@ -27,5 +29,9 @@ public class Message {
                 ", convertedTime='" + convertedTime + '\'' +
                 ", body='" + body + '\'' +
                 '}';
+    }
+
+    public String convertToOriginal(){
+        return String.format("%c%s%s [%s] %s", LOG_SYMBOL, logLevel, logType, time, body);
     }
 }

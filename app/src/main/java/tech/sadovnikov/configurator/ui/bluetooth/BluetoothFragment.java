@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,8 +19,6 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -41,7 +38,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
 
     @InjectPresenter
-    BluetoothPresenter bluetoothPresenter;
+    BluetoothPresenter presenter;
 
     // UI
     @BindView(R.id.sw_bluetooth)
@@ -93,7 +90,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     }
 
     private void setUp() {
-        switchBt.setOnCheckedChangeListener((buttonView, isChecked) -> bluetoothPresenter.onBtSwitchClick(isChecked));
+        switchBt.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.onBtSwitchClick(isChecked));
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -104,8 +101,8 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
             public void onPageSelected(int position) {
                 Log.v(TAG, "onPageSelected: " + String.valueOf(position));
                 // Todo Сделать восстоновление состояния adapter
-                if (position == 1) bluetoothPresenter.onAvailableDevicesViewShown();
-                else bluetoothPresenter.onPairedDevicesViewShown();
+                if (position == 1) presenter.onAvailableDevicesViewShown();
+                else presenter.onPairedDevicesViewShown();
             }
 
             @Override
@@ -161,20 +158,17 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 
     @Override
     public void requestBtPermission() {
-        ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        for (String permission : permissions) {
-            if (permission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                for (int result : grantResults) {
-                    if (result == PERMISSION_GRANTED)
-                        bluetoothPresenter.onPositiveBtRequestResult();
-                }
+        Log.d(TAG, "onRequestPermissionsResult: ");
+        if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION) {
+            if (permissions.length > 0 && permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED)
+                    presenter.onPositiveBtRequestResult();
             }
         }
     }
@@ -193,7 +187,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
         inflater.inflate(R.menu.menu_bluetooth, menu);
         super.onCreateOptionsMenu(menu, inflater);
         Log.v(TAG, "onCreateOptionsMenu: ");
-        bluetoothPresenter.onCreateOptionsMenu();
+        presenter.onCreateOptionsMenu();
     }
 
     @Override
@@ -211,7 +205,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.v(TAG, "onOptionsItemSelected: ");
-        bluetoothPresenter.onUpdateDevicesClick();
+        presenter.onUpdateDevicesClick();
         return super.onOptionsItemSelected(item);
     }
 

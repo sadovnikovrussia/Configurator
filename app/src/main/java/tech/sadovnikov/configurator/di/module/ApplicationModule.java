@@ -23,7 +23,6 @@ import tech.sadovnikov.configurator.utils.AppConstants;
 
 @Module
 public class ApplicationModule {
-    private static final String TAG = ApplicationModule.class.getSimpleName();
     private Application application;
 
     public ApplicationModule(Application application) {
@@ -51,6 +50,12 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
+    Logs provideLogs() {
+        return new DeviceLogs();
+    }
+
+    @Provides
+    @Singleton
     BluetoothService provideBluetoothService() {
         return new AppBluetoothService();
     }
@@ -59,12 +64,6 @@ public class ApplicationModule {
     @Singleton
     BluetoothBroadcastReceiver provideBluetoothReceiver() {
         return new BluetoothBroadcastReceiver();
-    }
-
-    @Provides
-    @Singleton
-    Logs provideLogs() {
-        return new DeviceLogs();
     }
 
     @Provides

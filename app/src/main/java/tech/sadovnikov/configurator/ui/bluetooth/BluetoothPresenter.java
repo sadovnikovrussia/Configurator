@@ -13,8 +13,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.App;
-import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
+import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
@@ -53,8 +53,7 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
         if (bluetoothService.isEnabled()) {
             getViewState().setSwBluetoothText("Включено");
             getViewState().showDevicesContainer();
-        }
-        else {
+        } else {
             getViewState().setSwBluetoothText("Выключено");
             getViewState().hideDevicesContainer();
         }
@@ -95,6 +94,7 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     private void updateDevices() {
         bluetoothService.cancelDiscovery();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Log.e(TAG, "updateDevices: " + (bluetoothPermission == PERMISSION_GRANTED));
             if (bluetoothPermission == PERMISSION_GRANTED) {
                 bluetoothService.startDiscovery();
             } else getViewState().requestBtPermission();
@@ -110,6 +110,8 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     }
 
     void onPositiveBtRequestResult() {
+        Log.d(TAG, "onPositiveBtRequestResult: ");
+        bluetoothPermission = PERMISSION_GRANTED;
         bluetoothService.startDiscovery();
     }
 

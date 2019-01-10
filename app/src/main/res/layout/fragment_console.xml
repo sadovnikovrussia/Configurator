@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:id="@+id/sv_logs"
+        android:id="@+id/sv_log_screen"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -39,7 +39,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_logs"
+                android:id="@+id/tv_log_screen"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingStart="16dp"
@@ -61,7 +61,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_send_command"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sv_logs"
+        app:layout_constraintTop_toBottomOf="@+id/sv_log_screen"
         tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
     <Button
@@ -78,6 +78,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/et_command_line"
-        app:layout_constraintTop_toBottomOf="@+id/sv_logs" />
+        app:layout_constraintTop_toBottomOf="@+id/sv_log_screen" />
 
 </android.support.constraint.ConstraintLayout>

@@ -374,7 +374,7 @@ public interface Contract {
 //    interface Logs {
 //        void addLine(String line);
 //
-//        String getAllMessages();
+//        String getMainLogMessages();
 //    }
 
     interface RepositoryConfiguration {

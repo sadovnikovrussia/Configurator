@@ -17,6 +17,7 @@ import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.DataManager;
+import tech.sadovnikov.configurator.entities.Message;
 
 @InjectViewState
 public class ConsolePresenter extends MvpPresenter<ConsoleView> {
@@ -48,17 +49,16 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         Log.v(TAG, "onFirstViewAttach: ");
-        PublishSubject<String> inputMessagesStream = bluetoothService.getInputMessagesStream();
-        Log.d(TAG, "onFirstViewAttach: " + bluetoothService + ", " + inputMessagesStream);
+        PublishSubject<Message> inputMessagesStream = dataManager.getObservableMainLog();
         Disposable subscribe = inputMessagesStream
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(message -> {
-                    //Log.d(TAG, "onNext: " + bluetoothService + ", " + inputMessagesStream + ": " + message);
-                    //getViewState().addMessageToLog(message);
-                    //dataManager.addLine(message);
-                });
+                .subscribe(message -> getViewState().addMessageToLogScreen(message));
         compositeDisposable.add(subscribe);
+    }
+
+    public void onCreateView() {
+        getViewState().showMainLogs(dataManager.getMainLogMessages());
     }
 
     @Override
@@ -79,4 +79,5 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
     void onChangeAutoScrollClick() {
 
     }
+
 }

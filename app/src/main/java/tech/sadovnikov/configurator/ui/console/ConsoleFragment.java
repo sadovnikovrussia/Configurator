@@ -17,11 +17,12 @@ import android.widget.TextView;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import java.text.MessageFormat;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.entities.Message;
 
 
 public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView {
@@ -31,9 +32,9 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     ConsolePresenter presenter;
 
     // UI
-    @BindView(R.id.tv_logs)
+    @BindView(R.id.tv_log_screen)
     TextView tvLogs;
-    @BindView(R.id.sv_logs)
+    @BindView(R.id.sv_log_screen)
     ScrollView svLogs;
     @BindView(R.id.btn_send_command)
     Button btnSendCommand;
@@ -62,6 +63,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
         View inflate = inflater.inflate(R.layout.fragment_console, container, false);
         ButterKnife.bind(this, inflate);
         setUp();
+        presenter.onCreateView();
         return inflate;
     }
 
@@ -75,35 +77,24 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
         });
     }
 
-    public String getCommandLineText() {
-        return etCommandLine.getText().toString();
+    @Override
+    public void addMessageToLogScreen(Message message) {
+        tvLogs.append(message.convertToOriginal() + "\r\n");
     }
 
     @Override
-    public void addMessageToLog(String message) {
-        tvLogs.append(message + "\r\n");
+    public void showMainLogs(List<Message> mainLogMessages) {
+        for (Message message : mainLogMessages) tvLogs.append(message.convertToOriginal());
+        if (isAutoScrollOn()) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
-    void showLog(String logsMessages) {
-        // DeviceLogs.d(TAG, "onShowLog: " + logsMessages);
-        if (tvLogs != null) {
-            tvLogs.setText(logsMessages);
-        }
+    @Override
+    public void clearMainLogs() {
+        tvLogs.setText("");
     }
 
-    void addLogsLine(String line) {
-        if (tvLogs != null) {
-            tvLogs.append(line + "\r\n");
-            if (swAutoScroll.isChecked()) {
-//                Editable editableText = tvLogs.getEditableText();
-//                tvLogs.setSelected(true);
-//                Selection.setSelection(editableText, editableText.length());
-                svLogs.fullScroll(ScrollView.FOCUS_DOWN);
-            } else {
-                tvLogs.setSelected(false);
-                // tvLogs.clearFocus();
-            }
-        }
+    boolean isAutoScrollOn() {
+        return swAutoScroll.isChecked();
     }
 
 

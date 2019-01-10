@@ -1,14 +1,11 @@
 package tech.sadovnikov.configurator.model;
 
-import android.util.Log;
-
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
-
-import static tech.sadovnikov.configurator.entities.Configuration.PARAMETER_NAMES;
+import tech.sadovnikov.configurator.entities.Message;
 
 
 /**
@@ -37,15 +34,13 @@ public class StreamAnalyzer {
 
     private DataParser dataParser = new DataParser();
 
-    //private PublishSubject<Message> observableMessages = PublishSubject.create();
-
     @Inject
     public StreamAnalyzer(BluetoothService bluetoothService, DataManager dataManager) {
         this.bluetoothService = bluetoothService;
         this.dataManager = dataManager;
         Disposable subscribe = bluetoothService.getInputMessagesStream()
                 .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::analyze);
     }
 

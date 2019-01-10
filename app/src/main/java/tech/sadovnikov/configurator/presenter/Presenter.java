@@ -852,7 +852,7 @@
 //
 //    @Override
 //    public void onConsoleFragmentCreateView() {
-//        mainView.showLog(logs.getAllMessages());
+//        mainView.showLog(logs.getMainLogMessages());
 //    }
 //
 //    // DeviceLogs events ---------------------------------------------------------------------------------
@@ -863,7 +863,7 @@
 //
 //    @Override
 //    public void onTvLogsLongClick() {
-//        String logsMessages = logs.getAllMessages();
+//        String logsMessages = logs.getMainLogMessages();
 //        ClipboardManager clipboard = (ClipboardManager) ((Activity) mainView).getSystemService(Context.CLIPBOARD_SERVICE);
 //        ClipData clip = ClipData.newPlainText("", logsMessages);
 //        if (clipboard != null) {
