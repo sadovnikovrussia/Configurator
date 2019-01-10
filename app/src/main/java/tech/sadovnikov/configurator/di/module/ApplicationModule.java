@@ -16,6 +16,7 @@ import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.DataManager;
 import tech.sadovnikov.configurator.model.DeviceLogs;
 import tech.sadovnikov.configurator.model.Logs;
+import tech.sadovnikov.configurator.model.StreamAnalyzer;
 import tech.sadovnikov.configurator.model.data.prefs.AppPreferencesHelper;
 import tech.sadovnikov.configurator.model.data.prefs.PreferencesHelper;
 import tech.sadovnikov.configurator.utils.AppConstants;
@@ -65,6 +66,13 @@ public class ApplicationModule {
     Logs provideLogs() {
         return new DeviceLogs();
     }
+
+    @Provides
+    @Singleton
+    StreamAnalyzer provideStreamAnalyzer(BluetoothService bluetoothService, DataManager dataManager) {
+        return new StreamAnalyzer(bluetoothService, dataManager);
+    }
+
 
 
 

@@ -64,8 +64,8 @@
 //import static tech.sadovnikov.configurator.entities.Configuration.TRUE_POS;
 //import static tech.sadovnikov.configurator.entities.Configuration.UPOWER;
 //import static tech.sadovnikov.configurator.entities.Configuration.UPOWER_THLD;
-//import static tech.sadovnikov.configurator.model.DataAnalyzer.WHAT_COMMAND_DATA;
-//import static tech.sadovnikov.configurator.model.DataAnalyzer.WHAT_MAIN_LOG;
+//import static tech.sadovnikov.configurator.model.StreamAnalyzer.WHAT_COMMAND_DATA;
+//import static tech.sadovnikov.configurator.model.StreamAnalyzer.WHAT_MAIN_LOG;
 //import static tech.sadovnikov.configurator.presenter.Loader.WHAT_LOADING_END;
 //import static tech.sadovnikov.configurator.presenter.UiHandler.WHAT_CONNECTING_ERROR;
 //
@@ -122,8 +122,8 @@
 //            //
 //            case WHAT_COMMAND_DATA:
 //                HashMap msgData = (HashMap) obj;
-//                String value = (String) msgData.get(DataAnalyzer.PARAMETER_VALUE);
-//                String name = (String) msgData.get(DataAnalyzer.PARAMETER_NAME);
+//                String value = (String) msgData.get(StreamAnalyzer.PARAMETER_VALUE);
+//                String name = (String) msgData.get(StreamAnalyzer.PARAMETER_NAME);
 //                repositoryConfiguration.setParameter(name, value);
 //                onReceiveCommand();
 //                break;

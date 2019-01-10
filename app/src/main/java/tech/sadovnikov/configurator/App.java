@@ -15,6 +15,7 @@ import tech.sadovnikov.configurator.di.module.ApplicationModule;
 import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.DataManager;
+import tech.sadovnikov.configurator.model.StreamAnalyzer;
 
 public class App extends Application {
     private static final String TAG = App.class.getSimpleName();
@@ -25,13 +26,11 @@ public class App extends Application {
     BluetoothBroadcastReceiver receiver;
     @Inject
     BluetoothService bluetoothService;
+    @Inject
+    StreamAnalyzer streamAnalyzer;
 
     private static ApplicationComponent applicationComponent;
 
-    public App() {
-        super();
-        Log.d(TAG, "ConfiguratorApplication: ");
-    }
 
     @Override
     public void onCreate() {

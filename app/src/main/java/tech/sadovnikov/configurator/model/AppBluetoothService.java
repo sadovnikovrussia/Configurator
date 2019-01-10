@@ -41,13 +41,13 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     private ConnectedThread mConnectedThread;
 
     // private UiHandler handler;
-    private DataAnalyzer dataAnalyzer;
+    private StreamAnalyzer streamAnalyzer;
 
 //    public AppBluetoothService(OnBluetoothServiceEventsListener onBluetoothServiceEventsListener, UiHandler handler) {
 //        // Log.v(TAG, "OnConstructor");
 //        listener = onBluetoothServiceEventsListener;
 //        this.handler = handler;
-//        dataAnalyzer = new DataAnalyzer(handler);
+//        streamAnalyzer = new StreamAnalyzer(handler);
 //    }
 //
 
@@ -326,7 +326,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
                 while ((line = readerSerial.readLine()) != null) {
                     Log.v(TAG, AppBluetoothService.this + ", " + inputMessagesStream + ", " + Thread.currentThread().getName() + ": " + line);
                     inputMessagesStream.onNext(line);
-                    // dataAnalyzer.analyze(line);
+                    // streamAnalyzer.analyze(line);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Не удалось прочитать из потока", e);
