@@ -1,14 +1,16 @@
 package tech.sadovnikov.configurator.model;
 
-import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import io.reactivex.subjects.PublishSubject;
-import tech.sadovnikov.configurator.model.entities.Message;
+import tech.sadovnikov.configurator.model.entities.LogMessage;
+
+import static tech.sadovnikov.configurator.model.entities.LogMessage.LOG_TYPE_CMD;
 
 /**
  * Класс, представляющий собой логи устройства
@@ -16,36 +18,44 @@ import tech.sadovnikov.configurator.model.entities.Message;
 public class DeviceLogs implements Logs {
     private static final String TAG = DeviceLogs.class.getSimpleName();
 
-    private StringBuilder allMessages = new StringBuilder();
-    private Map<String, List<Message>> taggedLogs = new LinkedHashMap<>();
-    private List<Message> main = new ArrayList<>();
-    private PublishSubject<Message> observableMain = PublishSubject.create();
+    private Map<String, List<LogMessage>> taggedLogs = new LinkedHashMap<>();
+    private Log main = new Log();
+    private Map<String, Log> logs = new LinkedHashMap<>();
+    private PublishSubject<LogMessage> observableMain = PublishSubject.create();
+    private Set<Log> logSet = new LinkedHashSet<>();
 
-
-
-    @Override
-    public List<Message> getMainLogMessages() {
-        return main;
+    public DeviceLogs() {
+        logs.put(LOG_TYPE_CMD, new Log(LOG_TYPE_CMD));
     }
 
     @Override
-    public PublishSubject<Message> getObservableMainLog() {
+    public List<LogMessage> getMainLogMessages() {
+        return main.getLogMessageList();
+    }
+
+    @Override
+    public PublishSubject<LogMessage> getObservableMainLog() {
         return observableMain;
     }
 
-    @Override
-    public void addLine(String line) {
-        Log.d(TAG, "addLine: " + line);
-        allMessages.append(line).append("\r\n");
-    }
 
     @Override
-    public void addMessage(Message message) {
-        Log.d(TAG, "addMessage: " + message);
-        main.add(message);
+    public void addLogMessage(LogMessage message) {
+        main.addMessage(message);
+        String logType = message.getLogType();
+        switch (logType) {
+            case LOG_TYPE_CMD:
+                if (logSet.contains(LOG_TYPE_CMD)) {
+                    Log log = logs.get(LOG_TYPE_CMD);
+                    log.addMessage(message);
+                }
+                break;
+            default:
+                if (logs.containsKey())
+        }
+        main.addMessage(message);
         observableMain.onNext(message);
     }
-
 
 
 }

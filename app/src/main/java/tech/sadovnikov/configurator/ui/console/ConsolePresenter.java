@@ -17,7 +17,7 @@ import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.DataManager;
-import tech.sadovnikov.configurator.model.entities.Message;
+import tech.sadovnikov.configurator.model.entities.LogMessage;
 
 @InjectViewState
 public class ConsolePresenter extends MvpPresenter<ConsoleView> {
@@ -49,7 +49,7 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         Log.v(TAG, "onFirstViewAttach: ");
-        PublishSubject<Message> inputMessagesStream = dataManager.getObservableMainLog();
+        PublishSubject<LogMessage> inputMessagesStream = dataManager.getObservableMainLog();
         Disposable subscribe = inputMessagesStream
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -5,7 +5,11 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import tech.sadovnikov.configurator.model.entities.Message;
+import tech.sadovnikov.configurator.model.entities.LogMessage;
+
+import static tech.sadovnikov.configurator.model.entities.LogMessage.LOG_LEVEL_1;
+import static tech.sadovnikov.configurator.model.entities.LogMessage.LOG_TYPE_CMD;
+import static tech.sadovnikov.configurator.model.entities.LogMessage.LOG_SYMBOL;
 
 
 /**
@@ -14,38 +18,28 @@ import tech.sadovnikov.configurator.model.entities.Message;
 public class StreamAnalyzer {
     private static final String TAG = "StreamAnalyzer";
 
-    private final static char LOG_SYMBOL = 0x7F;
-    private final static int LOG_LEVEL_1 = 1;
-    private static final String CMD = "CMD";
-    private static final String OK = "OK";
-
-    static final String PARAMETER_VALUE = "Data";
-    static final String PARAMETER_NAME = "Parameter's name";
-
-    static final int WHAT_COMMAND_DATA = 1;
-    static final int WHAT_MAIN_LOG = 0;
-
-    DataManager dataManager;
-    BluetoothService bluetoothService;
-
-    //private UiHandler uiHandler;
+    private DataManager dataManager;
+    private BluetoothService bluetoothService;
 
     private String buffer = "";
 
-    private DataParser dataParser = new DataParser();
+    private MessageAnalyzer messageAnalyzer;
+    private CommandAnalyzer commandAnalyzer;
 
     @Inject
     public StreamAnalyzer(BluetoothService bluetoothService, DataManager dataManager) {
         this.bluetoothService = bluetoothService;
         this.dataManager = dataManager;
+//        this.messageAnalyzer = messageAnalyzer;
+//        this.commandAnalyzer = commandAnalyzer;
         Disposable subscribe = bluetoothService.getInputMessagesStream()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::analyze);
+                .subscribe(this::analyzeLine);
     }
 
 
-    private void analyze(String line) {
+    private void analyzeLine(String line) {
         buffer = buffer + line + "\r\n";
         if (buffer.startsWith(String.valueOf(LOG_SYMBOL))) {
             int indexStartNewMessage = buffer.indexOf(LOG_SYMBOL, 1);
@@ -53,11 +47,14 @@ public class StreamAnalyzer {
                 try {
                     String nativeMessage = buffer.substring(0, indexStartNewMessage);
                     buffer = buffer.substring(indexStartNewMessage);
-                    Message message = MessageCreator.create(nativeMessage);
-                    dataManager.addMessage(message);
+                    LogMessage message = MessageCreator.create(nativeMessage);
+                    analyzeLog(message);
+                    analyzeCommand(message);
+
+
                     // TODO <Переделать определение logType>
-//                    if (logType.equals(CMD) & Integer.valueOf(logLevel) == LOG_LEVEL_1) {
-//                        Log.w(TAG, "analyze: message = " + nativeMessage);
+//                    if (logType.equals(LOG_TYPE_CMD) & Integer.valueOf(logLevel) == LOG_LEVEL_1) {
+//                        Log.w(TAG, "analyzeLine: message = " + nativeMessage);
 //                        if (nativeMessage.contains(OK)) {
 //                            for (String parameter : PARAMETER_NAMES) {
 //                                if (nativeMessage.toLowerCase().contains(parameter)) {
@@ -68,15 +65,30 @@ public class StreamAnalyzer {
 //                        }
 //                    }
                 } catch (Exception e) {
-                    // Log.w(TAG, "analyze: " + logType, e);
+                    // Log.w(TAG, "analyzeLine: " + logType, e);
                 }
             }
         } else buffer = "";
     }
 
+    private void analyzeLog(LogMessage message) {
+        if (message.getLogType().equals(LOG_TYPE_CMD) && message.getLogLevel().equals(LOG_LEVEL_1)) {
+            commandAnalyzer.analyzeAnswer(message);
+        }
+
+
+        dataManager.addLogMessage(message);
+    }
+
+    private void analyzeCommand(LogMessage message) {
+        if (message.getLogType().equals(LOG_TYPE_CMD) && message.getLogLevel().equals(LOG_LEVEL_1)) {
+            commandAnalyzer.analyzeAnswer(message);
+        }
+    }
+
 //    private void sendCommand(String value, String parameter) {
 //        // Log.i(TAG, "sendCommand");
-////        Message msg = new Message();
+////        LogMessage msg = new LogMessage();
 ////        msg.what = WHAT_COMMAND_DATA;
 ////        HashMap<String, Object> msgObj = new HashMap<>();
 ////        msgObj.put(PARAMETER_VALUE, value);
@@ -86,7 +98,7 @@ public class StreamAnalyzer {
 ////        uiHandler.sendMessage(msg);
 //    }
 //
-////        Message msg = new Message();
+////        LogMessage msg = new LogMessage();
 ////        msg.what = WHAT_MAIN_LOG;
 ////        msg.obj = line;
 //    //uiHandler.sendMessage(msg);

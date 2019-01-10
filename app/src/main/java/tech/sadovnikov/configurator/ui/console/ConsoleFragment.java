@@ -22,7 +22,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.model.entities.Message;
+import tech.sadovnikov.configurator.model.entities.LogMessage;
 
 
 public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView {
@@ -78,14 +78,14 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     }
 
     @Override
-    public void addMessageToLogScreen(Message message) {
+    public void addMessageToLogScreen(LogMessage message) {
         tvLogs.append(message.convertToOriginal());
         if (isAutoScrollOn()) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
     @Override
-    public void showMainLogs(List<Message> mainLogMessages) {
-        for (Message message : mainLogMessages) tvLogs.append(message.convertToOriginal());
+    public void showMainLogs(List<LogMessage> mainLogMessages) {
+        for (LogMessage message : mainLogMessages) tvLogs.append(message.convertToOriginal());
         if (isAutoScrollOn()) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
     }
 

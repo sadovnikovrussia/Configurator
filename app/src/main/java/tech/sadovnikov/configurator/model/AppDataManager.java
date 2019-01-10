@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
-import tech.sadovnikov.configurator.model.entities.Message;
+import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Configuration;
 
 @Singleton
@@ -31,17 +31,17 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void addMessage(Message message) {
-        logs.addMessage(message);
+    public void addLogMessage(LogMessage message) {
+        logs.addLogMessage(message);
     }
 
     @Override
-    public List<Message> getMainLogMessages() {
+    public List<LogMessage> getMainLogMessages() {
         return logs.getMainLogMessages();
     }
 
     @Override
-    public PublishSubject<Message> getObservableMainLog() {
+    public PublishSubject<LogMessage> getObservableMainLog() {
         return logs.getObservableMainLog();
     }
 

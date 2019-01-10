@@ -237,7 +237,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
                 Log.d("ConnectThread", "Connected");
             } catch (IOException e) {
                 Log.w("ConnectThread", "run: ", e);
-//                Message message = new Message();
+//                LogMessage message = new LogMessage();
 //                message.what = WHAT_CONNECTING_ERROR;
 //                handler.sendMessage(message);
                 //listener.onErrorToConnect();

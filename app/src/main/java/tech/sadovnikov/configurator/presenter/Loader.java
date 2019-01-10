@@ -1,6 +1,6 @@
 //package tech.sadovnikov.configurator.presenter;
 //
-//import android.os.Message;
+//import android.os.LogMessage;
 //import android.util.Log;
 //
 //import java.util.ArrayList;
@@ -94,7 +94,7 @@
 //                timer.cancel();
 //                timer.purge();
 //                loading = false;
-//                Message msg = new Message();
+//                LogMessage msg = new LogMessage();
 //                msg.what = WHAT_LOADING_END;
 //                handler.sendMessage(msg);
 //            }

@@ -2,7 +2,7 @@
 //
 //import android.app.Activity;
 //import android.os.Handler;
-//import android.os.Message;
+//import android.os.LogMessage;
 //
 //import java.lang.ref.WeakReference;
 //
@@ -23,7 +23,7 @@
 //    }
 //
 //    @Override
-//    public void handleMessage(Message msg) {
+//    public void handleMessage(LogMessage msg) {
 //        super.handleMessage(msg);
 //        MainActivity activity = (MainActivity) activityWeakReference.get();
 //        if (activity != null) {

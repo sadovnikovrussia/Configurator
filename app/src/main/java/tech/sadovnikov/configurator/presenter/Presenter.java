@@ -8,7 +8,7 @@
 //import android.content.Context;
 //import android.content.Intent;
 //import android.content.IntentFilter;
-//import android.os.Message;
+//import android.os.LogMessage;
 //import android.support.annotation.NonNull;
 //import android.util.Log;
 //import android.view.MenuItem;
@@ -111,7 +111,7 @@
 //    }
 //
 //    @Override
-//    public void onHandleMessage(Message msg) {
+//    public void onHandleMessage(LogMessage msg) {
 //        Object obj = msg.obj;
 //        switch (msg.what) {
 //            // Отправка полученных данных в logs

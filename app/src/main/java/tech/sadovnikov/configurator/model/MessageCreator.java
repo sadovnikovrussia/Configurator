@@ -2,11 +2,11 @@ package tech.sadovnikov.configurator.model;
 
 import android.annotation.SuppressLint;
 
-import tech.sadovnikov.configurator.model.entities.Message;
+import tech.sadovnikov.configurator.model.entities.LogMessage;
 
 public class MessageCreator {
 
-    public static Message create(String nativeMessage) {
+    public static LogMessage create(String nativeMessage) {
         String logLevel = nativeMessage.substring(1, 2);
         String logType = nativeMessage.substring(2, nativeMessage.indexOf(" "));
         int beginIndexOfTime = nativeMessage.indexOf("[") + 1;
@@ -20,6 +20,6 @@ public class MessageCreator {
         int mSeconds = time % 100;
         @SuppressLint("DefaultLocale") String convertedTime = String.format("%d:%d:%d.%d", hours, minutes, seconds, mSeconds);
         String body = nativeMessage.substring(endIndexOfTime + 2);
-        return new Message(logLevel, logType, originalTime, convertedTime, body);
+        return new LogMessage(logLevel, logType, originalTime, convertedTime, body);
     }
 }
