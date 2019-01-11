@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.text.DecimalFormat;
 
+import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
@@ -11,21 +12,21 @@ import static tech.sadovnikov.configurator.old.OldConfiguration.APN;
 import static tech.sadovnikov.configurator.old.OldConfiguration.LOGIN;
 import static tech.sadovnikov.configurator.old.OldConfiguration.PASSWORD;
 
-public class CmdLogMessageAnalyzer {
-    private static final String TAG = CmdLogMessageAnalyzer.class.getSimpleName();
+class CmdAnalyzer {
+    private static final String TAG = CmdAnalyzer.class.getSimpleName();
 
-    Parameter parseMessage(String messageBody) {
+    static Parameter getParameterFromMessage(LogMessage message) {
         ParametersEntities[] parametersEntities = ParametersEntities.values();
-
+        String messageBody = message.getBody();
         for (ParametersEntities entity : parametersEntities) {
-            int index = messageBody.indexOf(entity.getName());
+            int index = messageBody.toUpperCase().indexOf(entity.getName());
             if (index != -1) {
-                return getParameterFromMessage(messageBody, entity, index);
+                return parseMessageBody(messageBody, entity, index);
             }
         }
-
-//        if (logType.equals(LOG_TYPE_CMD) & Integer.valueOf(logLevel) == LOG_LEVEL_1) {
-//            Log.w(TAG, "analyzeLine: message = " + nativeMessage);
+        return null;
+        //        if (logType.equals(LOG_TYPE_CMD) & Integer.valueOf(logLevel) == LOG_LEVEL_1) {
+//            LogList.w(TAG, "analyzeLine: message = " + nativeMessage);
 //            if (nativeMessage.contains(OK)) {
 //                for (String parameter : PARAMETER_NAMES) {
 //                    if (nativeMessage.toLowerCase().contains(parameter)) {
@@ -36,7 +37,7 @@ public class CmdLogMessageAnalyzer {
 //            }
 //        }
 //
-//        // Log.d(TAG, "parseMessage: " + message);
+//        // LogList.d(TAG, "parseMessage: " + message);
 //        switch (parameter) {
 //            case FIRMWARE_VERSION:
 //                return parseVersion(message);
@@ -49,7 +50,7 @@ public class CmdLogMessageAnalyzer {
 //            case ANSW_NUMBER:
 //                return parseNumber(message);
 //            case APN:
-//                //Log.d(TAG, "parseMessage() returned: " + s);
+//                //LogList.d(TAG, "parseMessage() returned: " + s);
 //                return parseSim(message);
 //            case LOGIN:
 //                return parseSim(message);
@@ -62,11 +63,9 @@ public class CmdLogMessageAnalyzer {
 //                int endIndex = message.indexOf("\r\n", ravnoIndex);
 //                return message.substring(ravnoIndex + 1, endIndex).replaceAll(" ", "");
 //        }
-
-        return null;
     }
 
-    private Parameter getParameterFromMessage(String messageBody, ParametersEntities entity, int startIndex) {
+    private static Parameter parseMessageBody(String messageBody, ParametersEntities entity, int startIndex) {
         String value;
         int endIndex;
         switch (entity) {
@@ -145,7 +144,7 @@ public class CmdLogMessageAnalyzer {
         }
         //
         double doublePercents = ((double) volUse / volAdr * 100);
-        // Log.d(TAG, "parseMessage: doublePercents = " + doublePercents);
+        // LogList.d(TAG, "parseMessage: doublePercents = " + doublePercents);
         String pattern = "##0.000";
         DecimalFormat decimalFormat = new DecimalFormat(pattern);
         String formattedPercents = decimalFormat.format(doublePercents).replace(",", ".");

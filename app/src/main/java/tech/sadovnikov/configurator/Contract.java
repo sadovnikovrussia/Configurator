@@ -371,10 +371,10 @@ public interface Contract {
         void onItemUpdateAvailableDevicesClick();
     }
 
-//    interface Logs {
+//    interface LogManager {
 //        void addLine(String line);
 //
-//        String getMainLog();
+//        String getMainLogList();
 //    }
 
     interface RepositoryConfiguration {

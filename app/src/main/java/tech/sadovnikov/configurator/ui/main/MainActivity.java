@@ -141,7 +141,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-//        Log.w(TAG, "onSaveInstanceState: " + outState);
+//        LogList.w(TAG, "onSaveInstanceState: " + outState);
 //        outState.putBoolean("restart", true);
         super.onSaveInstanceState(outState);
     }
@@ -149,7 +149,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
 //        boolean restart = savedInstanceState.getBoolean("restart");
-//        Log.w(TAG, "onRestoreInstanceState: " + restart);
+//        LogList.w(TAG, "onRestoreInstanceState: " + restart);
 //        getPresenter().onRestoreInstanceState(restart);
         super.onRestoreInstanceState(savedInstanceState);
     }

@@ -10,7 +10,7 @@
 //import android.support.v4.app.ActivityCompat;
 //import android.support.v4.app.FragmentTransaction;
 //import android.support.v7.app.AppCompatActivity;
-//import android.util.Log;
+//import android.util.LogList;
 //import android.view.Menu;
 //import android.view.MenuItem;
 //import android.view.inputmethod.InputMethodManager;
@@ -117,7 +117,7 @@
 //    ConsoleFragment consoleFragment;
 //
 //    public MainActivity() {
-//        Log.v(TAG, "onConstructor");
+//        LogList.v(TAG, "onConstructor");
 //    }
 //
 //
@@ -141,7 +141,7 @@
 //    // Contract.View
 //    @Override
 //    public void showParameter(String name, String value) {
-//        Log.d(TAG, "showParameter: " + name + "=" + value);
+//        LogList.d(TAG, "showParameter: " + name + "=" + value);
 //        switch (name) {
 //            case ID:
 //                if (configBuoyFragment != null && configBuoyFragment.etId != null)
@@ -525,14 +525,14 @@
 //
 //    @Override
 //    public void updateAvailableDevices() {
-//        // LogsManager.d(TAG, "updateAvailableDevices()");
+//        // AppLogManager.d(TAG, "updateAvailableDevices()");
 //        bluetoothFragment.updateAvailableDevices();
 //    }
 //
 //
 //    @Override
 //    public void showLoadingProgress(int size) {
-//        Log.d(TAG, "showLoadingProgress: ");
+//        LogList.d(TAG, "showLoadingProgress: ");
 //        Objects.requireNonNull(getSupportActionBar()).setSubtitle("0%");
 //    }
 //
@@ -540,7 +540,7 @@
 //    public void setLoadingProgress(int commandNumber, int size) {
 //        float pers = (float) commandNumber / (float) size * (float) 100;
 //        String subtitle = String.valueOf((int) pers) + "%";
-//        Log.d(TAG, "setLoadingProgress: " + commandNumber + ", " + size + ", " + subtitle);
+//        LogList.d(TAG, "setLoadingProgress: " + commandNumber + ", " + size + ", " + subtitle);
 //        Objects.requireNonNull(getSupportActionBar()).setSubtitle(subtitle);
 //    }
 //
@@ -650,14 +650,14 @@
 //
 //    @Override
 //    public void showItemUpdateAvailableDevices() {
-//        Log.d(TAG, "showItemUpdateAvailableDevices: ");
+//        LogList.d(TAG, "showItemUpdateAvailableDevices: ");
 //        if (actionBarMenu != null)
 //            actionBarMenu.setGroupVisible(R.id.group_update_available_devices, true);
 //    }
 //
 //    @Override
 //    public void hideItemUpdateAvailableDevices() {
-//        Log.d(TAG, "hideItemUpdateAvailableDevices: ");
+//        LogList.d(TAG, "hideItemUpdateAvailableDevices: ");
 //        if (actionBarMenu != null)
 //            actionBarMenu.setGroupVisible(R.id.group_update_available_devices, false);
 //    }
@@ -1306,7 +1306,7 @@
 //    // States
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
-//        Log.v(TAG, "onCreate");
+//        LogList.v(TAG, "onCreate");
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
 //        //presenter = new Presenter(this);
@@ -1317,31 +1317,31 @@
 //    @Override
 //    protected void onStart() {
 //        super.onStart();
-//        Log.v(TAG, "onStart");
+//        LogList.v(TAG, "onStart");
 //    }
 //
 //    @Override
 //    protected void onResume() {
 //        super.onResume();
-//        Log.v(TAG, "onResume");
+//        LogList.v(TAG, "onResume");
 //    }
 //
 //    @Override
 //    protected void onPause() {
 //        super.onPause();
-//        Log.v(TAG, "onPause");
+//        LogList.v(TAG, "onPause");
 //    }
 //
 //    @Override
 //    protected void onStop() {
 //        super.onStop();
-//        Log.v(TAG, "onStop");
+//        LogList.v(TAG, "onStop");
 //    }
 //
 //    @Override
 //    protected void onDestroy() {
 //        super.onDestroy();
-//        Log.v(TAG, "onDestroy");
+//        LogList.v(TAG, "onDestroy");
 //        presenter.onMainActivityDestroy();
 //    }
 //
@@ -1350,7 +1350,7 @@
 //    // Activity
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
-//        Log.v(TAG, "onCreateOptionsMenu: ");
+//        LogList.v(TAG, "onCreateOptionsMenu: ");
 //        actionBarMenu = menu;
 //        getMenuInflater().inflate(R.menu.menu_configuration_options, actionBarMenu);
 //        itemUpdateAvailableDevices = actionBarMenu.findItem(R.id.item_update_available_devices);
@@ -1367,7 +1367,7 @@
 //
 //    @Override
 //    public boolean onPrepareOptionsMenu(Menu menu) {
-//        Log.v(TAG, "onPrepareOptionsMenu: ");
+//        LogList.v(TAG, "onPrepareOptionsMenu: ");
 //        return super.onPrepareOptionsMenu(menu);
 //    }
 //
@@ -1380,7 +1380,7 @@
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
-//        // Log.d(TAG, "onActivityResult: " + "requestCode = " + requestCode + ", " + "resultCode = " + resultCode + ", " + "data = " + data.getData());
+//        // LogList.d(TAG, "onActivityResult: " + "requestCode = " + requestCode + ", " + "resultCode = " + resultCode + ", " + "data = " + data.getData());
 //        // data.getData();
 //        presenter.onMainActivityResult(requestCode, resultCode, data);
 //    }
@@ -1434,29 +1434,29 @@
 //        for (int i : grantResults) {
 //            grants.add(i);
 //        }
-//        Log.d(TAG, "onRequestPermissionsResult() returned: " + requestCode + ", " + pers + ", " + grants);
+//        LogList.d(TAG, "onRequestPermissionsResult() returned: " + requestCode + ", " + pers + ", " + grants);
 //        if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
 //            if (grants.contains(PERMISSION_GRANTED)) {
-//                Log.i(TAG, "onRequestPermissionsResult: Подверждено =)");
+//                LogList.i(TAG, "onRequestPermissionsResult: Подверждено =)");
 //                presenter.onPositiveRequestReadExternalStoragePermissionRequestResult();
 //            } else {
-//                Log.e(TAG, "onRequestPermissionsResult: Отклонено =(");
+//                LogList.e(TAG, "onRequestPermissionsResult: Отклонено =(");
 //                presenter.onNegativeRequestReadExternalStoragePermissionRequestResult();
 //            }
 //        } else if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
 //            if (grants.contains(PERMISSION_GRANTED)) {
-//                Log.i(TAG, "onRequestPermissionsResult: Подверждено =)");
+//                LogList.i(TAG, "onRequestPermissionsResult: Подверждено =)");
 //                presenter.onPositiveRequestWriteExternalStoragePermissionRequestResult();
 //            } else {
-//                Log.e(TAG, "onRequestPermissionsResult: Отклонено =(");
+//                LogList.e(TAG, "onRequestPermissionsResult: Отклонено =(");
 //                presenter.onNegativeRequestWriteExternalStoragePermissionRequestResult();
 //            }
 //        } else if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION) {
 //            if (grants.contains(PERMISSION_GRANTED)) {
-//                Log.i(TAG, "onRequestPermissionsResult: Подверждено =)");
+//                LogList.i(TAG, "onRequestPermissionsResult: Подверждено =)");
 //                presenter.onPositiveRequestAccessCoarseLocationPermissionRequestResult();
 //            } else {
-//                Log.e(TAG, "onRequestPermissionsResult: Отклонено =(");
+//                LogList.e(TAG, "onRequestPermissionsResult: Отклонено =(");
 //                presenter.onNegativeRequestAccessCoarseLocationPermissionRequestResult();
 //            }
 //        }

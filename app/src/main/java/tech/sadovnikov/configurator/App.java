@@ -14,8 +14,8 @@ import tech.sadovnikov.configurator.di.component.DaggerApplicationComponent;
 import tech.sadovnikov.configurator.di.module.ApplicationModule;
 import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
-import tech.sadovnikov.configurator.model.DataManager;
 import tech.sadovnikov.configurator.model.StreamAnalyzer;
+import tech.sadovnikov.configurator.model.data.DataManager;
 
 public class App extends Application {
     private static final String TAG = App.class.getSimpleName();

@@ -8,19 +8,16 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import tech.sadovnikov.configurator.di.ApplicationContext;
-import tech.sadovnikov.configurator.di.PreferenceInfo;
+import tech.sadovnikov.configurator.di.MainConfiguration;
 import tech.sadovnikov.configurator.model.AppBluetoothService;
-import tech.sadovnikov.configurator.model.AppDataManager;
 import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
-import tech.sadovnikov.configurator.model.DataManager;
-import tech.sadovnikov.configurator.model.LogsManager;
-import tech.sadovnikov.configurator.model.Logs;
 import tech.sadovnikov.configurator.model.StreamAnalyzer;
-import tech.sadovnikov.configurator.model.data.prefs.AppPreferencesHelper;
-import tech.sadovnikov.configurator.model.data.prefs.PreferencesHelper;
+import tech.sadovnikov.configurator.model.data.AppDataManager;
+import tech.sadovnikov.configurator.model.data.DataManager;
+import tech.sadovnikov.configurator.model.data.logs.AppLogManager;
+import tech.sadovnikov.configurator.model.data.logs.LogManager;
 import tech.sadovnikov.configurator.model.entities.Configuration;
-import tech.sadovnikov.configurator.utils.AppConstants;
 
 @Module
 public class ApplicationModule {
@@ -51,12 +48,13 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    Logs provideLogs() {
-        return new LogsManager();
+    LogManager provideLogManager() {
+        return new AppLogManager();
     }
 
     @Provides
     @Singleton
+    @MainConfiguration
     Configuration provideConfiguration() {
         return new Configuration();
     }
@@ -77,21 +75,6 @@ public class ApplicationModule {
     @Singleton
     StreamAnalyzer provideStreamAnalyzer(BluetoothService bluetoothService, DataManager dataManager) {
         return new StreamAnalyzer(bluetoothService, dataManager);
-    }
-
-
-
-
-    @Provides
-    @Singleton
-    PreferencesHelper providePreferencesHelper(AppPreferencesHelper appPreferencesHelper) {
-        return appPreferencesHelper;
-    }
-
-    @Provides
-    @PreferenceInfo
-    String providePreferenceName() {
-        return AppConstants.PREF_NAME;
     }
 
 

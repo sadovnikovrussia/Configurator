@@ -1,7 +1,7 @@
 //package tech.sadovnikov.configurator.presenter;
 //
 //import android.os.LogMessage;
-//import android.util.Log;
+//import android.util.LogList;
 //
 //import java.util.ArrayList;
 //import java.util.Timer;
@@ -42,7 +42,7 @@
 //    }
 //
 //    void loadCommandList(ArrayList<String> commandList) {
-//        Log.d(TAG, "loadCommandList: " + commandList);
+//        LogList.d(TAG, "loadCommandList: " + commandList);
 //        this.commandList = commandList;
 //        loading = true;
 //        commandNumber = 0;
@@ -55,7 +55,7 @@
 //
 //    void nextCommand() {
 //        if (loading) {
-//            Log.d(TAG, "onNextCommand:");
+//            LogList.d(TAG, "onNextCommand:");
 //            timer.cancel();
 //            timer.purge();
 //            timer = new Timer();
@@ -77,7 +77,7 @@
 //                int attempts = 3;
 //                if (attemptNumber <= attempts) {
 //                    String command = commandList.get(commandNumber);
-//                    Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + command);
+//                    LogList.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + command);
 //                    bluetoothService.sendData(command);
 //                    attemptNumber++;
 //                } else {
@@ -85,7 +85,7 @@
 //                    if (commandNumber < commandList.size()) {
 //                        attemptNumber = 1;
 //                        String command = commandList.get(commandNumber);
-//                        Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + command);
+//                        LogList.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + command);
 //                        bluetoothService.sendData(command);
 //                    }
 //                }

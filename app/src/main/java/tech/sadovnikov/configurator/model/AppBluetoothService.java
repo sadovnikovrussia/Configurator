@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.subjects.PublishSubject;
-//import tech.sadovnikov.configurator.presenter.UiHandler;
 
 
 /**
@@ -23,8 +22,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     private static final String TAG = AppBluetoothService.class.getSimpleName();
 
     private static final java.util.UUID UUID = java.util.UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
-    static final int WHAT_CONNECTING_ERROR = 13;
 
     private static BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -40,11 +37,10 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
 
-    // private UiHandler handler;
     private StreamAnalyzer streamAnalyzer;
 
 //    public AppBluetoothService(OnBluetoothServiceEventsListener onBluetoothServiceEventsListener, UiHandler handler) {
-//        // Log.v(TAG, "OnConstructor");
+//        // LogList.v(TAG, "OnConstructor");
 //        listener = onBluetoothServiceEventsListener;
 //        this.handler = handler;
 //        streamAnalyzer = new StreamAnalyzer(handler);
@@ -156,7 +152,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 
 
     private synchronized void onConnecting(BluetoothDevice device) {
-        //Log.d(TAG, "Connecting to: " + device);
+        //LogList.d(TAG, "Connecting to: " + device);
 
         // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {
@@ -176,7 +172,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     }
 
     private synchronized void onConnected(BluetoothSocket socket) {
-        // Log.d(TAG, "onConnected to Socket: " + socket.toString());
+        // LogList.d(TAG, "onConnected to Socket: " + socket.toString());
         // Cancel the thread that completed the connection
         if (mConnectThread != null) {
             mConnectThread.cancel();
@@ -212,16 +208,16 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         BluetoothDevice mDevice;
 
         ConnectThread(BluetoothDevice device) {
-            // Log.d(TAG, "Create ConnectThread");
+            // LogList.d(TAG, "Create ConnectThread");
             BluetoothSocket tmp = null;
             mDevice = device;
             try {
                 tmp = device.createRfcommSocketToServiceRecord(UUID);
-                // Log.d(TAG, "Получаем socket c помощью createRfcommSocketToServiceRecord(UUID): " + "BluetoothSocket = " + tmp.toString());
+                // LogList.d(TAG, "Получаем socket c помощью createRfcommSocketToServiceRecord(UUID): " + "BluetoothSocket = " + tmp.toString());
             } catch (IOException e) {
                 e.printStackTrace();
-                // Log.e(TAG, "ConnectThread: не удалось createRfcommSocketToServiceRecord", e);
-                // Log.d(TAG, "Socket's createRfcommSocketToServiceRecord(UUID) method failed", e);
+                // LogList.e(TAG, "ConnectThread: не удалось createRfcommSocketToServiceRecord", e);
+                // LogList.d(TAG, "Socket's createRfcommSocketToServiceRecord(UUID) method failed", e);
             }
             mSocket = tmp;
         }
@@ -229,9 +225,9 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         @Override
         synchronized public void run() {
             setName("ConnectThread");
-            // Log.d(TAG, "Started thread " + "\"" + getName() + "\"");
+            // LogList.d(TAG, "Started thread " + "\"" + getName() + "\"");
             bluetoothAdapter.cancelDiscovery();
-            // Log.d(TAG, "Выключили поиск: " + "bluetoothAdapter.isDiscovering() = " + bluetoothAdapter.isDiscovering());
+            // LogList.d(TAG, "Выключили поиск: " + "bluetoothAdapter.isDiscovering() = " + bluetoothAdapter.isDiscovering());
             try {
                 mSocket.connect();
                 Log.d("ConnectThread", "Connected");
@@ -241,13 +237,13 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 //                message.what = WHAT_CONNECTING_ERROR;
 //                handler.sendMessage(message);
                 //listener.onErrorToConnect();
-                //Log.d(TAG, "Не получилось. mSocket is onConnected? " + String.valueOf(mSocket.isConnected()) + ", " + e.getMessage());
+                //LogList.d(TAG, "Не получилось. mSocket is onConnected? " + String.valueOf(mSocket.isConnected()) + ", " + e.getMessage());
                 //e.printStackTrace();
                 try {
                     mSocket.close();
                 } catch (IOException e1) {
                     e1.printStackTrace();
-                    // Log.d(TAG, "Не удалось закрыть socket: " + e1.getMessage());
+                    // LogList.d(TAG, "Не удалось закрыть socket: " + e1.getMessage());
                 }
                 return;
             }
@@ -261,7 +257,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         void cancel() {
             try {
                 mSocket.close();
-                // Log.d(TAG, "Закрыли socket");
+                // LogList.d(TAG, "Закрыли socket");
             } catch (IOException e) {
                 Log.e(TAG, "cancel: Не удалось закрыть socket в connectThread", e);
             }
@@ -274,17 +270,17 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         private final PrintWriter writerSerial;
 
         ConnectedThread(BluetoothSocket socket) {
-            // Log.d(TAG, "Create ConnectedThread");
+            // LogList.d(TAG, "Create ConnectedThread");
             mmSocket = socket;
             BufferedReader tmpReaderSerial = null;
             PrintWriter tmpWriterSerial = null;
             // Get the BluetoothSocket readerSerial and output streams
             try {
-                // Log.d(TAG, "Пытаемся получить InputStream");
+                // LogList.d(TAG, "Пытаемся получить InputStream");
                 tmpReaderSerial = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                // Log.d(TAG, "Получили InputStream: " + tmpReaderSerial.toString());
+                // LogList.d(TAG, "Получили InputStream: " + tmpReaderSerial.toString());
             } catch (IOException e) {
-                // Log.d(TAG, "Не удалось получить InputStream: " + e.getMessage());
+                // LogList.d(TAG, "Не удалось получить InputStream: " + e.getMessage());
             }
             readerSerial = tmpReaderSerial;
 //            inputStream = StringObservable.from(readerSerial);
@@ -307,9 +303,9 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 //            });
 
             try {
-                // Log.d(TAG, "Пытаемся создать OutputStream");
+                // LogList.d(TAG, "Пытаемся создать OutputStream");
                 tmpWriterSerial = new PrintWriter(socket.getOutputStream());
-                // Log.d(TAG, "Получили OutputStream: " + tmpWriterSerial.toString());
+                // LogList.d(TAG, "Получили OutputStream: " + tmpWriterSerial.toString());
             } catch (IOException e) {
                 Log.e(TAG, "Не удалось создать OutputStream: ", e);
             }
@@ -318,15 +314,15 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 
         public void run() {
             setName("ConnectedThread");
-            // Log.d(TAG, "Start thread " + getName());
-            // inputMessagesStream = PublishSubject.create();
+            // LogList.d(TAG, "Start thread " + getName());
+            // inputMessagesStream = PublishSubject.createMessage();
             String line;
             try {
-                // Log.d(TAG, "Пытаемся прочитать из потока");
+                // LogList.d(TAG, "Пытаемся прочитать из потока");
                 while ((line = readerSerial.readLine()) != null) {
                     Log.v(TAG, AppBluetoothService.this + ", " + inputMessagesStream + ", " + Thread.currentThread().getName() + ": " + line);
                     inputMessagesStream.onNext(line);
-                    // streamAnalyzer.analyze(line);
+                    // streamAnalyzer.analyzeMessage(line);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Не удалось прочитать из потока", e);

@@ -299,7 +299,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 //    }
 
 //    public int getSelectedPageOfViewPager() {
-//        // Log.v(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
+//        // LogList.v(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
 //        return viewPager.getCurrentItem();
 //    }
 

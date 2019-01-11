@@ -16,7 +16,7 @@ import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
-import tech.sadovnikov.configurator.model.DataManager;
+import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 
 @InjectViewState
@@ -58,7 +58,7 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
     }
 
     public void onCreateView() {
-        getViewState().showMainLogs(dataManager.getMainLog());
+        getViewState().showMainLogs(dataManager.getMainLogList());
     }
 
     @Override

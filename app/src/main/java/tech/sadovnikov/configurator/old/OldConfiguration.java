@@ -72,7 +72,7 @@ public class OldConfiguration {
 
     public OldConfiguration() {
         init();
-        // Log.d(TAG, "OldConfiguration: " + name + " = " + configurationMap.get(name));
+        // LogList.d(TAG, "OldConfiguration: " + name + " = " + configurationMap.get(name));
     }
 
     public static OldConfiguration getEmptyConfiguration() {
@@ -121,7 +121,7 @@ public class OldConfiguration {
     }
 
     public String getParameterValue(String parameterName) {
-        // Log.d(TAG, "getParameterValue(): " + parameterName + "=" + configurationMap.get(parameterName));
+        // LogList.d(TAG, "getParameterValue(): " + parameterName + "=" + configurationMap.get(parameterName));
         OldParameter oldParameter = new OldParameter(parameterName);
         if (parametersList.contains(oldParameter)) {
             return parametersList.get(parametersList.indexOf(oldParameter)).getValue();

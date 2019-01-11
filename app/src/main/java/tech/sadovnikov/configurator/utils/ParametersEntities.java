@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 public enum ParametersEntities {
 
     ID("ID", true),
-    FIRMWARE_VERSION("firm", false),
+    FIRMWARE_VERSION("FIRMWARE VERSION", false),
     BLINKER_MODE("BLINKER MODE", true);
 
     @NonNull

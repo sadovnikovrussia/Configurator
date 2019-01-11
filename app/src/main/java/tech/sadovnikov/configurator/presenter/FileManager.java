@@ -52,7 +52,7 @@ public class FileManager {
         Log.d(TAG, "getFile: dir = " + dir.getAbsolutePath());
         File file = new File(dir, fileName + ".cfg");
         if (!file.exists()) {
-            // Log.d(TAG, "File does not exist");
+            // LogList.d(TAG, "File does not exist");
             try {
                 if (!file.createNewFile()){
                     Log.d(TAG, "getFile: Создан файл по умолчанию, file dir = " + file.getAbsolutePath());
@@ -77,7 +77,7 @@ public class FileManager {
 
     void saveConfiguration(OldConfiguration oldConfiguration, String fileName) {
         File file = getFile(fileName);
-        // Log.d(TAG, "saveConfiguration: " + String.valueOf(file.isDirectory()) + ", " +  String.valueOf(file.isFile()));
+        // LogList.d(TAG, "saveConfiguration: " + String.valueOf(file.isDirectory()) + ", " +  String.valueOf(file.isFile()));
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
@@ -85,7 +85,7 @@ public class FileManager {
                 for (int i = 0; i < oldConfiguration.getSize(); i++) {
                     outputStreamWriter.write(oldConfiguration.getSettingCommand(i) + "\r\n");
                 }
-                // Log.d(TAG, "saveConfiguration: ok");
+                // LogList.d(TAG, "saveConfiguration: ok");
                 listener.onSaveConfigurationSuccess(fileName+".cfg");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -132,7 +132,7 @@ public class FileManager {
                             OldParameter oldParameter = new OldParameter(name, value);
                             Log.d(TAG, "openConfiguration: read Parameter: " + oldParameter);
                             oldConfiguration.addParameter(oldParameter);
-                            // Log.d(TAG, "openConfiguration: Parameter name =" + name + ", " + "value = " + value);
+                            // LogList.d(TAG, "openConfiguration: Parameter name =" + name + ", " + "value = " + value);
                         }
                     }
                 }
