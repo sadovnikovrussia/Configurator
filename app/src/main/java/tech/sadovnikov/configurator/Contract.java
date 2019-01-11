@@ -7,8 +7,8 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
-import tech.sadovnikov.configurator.entities.OldConfiguration;
-import tech.sadovnikov.configurator.entities.OldParameter;
+import tech.sadovnikov.configurator.old.OldConfiguration;
+import tech.sadovnikov.configurator.old.OldParameter;
 
 import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 
@@ -374,7 +374,7 @@ public interface Contract {
 //    interface Logs {
 //        void addLine(String line);
 //
-//        String getMainLogMessages();
+//        String getMainLog();
 //    }
 
     interface RepositoryConfiguration {

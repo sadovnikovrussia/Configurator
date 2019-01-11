@@ -5,13 +5,13 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import tech.sadovnikov.configurator.Contract;
-import tech.sadovnikov.configurator.entities.OldConfiguration;
-import tech.sadovnikov.configurator.entities.OldParameter;
+import tech.sadovnikov.configurator.old.OldConfiguration;
+import tech.sadovnikov.configurator.old.OldParameter;
 
-import static tech.sadovnikov.configurator.entities.OldConfiguration.CURRENT_POS;
-import static tech.sadovnikov.configurator.entities.OldConfiguration.FIRMWARE_VERSION;
-import static tech.sadovnikov.configurator.entities.OldConfiguration.PACKETS;
-import static tech.sadovnikov.configurator.entities.OldConfiguration.UPOWER;
+import static tech.sadovnikov.configurator.old.OldConfiguration.CURRENT_POS;
+import static tech.sadovnikov.configurator.old.OldConfiguration.FIRMWARE_VERSION;
+import static tech.sadovnikov.configurator.old.OldConfiguration.PACKETS;
+import static tech.sadovnikov.configurator.old.OldConfiguration.UPOWER;
 
 
 public class RepositoryConfiguration implements Contract.RepositoryConfiguration {

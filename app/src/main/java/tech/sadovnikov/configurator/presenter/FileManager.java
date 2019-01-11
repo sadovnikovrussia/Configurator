@@ -13,10 +13,10 @@ import java.io.OutputStreamWriter;
 import java.util.Calendar;
 import java.util.Date;
 
-import tech.sadovnikov.configurator.entities.OldConfiguration;
-import tech.sadovnikov.configurator.entities.OldParameter;
+import tech.sadovnikov.configurator.old.OldConfiguration;
+import tech.sadovnikov.configurator.old.OldParameter;
 
-import static tech.sadovnikov.configurator.entities.OldConfiguration.PARAMETER_NAMES_LIST;
+import static tech.sadovnikov.configurator.old.OldConfiguration.PARAMETER_NAMES_LIST;
 
 /**
  * Класс, предназначенный для работы с файлом конфигурации (открытие, сохранение)

@@ -3,7 +3,6 @@ package tech.sadovnikov.configurator.ui.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.FrameLayout;
 
@@ -21,8 +20,8 @@ import tech.sadovnikov.configurator.di.component.DaggerActivityComponent;
 import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
 import tech.sadovnikov.configurator.ui.console.ConsoleFragment;
 
-public class MainActivityNew extends MvpAppCompatActivity implements MainView {
-    private static final String TAG = MainActivityNew.class.getSimpleName();
+public class MainActivity extends MvpAppCompatActivity implements MainView {
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.navigation)
     BottomNavigationView navigationView;
@@ -99,7 +98,7 @@ public class MainActivityNew extends MvpAppCompatActivity implements MainView {
     }
 
 
-    public MainActivityNew() {
+    public MainActivity() {
         super();
         Log.w(TAG, "onConstructor: ");
     }

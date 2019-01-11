@@ -14,13 +14,12 @@ import tech.sadovnikov.configurator.model.AppDataManager;
 import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.DataManager;
-import tech.sadovnikov.configurator.model.DeviceLogs;
+import tech.sadovnikov.configurator.model.LogsManager;
 import tech.sadovnikov.configurator.model.Logs;
 import tech.sadovnikov.configurator.model.StreamAnalyzer;
 import tech.sadovnikov.configurator.model.data.prefs.AppPreferencesHelper;
 import tech.sadovnikov.configurator.model.data.prefs.PreferencesHelper;
 import tech.sadovnikov.configurator.model.entities.Configuration;
-import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.AppConstants;
 
 @Module
@@ -53,7 +52,7 @@ public class ApplicationModule {
     @Provides
     @Singleton
     Logs provideLogs() {
-        return new DeviceLogs();
+        return new LogsManager();
     }
 
     @Provides

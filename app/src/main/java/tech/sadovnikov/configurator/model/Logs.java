@@ -9,7 +9,7 @@ public interface Logs {
 
     void addLogMessage(LogMessage message);
 
-    List<LogMessage> getMainLogMessages();
+    List<LogMessage> getMainLog();
 
     PublishSubject<LogMessage> getObservableMainLog();
 

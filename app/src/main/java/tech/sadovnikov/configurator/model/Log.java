@@ -10,11 +10,15 @@ public class Log {
     private String logType;
     private List<LogMessage> logMessageList = new ArrayList<>();
 
-    public Log(String logType) {
+    public Log() {
+    }
+
+    private Log(String logType) {
         this.logType = logType;
     }
 
-    public Log() {
+    public static Log of(String logType) {
+        return new Log(logType);
     }
 
     void addMessage(LogMessage logMessage){

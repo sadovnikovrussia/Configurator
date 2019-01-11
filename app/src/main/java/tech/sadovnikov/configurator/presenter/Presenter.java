@@ -21,7 +21,7 @@
 //import tech.sadovnikov.configurator.R;
 //import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 //import tech.sadovnikov.configurator.model.BluetoothService;
-//import tech.sadovnikov.configurator.model.DeviceLogs;
+//import tech.sadovnikov.configurator.model.LogsManager;
 //import tech.sadovnikov.configurator.model.RepositoryConfiguration;
 //import tech.sadovnikov.configurator.ui.MainActivity;
 //import tech.sadovnikov.configurator.ui.adapter.AvailableDevicesItemView;
@@ -75,7 +75,7 @@
 //    private static final String TAG = "Presenter";
 //
 //    private Contract.View mainView;
-//    private Contract.DeviceLogs logs;
+//    private Contract.LogsManager logs;
 //    private Contract.RepositoryConfiguration repositoryConfiguration;
 //
 //    private BluetoothService bluetoothService;
@@ -86,7 +86,7 @@
 //    public Presenter(Contract.View mainView) {
 //        Log.v(TAG, "onConstructor");
 //        this.mainView = mainView;
-//        logs = new DeviceLogs(this);
+//        logs = new LogsManager(this);
 //        UiHandler uiHandler = new UiHandler((Activity) mainView, this);
 //        bluetoothService = new BluetoothService(this, uiHandler);
 //        bluetoothBroadcastReceiver = new BluetoothBroadcastReceiver(this);
@@ -246,7 +246,7 @@
 //    // BluetoothFragment events
 //    @Override
 //    public void onSwitchBtStateChanged(boolean state) {
-//        // DeviceLogs.d(TAG, "onSwitchBtStateChanged" + String.valueOf(state));
+//        // LogsManager.d(TAG, "onSwitchBtStateChanged" + String.valueOf(state));
 //        if (state) {
 //            bluetoothService.enableBt();
 //        } else {
@@ -268,7 +268,7 @@
 //
 //    @Override
 //    public void onPairedDevicesRvItemClick(String bluetoothDeviceAddress) {
-//        // DeviceLogs.d(TAG, "Ща будем подключаться к " + bluetoothDevice.getName());
+//        // LogsManager.d(TAG, "Ща будем подключаться к " + bluetoothDevice.getName());
 //        bluetoothService.connectTo(bluetoothDeviceAddress);
 //    }
 //
@@ -852,10 +852,10 @@
 //
 //    @Override
 //    public void onConsoleFragmentCreateView() {
-//        mainView.showLog(logs.getMainLogMessages());
+//        mainView.showLog(logs.getMainLog());
 //    }
 //
-//    // DeviceLogs events ---------------------------------------------------------------------------------
+//    // LogsManager events ---------------------------------------------------------------------------------
 //    @Override
 //    public void onAddLogsLineEvent(String line) {
 //        mainView.addLogsLine(line);
@@ -863,7 +863,7 @@
 //
 //    @Override
 //    public void onTvLogsLongClick() {
-//        String logsMessages = logs.getMainLogMessages();
+//        String logsMessages = logs.getMainLog();
 //        ClipboardManager clipboard = (ClipboardManager) ((Activity) mainView).getSystemService(Context.CLIPBOARD_SERVICE);
 //        ClipData clip = ClipData.newPlainText("", logsMessages);
 //        if (clipboard != null) {

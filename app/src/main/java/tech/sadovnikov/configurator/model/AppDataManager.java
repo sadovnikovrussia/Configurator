@@ -36,8 +36,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public List<LogMessage> getMainLogMessages() {
-        return logs.getMainLogMessages();
+    public List<LogMessage> getMainLog() {
+        return logs.getMainLog();
     }
 
     @Override

@@ -48,8 +48,7 @@ public class StreamAnalyzer {
                     String nativeMessage = buffer.substring(0, indexStartNewMessage);
                     buffer = buffer.substring(indexStartNewMessage);
                     LogMessage message = MessageCreator.create(nativeMessage);
-                    analyzeLog(message);
-                    analyzeCommand(message);
+                    dataManager.addLogMessage(message);
 
 
                     // TODO <Переделать определение logType>
@@ -71,20 +70,8 @@ public class StreamAnalyzer {
         } else buffer = "";
     }
 
-    private void analyzeLog(LogMessage message) {
-        if (message.getLogType().equals(LOG_TYPE_CMD) && message.getLogLevel().equals(LOG_LEVEL_1)) {
-            commandAnalyzer.analyzeAnswer(message);
-        }
 
 
-        dataManager.addLogMessage(message);
-    }
-
-    private void analyzeCommand(LogMessage message) {
-        if (message.getLogType().equals(LOG_TYPE_CMD) && message.getLogLevel().equals(LOG_LEVEL_1)) {
-            commandAnalyzer.analyzeAnswer(message);
-        }
-    }
 
 //    private void sendCommand(String value, String parameter) {
 //        // Log.i(TAG, "sendCommand");

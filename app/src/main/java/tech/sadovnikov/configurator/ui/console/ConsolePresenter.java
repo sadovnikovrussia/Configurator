@@ -58,7 +58,7 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
     }
 
     public void onCreateView() {
-        getViewState().showMainLogs(dataManager.getMainLogMessages());
+        getViewState().showMainLogs(dataManager.getMainLog());
     }
 
     @Override
