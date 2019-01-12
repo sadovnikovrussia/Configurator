@@ -4,11 +4,13 @@ import com.arellomobile.mvp.MvpView;
 
 public interface MainView extends MvpView {
 
-        void showBluetoothView();
+    void showBluetoothView();
 
-        void showConsoleView();
+    void showConsoleView();
 
-        void showConfigurationView();
+    void showConfigurationView();
+
+    void showLoadingProcess();
 
 
 //        // Вывести сообщение лога в консоль
@@ -158,5 +160,5 @@ public interface MainView extends MvpView {
 //
 //        int getSelectedPageOfViewPager();
 
-    }
+}
 

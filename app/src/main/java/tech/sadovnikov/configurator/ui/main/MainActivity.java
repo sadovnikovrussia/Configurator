@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -88,6 +90,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     }
 
     @Override
+    public void showLoadingProcess() {
+
+    }
+
+    @Override
     public void showConsoleView() {
         Log.w(TAG, "showConsoleView: ");
         getSupportFragmentManager().beginTransaction()
@@ -97,6 +104,57 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_console);
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.item_open:
+                presenter.onOpenDeviceConfiguration();
+                break;
+            case R.id.item_save:
+                presenter.onSaveDeviceConfiguration();
+                break;
+            case R.id.item_load:
+                presenter.onLoadDeviceConfiguration();
+                break;
+            case R.id.item_set:
+                presenter.onSetDeviceConfiguration();
+                break;
+//                if (itemId == R.id.item_set) {
+//            // TODO? <Что делать со спинерами, когда эти параметр не трогали?>
+//            // TODO <Поставить условие на подключение к устройству>
+//            // TODO <Показать бегунок загрузки>
+//            loader.loadCommandList(repositoryConfiguration.getCommandListForSetConfiguration());
+//        } else if (itemId == R.id.item_load) {
+//            // TODO <Поставить условие на подключение к устройству>
+//            // TODO <Показать бегунок загрузки>
+//            loader.loadCommandList(repositoryConfiguration.getCommandListForReadConfiguration());
+//        } else if (itemId == R.id.item_open) {
+//            mainView.startOpenFileManagerActivityWithRequestPermission();
+//        } else if (itemId == R.id.item_save) {
+//            mainView.startSaveFileActivityWithRequestPermission();
+//        } else if (itemId == R.id.item_update_available_devices){
+//            mainView.updateAvailableDevices();
+//        }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onOptionsMenuClosed(Menu menu) {
+        super.onOptionsMenuClosed(menu);
+    }
 
     public MainActivity() {
         super();
@@ -139,18 +197,5 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         Log.w(TAG, "onRestart: ");
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-//        LogList.w(TAG, "onSaveInstanceState: " + outState);
-//        outState.putBoolean("restart", true);
-        super.onSaveInstanceState(outState);
-    }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        boolean restart = savedInstanceState.getBoolean("restart");
-//        LogList.w(TAG, "onRestoreInstanceState: " + restart);
-//        getPresenter().onRestoreInstanceState(restart);
-        super.onRestoreInstanceState(savedInstanceState);
-    }
 }

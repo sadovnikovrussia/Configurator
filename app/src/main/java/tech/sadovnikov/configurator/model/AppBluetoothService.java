@@ -25,7 +25,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 
     private static BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    private PublishSubject<String> inputMessagesStream = PublishSubject.create();
+    private PublishSubject<String> inputMessagesObservable = PublishSubject.create();
     private PublishSubject<Integer> bluetoothState = PublishSubject.create();
     private PublishSubject<List<BluetoothDevice>> pairedDevices = PublishSubject.create();
     private PublishSubject<List<BluetoothDevice>> availableDevicesObservable = PublishSubject.create();
@@ -51,13 +51,13 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     }
 
     @Override
-    public boolean enable() {
-        return bluetoothAdapter.enable();
+    public void enable() {
+        bluetoothAdapter.enable();
     }
 
     @Override
-    public boolean disable() {
-        return bluetoothAdapter.disable();
+    public void disable() {
+        bluetoothAdapter.disable();
     }
 
     @Override
@@ -76,8 +76,8 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     }
 
     @Override
-    public PublishSubject<String> getInputMessagesStream() {
-        return inputMessagesStream;
+    public PublishSubject<String> getInputMessagesObservable() {
+        return inputMessagesObservable;
     }
 
     @Override
@@ -315,13 +315,13 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         public void run() {
             setName("ConnectedThread");
             // LogList.d(TAG, "Start thread " + getName());
-            // inputMessagesStream = PublishSubject.createMessage();
+            // inputMessagesObservable = PublishSubject.createMessage();
             String line;
             try {
                 // LogList.d(TAG, "Пытаемся прочитать из потока");
                 while ((line = readerSerial.readLine()) != null) {
-                    Log.v(TAG, AppBluetoothService.this + ", " + inputMessagesStream + ", " + Thread.currentThread().getName() + ": " + line);
-                    inputMessagesStream.onNext(line);
+                    Log.v(TAG, line);
+                    inputMessagesObservable.onNext(line);
                     // streamAnalyzer.analyzeMessage(line);
                 }
             } catch (IOException e) {
@@ -344,6 +344,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         }
     }
 
+    @Override
     public void sendData(String data) {
         if (mConnectedThread != null) {
             mConnectedThread.write(data);

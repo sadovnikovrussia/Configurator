@@ -69,7 +69,7 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
     }
 
     void onSendCommandClick(String command) {
-
+        bluetoothService.sendData(command);
     }
 
     void onLogsLongClick() {

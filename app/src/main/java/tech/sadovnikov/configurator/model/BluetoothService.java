@@ -11,9 +11,9 @@ public interface BluetoothService {
 
     boolean isEnabled();
 
-    boolean enable();
+    void enable();
 
-    boolean disable();
+    void disable();
 
     void connectToDevice(BluetoothDevice device);
 
@@ -37,9 +37,11 @@ public interface BluetoothService {
 
     void cancelDiscovery();
 
-    PublishSubject<String> getInputMessagesStream();
+    PublishSubject<String> getInputMessagesObservable();
 
     void setInputStreamListener(InputStreamListener listener);
+
+    void sendData(String data);
 
     interface InputStreamListener {
 

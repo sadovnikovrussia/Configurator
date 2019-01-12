@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import dagger.Module;
 import dagger.Provides;
 import tech.sadovnikov.configurator.di.ActivityContext;
+import tech.sadovnikov.configurator.model.CfgLoader;
 
 @Module
 public class ActivityModule {
@@ -22,7 +23,9 @@ public class ActivityModule {
 
     @ActivityContext
     @Provides
-    Context provideActivityContext(){
+    Context provideActivityContext() {
         return activity;
     }
+
+
 }

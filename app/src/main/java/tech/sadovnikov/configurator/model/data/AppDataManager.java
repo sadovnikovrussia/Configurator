@@ -48,6 +48,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public List<String> getCmdListForReadDeviceConfiguration() {
+        return configuration.getCmdListForReadDeviceConfiguration();
+    }
+
+    @Override
     public void clearSubscribes() {
         compositeDisposable.clear();
     }

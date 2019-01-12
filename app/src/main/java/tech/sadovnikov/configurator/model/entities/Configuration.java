@@ -3,11 +3,14 @@ package tech.sadovnikov.configurator.model.entities;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
+import tech.sadovnikov.configurator.ui.bluetooth.available_devices.AvailableDevicesRvAdapter;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 public class Configuration {
@@ -50,6 +53,19 @@ public class Configuration {
         return parameters.remove(Parameter.of(parametersEntity));
     }
 
+    public List<String> getCmdListForReadDeviceConfiguration(){
+        List<String> commandListForReadConfiguration = new ArrayList<>();
+        for (ParametersEntities parameterEntity : ParametersEntities.values()) {
+            switch (parameterEntity) {
+                case FIRMWARE_VERSION:
+                    commandListForReadConfiguration.add("@version");
+                    break;
+                default:
+                    commandListForReadConfiguration.add(parameterEntity + "?");
+            }
+        }
+        return commandListForReadConfiguration;
+    }
     public void clear() {
         parameters.clear();
     }

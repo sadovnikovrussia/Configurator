@@ -29,7 +29,7 @@ public class StreamAnalyzer {
     @Inject
     public StreamAnalyzer(BluetoothService bluetoothService, DataManager dataManager) {
         this.dataManager = dataManager;
-        Disposable subscribe = bluetoothService.getInputMessagesStream()
+        Disposable subscribe = bluetoothService.getInputMessagesObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::analyzeLine);

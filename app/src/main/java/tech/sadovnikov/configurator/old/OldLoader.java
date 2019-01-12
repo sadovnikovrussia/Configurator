@@ -1,4 +1,4 @@
-//package tech.sadovnikov.configurator.presenter;
+//package tech.sadovnikov.configurator.old;
 //
 //import android.os.LogMessage;
 //import android.util.LogList;
@@ -15,7 +15,7 @@
 // * считывание: id?
 // * установка: id = 1
 // */
-//class Loader {
+//class OldLoader {
 //    private static final String TAG = "Loader";
 //
 //    static final int WHAT_LOADING_END = 11;
@@ -35,7 +35,7 @@
 //    private AppBluetoothService bluetoothService;
 //    UiHandler handler;
 //
-//    Loader(OnLoaderEventsListener onLoaderEventsListener, final AppBluetoothService bluetoothService, UiHandler uiHandler) {
+//    OldLoader(OnLoaderEventsListener onLoaderEventsListener, final AppBluetoothService bluetoothService, UiHandler uiHandler) {
 //        handler = uiHandler;
 //        this.onLoaderEventsListener = onLoaderEventsListener;
 //        this.bluetoothService = bluetoothService;
