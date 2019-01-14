@@ -17,7 +17,7 @@ import tech.sadovnikov.configurator.utils.ParametersEntities;
  * считывание: id?
  * установка: id = 1
  */
-public class CfgLoader implements StreamAnalyzer.OnSetCfgParameterListener {
+public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
     private static final String TAG = CfgLoader.class.getSimpleName();
 
     static final int WHAT_LOADING_END = 11;

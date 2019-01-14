@@ -14,7 +14,7 @@ import tech.sadovnikov.configurator.di.component.DaggerApplicationComponent;
 import tech.sadovnikov.configurator.di.module.ApplicationModule;
 import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
-import tech.sadovnikov.configurator.model.StreamAnalyzer;
+import tech.sadovnikov.configurator.model.MessageAnalyzer;
 import tech.sadovnikov.configurator.model.data.DataManager;
 
 public class App extends Application {
@@ -27,7 +27,7 @@ public class App extends Application {
     @Inject
     BluetoothService bluetoothService;
     @Inject
-    StreamAnalyzer streamAnalyzer;
+    MessageAnalyzer messageAnalyzer;
 
     private static ApplicationComponent applicationComponent;
 

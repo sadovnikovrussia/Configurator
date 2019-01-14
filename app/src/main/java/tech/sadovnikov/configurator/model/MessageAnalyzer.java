@@ -9,6 +9,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.model.data.DataManager;
+import tech.sadovnikov.configurator.model.data.RemoteDevice;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
@@ -20,16 +21,17 @@ import static tech.sadovnikov.configurator.model.entities.LogMessage.LOG_TYPE_CM
 /**
  * Класс, предназначенный для парсинга данных из лога
  */
-public class StreamAnalyzer {
-    private static final String TAG = "StreamAnalyzer";
+public class MessageAnalyzer implements RemoteDevice {
+    private static final String TAG = "MessageAnalyzer";
 
     private DataManager dataManager;
 
     private String buffer = "";
     private OnSetCfgParameterListener listener;
+    private AnswerCallback answerCallback;
 
     @Inject
-    public StreamAnalyzer(BluetoothService bluetoothService, DataManager dataManager) {
+    public MessageAnalyzer(BluetoothService bluetoothService, DataManager dataManager) {
         this.dataManager = dataManager;
         Disposable subscribe = bluetoothService.getInputMessagesObservable()
                 .subscribeOn(Schedulers.io())
@@ -82,14 +84,24 @@ public class StreamAnalyzer {
                 Parameter parameter = CmdAnalyzer.getParameterFromMessage(message);
                 dataManager.setConfigParameter(parameter);
                 if (parameter != null) {
+                    answerCallback.onAnswerOk(parameter);
                     listener.onSetConfigParameter(parameter.getEntity());
                 }
+            } else {
+                answerCallback.onAnswerError(message);
             }
         }
     }
 
     public void setListener(OnSetCfgParameterListener listener) {
         this.listener = listener;
+    }
+
+    @Override
+    public void getParameter(ParametersEntities parameterEntity, AnswerCallback answerCallback) {
+        this.answerCallback = answerCallback;
+
+
     }
 
     interface OnSetCfgParameterListener {
@@ -103,7 +115,7 @@ public class StreamAnalyzer {
 ////        msgObj.put(PARAMETER_VALUE, value);
 ////        msgObj.put(PARAMETER_NAME, parameter);
 ////        msg.obj = msgObj;
-//        // LogList.d(TAG, "sendCommand: " + ((HashMap)msg.obj).get(StreamAnalyzer.PARAMETER_VALUE).toString());
+//        // LogList.d(TAG, "sendCommand: " + ((HashMap)msg.obj).get(MessageAnalyzer.PARAMETER_VALUE).toString());
 ////        uiHandler.sendMessage(msg);
 //    }
 //

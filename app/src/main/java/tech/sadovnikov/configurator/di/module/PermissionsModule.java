@@ -13,7 +13,6 @@ import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 @Module
 public class PermissionsModule {
 
-    @PresenterScope
     @Provides
     int checkBluetoothPermission(@ApplicationContext Context context) {
         return checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION);
