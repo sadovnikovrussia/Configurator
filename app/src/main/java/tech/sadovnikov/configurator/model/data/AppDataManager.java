@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.model.data.logs.LogManager;
-import tech.sadovnikov.configurator.model.entities.Configuration;
+import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 
@@ -18,6 +18,9 @@ public class AppDataManager implements DataManager {
 
     private LogManager logManager;
     private Configuration configuration;
+    private PublishSubject<Configuration> configurationObservable;
+
+    //private DataManagerListener dataManagerListener;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -25,6 +28,7 @@ public class AppDataManager implements DataManager {
     public AppDataManager(LogManager logManager, Configuration configuration) {
         this.logManager = logManager;
         this.configuration = configuration;
+        this.configurationObservable = PublishSubject.create();
     }
 
     @Override
@@ -50,6 +54,11 @@ public class AppDataManager implements DataManager {
     @Override
     public List<String> getCmdListForReadDeviceConfiguration() {
         return configuration.getCmdListForReadDeviceConfiguration();
+    }
+
+    @Override
+    public PublishSubject<Configuration> getConfigurationObservable() {
+        return configurationObservable;
     }
 
     @Override

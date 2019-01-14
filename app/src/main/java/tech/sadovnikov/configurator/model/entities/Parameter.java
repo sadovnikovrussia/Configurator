@@ -1,7 +1,6 @@
 package tech.sadovnikov.configurator.model.entities;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 
 import java.util.Objects;
@@ -9,24 +8,25 @@ import java.util.Objects;
 import tech.sadovnikov.configurator.model.exception.NoSettableParameterException;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
-public class Parameter implements CommandCreating {
+public class Parameter implements CommandCreatable {
 
+    @NonNull
     private ParametersEntities entity;
-    @Nullable
+    @NonNull
     private String value;
 
-    private Parameter(ParametersEntities entity) {
-        this.entity = entity;
-    }
+//    private Parameter(@NonNull ParametersEntities entity) {
+//        this.entity = entity;
+//    }
 
-    private Parameter(ParametersEntities entity, @Nullable String value) {
+    private Parameter(@NonNull ParametersEntities entity, @NonNull String value) {
         this.entity = entity;
         this.value = value;
     }
 
-    public static Parameter of(ParametersEntities parametersEntity){
-        return new Parameter(parametersEntity);
-    }
+//    public static Parameter of(ParametersEntities parametersEntity){
+//        return new Parameter(parametersEntity);
+//    }
 
     public static Parameter of(ParametersEntities parameterEntity, String value) {
         return new Parameter(parameterEntity, value);
@@ -44,21 +44,22 @@ public class Parameter implements CommandCreating {
     }
 
     @NonNull
+    public ParametersEntities getEntity() {
+        return entity;
+    }
+
+    @NonNull
     public String getName() {
         return entity.getName();
     }
 
-    @Nullable
+    @NonNull
     public String getValue() {
         return value;
     }
 
-    public void setValue(@Nullable String value) {
+    public void setValue(@NonNull String value) {
         this.value = value;
-    }
-
-    boolean isValueNull() {
-        return value == null;
     }
 
     @NonNull

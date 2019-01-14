@@ -2,14 +2,14 @@ package tech.sadovnikov.configurator.model;
 
 import android.util.Log;
 
-import com.arellomobile.mvp.presenter.InjectPresenter;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.inject.Inject;
+
+import tech.sadovnikov.configurator.model.data.DataManager;
+import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 /**
  * Класс, отвечающий за отправку списка команд (установка и считывание параметров из устройства)
@@ -17,7 +17,7 @@ import javax.inject.Inject;
  * считывание: id?
  * установка: id = 1
  */
-public class CfgLoader {
+public class CfgLoader implements StreamAnalyzer.OnSetCfgParameterListener {
     private static final String TAG = CfgLoader.class.getSimpleName();
 
     static final int WHAT_LOADING_END = 11;
@@ -35,6 +35,7 @@ public class CfgLoader {
 
     private OnLoaderEventsListener onLoaderEventsListener;
     private BluetoothService bluetoothService;
+    private DataManager dataManager;
     //UiHandler handler;
 
     @Inject
@@ -46,6 +47,24 @@ public class CfgLoader {
 
     public void setBluetoothService(BluetoothService bluetoothService) {
         this.bluetoothService = bluetoothService;
+    }
+
+    public void setDataManager(DataManager dataManager) {
+        this.dataManager = dataManager;
+    }
+
+    public void readFullConfiguration() {
+        commandList.clear();
+        for (ParametersEntities entity : ParametersEntities.values()) {
+            commandList.add(entity.createReadingCommand());
+        }
+        Log.d(TAG, "loadCommandList: " + commandList);
+        loading = true;
+        commandNumber = 0;
+        attemptNumber = 1;
+        timer = new Timer();
+        task = new Task();
+        timer.schedule(task, 0, period);
     }
 
     public void loadCommandList(List<String> commandList) {
@@ -60,7 +79,7 @@ public class CfgLoader {
         //onLoaderEventsListener.onStartLoading(commandList.size());
     }
 
-    public void nextCommand() {
+    private void nextCommand() {
         if (loading) {
             Log.d(TAG, "onNextCommand:");
             timer.cancel();
@@ -74,9 +93,14 @@ public class CfgLoader {
         }
     }
 
+    @Override
+    public void onSetConfigParameter(ParametersEntities parameterEntity) {
+        nextCommand();
+    }
+
 
     private class Task extends TimerTask {
-        private static final String TAG = "Task";
+        private final String TAG = Task.class.getSimpleName();
 
         @Override
         public void run() {

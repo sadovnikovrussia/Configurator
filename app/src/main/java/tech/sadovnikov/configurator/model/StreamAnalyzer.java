@@ -11,6 +11,7 @@ import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
+import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 import static tech.sadovnikov.configurator.model.entities.LogMessage.LOG_SYMBOL;
 import static tech.sadovnikov.configurator.model.entities.LogMessage.LOG_TYPE_CMD;
@@ -25,6 +26,7 @@ public class StreamAnalyzer {
     private DataManager dataManager;
 
     private String buffer = "";
+    private OnSetCfgParameterListener listener;
 
     @Inject
     public StreamAnalyzer(BluetoothService bluetoothService, DataManager dataManager) {
@@ -79,10 +81,20 @@ public class StreamAnalyzer {
             if (isCmdOk) {
                 Parameter parameter = CmdAnalyzer.getParameterFromMessage(message);
                 dataManager.setConfigParameter(parameter);
+                if (parameter != null) {
+                    listener.onSetConfigParameter(parameter.getEntity());
+                }
             }
         }
     }
 
+    public void setListener(OnSetCfgParameterListener listener) {
+        this.listener = listener;
+    }
+
+    interface OnSetCfgParameterListener {
+        void onSetConfigParameter(ParametersEntities parameterEntity);
+    }
 //    private void sendCommand(String value, String parameter) {
 //        // LogList.i(TAG, "sendCommand");
 ////        LogMessage msg = new LogMessage();

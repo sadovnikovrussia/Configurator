@@ -120,16 +120,16 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.item_open:
-                presenter.onOpenDeviceConfiguration();
+                presenter.onOpenConfiguration();
                 break;
             case R.id.item_save:
-                presenter.onSaveDeviceConfiguration();
+                presenter.onSaveConfiguration();
                 break;
             case R.id.item_load:
-                presenter.onLoadDeviceConfiguration();
+                presenter.onReadConfiguration();
                 break;
             case R.id.item_set:
-                presenter.onSetDeviceConfiguration();
+                presenter.onSetConfiguration();
                 break;
 //                if (itemId == R.id.item_set) {
 //            // TODO? <Что делать со спинерами, когда эти параметр не трогали?>

@@ -1,59 +1,52 @@
-package tech.sadovnikov.configurator.model.entities;
+package tech.sadovnikov.configurator.model.data.configuration;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import javax.inject.Inject;
 
-import tech.sadovnikov.configurator.ui.bluetooth.available_devices.AvailableDevicesRvAdapter;
+import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 public class Configuration {
     private static final String TAG = Configuration.class.getSimpleName();
 
-    private Set<Parameter> parameters = new HashSet<>();
+    //private Set<Parameter> parameters = new HashSet<>();
+    private Map<ParametersEntities, Parameter> parametersMap = new LinkedHashMap<>();
 
-    public static Configuration createMainConfiguration() {
-        Configuration main = new Configuration();
-        for (ParametersEntities parametersEntity : ParametersEntities.values()) {
-            main.addParameter(parametersEntity);
-        }
-        return main;
-    }
-
-    @Inject
-    public Configuration() {
-    }
-
-    private void addParameter(ParametersEntities parameterEntity) {
-        parameters.add(Parameter.of(parameterEntity));
-    }
 
     public void setParameter(ParametersEntities parameterEntity, String value) {
         Parameter parameter = Parameter.of(parameterEntity, value);
-        parameters.remove(parameter);
-        parameters.add(parameter);
+        //parameters.remove(parameter);
+        //parameters.add(parameter);
+        parametersMap.put(parameterEntity, Parameter.of(parameterEntity, value));
         Log.d(TAG, "setParameter: " + parameter);
         Log.d(TAG, "setParameter: " + this);
     }
 
     public void setParameter(Parameter parameter) {
-        parameters.remove(parameter);
-        parameters.add(parameter);
+        //parameters.remove(parameter);
+        //parameters.add(parameter);
+        parametersMap.put(parameter.getEntity(), parameter);
         Log.d(TAG, "setParameter: " + parameter);
         Log.d(TAG, "setParameter: " + this);
     }
 
-    public boolean removeParameter(ParametersEntities parametersEntity) {
-        return parameters.remove(Parameter.of(parametersEntity));
+    public Parameter getParameter(ParametersEntities parameterEntity) {
+        return parametersMap.get(parameterEntity);
     }
 
-    public List<String> getCmdListForReadDeviceConfiguration(){
+    public Parameter removeParameter(ParametersEntities parametersEntity) {
+        //return parameters.remove(Parameter.of(parametersEntity));
+        return parametersMap.remove(parametersEntity);
+    }
+
+    public List<String> getCmdListForReadDeviceConfiguration() {
         List<String> commandListForReadConfiguration = new ArrayList<>();
         for (ParametersEntities parameterEntity : ParametersEntities.values()) {
             switch (parameterEntity) {
@@ -66,15 +59,16 @@ public class Configuration {
         }
         return commandListForReadConfiguration;
     }
+
     public void clear() {
-        parameters.clear();
+        //parameters.clear();
+        parametersMap.clear();
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "Configuration{" +
-                "parameters=" + parameters +
+        return "Configuration{" + parametersMap +
                 '}';
     }
 }

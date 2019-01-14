@@ -18,7 +18,7 @@ import tech.sadovnikov.configurator.model.data.DataManager;
 public class MainPresenter extends MvpPresenter<MainView> {
     private static final String TAG = MainPresenter.class.getSimpleName();
 
-    PresenterComponent presenterComponent;
+    private PresenterComponent presenterComponent;
     @Inject
     CfgLoader cfgLoader;
     @Inject
@@ -32,6 +32,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
         initDaggerComponent();
         presenterComponent.injectMainPresenter(this);
         cfgLoader.setBluetoothService(bluetoothService);
+        cfgLoader.setDataManager(dataManager);
     }
     private void initDaggerComponent() {
         presenterComponent = DaggerPresenterComponent
@@ -59,20 +60,20 @@ public class MainPresenter extends MvpPresenter<MainView> {
         if (!isFragmentOpened) getViewState().showConsoleView();
     }
 
-    void onSetDeviceConfiguration() {
+    void onSetConfiguration() {
 
     }
 
-    void onSaveDeviceConfiguration() {
+    void onSaveConfiguration() {
 
     }
 
-    void onOpenDeviceConfiguration() {
+    void onOpenConfiguration() {
 
     }
 
-    void onLoadDeviceConfiguration() {
-        cfgLoader.loadCommandList(dataManager.getCmdListForReadDeviceConfiguration());
+    void onReadConfiguration() {
+        cfgLoader.readFullConfiguration();
         getViewState().showLoadingProcess();
     }
 }

@@ -17,7 +17,7 @@ import tech.sadovnikov.configurator.model.data.AppDataManager;
 import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.model.data.logs.AppLogManager;
 import tech.sadovnikov.configurator.model.data.logs.LogManager;
-import tech.sadovnikov.configurator.model.entities.Configuration;
+import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 
 @Module
 public class ApplicationModule {

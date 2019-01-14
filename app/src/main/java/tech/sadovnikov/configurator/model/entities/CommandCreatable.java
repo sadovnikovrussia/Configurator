@@ -2,7 +2,7 @@ package tech.sadovnikov.configurator.model.entities;
 
 import tech.sadovnikov.configurator.model.exception.NoSettableParameterException;
 
-interface CommandCreating {
+public interface CommandCreatable {
     String endOfCommonReadingCommand = "?";
     String eq = "=";
 
