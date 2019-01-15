@@ -15,6 +15,8 @@ public interface DataManager extends LogManager {
 
     List<String> getCmdListForReadDeviceConfiguration();
 
+    List<String> getCmdListForSetDeviceConfiguration();
+
     PublishSubject<Configuration> getConfigurationObservable();
 
     interface DataManagerListener {

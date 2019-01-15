@@ -6,10 +6,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import dagger.Module;
 import dagger.Provides;
 import tech.sadovnikov.configurator.di.PerFragment;
-import tech.sadovnikov.configurator.ui.bluetooth.available_devices.AvailableDevicesRvAdapter;
-import tech.sadovnikov.configurator.ui.configuration.ConfigTabsRvAdapter;
-import tech.sadovnikov.configurator.ui.bluetooth.DevicesFragmentPagerAdapter;
-import tech.sadovnikov.configurator.ui.bluetooth.paired_devices.PairedDevicesRvAdapter;
+import tech.sadovnikov.configurator.presentation.bluetooth.available_devices.AvailableDevicesRvAdapter;
+import tech.sadovnikov.configurator.presentation.configuration.ConfigTabsRvAdapter;
+import tech.sadovnikov.configurator.presentation.bluetooth.DevicesFragmentPagerAdapter;
+import tech.sadovnikov.configurator.presentation.bluetooth.paired_devices.PairedDevicesRvAdapter;
 
 @Module
 public class FragmentModule {

@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothDevice;
 import java.util.List;
 
 import io.reactivex.subjects.PublishSubject;
+import tech.sadovnikov.configurator.model.entities.LogMessage;
+import tech.sadovnikov.configurator.model.entities.Parameter;
 
 
 public interface BluetoothService {
@@ -19,13 +21,9 @@ public interface BluetoothService {
 
     void closeAllConnections();
 
-    List<BluetoothDevice> getPairedDevices();
-
     PublishSubject<Integer> getBluetoothStateObservable();
 
-    void setBluetoothState(Integer state);
-
-    void setPairedDevices(List<BluetoothDevice> pairedDevices);
+    List<BluetoothDevice> getPairedDevices();
 
     PublishSubject<List<BluetoothDevice>> getPairedDevicesObservable();
 
@@ -33,13 +31,15 @@ public interface BluetoothService {
 
     PublishSubject<List<BluetoothDevice>> getAvailableDevicesObservable();
 
+    PublishSubject<LogMessage> getLogMessageObservable();
+
+    PublishSubject<Parameter> getCmdObservable();
+
     void startDiscovery();
 
     void cancelDiscovery();
 
     PublishSubject<String> getInputMessagesObservable();
-
-    void setInputStreamListener(InputStreamListener listener);
 
     void sendData(String data);
 

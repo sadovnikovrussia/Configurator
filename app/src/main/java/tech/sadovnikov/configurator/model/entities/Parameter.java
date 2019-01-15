@@ -38,9 +38,9 @@ public class Parameter implements CommandCreatable {
     }
 
     @Override
-    public String createSettingCommand() throws NoSettableParameterException {
+    public String createSettingCommand() {
         if (entity.isSettable()) return entity.getName() + eq + value;
-        else throw new NoSettableParameterException(this);
+        return "";
     }
 
     @NonNull

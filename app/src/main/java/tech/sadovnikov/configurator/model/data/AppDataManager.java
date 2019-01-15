@@ -7,8 +7,8 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
-import tech.sadovnikov.configurator.model.data.logs.LogManager;
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
+import tech.sadovnikov.configurator.model.data.logs.LogManager;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 
@@ -54,6 +54,11 @@ public class AppDataManager implements DataManager {
     @Override
     public List<String> getCmdListForReadDeviceConfiguration() {
         return configuration.getCmdListForReadDeviceConfiguration();
+    }
+
+    @Override
+    public List<String> getCmdListForSetDeviceConfiguration() {
+        return configuration.getCmdListForSetDeviceConfiguration();
     }
 
     @Override

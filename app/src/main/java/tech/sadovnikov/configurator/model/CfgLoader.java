@@ -2,12 +2,17 @@ package tech.sadovnikov.configurator.model;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
@@ -27,8 +32,9 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
     private int commandNumber = 0;
     private int attemptNumber = 1;
     private int period = 2500;
+    private PublishSubject<Float> progress;
 
-    private List<String> commandList;
+    private List<String> commandList = new ArrayList<>();
 
     private Timer timer;
     private TimerTask task;
@@ -36,6 +42,8 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
     private OnLoaderEventsListener onLoaderEventsListener;
     private BluetoothService bluetoothService;
     private DataManager dataManager;
+
+    private CompositeDisposable subscriptions = new CompositeDisposable();
     //UiHandler handler;
 
     @Inject
@@ -53,12 +61,31 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
         this.dataManager = dataManager;
     }
 
-    public void readFullConfiguration() {
+    public PublishSubject<Float> setCurrentConfiguration() {
+        commandList = dataManager.getCmdListForSetDeviceConfiguration();
+        Log.d(TAG, "setCurrentConfiguration: " + commandList);
+        startLoading();
+        return progress;
+    }
+
+    public PublishSubject<Float> readFullConfiguration() {
         commandList.clear();
         for (ParametersEntities entity : ParametersEntities.values()) {
             commandList.add(entity.createReadingCommand());
         }
-        Log.d(TAG, "loadCommandList: " + commandList);
+        Log.d(TAG, "readFullConfiguration: " + commandList);
+        startLoading();
+        return progress;
+    }
+
+    private void startLoading() {
+        subscriptions.add(bluetoothService.getCmdObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(parameter -> {
+                    nextCommand();
+                    dataManager.setConfigParameter(parameter);
+                }));
         loading = true;
         commandNumber = 0;
         attemptNumber = 1;
@@ -105,6 +132,8 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
         @Override
         public void run() {
             if (commandNumber < commandList.size()) {
+                float progr = (commandNumber / commandList.size());
+                progress.onNext(progr);
                 int attempts = 3;
                 if (attemptNumber <= attempts) {
                     String command = commandList.get(commandNumber);
@@ -121,10 +150,12 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
                     }
                 }
             } else {
+                progress.onComplete();
                 commandNumber++;
                 timer.cancel();
                 timer.purge();
                 loading = false;
+                subscriptions.clear();
 //                Message msg = new Message();
 //                msg.what = WHAT_LOADING_END;
 //                handler.sendMessage(msg);

@@ -9,7 +9,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.model.data.DataManager;
-import tech.sadovnikov.configurator.model.data.RemoteDevice;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
@@ -21,14 +20,14 @@ import static tech.sadovnikov.configurator.model.entities.LogMessage.LOG_TYPE_CM
 /**
  * Класс, предназначенный для парсинга данных из лога
  */
-public class MessageAnalyzer implements RemoteDevice {
+public class MessageAnalyzer {
     private static final String TAG = "MessageAnalyzer";
 
     private DataManager dataManager;
 
     private String buffer = "";
     private OnSetCfgParameterListener listener;
-    private AnswerCallback answerCallback;
+    private Device.AnswerCallback answerCallback;
 
     @Inject
     public MessageAnalyzer(BluetoothService bluetoothService, DataManager dataManager) {
@@ -95,13 +94,6 @@ public class MessageAnalyzer implements RemoteDevice {
 
     public void setListener(OnSetCfgParameterListener listener) {
         this.listener = listener;
-    }
-
-    @Override
-    public void getParameter(ParametersEntities parameterEntity, AnswerCallback answerCallback) {
-        this.answerCallback = answerCallback;
-
-
     }
 
     interface OnSetCfgParameterListener {

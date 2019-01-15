@@ -4,10 +4,10 @@ package tech.sadovnikov.configurator.di.component;
 import dagger.Component;
 import tech.sadovnikov.configurator.di.PerFragment;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
-import tech.sadovnikov.configurator.ui.bluetooth.BluetoothFragment;
-import tech.sadovnikov.configurator.ui.bluetooth.available_devices.AvailableDevicesFragment;
-import tech.sadovnikov.configurator.ui.bluetooth.paired_devices.PairedDevicesFragment;
-import tech.sadovnikov.configurator.ui.configuration.ConfigurationFragment;
+import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothFragment;
+import tech.sadovnikov.configurator.presentation.bluetooth.available_devices.AvailableDevicesFragment;
+import tech.sadovnikov.configurator.presentation.bluetooth.paired_devices.PairedDevicesFragment;
+import tech.sadovnikov.configurator.presentation.configuration.ConfigurationFragment;
 
 @PerFragment
 @Component(modules = FragmentModule.class)

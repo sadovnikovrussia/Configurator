@@ -72,6 +72,7 @@ public class App extends Application {
         Log.d(TAG, "onTerminate: ");
         unregisterReceiver(receiver);
         dataManager.clearSubscribes();
+        bluetoothService.closeAllConnections();
     }
 
     @Override
