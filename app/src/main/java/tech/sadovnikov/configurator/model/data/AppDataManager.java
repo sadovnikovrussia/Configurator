@@ -79,6 +79,21 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public boolean getAutoScrollState() {
+        return logManager.getAutoScrollState();
+    }
+
+    @Override
+    public void setAutoScrollMode(boolean isChecked) {
+        logManager.setAutoScrollMode(isChecked);
+    }
+
+    @Override
+    public PublishSubject<Boolean> getAutoScrollModeObservable() {
+        return logManager.getAutoScrollModeObservable();
+    }
+
+    @Override
     public void clearSubscribes() {
         compositeDisposable.clear();
     }

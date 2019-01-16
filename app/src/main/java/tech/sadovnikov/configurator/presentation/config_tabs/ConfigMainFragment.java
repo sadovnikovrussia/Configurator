@@ -16,7 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.presentation.OnLlParameterClickListener;
+import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
 
 public class ConfigMainFragment extends Fragment {
     private static final String TAG = "ConfigMainFragment";

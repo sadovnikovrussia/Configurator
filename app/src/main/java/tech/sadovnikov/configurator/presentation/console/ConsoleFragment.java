@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.PresenterType;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
+import tech.sadovnikov.configurator.presentation.main.MainPresenter;
 
 
 public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView {
@@ -46,6 +48,8 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     @BindView(R.id.sw_auto_scroll)
     Switch swAutoScroll;
 
+    private Listener listener;
+
 
     public ConsoleFragment() {
         //Log.v(TAG, "onConstructor");
@@ -62,133 +66,134 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Log.v(TAG, "onCreateView");
+        Log.v(TAG, "onCreateView");
         View inflate = inflater.inflate(R.layout.fragment_console, container, false);
         ButterKnife.bind(this, inflate);
         setUp();
         presenter.onCreateView();
+        listener.onCreateConsoleView();
         return inflate;
     }
 
     private void setUp() {
-        swAutoScroll.setChecked(true);
-        swAutoScroll.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.onChangeAutoScrollClick());
-        btnSendCommand.setOnClickListener(view -> presenter.onSendCommandClick(etCommandLine.getText().toString()));
+        swAutoScroll.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.onChangeAutoScrollClick(isChecked));
+        btnSendCommand.setOnClickListener(view -> presenter.onSendCommand(etCommandLine.getText().toString()));
         tvLogs.setOnLongClickListener(view -> {
-            presenter.onLogsLongClick();
+            presenter.onSaveLogMessages();
             return false;
         });
         setHasOptionsMenu(true);
     }
 
     @Override
-    public void addMessageToLogScreen(LogMessage message) {
+    public void addMessageToLogScreen(LogMessage message, boolean autoScrollOn) {
         tvLogs.append(message.convertToOriginal());
-        if (isAutoScrollOn()) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
+        if (autoScrollOn) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
     @Override
-    public void showMainLogs(List<LogMessage> mainLogMessages) {
+    public void showMainLogs(List<LogMessage> mainLogMessages, boolean autoScrollOn) {
+        Log.v(TAG, "showMainLogs: ");
         for (LogMessage message : mainLogMessages) tvLogs.append(message.convertToOriginal());
-        if (isAutoScrollOn()) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
+        if (autoScrollOn) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
     @Override
     public void clearMainLogs() {
+        Log.v(TAG, "clearMainLogs: ");
         tvLogs.setText("");
     }
 
-    boolean isAutoScrollOn() {
-        //Log.d(TAG, "isAutoScrollOn() returned: " + swAutoScroll.isChecked());
-        return swAutoScroll.isChecked();
+    @Override
+    public void setAutoScrollState(boolean isAutoScroll) {
+        Log.v(TAG, "setAutoScrollState: " + isAutoScroll);
+        swAutoScroll.setChecked(isAutoScroll);
     }
 
 
     // ---------------------------------------------------------------------------------------------
     // States
-
-    @Override
-    public void setMenuVisibility(boolean menuVisible) {
-        super.setMenuVisibility(menuVisible);
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        Log.i(TAG, "onCreateOptionsMenu: ");
+        //Log.i(TAG, "onCreateOptionsMenu: ");
         inflater.inflate(R.menu.menu_configuration_options, menu);
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        Log.i(TAG, "onPrepareOptionsMenu: ");
+        //Log.i(TAG, "onPrepareOptionsMenu: ");
     }
 
     @Override
     public void onDestroyOptionsMenu() {
         super.onDestroyOptionsMenu();
-        Log.i(TAG, "onDestroyOptionsMenu: ");
+        //Log.i(TAG, "onDestroyOptionsMenu: ");
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "onOptionsItemSelected: ");
+        //Log.i(TAG, "onOptionsItemSelected: ");
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        //Log.v(TAG, "onStart");
+        listener = (Listener) getActivity();
+        Log.v(TAG, "onStart");
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //Log.v(TAG, "onActivityCreated");
+        Log.v(TAG, "onActivityCreated");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Log.v(TAG, "onCreate");
+        Log.v(TAG, "onCreate");
     }
 
     public void onStart() {
         super.onStart();
-        //Log.v(TAG, "onStart");
+        Log.v(TAG, "onStart");
     }
 
     public void onResume() {
         super.onResume();
-        //Log.v(TAG, "onResume");
+        Log.v(TAG, "onResume");
     }
 
     public void onPause() {
         super.onPause();
-        //Log.v(TAG, "onPause");
+        Log.v(TAG, "onPause");
     }
 
     public void onStop() {
         super.onStop();
-        //Log.v(TAG, "onStop");
+        Log.v(TAG, "onStop");
     }
 
     public void onDestroyView() {
         super.onDestroyView();
-        //Log.v(TAG, "onDestroyView");
+        Log.v(TAG, "onDestroyView");
     }
 
     public void onDestroy() {
         super.onDestroy();
-        //Log.v(TAG, "onDestroy");
+        Log.v(TAG, "onDestroy");
     }
 
     public void onDetach() {
         super.onDetach();
-        //Log.v(TAG, "onDetach");
+        Log.v(TAG, "onDetach");
     }
     // ---------------------------------------------------------------------------------------------
 
+    public interface Listener{
+        void onCreateConsoleView();
+    }
 }

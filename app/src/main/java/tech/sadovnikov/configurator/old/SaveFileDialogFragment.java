@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.presentation;
+package tech.sadovnikov.configurator.old;
 
 import android.app.Dialog;
 import android.content.Context;

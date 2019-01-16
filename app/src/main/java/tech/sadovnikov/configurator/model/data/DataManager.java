@@ -3,6 +3,7 @@ package tech.sadovnikov.configurator.model.data;
 import java.util.List;
 
 import io.reactivex.subjects.PublishSubject;
+import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.model.data.logs.LogManager;
 import tech.sadovnikov.configurator.model.entities.Parameter;
@@ -18,9 +19,5 @@ public interface DataManager extends LogManager {
     List<String> getCmdListForSetDeviceConfiguration();
 
     PublishSubject<Configuration> getConfigurationObservable();
-
-    interface DataManagerListener {
-        void onGetParameterFromDevice();
-    }
 
 }

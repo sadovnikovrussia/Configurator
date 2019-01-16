@@ -33,7 +33,7 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
     DataManager dataManager;
 
     ConsolePresenter() {
-        Log.v(TAG, "ConsolePresenter: ");
+        Log.i(TAG, "ConsolePresenter: ");
         initDaggerComponent();
         presenterComponent.injectConsolePresenter(this);
     }
@@ -48,36 +48,44 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        Log.v(TAG, "onFirstViewAttach: ");
-        PublishSubject<LogMessage> inputMessagesStream = dataManager.getObservableMainLog();
-        Disposable subscribe = inputMessagesStream
+        Log.i(TAG, "onFirstViewAttach: ");
+        getViewState().setAutoScrollState(dataManager.getAutoScrollState());
+        PublishSubject<LogMessage> observableMainLog = dataManager.getObservableMainLog();
+        Disposable subscribe = observableMainLog
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(message -> getViewState().addMessageToLogScreen(message));
+                .subscribe(message -> getViewState().addMessageToLogScreen(message, dataManager.getAutoScrollState()),
+                        Throwable::printStackTrace,
+                        () -> {},
+                        disposable -> {
+                            Log.i(TAG, "onFirstViewAttach: " + dataManager.getAutoScrollState());
+                            getViewState().showMainLogs(dataManager.getMainLogList(), dataManager.getAutoScrollState());
+                        });
         compositeDisposable.add(subscribe);
     }
 
     public void onCreateView() {
-        getViewState().showMainLogs(dataManager.getMainLogList());
+        //getViewState().showMainLogs(dataManager.getMainLogList());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.v(TAG, "onDestroy: ");
+        Log.i(TAG, "onDestroy: ");
         compositeDisposable.clear();
     }
 
-    void onSendCommandClick(String command) {
+    void onSendCommand(String command) {
         bluetoothService.sendData(command);
     }
 
-    void onLogsLongClick() {
+    void onSaveLogMessages() {
 
     }
 
-    void onChangeAutoScrollClick() {
-
+    void onChangeAutoScrollClick(boolean isChecked) {
+        dataManager.setAutoScrollMode(isChecked);
+        getViewState().setAutoScrollState(dataManager.getAutoScrollState());
     }
 
 }

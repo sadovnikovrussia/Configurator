@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.presentation.OnLlParameterClickListener;
+import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
 
 
 public class ConfigSimCardFragment extends Fragment {

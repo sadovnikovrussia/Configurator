@@ -1,6 +1,9 @@
 package tech.sadovnikov.configurator.presentation.console;
 
 import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import java.util.List;
 
@@ -8,9 +11,15 @@ import tech.sadovnikov.configurator.model.entities.LogMessage;
 
 interface ConsoleView extends MvpView {
 
-    void addMessageToLogScreen(LogMessage message);
+    @StateStrategyType(SkipStrategy.class)
+    void addMessageToLogScreen(LogMessage message, boolean autoScrollOn);
 
-    void showMainLogs(List<LogMessage> mainLogMessages);
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showMainLogs(List<LogMessage> mainLogMessages, boolean autoScrollOn);
 
+    @StateStrategyType(SkipStrategy.class)
     void clearMainLogs();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setAutoScrollState(boolean isAutoScroll);
 }

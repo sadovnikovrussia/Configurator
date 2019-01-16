@@ -25,7 +25,7 @@ public class AvailableDevicesRvAdapter extends RecyclerView.Adapter<AvailableDev
     private List<BluetoothDevice> devices = new ArrayList<>();
 
     public AvailableDevicesRvAdapter() {
-        Log.i(TAG, "onConstructor: ");
+        //Log.i(TAG, "onConstructor: ");
     }
 
     @NonNull

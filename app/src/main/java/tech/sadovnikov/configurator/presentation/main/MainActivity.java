@@ -23,7 +23,7 @@ import tech.sadovnikov.configurator.di.component.DaggerActivityComponent;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothFragment;
 import tech.sadovnikov.configurator.presentation.console.ConsoleFragment;
 
-public class MainActivity extends MvpAppCompatActivity implements MainView {
+public class MainActivity extends MvpAppCompatActivity implements MainView, ConsoleFragment.Listener, BluetoothFragment.Listener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.navigation)
@@ -38,7 +38,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ////Log.w(TAG, "onCreate: ");
+        Log.w(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initializeDaggerComponent();
@@ -109,6 +109,18 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     }
 
+    @Override
+    public void setConsoleNavigationPosition() {
+        Log.d(TAG, "setConsoleNavigationPosition: ");
+        navigationView.setSelectedItemId(R.id.navigation_console);
+    }
+
+    @Override
+    public void setBluetoothNavigationPosition() {
+        Log.d(TAG, "setBluetoothNavigationPosition: ");
+        navigationView.setSelectedItemId(R.id.navigation_bluetooth);
+    }
+
     private void showFragment(Fragment bluetoothFragment, String tag) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, bluetoothFragment, tag)
@@ -118,7 +130,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG, "onCreateOptionsMenu1: " + menu);
+        //Log.d(TAG, "onCreateOptionsMenu1: " + menu);
         //menu.clear();
         //getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
         ////Log.d(TAG, "onCreateOptionsMenu2: " + menu);
@@ -128,7 +140,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        Log.d(TAG, "onPrepareOptionsMenu: " + menu.hasVisibleItems());
+        //Log.d(TAG, "onPrepareOptionsMenu: " + menu.hasVisibleItems());
         //menu.setGroupVisible(R.id.group_update_devices, false);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -136,7 +148,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "onOptionsItemSelected: " + item.getItemId());
+        //Log.d(TAG, "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.item_open:
                 presenter.onOpenConfiguration();
@@ -156,7 +168,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     @Override
     public void onOptionsMenuClosed(Menu menu) {
-        Log.d(TAG, "onOptionsMenuClosed: ");
+        //Log.d(TAG, "onOptionsMenuClosed: ");
         super.onOptionsMenuClosed(menu);
     }
 
@@ -203,4 +215,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     }
 
 
+    @Override
+    public void onCreateConsoleView() {
+        presenter.onCreateConsoleView();
+    }
+
+    @Override
+    public void onCreateBluetoothView() {
+        presenter.onCreateBluetoothView();
+    }
 }

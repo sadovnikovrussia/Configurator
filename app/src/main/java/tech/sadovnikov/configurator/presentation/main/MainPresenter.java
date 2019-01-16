@@ -92,4 +92,13 @@ public class MainPresenter extends MvpPresenter<MainView> {
                         () -> getViewState().hideLoadingProgress());
 
     }
+
+
+    void onCreateConsoleView() {
+        getViewState().setConsoleNavigationPosition();
+    }
+
+    void onCreateBluetoothView() {
+        getViewState().setBluetoothNavigationPosition();
+    }
 }

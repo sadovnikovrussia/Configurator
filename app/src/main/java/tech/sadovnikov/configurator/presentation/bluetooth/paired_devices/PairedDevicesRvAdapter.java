@@ -25,7 +25,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
 
 
     public PairedDevicesRvAdapter() {
-        Log.d(TAG, "onConstructor: ");
+        //Log.d(TAG, "onConstructor: ");
     }
 
     public void setListener(Listener listener) {

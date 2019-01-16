@@ -30,9 +30,14 @@ public class AppLogManager implements LogManager {
 
     private Analyzer analyzer;
 
+    private boolean autoScrollMode;
+    private PublishSubject<Boolean> autoScrollModeObservable;
+
     @Inject
     public AppLogManager() {
         this.analyzer = new Analyzer();
+        autoScrollMode = true;
+        autoScrollModeObservable = PublishSubject.create();
     }
 
     @Override
@@ -43,6 +48,21 @@ public class AppLogManager implements LogManager {
     @Override
     public PublishSubject<LogMessage> getObservableMainLog() {
         return observableMainLog;
+    }
+
+    @Override
+    public boolean getAutoScrollState() {
+        return autoScrollMode;
+    }
+
+    @Override
+    public PublishSubject<Boolean> getAutoScrollModeObservable() {
+        return autoScrollModeObservable;
+    }
+
+    @Override
+    public void setAutoScrollMode(boolean isChecked) {
+        autoScrollMode = isChecked;
     }
 
     @Override

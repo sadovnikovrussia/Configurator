@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.presentation.OnLlParameterClickListener;
+import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
 
 
 public class ConfigServerFragment extends Fragment {

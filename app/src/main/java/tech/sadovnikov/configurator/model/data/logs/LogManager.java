@@ -13,4 +13,9 @@ public interface LogManager {
 
     PublishSubject<LogMessage> getObservableMainLog();
 
+    boolean getAutoScrollState();
+
+    PublishSubject<Boolean> getAutoScrollModeObservable();
+
+    void setAutoScrollMode(boolean isChecked);
 }

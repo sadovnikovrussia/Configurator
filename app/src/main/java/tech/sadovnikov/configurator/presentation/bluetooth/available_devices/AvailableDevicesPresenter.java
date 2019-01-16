@@ -29,7 +29,7 @@ public class AvailableDevicesPresenter extends MvpPresenter<AvailableDevicesView
 
     AvailableDevicesPresenter() {
         super();
-        Log.i(TAG, "onConstructor: ");
+        //Log.i(TAG, "onConstructor: ");
         initDaggerComponent();
         presenterComponent.injectAvailableDevicesPresenter(this);
     }
@@ -44,14 +44,14 @@ public class AvailableDevicesPresenter extends MvpPresenter<AvailableDevicesView
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        Log.d(TAG, "onFirstViewAttach: ");
+        //Log.d(TAG, "onFirstViewAttach: ");
         getViewState().setAvailableDevices(bluetoothService.getAvailableDevices());
         Disposable subscribe = bluetoothService.getAvailableDevicesObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         bluetoothDevices -> {
-                            Log.d(TAG, "onNext: " + bluetoothDevices);
+                            //Log.d(TAG, "onNext: " + bluetoothDevices);
                             getViewState().setAvailableDevices(bluetoothDevices);
                         },
                         throwable -> Log.w(TAG, "onError: ", throwable),
@@ -59,7 +59,7 @@ public class AvailableDevicesPresenter extends MvpPresenter<AvailableDevicesView
                         disposable -> Log.d(TAG, "onSubscribe: "));
         compositeDisposable.add(subscribe);
     }
-    
+
     void onDeviceClicked(BluetoothDevice device) {
         bluetoothService.connectToDevice(device);
     }
@@ -67,7 +67,7 @@ public class AvailableDevicesPresenter extends MvpPresenter<AvailableDevicesView
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy: ");
+        //Log.i(TAG, "onDestroy: ");
         compositeDisposable.clear();
     }
 

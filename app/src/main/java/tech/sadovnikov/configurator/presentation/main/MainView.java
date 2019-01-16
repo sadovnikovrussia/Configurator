@@ -1,13 +1,18 @@
 package tech.sadovnikov.configurator.presentation.main;
 
 import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 public interface MainView extends MvpView {
 
+    @StateStrategyType(SkipStrategy.class)
     void navigateToBluetoothView();
 
+    @StateStrategyType(SkipStrategy.class)
     void navigateToConsoleView();
 
+    @StateStrategyType(SkipStrategy.class)
     void navigateToConfigurationView();
 
     void showLoadingProcess();
@@ -15,6 +20,12 @@ public interface MainView extends MvpView {
     void hideLoadingProgress();
 
     void updateLoadingProcess(Float percents);
+
+    @StateStrategyType(SkipStrategy.class)
+    void setConsoleNavigationPosition();
+
+    @StateStrategyType(SkipStrategy.class)
+    void setBluetoothNavigationPosition();
 
 
 //        // Вывести сообщение лога в консоль

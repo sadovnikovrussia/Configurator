@@ -34,7 +34,7 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
 
 
     BluetoothPresenter() {
-        //Log.v(TAG, "onConstructor");
+        Log.v(TAG, "onConstructor");
         initDaggerComponent();
         presenterComponent.injectBluetoothPresenter(this);
     }
@@ -94,7 +94,7 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     private void updateDevices() {
         bluetoothService.cancelDiscovery();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.e(TAG, "updateDevices: " + (bluetoothPermission == PERMISSION_GRANTED));
+            //Log.e(TAG, "updateDevices: " + (bluetoothPermission == PERMISSION_GRANTED));
             if (bluetoothPermission == PERMISSION_GRANTED) {
                 bluetoothService.startDiscovery();
             } else getViewState().requestBtPermission();
@@ -110,7 +110,6 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     }
 
     void onPositiveBtRequestResult() {
-        Log.d(TAG, "onPositiveBtRequestResult: ");
         bluetoothPermission = PERMISSION_GRANTED;
         bluetoothService.startDiscovery();
     }
@@ -133,7 +132,7 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     }
 
     void onPrepareOptionsMenu() {
-        Log.d(TAG, "onPrepareOptionsMenu: ");
+        //Log.d(TAG, "onPrepareOptionsMenu: ");
         if (bluetoothService.isEnabled()) getViewState().showUpdateDevicesView();
         else getViewState().hideUpdateDevicesView();
     }

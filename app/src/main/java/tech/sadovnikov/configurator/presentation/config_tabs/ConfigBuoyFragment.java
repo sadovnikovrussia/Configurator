@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.presentation.OnLlParameterClickListener;
+import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
 
 
 public class ConfigBuoyFragment extends Fragment {
