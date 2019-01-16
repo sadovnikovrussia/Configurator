@@ -16,7 +16,7 @@ public class DevicesFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public DevicesFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
-        Log.v(TAG, "onConstructor: ");
+        //Log.v(TAG, "onConstructor: ");
     }
 
     @Override

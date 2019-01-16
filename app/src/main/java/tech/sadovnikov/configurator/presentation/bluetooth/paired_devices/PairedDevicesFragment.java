@@ -100,7 +100,7 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: ");
-        setRetainInstance(true);
+        //setRetainInstance(true);
     }
 
     @Override

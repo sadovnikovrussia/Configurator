@@ -6,6 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -45,11 +48,11 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
 
 
     public ConsoleFragment() {
-        Log.v(TAG, "onConstructor");
+        //Log.v(TAG, "onConstructor");
     }
 
     public static Fragment newInstance() {
-        Log.v(TAG, "newInstance: ");
+        //Log.v(TAG, "newInstance: ");
         Bundle args = new Bundle();
         ConsoleFragment fragment = new ConsoleFragment();
         fragment.setArguments(args);
@@ -59,7 +62,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView");
+        //Log.v(TAG, "onCreateView");
         View inflate = inflater.inflate(R.layout.fragment_console, container, false);
         ButterKnife.bind(this, inflate);
         setUp();
@@ -75,6 +78,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
             presenter.onLogsLongClick();
             return false;
         });
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -95,63 +99,95 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     }
 
     boolean isAutoScrollOn() {
-        Log.d(TAG, "isAutoScrollOn() returned: " + swAutoScroll.isChecked());
+        //Log.d(TAG, "isAutoScrollOn() returned: " + swAutoScroll.isChecked());
         return swAutoScroll.isChecked();
     }
 
 
     // ---------------------------------------------------------------------------------------------
     // States
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        Log.i(TAG, "onCreateOptionsMenu: ");
+        inflater.inflate(R.menu.menu_configuration_options, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        Log.i(TAG, "onPrepareOptionsMenu: ");
+    }
+
+    @Override
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+        Log.i(TAG, "onDestroyOptionsMenu: ");
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i(TAG, "onOptionsItemSelected: ");
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.v(TAG, "onStart");
+        //Log.v(TAG, "onStart");
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.v(TAG, "onActivityCreated");
+        //Log.v(TAG, "onActivityCreated");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG, "onCreate");
+        //Log.v(TAG, "onCreate");
     }
 
     public void onStart() {
         super.onStart();
-        Log.v(TAG, "onStart");
+        //Log.v(TAG, "onStart");
     }
 
     public void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume");
+        //Log.v(TAG, "onResume");
     }
 
     public void onPause() {
         super.onPause();
-        Log.v(TAG, "onPause");
+        //Log.v(TAG, "onPause");
     }
 
     public void onStop() {
         super.onStop();
-        Log.v(TAG, "onStop");
+        //Log.v(TAG, "onStop");
     }
 
     public void onDestroyView() {
         super.onDestroyView();
-        Log.v(TAG, "onDestroyView");
+        //Log.v(TAG, "onDestroyView");
     }
 
     public void onDestroy() {
         super.onDestroy();
-        Log.v(TAG, "onDestroy");
+        //Log.v(TAG, "onDestroy");
     }
 
     public void onDetach() {
         super.onDetach();
-        Log.v(TAG, "onDetach");
+        //Log.v(TAG, "onDetach");
     }
     // ---------------------------------------------------------------------------------------------
 

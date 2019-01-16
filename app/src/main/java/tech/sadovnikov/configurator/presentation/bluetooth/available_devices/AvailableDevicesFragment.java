@@ -100,7 +100,7 @@ public class AvailableDevicesFragment extends MvpAppCompatFragment implements Av
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
-        setRetainInstance(true);
+        //setRetainInstance(true);
     }
 
     @Override

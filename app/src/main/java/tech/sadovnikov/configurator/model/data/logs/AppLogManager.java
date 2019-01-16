@@ -1,6 +1,8 @@
 package tech.sadovnikov.configurator.model.data.logs;
 
 
+import android.bluetooth.BluetoothDevice;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ public class AppLogManager implements LogManager {
     private PublishSubject<LogMessage> observableMainLog = PublishSubject.create();
     // private PublishSubject<LogMessage> observableCmdLog = PublishSubject.createMessage();
     private Map<String, LogList> logs = new LinkedHashMap<>();
+
 
     private Analyzer analyzer;
 

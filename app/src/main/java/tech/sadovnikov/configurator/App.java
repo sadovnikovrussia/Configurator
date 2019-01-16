@@ -37,8 +37,7 @@ public class App extends Application {
         super.onCreate();
         initDaggerComponent();
         applicationComponent.inject(this);
-        Log.d(TAG, "onCreate: " + bluetoothService + ", " + bluetoothService.getInputMessagesObservable());
-        receiver.setListener((BluetoothBroadcastReceiver.Listener) bluetoothService);
+        Log.d(TAG, "onCreate: " + bluetoothService);
         registerBluetoothReceiver(receiver);
     }
 

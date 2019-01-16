@@ -48,6 +48,7 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
 
     @Inject
     public CfgLoader() {
+        progress = PublishSubject.create();
         //handler = uiHandler;
         //this.onLoaderEventsListener = onLoaderEventsListener;
         //this.bluetoothService = bluetoothService;

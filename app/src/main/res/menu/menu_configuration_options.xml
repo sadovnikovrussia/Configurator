@@ -2,20 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <group
-        android:id="@+id/group_update_available_devices"
-        android:visible="false"
-        app:showAsAction="ifRoom">
-        <item
-            android:id="@+id/item_update_available_devices"
-            android:icon="@drawable/refresh"
-            android:title="@string/update_list_of_available_devices"
-            app:showAsAction="ifRoom" />
-    </group>
+    <!--<group-->
+        <!--android:id="@+id/group_update_devices"-->
+        <!--android:visible="true"-->
+        <!--app:showAsAction="ifRoom">-->
+        <!--<item-->
+            <!--android:id="@+id/item_update_available_devices"-->
+            <!--android:icon="@drawable/refresh"-->
+            <!--android:title="@string/update_list_of_available_devices"-->
+            <!--app:showAsAction="ifRoom" />-->
+    <!--</group>-->
 
     <group
         android:id="@+id/group_configuration_actions_menu"
+        android:visible="true"
         app:showAsAction="ifRoom">
         <item
             android:id="@+id/item_set"

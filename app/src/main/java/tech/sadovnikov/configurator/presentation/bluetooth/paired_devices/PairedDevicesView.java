@@ -7,7 +7,6 @@ import com.arellomobile.mvp.viewstate.strategy.*;
 
 import java.util.List;
 
-@StateStrategyType(SkipStrategy.class)
 public interface PairedDevicesView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)

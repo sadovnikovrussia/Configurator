@@ -177,7 +177,7 @@ public class RemoteDevice implements Device {
                 while ((line = readerSerial.readLine()) != null) {
                     Log.v(TAG, line);
                     //inputMessagesObservable.onNext(line);
-                    analyzeLine(line);
+                    //analyzeLine(line);
                     // messageAnalyzer.analyzeMessage(line);
                 }
             } catch (IOException e) {

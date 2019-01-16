@@ -58,7 +58,6 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    @MainConfiguration
     Configuration provideConfiguration() {
         return new Configuration();
     }
@@ -71,8 +70,8 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    BluetoothBroadcastReceiver provideBluetoothReceiver() {
-        return new BluetoothBroadcastReceiver();
+    BluetoothBroadcastReceiver provideBluetoothReceiver(BluetoothService bluetoothService) {
+        return new BluetoothBroadcastReceiver((BluetoothBroadcastReceiver.Listener) bluetoothService);
     }
 
     @Provides

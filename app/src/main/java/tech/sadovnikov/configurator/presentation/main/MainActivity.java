@@ -38,7 +38,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.w(TAG, "onCreate: ");
+        ////Log.w(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initializeDaggerComponent();
@@ -77,7 +77,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     @Override
     public void navigateToBluetoothView() {
-        Log.w(TAG, "navigateToBluetoothView: ");
+        //Log.w(TAG, "navigateToBluetoothView: ");
         showFragment(BluetoothFragment.newInstance(), BluetoothFragment.TAG);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_bluetooth);
     }
@@ -89,7 +89,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     @Override
     public void navigateToConsoleView() {
-        Log.w(TAG, "navigateToConsoleView: ");
+        //Log.w(TAG, "navigateToConsoleView: ");
         showFragment(ConsoleFragment.newInstance(), ConsoleFragment.TAG);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_console);
     }
@@ -118,18 +118,26 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
+        Log.d(TAG, "onCreateOptionsMenu1: " + menu);
+        //menu.clear();
+        //getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
+        ////Log.d(TAG, "onCreateOptionsMenu2: " + menu);
+        //getMenuInflater().inflate(R.menu.menu_bluetooth, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        Log.d(TAG, "onPrepareOptionsMenu: " + menu.hasVisibleItems());
+        //menu.setGroupVisible(R.id.group_update_devices, false);
         return super.onPrepareOptionsMenu(menu);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        Log.d(TAG, "onOptionsItemSelected: " + item.getItemId());
+        switch (item.getItemId()) {
             case R.id.item_open:
                 presenter.onOpenConfiguration();
                 break;
@@ -142,70 +150,56 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
             case R.id.item_set:
                 presenter.onSetConfiguration();
                 break;
-//                if (itemId == R.id.item_set) {
-//            // TODO? <Что делать со спинерами, когда эти параметр не трогали?>
-//            // TODO <Поставить условие на подключение к устройству>
-//            // TODO <Показать бегунок загрузки>
-//            loader.loadCommandList(repositoryConfiguration.getCommandListForSetConfiguration());
-//        } else if (itemId == R.id.item_load) {
-//            // TODO <Поставить условие на подключение к устройству>
-//            // TODO <Показать бегунок загрузки>
-//            loader.loadCommandList(repositoryConfiguration.getCommandListForReadConfiguration());
-//        } else if (itemId == R.id.item_open) {
-//            mainView.startOpenFileManagerActivityWithRequestPermission();
-//        } else if (itemId == R.id.item_save) {
-//            mainView.startSaveFileActivityWithRequestPermission();
-//        } else if (itemId == R.id.item_update_available_devices){
-//            mainView.updateAvailableDevices();
-//        }
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onOptionsMenuClosed(Menu menu) {
+        Log.d(TAG, "onOptionsMenuClosed: ");
         super.onOptionsMenuClosed(menu);
     }
 
+
     public MainActivity() {
         super();
-        Log.w(TAG, "onConstructor: ");
+        //Log.w(TAG, "onConstructor: ");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.w(TAG, "onDestroy: ");
+        //Log.w(TAG, "onDestroy: ");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.w(TAG, "onPause: ");
+        //Log.w(TAG, "onPause: ");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.w(TAG, "onResume: ");
+        //Log.w(TAG, "onResume: ");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.w(TAG, "onStart: ");
+        //Log.w(TAG, "onStart: ");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.w(TAG, "onStop: ");
+        //Log.w(TAG, "onStop: ");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.w(TAG, "onRestart: ");
+        //Log.w(TAG, "onRestart: ");
     }
 
 

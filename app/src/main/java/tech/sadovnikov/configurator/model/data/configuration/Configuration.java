@@ -31,8 +31,8 @@ public class Configuration {
         //parameters.remove(parameter);
         //parameters.add(parameter);
         parametersMap.put(parameter.getEntity(), parameter);
-        Log.d(TAG, "setParameter: " + parameter);
-        Log.d(TAG, "setParameter: " + this);
+        //Log.d(TAG, "setParameter: " + parameter);
+        //Log.d(TAG, "setParameter: " + this);
     }
 
     public Parameter getParameter(ParametersEntities parameterEntity) {
@@ -45,17 +45,11 @@ public class Configuration {
     }
 
     public List<String> getCmdListForReadDeviceConfiguration() {
-        List<String> commandListForReadConfiguration = new ArrayList<>();
-        for (ParametersEntities parameterEntity : ParametersEntities.values()) {
-            switch (parameterEntity) {
-                case FIRMWARE_VERSION:
-                    commandListForReadConfiguration.add("@version");
-                    break;
-                default:
-                    commandListForReadConfiguration.add(parameterEntity + "?");
-            }
+        List<String> commandList = new ArrayList<>();
+        for (ParametersEntities entity : ParametersEntities.values()) {
+            commandList.add(entity.createReadingCommand());
         }
-        return commandListForReadConfiguration;
+        return commandList;
     }
 
     public List<String> getCmdListForSetDeviceConfiguration() {

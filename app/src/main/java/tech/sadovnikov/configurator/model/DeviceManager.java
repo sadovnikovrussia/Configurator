@@ -5,21 +5,18 @@ import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
 import tech.sadovnikov.configurator.model.data.DataManager;
-import tech.sadovnikov.configurator.model.data.RemoteDevice;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
-import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 import static tech.sadovnikov.configurator.model.entities.LogMessage.LOG_SYMBOL;
 import static tech.sadovnikov.configurator.model.entities.LogMessage.LOG_TYPE_CMD;
 
-public class DeviceManager implements RemoteDevice {
+public class DeviceManager {
     private static final String TAG = DeviceManager.class.getSimpleName();
     private DataManager dataManager;
 
     private String buffer = "";
     private MessageAnalyzer.OnSetCfgParameterListener listener;
-    private AnswerCallback answerCallback;
     BluetoothService bluetoothService;
     BluetoothDevice bluetoothDevice;
 
@@ -76,17 +73,10 @@ public class DeviceManager implements RemoteDevice {
                 Parameter parameter = CmdAnalyzer.getParameterFromMessage(message);
                 dataManager.setConfigParameter(parameter);
                 if (parameter != null) {
-                    answerCallback.onAnswerOk(parameter);
                     listener.onSetConfigParameter(parameter.getEntity());
                 }
-            } else {
-                answerCallback.onAnswerError(message);
             }
         }
     }
 
-    @Override
-    public void getParameter(ParametersEntities parameterEntity, AnswerCallback answerCallback) {
-
-    }
 }

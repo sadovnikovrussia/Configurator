@@ -7,9 +7,9 @@ import com.arellomobile.mvp.viewstate.strategy.*;
 public interface BluetoothView extends MvpView {
     void displayBluetoothState(boolean state);
 
-    void showDevicesContainer();
+    void showDevices();
 
-    void hideDevicesContainer();
+    void hideDevices();
 
     void showTurningOn();
 
@@ -17,13 +17,13 @@ public interface BluetoothView extends MvpView {
 
     void requestBtPermission();
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
+    @StateStrategyType(SkipStrategy.class)
     void hideUpdateDevicesView();
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
+    @StateStrategyType(SkipStrategy.class)
     void showUpdateDevicesView();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void setSwBluetoothText(String text);
+    void setSwBluetoothStateText(String text);
 
 }

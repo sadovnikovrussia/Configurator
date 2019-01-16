@@ -56,7 +56,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 //
 
     public AppBluetoothService() {
-
     }
 
     @Override

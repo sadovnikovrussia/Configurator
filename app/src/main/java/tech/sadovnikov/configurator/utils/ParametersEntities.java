@@ -8,7 +8,7 @@ public enum ParametersEntities {
     FIRMWARE_VERSION("FIRMWARE VERSION", false, String.class) {
         @Override
         public String createReadingCommand() {
-            return String.format("@%S", getName());
+            return "@VERSION";
         }
     },
     BLINKER_MODE("BLINKER MODE", true, Integer.class);

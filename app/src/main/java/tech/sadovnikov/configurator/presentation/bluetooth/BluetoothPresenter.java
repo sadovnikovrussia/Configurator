@@ -34,7 +34,7 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
 
 
     BluetoothPresenter() {
-        Log.v(TAG, "onConstructor");
+        //Log.v(TAG, "onConstructor");
         initDaggerComponent();
         presenterComponent.injectBluetoothPresenter(this);
     }
@@ -51,11 +51,11 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
         super.onFirstViewAttach();
         getViewState().displayBluetoothState(bluetoothService.isEnabled());
         if (bluetoothService.isEnabled()) {
-            getViewState().setSwBluetoothText("Включено");
-            getViewState().showDevicesContainer();
+            getViewState().setSwBluetoothStateText("Включено");
+            getViewState().showDevices();
         } else {
-            getViewState().setSwBluetoothText("Выключено");
-            getViewState().hideDevicesContainer();
+            getViewState().setSwBluetoothStateText("Выключено");
+            getViewState().hideDevices();
         }
         PublishSubject<Integer> bluetoothStateObservable = bluetoothService.getBluetoothStateObservable();
         Disposable disposable = bluetoothStateObservable
@@ -66,22 +66,22 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
                                     getViewState().showTurningOn();
                                     break;
                                 case BluetoothAdapter.STATE_ON:
-                                    getViewState().setSwBluetoothText("Включено");
+                                    getViewState().setSwBluetoothStateText("Включено");
                                     getViewState().displayBluetoothState(true);
-                                    getViewState().showDevicesContainer();
+                                    getViewState().showDevices();
                                     getViewState().hideTurningOn();
                                     getViewState().showUpdateDevicesView();
                                     break;
                                 case BluetoothAdapter.STATE_OFF:
-                                    getViewState().setSwBluetoothText("Выключено");
+                                    getViewState().setSwBluetoothStateText("Выключено");
                                     getViewState().displayBluetoothState(false);
-                                    getViewState().hideDevicesContainer();
+                                    getViewState().hideDevices();
                                     getViewState().hideUpdateDevicesView();
                                     break;
                             }
                         },
                         throwable -> Log.w(TAG, "onError: ", throwable),
-                        () -> Log.i(TAG, "onStart: Усе"));
+                        () -> Log.i(TAG, "onComplete: Усе"));
         compositeDisposable.add(disposable);
     }
 
@@ -130,5 +130,11 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
 
     void onUpdateDevicesClick() {
         updateDevices();
+    }
+
+    void onPrepareOptionsMenu() {
+        Log.d(TAG, "onPrepareOptionsMenu: ");
+        if (bluetoothService.isEnabled()) getViewState().showUpdateDevicesView();
+        else getViewState().hideUpdateDevicesView();
     }
 }
