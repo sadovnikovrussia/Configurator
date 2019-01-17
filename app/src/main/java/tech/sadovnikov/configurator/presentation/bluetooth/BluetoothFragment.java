@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.PresenterType;
 
 import javax.inject.Inject;
 
@@ -37,7 +38,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
 
-    @InjectPresenter
+    @InjectPresenter(type = PresenterType.GLOBAL, tag = "Bluetooth")
     BluetoothPresenter presenter;
 
     // UI
@@ -60,7 +61,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     private Listener listener;
 
     public BluetoothFragment() {
-        ////Log.v(TAG, "onConstructor: ");
+        //Log.v(TAG, "onConstructor: ");
     }
 
     public static BluetoothFragment newInstance() {
@@ -120,47 +121,53 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
 
     @Override
     public void displayBluetoothState(boolean state) {
+        Log.d(TAG, "displayBluetoothState: " + state);
         switchBt.setChecked(state);
     }
 
     @Override
     public void showDevices() {
+        Log.d(TAG, "showDevices: ");
         viewPager.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideDevices() {
+        Log.d(TAG, "hideDevices: ");
         viewPager.setVisibility(View.GONE);
         tabLayout.setVisibility(View.GONE);
     }
 
     @Override
     public void showTurningOn() {
+        Log.d(TAG, "showTurningOn: ");
         tvTurningOn.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideTurningOn() {
+        Log.d(TAG, "hideTurningOn: ");
         tvTurningOn.setVisibility(View.GONE);
     }
 
     @Override
     public void hideUpdateDevicesView() {
-        //Log.v(TAG, "hideUpdateDevicesView: ");
+        Log.d(TAG, "hideUpdateDevicesView: ");
         menu.setGroupVisible(R.id.group_update_devices, false);
     }
 
     @Override
     public void showUpdateDevicesView() {
-        //Log.v(TAG, "showUpdateDevicesView: ");
+        Log.d(TAG, "showUpdateDevicesView: ");
         menu.setGroupVisible(R.id.group_update_devices, true);
 
     }
 
     @Override
     public void setSwBluetoothStateText(String text) {
-
+        Log.d(TAG, "setSwBluetoothStateText: " + text);
+        switchBt.setText(text);
     }
 
     @Override
@@ -193,7 +200,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
         super.onCreateOptionsMenu(menu, inflater);
         //menu.clear();
         this.menu = menu;
-        //Log.v(TAG, "onCreateOptionsMenu: ");
+        Log.v(TAG, "onCreateOptionsMenu: ");
         inflater.inflate(R.menu.menu_bluetooth, menu);
         //presenter.onCreateOptionsMenu();
     }
@@ -202,7 +209,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         //setMenuVisibility(false);
-        //Log.v(TAG, "onPrepareOptionsMenu: ");
+        Log.v(TAG, "onPrepareOptionsMenu: ");
         //setMenuVisibility(false);
         presenter.onPrepareOptionsMenu();
     }

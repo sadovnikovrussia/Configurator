@@ -83,7 +83,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
     public void navigateToBluetoothView() {
         Log.w(TAG, "navigateToBluetoothView: ");
         showFragment(BluetoothFragment.newInstance(), BluetoothFragment.TAG, R.id.navigation_bluetooth);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_bluetooth);
+        setTitle(R.string.title_bluetooth);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
     public void navigateToConsoleView() {
         Log.w(TAG, "navigateToConsoleView: ");
         showFragment(ConsoleFragment.newInstance(), ConsoleFragment.TAG, R.id.navigation_console);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_console);
+        setTitle(R.string.title_console);
     }
 
     @Override
@@ -127,6 +127,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
         navigationView.setOnNavigationItemSelectedListener(null);
         navigationView.setSelectedItemId(R.id.navigation_bluetooth);
         navigationView.setOnNavigationItemSelectedListener(navigationListener);
+    }
+
+    @Override
+    public void setTitle(int title) {
+        Objects.requireNonNull(getSupportActionBar()).setTitle(title);
     }
 
     private void showFragment(Fragment fragment, String tag, int navigation) {

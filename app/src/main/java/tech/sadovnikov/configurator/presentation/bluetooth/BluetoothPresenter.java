@@ -11,7 +11,6 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
@@ -34,7 +33,7 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
 
 
     BluetoothPresenter() {
-        Log.v(TAG, "onConstructor");
+        Log.w(TAG, "onConstructor");
         initDaggerComponent();
         presenterComponent.injectBluetoothPresenter(this);
     }
@@ -49,18 +48,9 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        getViewState().displayBluetoothState(bluetoothService.isEnabled());
-        if (bluetoothService.isEnabled()) {
-            getViewState().setSwBluetoothStateText("Включено");
-            getViewState().showDevices();
-        } else {
-            getViewState().setSwBluetoothStateText("Выключено");
-            getViewState().hideDevices();
-        }
-        PublishSubject<Integer> bluetoothStateObservable = bluetoothService.getBluetoothStateObservable();
-        Disposable disposable = bluetoothStateObservable
+        Log.w(TAG, "onFirstViewAttach: ");
+        Disposable subscription = bluetoothService.getBluetoothStateObservable()
                 .subscribe(integer -> {
-                            Log.d(TAG, "onNext: " + integer + bluetoothService);
                             switch (integer) {
                                 case BluetoothAdapter.STATE_TURNING_ON:
                                     getViewState().showTurningOn();
@@ -81,25 +71,27 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
                             }
                         },
                         throwable -> Log.w(TAG, "onError: ", throwable),
-                        () -> Log.i(TAG, "onComplete: Усе"));
-        compositeDisposable.add(disposable);
+                        () -> Log.i(TAG, "onComplete: Усе"),
+                        disposable -> {
+                            getViewState().displayBluetoothState(bluetoothService.isEnabled());
+                            if (bluetoothService.isEnabled()) {
+                                getViewState().setSwBluetoothStateText("Включено");
+                                getViewState().showDevices();
+                            } else {
+                                getViewState().setSwBluetoothStateText("Выключено");
+                                getViewState().hideDevices();
+                            }
+                        });
+        compositeDisposable.add(subscription);
     }
 
     @Override
     public void onDestroy() {
+        Log.w(TAG, "onDestroy: ");
         super.onDestroy();
         compositeDisposable.clear();
     }
 
-    private void updateDevices() {
-        bluetoothService.cancelDiscovery();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //Log.e(TAG, "updateDevices: " + (bluetoothPermission == PERMISSION_GRANTED));
-            if (bluetoothPermission == PERMISSION_GRANTED) {
-                bluetoothService.startDiscovery();
-            } else getViewState().requestBtPermission();
-        } else bluetoothService.startDiscovery();
-    }
 
     void onAvailableDevicesViewShown() {
 
@@ -122,13 +114,14 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
         }
     }
 
-    void onCreateOptionsMenu() {
-        if (bluetoothService.isEnabled()) getViewState().showUpdateDevicesView();
-        else getViewState().hideUpdateDevicesView();
-    }
-
     void onUpdateDevicesClick() {
-        updateDevices();
+        bluetoothService.cancelDiscovery();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //Log.e(TAG, "updateDevices: " + (bluetoothPermission == PERMISSION_GRANTED));
+            if (bluetoothPermission == PERMISSION_GRANTED) {
+                bluetoothService.startDiscovery();
+            } else getViewState().requestBtPermission();
+        } else bluetoothService.startDiscovery();
     }
 
     void onPrepareOptionsMenu() {

@@ -4,6 +4,7 @@ import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
+@StateStrategyType(SkipStrategy.class)
 public interface MainView extends MvpView {
 
     @StateStrategyType(SkipStrategy.class)
@@ -26,6 +27,8 @@ public interface MainView extends MvpView {
 
     @StateStrategyType(SkipStrategy.class)
     void setBluetoothNavigationPosition();
+
+    void setTitle(int title);
 
 
 //        // Вывести сообщение лога в консоль

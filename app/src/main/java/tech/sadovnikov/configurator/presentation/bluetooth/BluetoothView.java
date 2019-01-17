@@ -3,26 +3,33 @@ package tech.sadovnikov.configurator.presentation.bluetooth;
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.*;
 
+import tech.sadovnikov.configurator.presentation.AddToEndSingleByTagStateStrategy;
+
 @StateStrategyType(SkipStrategy.class)
 public interface BluetoothView extends MvpView {
     String TAG = BluetoothView.class.getSimpleName();
 
     void displayBluetoothState(boolean state);
 
+    @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "devices")
     void showDevices();
 
+    @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "devices")
     void hideDevices();
 
+    @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "turningOn")
     void showTurningOn();
 
+    @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "turningOn")
     void hideTurningOn();
 
     void requestBtPermission();
 
-    @StateStrategyType(SkipStrategy.class)
+
+    @StateStrategyType(value = SkipStrategy.class)
     void hideUpdateDevicesView();
 
-    @StateStrategyType(SkipStrategy.class)
+    @StateStrategyType(value = SkipStrategy.class)
     void showUpdateDevicesView();
 
     @StateStrategyType(AddToEndSingleStrategy.class)

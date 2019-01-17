@@ -5,7 +5,6 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import java.util.HashMap;
 import java.util.Stack;
 
 import javax.inject.Inject;
@@ -14,6 +13,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.App;
+import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
@@ -114,14 +114,17 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     }
 
+    void onCreateBluetoothView() {
+        currentView = BluetoothView.class;
+        getViewState().setBluetoothNavigationPosition();
+        getViewState().setTitle(R.string.title_bluetooth);
+    }
 
     void onCreateConsoleView() {
         currentView = ConsoleView.class;
         getViewState().setConsoleNavigationPosition();
+        getViewState().setTitle(R.string.title_console);
     }
 
-    void onCreateBluetoothView() {
-        currentView = BluetoothView.class;
-        getViewState().setBluetoothNavigationPosition();
-    }
+
 }

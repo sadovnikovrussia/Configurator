@@ -27,13 +27,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
-import tech.sadovnikov.configurator.presentation.main.MainPresenter;
+
+import static tech.sadovnikov.configurator.presentation.console.ConsolePresenter.*;
+import static tech.sadovnikov.configurator.presentation.console.ConsolePresenter.TAG;
 
 
 public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView {
     public static final String TAG = ConsoleFragment.class.getSimpleName();
 
-    @InjectPresenter
+    @InjectPresenter(type = PresenterType.GLOBAL, tag = "Console")
     ConsolePresenter presenter;
 
     // UI

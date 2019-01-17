@@ -21,7 +21,7 @@ import tech.sadovnikov.configurator.model.entities.LogMessage;
 
 @InjectViewState
 public class ConsolePresenter extends MvpPresenter<ConsoleView> {
-    private static final String TAG = ConsolePresenter.class.getSimpleName();
+    public static final String TAG = ConsolePresenter.class.getSimpleName();
 
     private PresenterComponent presenterComponent;
 
