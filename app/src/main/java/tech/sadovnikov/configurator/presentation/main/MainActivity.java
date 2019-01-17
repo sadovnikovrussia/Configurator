@@ -35,6 +35,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
     @InjectPresenter
     MainPresenter presenter;
 
+    private BottomNavigationView.OnNavigationItemSelectedListener navigationListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,21 +48,23 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
     }
 
     private void setUp() {
-        navigationView.setOnNavigationItemSelectedListener(menuItem -> {
-            boolean isFragmentOpened = navigationView.getSelectedItemId() == menuItem.getItemId();
+        navigationListener = menuItem -> {
+            Log.w(TAG, "OnNavigationItemSelected: " + menuItem.toString());
             switch (menuItem.getItemId()) {
                 case R.id.navigation_bluetooth:
-                    presenter.onBluetoothClick(isFragmentOpened);
-                    return true;
+                    presenter.onBluetoothClick();
+                    break;
                 case R.id.navigation_configuration:
-                    presenter.onConfigurationClick(isFragmentOpened);
-                    return true;
+                    presenter.onConfigurationClick();
+                    break;
                 case R.id.navigation_console:
-                    presenter.onConsoleClick(isFragmentOpened);
-                    return true;
+                    presenter.onConsoleClick();
+                    break;
             }
-            return false;
-        });
+            return true;
+        };
+        navigationView.setOnNavigationItemReselectedListener(menuItem -> Log.w(TAG, "OnNavigationItemReselected: " + menuItem.toString()));
+        navigationView.setOnNavigationItemSelectedListener(navigationListener);
     }
 
     private void initializeDaggerComponent() {
@@ -77,8 +81,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
 
     @Override
     public void navigateToBluetoothView() {
-        //Log.w(TAG, "navigateToBluetoothView: ");
-        showFragment(BluetoothFragment.newInstance(), BluetoothFragment.TAG);
+        Log.w(TAG, "navigateToBluetoothView: ");
+        showFragment(BluetoothFragment.newInstance(), BluetoothFragment.TAG, R.id.navigation_bluetooth);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_bluetooth);
     }
 
@@ -89,8 +93,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
 
     @Override
     public void navigateToConsoleView() {
-        //Log.w(TAG, "navigateToConsoleView: ");
-        showFragment(ConsoleFragment.newInstance(), ConsoleFragment.TAG);
+        Log.w(TAG, "navigateToConsoleView: ");
+        showFragment(ConsoleFragment.newInstance(), ConsoleFragment.TAG, R.id.navigation_console);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_console);
     }
 
@@ -111,36 +115,48 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
 
     @Override
     public void setConsoleNavigationPosition() {
-        Log.d(TAG, "setConsoleNavigationPosition: ");
+        Log.w(TAG, "setConsoleNavigationPosition: ");
+        navigationView.setOnNavigationItemSelectedListener(null);
         navigationView.setSelectedItemId(R.id.navigation_console);
+        navigationView.setOnNavigationItemSelectedListener(navigationListener);
     }
 
     @Override
     public void setBluetoothNavigationPosition() {
-        Log.d(TAG, "setBluetoothNavigationPosition: ");
+        Log.w(TAG, "setBluetoothNavigationPosition: ");
+        navigationView.setOnNavigationItemSelectedListener(null);
         navigationView.setSelectedItemId(R.id.navigation_bluetooth);
+        navigationView.setOnNavigationItemSelectedListener(navigationListener);
     }
 
-    private void showFragment(Fragment bluetoothFragment, String tag) {
+    private void showFragment(Fragment fragment, String tag, int navigation) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, bluetoothFragment, tag)
-                .addToBackStack(null)
+                .replace(R.id.container, fragment, tag)
+                .addToBackStack(tag)
                 .commit();
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        Log.d(TAG, "onBackPressed: " + backStackEntryCount);
+        if (backStackEntryCount < 1) finish();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //Log.d(TAG, "onCreateOptionsMenu1: " + menu);
+        //Log.w(TAG, "onCreateOptionsMenu1: " + menu);
         //menu.clear();
         //getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
-        ////Log.d(TAG, "onCreateOptionsMenu2: " + menu);
+        ////Log.w(TAG, "onCreateOptionsMenu2: " + menu);
         //getMenuInflater().inflate(R.menu.menu_bluetooth, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        //Log.d(TAG, "onPrepareOptionsMenu: " + menu.hasVisibleItems());
+        //Log.w(TAG, "onPrepareOptionsMenu: " + menu.hasVisibleItems());
         //menu.setGroupVisible(R.id.group_update_devices, false);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -148,7 +164,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //Log.d(TAG, "onOptionsItemSelected: " + item.getItemId());
+        //Log.w(TAG, "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.item_open:
                 presenter.onOpenConfiguration();
@@ -168,7 +184,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
 
     @Override
     public void onOptionsMenuClosed(Menu menu) {
-        //Log.d(TAG, "onOptionsMenuClosed: ");
+        //Log.w(TAG, "onOptionsMenuClosed: ");
         super.onOptionsMenuClosed(menu);
     }
 
@@ -216,12 +232,12 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
 
 
     @Override
-    public void onCreateConsoleView() {
+    public void onCreateViewConsole() {
         presenter.onCreateConsoleView();
     }
 
     @Override
-    public void onCreateBluetoothView() {
+    public void onCreateViewBluetooth() {
         presenter.onCreateBluetoothView();
     }
 }

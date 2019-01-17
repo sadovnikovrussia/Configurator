@@ -70,13 +70,11 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
         View inflate = inflater.inflate(R.layout.fragment_console, container, false);
         ButterKnife.bind(this, inflate);
         setUp();
-        presenter.onCreateView();
-        listener.onCreateConsoleView();
+        listener.onCreateViewConsole();
         return inflate;
     }
 
     private void setUp() {
-        swAutoScroll.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.onChangeAutoScrollClick(isChecked));
         btnSendCommand.setOnClickListener(view -> presenter.onSendCommand(etCommandLine.getText().toString()));
         tvLogs.setOnLongClickListener(view -> {
             presenter.onSaveLogMessages();
@@ -160,6 +158,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
+        swAutoScroll.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.onChangeAutoScrollClick(isChecked));
     }
 
     public void onResume() {
@@ -194,6 +193,6 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     // ---------------------------------------------------------------------------------------------
 
     public interface Listener{
-        void onCreateConsoleView();
+        void onCreateViewConsole();
     }
 }

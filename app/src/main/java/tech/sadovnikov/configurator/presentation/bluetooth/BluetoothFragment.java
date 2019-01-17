@@ -79,7 +79,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
         ButterKnife.bind(this, inflate);
         initDaggerAndInject();
         setUp();
-        listener.onCreateBluetoothView();
+        listener.onCreateViewBluetooth();
         return inflate;
     }
 
@@ -230,56 +230,56 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     public void onAttach(Context context) {
         super.onAttach(context);
         listener = (Listener)getActivity();
-        ////Log.v(TAG, "onAttach");
+        Log.v(TAG, "onAttach");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ////Log.v(TAG, "onCreate: ");
-        setRetainInstance(true);
+        Log.v(TAG, "onCreate: ");
+        //setRetainInstance(true);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ////Log.v(TAG, "onActivityCreated");
+        Log.v(TAG, "onActivityCreated");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        ////Log.v(TAG, "onStart");
+        Log.v(TAG, "onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        ////Log.v(TAG, "onResume");
+        Log.v(TAG, "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ////Log.v(TAG, "onPause");
+        Log.v(TAG, "onPause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        ////Log.v(TAG, "onStop");
+        Log.v(TAG, "onStop");
     }
 
     @Override
     public void onDestroyView() {
-        ////Log.v(TAG, "onDestroyView");
+        Log.v(TAG, "onDestroyView");
         super.onDestroyView();
         //listener.onBluetoothFragmentDestroyView();
     }
 
     @Override
     public void onDestroy() {
-        ////Log.v(TAG, "onDestroy");
+        Log.v(TAG, "onDestroy");
         super.onDestroy();
         //listener.onBluetoothFragmentDestroy();
     }
@@ -287,7 +287,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     @Override
     public void onDetach() {
         super.onDetach();
-        ////Log.v(TAG, "onDetach: ");
+        Log.v(TAG, "onDetach: ");
         //listener = null;
     }
 
@@ -299,7 +299,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     // ---------------------------------------------------------------------------------------------
 
     public interface Listener{
-        void onCreateBluetoothView();
+        void onCreateViewBluetooth();
     }
 //    @Override
 //    public void onPrepareOptionsMenu(Menu menu) {

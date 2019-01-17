@@ -5,6 +5,8 @@ import com.arellomobile.mvp.viewstate.strategy.*;
 
 @StateStrategyType(SkipStrategy.class)
 public interface BluetoothView extends MvpView {
+    String TAG = BluetoothView.class.getSimpleName();
+
     void displayBluetoothState(boolean state);
 
     void showDevices();

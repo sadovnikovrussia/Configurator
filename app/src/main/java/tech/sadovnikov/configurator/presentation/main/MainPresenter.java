@@ -5,6 +5,9 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import java.util.HashMap;
+import java.util.Stack;
+
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -16,6 +19,8 @@ import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.CfgLoader;
 import tech.sadovnikov.configurator.model.data.DataManager;
+import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothView;
+import tech.sadovnikov.configurator.presentation.console.ConsoleView;
 
 @InjectViewState
 public class MainPresenter extends MvpPresenter<MainView> {
@@ -29,6 +34,11 @@ public class MainPresenter extends MvpPresenter<MainView> {
     @Inject
     DataManager dataManager;
 
+    private String bluetoothView;
+    private String consoleView;
+    private Class currentView;
+    private Stack<Class> stack;
+
     MainPresenter() {
         super();
         Log.w(TAG, "onConstructor: ");
@@ -36,6 +46,9 @@ public class MainPresenter extends MvpPresenter<MainView> {
         presenterComponent.injectMainPresenter(this);
         cfgLoader.setBluetoothService(bluetoothService);
         cfgLoader.setDataManager(dataManager);
+        stack = new Stack<>();
+        bluetoothView = BluetoothView.class.getSimpleName();
+        consoleView = ConsoleView.class.getSimpleName();
     }
 
     private void initDaggerComponent() {
@@ -50,19 +63,27 @@ public class MainPresenter extends MvpPresenter<MainView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         Log.w(TAG, "onFirstViewAttach: ");
+        currentView = BluetoothView.class;
         getViewState().navigateToBluetoothView();
     }
 
-    void onBluetoothClick(boolean isFragmentOpened) {
-        if (!isFragmentOpened) getViewState().navigateToBluetoothView();
+    void onBluetoothClick() {
+        Log.d(TAG, "onBluetoothClick: ");
+        if (!currentView.equals(BluetoothView.class)) getViewState().navigateToBluetoothView();
+        currentView = BluetoothView.class;
+        //getViewState().setBluetoothNavigationPosition();
     }
 
-    void onConfigurationClick(boolean isFragmentOpened) {
+    void onConfigurationClick() {
     }
 
-    void onConsoleClick(boolean isFragmentOpened) {
-        if (!isFragmentOpened) getViewState().navigateToConsoleView();
+    void onConsoleClick() {
+        Log.d(TAG, "onConsoleClick: ");
+        if (!currentView.equals(ConsoleView.class)) getViewState().navigateToConsoleView();
+        currentView = ConsoleView.class;
+        //getViewState().setConsoleNavigationPosition();
     }
+
 
     void onSetConfiguration() {
         getViewState().showLoadingProcess();
@@ -95,10 +116,12 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
 
     void onCreateConsoleView() {
+        currentView = ConsoleView.class;
         getViewState().setConsoleNavigationPosition();
     }
 
     void onCreateBluetoothView() {
+        currentView = BluetoothView.class;
         getViewState().setBluetoothNavigationPosition();
     }
 }

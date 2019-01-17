@@ -9,7 +9,7 @@ import java.util.List;
 
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 
-interface ConsoleView extends MvpView {
+public interface ConsoleView extends MvpView {
 
     @StateStrategyType(SkipStrategy.class)
     void addMessageToLogScreen(LogMessage message, boolean autoScrollOn);

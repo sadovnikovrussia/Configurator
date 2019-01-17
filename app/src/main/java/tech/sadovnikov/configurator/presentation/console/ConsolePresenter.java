@@ -50,23 +50,19 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
         super.onFirstViewAttach();
         Log.i(TAG, "onFirstViewAttach: ");
         getViewState().setAutoScrollState(dataManager.getAutoScrollState());
-        PublishSubject<LogMessage> observableMainLog = dataManager.getObservableMainLog();
-        Disposable subscribe = observableMainLog
+        Disposable subscribe = dataManager.getObservableMainLog()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(message -> getViewState().addMessageToLogScreen(message, dataManager.getAutoScrollState()),
                         Throwable::printStackTrace,
                         () -> {},
                         disposable -> {
-                            Log.i(TAG, "onFirstViewAttach: " + dataManager.getAutoScrollState());
+                            Log.i(TAG, "onSubscribe: ");
                             getViewState().showMainLogs(dataManager.getMainLogList(), dataManager.getAutoScrollState());
                         });
         compositeDisposable.add(subscribe);
     }
 
-    public void onCreateView() {
-        //getViewState().showMainLogs(dataManager.getMainLogList());
-    }
 
     @Override
     public void onDestroy() {
