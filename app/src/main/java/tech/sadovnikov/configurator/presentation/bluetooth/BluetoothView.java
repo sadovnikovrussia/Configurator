@@ -25,7 +25,6 @@ public interface BluetoothView extends MvpView {
 
     void requestBtPermission();
 
-
     @StateStrategyType(value = SkipStrategy.class)
     void hideUpdateDevicesView();
 
@@ -35,4 +34,9 @@ public interface BluetoothView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setSwBluetoothStateText(String text);
 
+    @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "devicePage")
+    void setPairedDevicesPage();
+
+    @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "devicePage")
+    void setAvailableDevicesPage();
 }

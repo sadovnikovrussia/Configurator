@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.PresenterType;
 
 import java.util.Objects;
 
@@ -32,7 +33,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
     FrameLayout container;
 
     private ActivityComponent activityComponent;
-    @InjectPresenter
+    @InjectPresenter(type = PresenterType.GLOBAL)
     MainPresenter presenter;
 
     private BottomNavigationView.OnNavigationItemSelectedListener navigationListener;
@@ -146,12 +147,14 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
         super.onBackPressed();
         int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
         Log.d(TAG, "onBackPressed: " + backStackEntryCount);
-        if (backStackEntryCount < 1) finish();
+        if (backStackEntryCount < 1) finishAffinity();
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //Log.w(TAG, "onCreateOptionsMenu1: " + menu);
+        Log.v(TAG, "onCreateOptionsMenu: " + menu);
         //menu.clear();
         //getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
         ////Log.w(TAG, "onCreateOptionsMenu2: " + menu);
@@ -161,7 +164,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        //Log.w(TAG, "onPrepareOptionsMenu: " + menu.hasVisibleItems());
+        Log.v(TAG, "onPrepareOptionsMenu: " + menu.hasVisibleItems());
         //menu.setGroupVisible(R.id.group_update_devices, false);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -202,37 +205,37 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, Cons
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //Log.w(TAG, "onDestroy: ");
+        Log.v(TAG, "onDestroy: ");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //Log.w(TAG, "onPause: ");
+        Log.v(TAG, "onPause: ");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //Log.w(TAG, "onResume: ");
+        Log.v(TAG, "onResume: ");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        //Log.w(TAG, "onStart: ");
+        Log.v(TAG, "onStart: ");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        //Log.w(TAG, "onStop: ");
+        Log.v(TAG, "onStop: ");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        //Log.w(TAG, "onRestart: ");
+        Log.v(TAG, "onRestart: ");
     }
 
 

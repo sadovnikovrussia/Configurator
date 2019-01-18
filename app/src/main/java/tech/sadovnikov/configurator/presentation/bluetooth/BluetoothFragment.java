@@ -84,7 +84,6 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
         return inflate;
     }
 
-
     private void initDaggerAndInject() {
         fragmentComponent = DaggerFragmentComponent
                 .builder()
@@ -168,6 +167,18 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     public void setSwBluetoothStateText(String text) {
         Log.d(TAG, "setSwBluetoothStateText: " + text);
         switchBt.setText(text);
+    }
+
+    @Override
+    public void setPairedDevicesPage() {
+        Log.d(TAG, "setPairedDevicesPage: 0");
+        viewPager.setCurrentItem(0);
+    }
+
+    @Override
+    public void setAvailableDevicesPage() {
+        Log.d(TAG, "setAvailableDevicesPage: 1");
+        viewPager.setCurrentItem(1);
     }
 
     @Override

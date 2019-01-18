@@ -67,11 +67,11 @@ public class App extends Application {
 
     @Override
     public void onTerminate() {
-        super.onTerminate();
         Log.d(TAG, "onTerminate: ");
         unregisterReceiver(receiver);
         dataManager.clearSubscribes();
         bluetoothService.closeAllConnections();
+        super.onTerminate();
     }
 
     @Override

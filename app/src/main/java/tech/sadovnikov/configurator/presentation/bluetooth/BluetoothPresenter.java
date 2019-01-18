@@ -94,11 +94,11 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
 
 
     void onAvailableDevicesViewShown() {
-
+        getViewState().setAvailableDevicesPage();
     }
 
     void onPairedDevicesViewShown() {
-
+        getViewState().setPairedDevicesPage();
     }
 
     void onPositiveBtRequestResult() {
