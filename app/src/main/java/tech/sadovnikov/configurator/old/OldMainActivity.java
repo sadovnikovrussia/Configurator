@@ -1415,8 +1415,8 @@
 //    }
 //
 //    @Override
-//    public void onSaveFileDialogPositiveClick(String fileName) {
-//        presenter.onSaveFileDialogPositiveClick(fileName);
+//    public void onSaveDialogPositiveClick(String fileName) {
+//        presenter.onSaveDialogPositiveClick(fileName);
 //    }
 //
 //    @Override

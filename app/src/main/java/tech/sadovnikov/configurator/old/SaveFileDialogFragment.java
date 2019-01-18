@@ -2,7 +2,6 @@ package tech.sadovnikov.configurator.old;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -12,14 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import java.util.Objects;
+
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.presentation.config_tabs.ConfigMainFragment;
 
 
 public class SaveFileDialogFragment extends DialogFragment {
-    private static final String TAG = "SaveFileDialogFragment";
+    public static final String TAG = "SaveFileDialogFragment";
 
-    OnSaveFileDialogFragmentInteractionListener listener;
+    Listener listener;
 
     // UI
     EditText etFileName;
@@ -32,25 +32,15 @@ public class SaveFileDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_save_file, null, false);
         etFileName = view.findViewById(R.id.file_name);
         etFileName.setPaintFlags(View.INVISIBLE);
         builder.setView(view);
         builder.setMessage(R.string.saving_configuration)
-                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        listener.onSaveFileDialogPositiveClick(etFileName.getText().toString());
-
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        SaveFileDialogFragment.this.getDialog().cancel();
-                    }
-                });
+                .setPositiveButton(R.string.save, (dialog, id) -> listener.onSaveDialogPositiveClick(etFileName.getText().toString()))
+                .setNegativeButton(R.string.cancel, (dialog, id) -> listener.onSaveDialogNegativeClick());
         // Create the AlertDialog object and return it
         return builder.create();
     }
@@ -59,16 +49,17 @@ public class SaveFileDialogFragment extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.v(TAG, "onStart");
-        if (context instanceof ConfigMainFragment.OnConfigMainFragmentInteractionListener) {
-            listener = (SaveFileDialogFragment.OnSaveFileDialogFragmentInteractionListener) context;
+        if (context instanceof Listener) {
+            listener = (Listener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnSaveFileDialogFragmentInteractionListener");
         }
     }
 
-    interface OnSaveFileDialogFragmentInteractionListener {
+    public interface Listener {
+        void onSaveDialogPositiveClick(String s);
 
-        void onSaveFileDialogPositiveClick(String s);
+        void onSaveDialogNegativeClick();
     }
 }

@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import tech.sadovnikov.configurator.App;
+import tech.sadovnikov.configurator.di.BluetoothPermission;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
@@ -27,6 +28,7 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     private PresenterComponent presenterComponent;
 
     @Inject
+    @BluetoothPermission
     int bluetoothPermission;
     @Inject
     BluetoothService bluetoothService;

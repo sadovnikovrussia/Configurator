@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.presentation.main;
 
+import android.os.Build;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -18,9 +19,13 @@ import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.CfgLoader;
+import tech.sadovnikov.configurator.model.FileManager;
 import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothView;
 import tech.sadovnikov.configurator.presentation.console.ConsoleView;
+import tech.sadovnikov.configurator.di.WritePermission;
+
+import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
 @InjectViewState
 public class MainPresenter extends MvpPresenter<MainView> {
@@ -33,6 +38,11 @@ public class MainPresenter extends MvpPresenter<MainView> {
     BluetoothService bluetoothService;
     @Inject
     DataManager dataManager;
+    @Inject
+    FileManager fileManager;
+    @Inject
+    @WritePermission
+    int writePermission;
 
     private String bluetoothView;
     private String consoleView;
@@ -96,7 +106,40 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     void onSaveConfiguration() {
+        if (fileManager.isExternalStorageWritable()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (writePermission == PERMISSION_GRANTED) {
+                    getViewState().showSaveDialog();
+                } else getViewState().requestWritePermission();
+            } else getViewState().showSaveDialog();
+        } else {
+            getViewState().showErrorMessage("Ваше устройство не поддерживает данную функцию");
+        }
 
+    }
+
+    void onPositiveWriteRequestResult() {
+        writePermission = PERMISSION_GRANTED;
+        getViewState().showSaveDialog();
+    }
+
+    void onSaveDialogPositiveClick(String name) {
+        fileManager.saveConfiguration(dataManager.getConfiguration(), name, new FileManager.SaveCfgCallback() {
+            @Override
+            public void onSuccess() {
+                getViewState().hideDialogSave();
+                getViewState().showSuccessSaveMessage(name);
+            }
+
+            @Override
+            public void onError() {
+                getViewState().showErrorSaveMessage();
+            }
+        });
+    }
+
+    void onSaveDialogNegativeClick() {
+        getViewState().hideDialogSave();
     }
 
     void onOpenConfiguration() {

@@ -209,7 +209,7 @@
 //    }
 //
 //    @Override
-//    public void onSaveFileDialogPositiveClick(String fileName) {
+//    public void onSaveDialogPositiveClick(String fileName) {
 //        fileManager.saveConfiguration(repositoryConfiguration.getConfigurationForSave(), fileName);
 //
 //    }

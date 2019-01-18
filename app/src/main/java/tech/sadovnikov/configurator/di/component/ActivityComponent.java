@@ -18,6 +18,5 @@ public interface ActivityComponent {
 
     DataManager getDataManager();
 
-    CfgLoader getCfgLoader();
 
 }

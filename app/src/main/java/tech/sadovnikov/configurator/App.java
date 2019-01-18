@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.util.Log;
 
 import javax.inject.Inject;
@@ -16,6 +17,8 @@ import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.MessageAnalyzer;
 import tech.sadovnikov.configurator.model.data.DataManager;
+
+import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 public class App extends Application {
     private static final String TAG = App.class.getSimpleName();

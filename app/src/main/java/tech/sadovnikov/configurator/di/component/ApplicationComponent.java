@@ -11,6 +11,7 @@ import tech.sadovnikov.configurator.di.ApplicationContext;
 import tech.sadovnikov.configurator.di.module.ApplicationModule;
 import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
+import tech.sadovnikov.configurator.model.FileManager;
 import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.model.data.logs.LogManager;
 
@@ -32,4 +33,6 @@ public interface ApplicationComponent {
     BluetoothBroadcastReceiver getBluetoothBroadcastReceiver();
 
     LogManager getLogManager();
+
+    //FileManager getFileManager();
 }

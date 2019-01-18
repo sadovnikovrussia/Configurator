@@ -14,9 +14,7 @@ import tech.sadovnikov.configurator.utils.ParametersEntities;
 public class Configuration {
     private static final String TAG = Configuration.class.getSimpleName();
 
-    //private Set<Parameter> parameters = new HashSet<>();
     private Map<ParametersEntities, Parameter> parametersMap = new LinkedHashMap<>();
-
 
     public void setParameter(ParametersEntities parameterEntity, String value) {
         Parameter parameter = Parameter.of(parameterEntity, value);
@@ -52,17 +50,17 @@ public class Configuration {
         return commandList;
     }
 
-    public List<String> getCmdListForSetDeviceConfiguration() {
+    public List<String> getCmdListForSetOrSave() {
         List<String> cmdList = new ArrayList<>();
         for (Map.Entry<ParametersEntities, Parameter> parameterEntry : parametersMap.entrySet()) {
             ParametersEntities parameterEntity = parameterEntry.getKey();
             if (parameterEntity.isSettable()){
                 cmdList.add(parameterEntry.getValue().createSettingCommand());
             }
-
         }
         return cmdList;
     }
+
 
     public void clear() {
         //parameters.clear();
@@ -74,6 +72,10 @@ public class Configuration {
     public String toString() {
         return "Configuration{" + parametersMap +
                 '}';
+    }
+
+    public int getSize() {
+        return parametersMap.size();
     }
 
 }

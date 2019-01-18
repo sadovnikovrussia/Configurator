@@ -4,16 +4,15 @@ import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
+import tech.sadovnikov.configurator.presentation.AddToEndSingleByTagStateStrategy;
+
 @StateStrategyType(SkipStrategy.class)
 public interface MainView extends MvpView {
 
-    @StateStrategyType(SkipStrategy.class)
     void navigateToBluetoothView();
 
-    @StateStrategyType(SkipStrategy.class)
     void navigateToConsoleView();
 
-    @StateStrategyType(SkipStrategy.class)
     void navigateToConfigurationView();
 
     void showLoadingProcess();
@@ -22,13 +21,25 @@ public interface MainView extends MvpView {
 
     void updateLoadingProcess(Float percents);
 
-    @StateStrategyType(SkipStrategy.class)
     void setConsoleNavigationPosition();
 
-    @StateStrategyType(SkipStrategy.class)
     void setBluetoothNavigationPosition();
 
     void setTitle(int title);
+
+    @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "saveDialog")
+    void showSaveDialog();
+
+    @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "saveDialog")
+    void hideDialogSave();
+
+    void showSuccessSaveMessage(String name);
+
+    void showErrorSaveMessage();
+
+    void showErrorMessage(String message);
+
+    void requestWritePermission();
 
 
 //        // Вывести сообщение лога в консоль

@@ -70,12 +70,17 @@ public class AppDataManager implements DataManager {
 
     @Override
     public List<String> getCmdListForSetDeviceConfiguration() {
-        return configuration.getCmdListForSetDeviceConfiguration();
+        return configuration.getCmdListForSetOrSave();
     }
 
     @Override
     public PublishSubject<Configuration> getConfigurationObservable() {
         return configurationObservable;
+    }
+
+    @Override
+    public Configuration getConfiguration() {
+        return configuration;
     }
 
     @Override
