@@ -21,4 +21,6 @@ public interface DataManager extends LogManager {
     PublishSubject<Configuration> getConfigurationObservable();
 
     Configuration getConfiguration();
+
+    void setConfiguration(Configuration configuration);
 }

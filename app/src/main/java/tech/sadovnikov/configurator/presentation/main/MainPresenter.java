@@ -15,12 +15,14 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.di.ReadPermission;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.CfgLoader;
 import tech.sadovnikov.configurator.model.FileManager;
 import tech.sadovnikov.configurator.model.data.DataManager;
+import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothView;
 import tech.sadovnikov.configurator.presentation.console.ConsoleView;
 import tech.sadovnikov.configurator.di.WritePermission;
@@ -43,6 +45,10 @@ public class MainPresenter extends MvpPresenter<MainView> {
     @Inject
     @WritePermission
     int writePermission;
+    @Inject
+    @ReadPermission
+    int readPermission;
+
 
     private String bluetoothView;
     private String consoleView;
@@ -77,23 +83,31 @@ public class MainPresenter extends MvpPresenter<MainView> {
         getViewState().navigateToBluetoothView();
     }
 
-    void onBluetoothClick() {
-        Log.d(TAG, "onBluetoothClick: ");
+    void onNavigateToBluetooth() {
+        Log.d(TAG, "onNavigateToBluetooth: ");
         if (!currentView.equals(BluetoothView.class)) getViewState().navigateToBluetoothView();
         currentView = BluetoothView.class;
-        //getViewState().setBluetoothNavigationPosition();
     }
 
-    void onConfigurationClick() {
+    void onNavigateToConfiguration() {
     }
 
-    void onConsoleClick() {
-        Log.d(TAG, "onConsoleClick: ");
+    void onNavigateToConsole() {
+        Log.d(TAG, "onNavigateToConsole: ");
         if (!currentView.equals(ConsoleView.class)) getViewState().navigateToConsoleView();
         currentView = ConsoleView.class;
-        //getViewState().setConsoleNavigationPosition();
     }
 
+    void onReadConfiguration() {
+        getViewState().showLoadingProcess();
+        Disposable progressSubscription = cfgLoader.readFullConfiguration()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aFloat -> getViewState().updateLoadingProcess(aFloat),
+                        Throwable::printStackTrace,
+                        () -> getViewState().hideLoadingProgress());
+
+    }
 
     void onSetConfiguration() {
         getViewState().showLoadingProcess();
@@ -113,7 +127,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 } else getViewState().requestWritePermission();
             } else getViewState().showSaveDialog();
         } else {
-            getViewState().showErrorMessage("Ваше устройство не поддерживает данную функцию");
+            getViewState().showMessage("Ваше устройство не поддерживает данную функцию");
         }
 
     }
@@ -126,14 +140,14 @@ public class MainPresenter extends MvpPresenter<MainView> {
     void onSaveDialogPositiveClick(String name) {
         fileManager.saveConfiguration(dataManager.getConfiguration(), name, new FileManager.SaveCfgCallback() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(String fileName) {
                 getViewState().hideDialogSave();
-                getViewState().showSuccessSaveMessage(name);
+                getViewState().showSuccessSaveCfgMessage(fileName);
             }
 
             @Override
-            public void onError() {
-                getViewState().showErrorSaveMessage();
+            public void onError(Exception e) {
+                getViewState().showErrorSaveCfgMessage(e);
             }
         });
     }
@@ -143,31 +157,60 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     void onOpenConfiguration() {
-
+        Log.d(TAG, "onOpenConfiguration: 1");
+        if (fileManager.isExternalStorageReadable()) {
+            Log.d(TAG, "onOpenConfiguration: 2");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Log.d(TAG, "onOpenConfiguration: 3");
+                if (readPermission == PERMISSION_GRANTED) {
+                    Log.d(TAG, "onOpenConfiguration: 4");
+                    getViewState().startOpenFileManagerActivity();
+                } else {
+                    Log.d(TAG, "onOpenConfiguration: 5");
+                    getViewState().requestReadStoragePermission();
+                }
+            } else {
+                Log.d(TAG, "onOpenConfiguration: 6");
+                getViewState().startOpenFileManagerActivity();
+            }
+        } else {
+            getViewState().showMessage("Ваше устройство не поддерживает данную функцию");
+        }
     }
 
-    void onReadConfiguration() {
-        getViewState().showLoadingProcess();
-        Disposable progressSubscription = cfgLoader.readFullConfiguration()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aFloat -> getViewState().updateLoadingProcess(aFloat),
-                        Throwable::printStackTrace,
-                        () -> getViewState().hideLoadingProgress());
-
+    void onPositiveReadStorageRequestResult() {
+        Log.d(TAG, "onPositiveReadStorageRequestResult: ");
+        readPermission = PERMISSION_GRANTED;
+        getViewState().startOpenFileManagerActivity();
     }
 
-    void onCreateBluetoothView() {
+    void onGetCfgPath(String path) {
+        Log.d(TAG, "onGetCfgPath: ");
+        fileManager.openConfiguration(path, new FileManager.OpenCfgCallback() {
+            @Override
+            public void onSuccess(String cfgName, Configuration configuration) {
+                Log.d(TAG, "onSuccess: ");
+                dataManager.setConfiguration(configuration);
+                // todo Почему отсюда не вызываются некоторые методоы во view ???
+                getViewState().showSuccessOpenCfgMessage(cfgName);
+            }
+            @Override
+            public void onError(String cfgName, Exception e) {
+                getViewState().showErrorOpenCfgMessage(cfgName, e);
+            }
+        });
+    }
+
+    void onCreateViewBluetooth() {
         currentView = BluetoothView.class;
         getViewState().setBluetoothNavigationPosition();
         getViewState().setTitle(R.string.title_bluetooth);
     }
 
-    void onCreateConsoleView() {
+    void onCreateViewConsole() {
         currentView = ConsoleView.class;
         getViewState().setConsoleNavigationPosition();
         getViewState().setTitle(R.string.title_console);
     }
-
 
 }

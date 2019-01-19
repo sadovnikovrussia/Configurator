@@ -33,13 +33,21 @@ public interface MainView extends MvpView {
     @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "saveDialog")
     void hideDialogSave();
 
-    void showSuccessSaveMessage(String name);
+    void showSuccessSaveCfgMessage(String name);
 
-    void showErrorSaveMessage();
+    void showErrorSaveCfgMessage(Exception e);
 
-    void showErrorMessage(String message);
+    void showMessage(String message);
 
     void requestWritePermission();
+
+    void requestReadStoragePermission();
+
+    void startOpenFileManagerActivity();
+
+    void showErrorOpenCfgMessage(String cfgName, Exception e);
+
+    void showSuccessOpenCfgMessage(String cfgName);
 
 
 //        // Вывести сообщение лога в консоль
@@ -99,7 +107,7 @@ public interface MainView extends MvpView {
 //
 //        String getEtMaxActiveText();
 //
-//        void requestReadPermission();
+//        void requestReadStoragePermission();
 //
 //        void requestWritePermission();
 //

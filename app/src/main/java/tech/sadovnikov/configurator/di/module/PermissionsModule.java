@@ -27,10 +27,10 @@ public class PermissionsModule {
         return checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
-//    @Provides
-//    @ReadPermission
-//    int checkReadExternalStoragePermission(@ApplicationContext Context context) {
-//        return checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
-//    }
+    @Provides
+    @ReadPermission
+    int checkReadExternalStoragePermission(@ApplicationContext Context context) {
+        return checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
+    }
 
 }

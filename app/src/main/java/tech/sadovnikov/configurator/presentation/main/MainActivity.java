@@ -2,9 +2,11 @@ package tech.sadovnikov.configurator.presentation.main;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -35,7 +37,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         SaveFileDialogFragment.Listener,
         ConsoleFragment.Listener, BluetoothFragment.Listener {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1;
+    private static final int REQUEST_WRITE_STORAGE = 1;
+    private static final int REQUEST_READ_STORAGE = 2;
+    public static final int OPEN_FILE_MANAGER_REQUEST_CODE = 11;
 
     @BindView(R.id.navigation)
     BottomNavigationView navigationView;
@@ -65,13 +69,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
             Log.w(TAG, "OnNavigationItemSelected: " + menuItem.toString());
             switch (menuItem.getItemId()) {
                 case R.id.navigation_bluetooth:
-                    presenter.onBluetoothClick();
+                    presenter.onNavigateToBluetooth();
                     break;
                 case R.id.navigation_configuration:
-                    presenter.onConfigurationClick();
+                    presenter.onNavigateToConfiguration();
                     break;
                 case R.id.navigation_console:
-                    presenter.onConsoleClick();
+                    presenter.onNavigateToConsole();
                     break;
             }
             return true;
@@ -95,7 +99,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     @Override
     public void navigateToBluetoothView() {
         Log.w(TAG, "navigateToBluetoothView: ");
-        showFragment(BluetoothFragment.newInstance(), BluetoothFragment.TAG, R.id.navigation_bluetooth);
+        showFragment(BluetoothFragment.newInstance(), BluetoothFragment.TAG);
         setTitle(R.string.title_bluetooth);
     }
 
@@ -107,12 +111,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     @Override
     public void navigateToConsoleView() {
         Log.w(TAG, "navigateToConsoleView: ");
-        showFragment(ConsoleFragment.newInstance(), ConsoleFragment.TAG, R.id.navigation_console);
+        showFragment(ConsoleFragment.newInstance(), ConsoleFragment.TAG);
         setTitle(R.string.title_console);
     }
 
     @Override
     public void showLoadingProcess() {
+        Log.d(TAG, "showLoadingProcess: ");
 
     }
 
@@ -144,11 +149,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public void setTitle(int title) {
+        Log.d(TAG, "setTitle: ");
         Objects.requireNonNull(getSupportActionBar()).setTitle(title);
     }
 
     @Override
     public void showSaveDialog() {
+        Log.d(TAG, "showSaveDialog: ");
         saveDialog = new SaveFileDialogFragment();
         saveDialog.show(getSupportFragmentManager(), SaveFileDialogFragment.TAG);
     }
@@ -160,26 +167,27 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     }
 
     @Override
-    public void showSuccessSaveMessage(String name) {
-        Log.d(TAG, "showSuccessSaveMessage: " + name);
-        Toast.makeText(this, "Конфигурация " + name + " сохранена в папку Загрузки", Toast.LENGTH_LONG).show();
+    public void showSuccessSaveCfgMessage(String name) {
+        Log.d(TAG, "showSuccessSaveCfgMessage: ");
+        showToast("Конфигурация " + name + " сохранена в папку Загрузки");
     }
 
     @Override
-    public void showErrorSaveMessage() {
-        Log.d(TAG, "showErrorSaveMessage: ");
-        Toast.makeText(this, "Не удалось сохранить конфигурацию", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void showErrorMessage(String message) {
-        showToast(message);
+    public void showErrorSaveCfgMessage(Exception e) {
+        Log.d(TAG, "showErrorSaveCfgMessage: ");
+        showToast("Не удалось сохранить конфигурацию" + "\r\n" + e);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void requestWritePermission() {
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_EXTERNAL_STORAGE);
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    public void requestReadStoragePermission() {
+        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_STORAGE);
     }
 
     @Override
@@ -192,15 +200,22 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         presenter.onSaveDialogNegativeClick();
     }
 
-    private void showFragment(Fragment fragment, String tag, int navigation) {
+    private void showFragment(Fragment fragment, String tag) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment, tag)
                 .addToBackStack(tag)
                 .commit();
     }
 
+    @Override
+    public void showMessage(String message) {
+        Log.d(TAG, "showMessage: ");
+        showToast(message);
+    }
+
     private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Log.d(TAG, "showToast: ");
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -211,38 +226,71 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         if (backStackEntryCount < 1) finishAffinity();
     }
 
+
+
+    @Override
+    public void startOpenFileManagerActivity() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        startActivityForResult(intent, OPEN_FILE_MANAGER_REQUEST_CODE);
+    }
+
+    @Override
+    public void showErrorOpenCfgMessage(String cfgName, Exception e) {
+        Log.d(TAG, "showErrorOpenCfgMessage: ");
+        showToast("Не удалось открыть " + cfgName + "\r\n" + e.toString());
+    }
+
+    @Override
+    public void showSuccessOpenCfgMessage(String cfgName) {
+        Log.d(TAG, "showSuccessOpenCfgMessage: ");
+        showToast(cfgName + " открыта успешно");
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {
+        if (requestCode == REQUEST_WRITE_STORAGE) {
             if (permissions.length > 0 && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED)
                     presenter.onPositiveWriteRequestResult();
             }
+        } else if (requestCode == REQUEST_READ_STORAGE) {
+            if (permissions.length > 0 && permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED)
+                    presenter.onPositiveReadStorageRequestResult();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case OPEN_FILE_MANAGER_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    presenter.onGetCfgPath(Objects.requireNonNull(Objects.requireNonNull(data).getData()).getPath());
+                }
+                break;
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.v(TAG, "onCreateOptionsMenu: " + menu);
-        //menu.clear();
-        //getMenuInflater().inflate(R.menu.menu_configuration_options, menu);
-        ////Log.w(TAG, "onCreateOptionsMenu2: " + menu);
-        //getMenuInflater().inflate(R.menu.menu_bluetooth, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         Log.v(TAG, "onPrepareOptionsMenu: " + menu.hasVisibleItems());
-        //menu.setGroupVisible(R.id.group_update_devices, false);
         return super.onPrepareOptionsMenu(menu);
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //Log.w(TAG, "onOptionsItemSelected: " + item.getItemId());
+        Log.w(TAG, "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.item_open:
                 presenter.onOpenConfiguration();
@@ -262,7 +310,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public void onOptionsMenuClosed(Menu menu) {
-        //Log.w(TAG, "onOptionsMenuClosed: ");
+        Log.w(TAG, "onOptionsMenuClosed: ");
         super.onOptionsMenuClosed(menu);
     }
 
@@ -311,12 +359,12 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public void onCreateViewConsole() {
-        presenter.onCreateConsoleView();
+        presenter.onCreateViewConsole();
     }
 
     @Override
     public void onCreateViewBluetooth() {
-        presenter.onCreateBluetoothView();
+        presenter.onCreateViewBluetooth();
     }
 
 }

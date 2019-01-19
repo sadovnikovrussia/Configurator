@@ -77,7 +77,7 @@
 //import static tech.sadovnikov.configurator.entities.OldConfiguration.UPOWER_THLD;
 //
 //
-//public abstract class MainActivity extends AppCompatActivity implements Contract.View,
+//public abstract class OldMainActivity extends AppCompatActivity implements Contract.View,
 //        BluetoothFragment.OnBluetoothFragmentInteractionListener,
 //        ConfigurationFragment.OnConfigurationFragmentInteractionListener,
 //        ConsoleFragment.OnConsoleFragmentInteractionListener,
@@ -683,7 +683,7 @@
 //    }
 //
 //    @Override
-//    public void requestReadPermission() {
+//    public void requestReadStoragePermission() {
 //        ActivityCompat.requestPermissions(this,
 //                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
 //                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
@@ -1394,7 +1394,7 @@
 //
 //    @Override
 //    public void startOpenFileManagerActivityWithRequestPermission() {
-//        requestReadPermission();
+//        requestReadStoragePermission();
 //    }
 //
 //    @Override

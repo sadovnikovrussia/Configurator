@@ -24,9 +24,7 @@ public class AppDataManager implements DataManager {
 
     private LogManager logManager;
     private Configuration configuration;
-    private BluetoothService bluetoothService;
     private PublishSubject<Configuration> configurationObservable;
-    //private DataManagerListener dataManagerListener;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -34,7 +32,6 @@ public class AppDataManager implements DataManager {
     public AppDataManager(LogManager logManager, Configuration configuration, BluetoothService bluetoothService) {
         this.logManager = logManager;
         this.configuration = configuration;
-        this.bluetoothService = bluetoothService;
         Disposable subscribe = bluetoothService.getLogMessageObservable()
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -81,6 +78,13 @@ public class AppDataManager implements DataManager {
     @Override
     public Configuration getConfiguration() {
         return configuration;
+    }
+
+    @Override
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+        Log.d(TAG, "setConfiguration: " + this.configuration);
+        configurationObservable.onNext(this.configuration);
     }
 
     @Override

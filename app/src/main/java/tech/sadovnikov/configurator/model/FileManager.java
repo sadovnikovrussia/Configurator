@@ -10,17 +10,13 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
-import tech.sadovnikov.configurator.old.OldConfiguration;
-import tech.sadovnikov.configurator.old.OldParameter;
-
-import static tech.sadovnikov.configurator.old.OldConfiguration.PARAMETER_NAMES_LIST;
+import tech.sadovnikov.configurator.model.entities.Parameter;
+import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 /**
  * Класс, предназначенный для работы с файлом конфигурации (открытие, сохранение)
@@ -78,7 +74,6 @@ public class FileManager {
 
     public void saveConfiguration(Configuration configuration, String fileName, SaveCfgCallback callback) {
         File file = getFile(fileName);
-        // LogList.d(TAG, "saveConfiguration: " + String.valueOf(file.isDirectory()) + ", " +  String.valueOf(file.isFile()));
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
@@ -87,33 +82,32 @@ public class FileManager {
                 for (String cmd : cmdListForSetOrSave) {
                     outputStreamWriter.write(cmd + "\r\n");
                 }
-                callback.onSuccess();
-                // LogList.d(TAG, "saveConfiguration: ok");
-                //listener.onSaveConfigurationSuccess(fileName + ".cfg");
+                callback.onSuccess(fileName);
             } catch (IOException e) {
-                callback.onError();
+                callback.onError(e);
                 e.printStackTrace();
             }
             try {
                 outputStreamWriter.close();
                 fileOutputStream.close();
             } catch (IOException e) {
-                callback.onError();
+                callback.onError(e);
                 e.printStackTrace();
             }
         } catch (FileNotFoundException e) {
-            callback.onError();
+            callback.onError(e);
             e.printStackTrace();
         }
     }
 
     // TODO <Доделать проверки валидности пути и тд. (.cfg?), добавить выброс исключений>
-    OldConfiguration openConfiguration(String path) {
+    public void openConfiguration(String path, OpenCfgCallback callback) {
         Log.d(TAG, "openConfiguration: ");
         FileReader fileReader;
         BufferedReader bufferedReader;
-        OldConfiguration oldConfiguration = OldConfiguration.getEmptyConfiguration();
+        Configuration configuration;
         File file;
+        String cfgName;
         if (!path.startsWith("/storage") && path.contains("/storage")) {
             String newPath = path.substring(path.indexOf("/storage"));
             Log.d(TAG, "openConfiguration: newPath = " + newPath);
@@ -122,40 +116,57 @@ public class FileManager {
             Log.d(TAG, "openConfiguration: path = " + path);
             file = new File(path);
         }
+        cfgName = file.getName();
+        Log.d(TAG, "openConfiguration: " + cfgName);
         try {
             fileReader = new FileReader(file);
             bufferedReader = new BufferedReader(fileReader);
-            String line;
+            configuration = new Configuration();
             try {
+                String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    int indexOfRavno = line.indexOf("=");
-                    String value;
-                    String name;
-                    if (indexOfRavno != -1) {
-                        name = line.substring(0, indexOfRavno).trim().toLowerCase();
-                        if (PARAMETER_NAMES_LIST.contains(name)) {
-                            value = line.substring(indexOfRavno + 1).trim();
-                            OldParameter oldParameter = new OldParameter(name, value);
-                            Log.d(TAG, "openConfiguration: read Parameter: " + oldParameter);
-                            oldConfiguration.addParameter(oldParameter);
-                            // LogList.d(TAG, "openConfiguration: Parameter name =" + name + ", " + "value = " + value);
+                    Log.d(TAG, "openConfiguration: 1" + line);
+                    line = line.toUpperCase();
+                    int indexEquals = line.indexOf("=");
+                    if (indexEquals != -1) {
+                        String value;
+                        String name;
+                        name = line.substring(0, indexEquals).trim().toUpperCase();
+                        Log.d(TAG, "openConfiguration: 2" + name);
+                        for (ParametersEntities parameterEntity : ParametersEntities.values()){
+                            if (parameterEntity.getName().equals(name)){
+                                value = line.substring(indexEquals + 1).trim();
+                                if (value.length() != 0) {
+                                    Parameter parameter = Parameter.of(parameterEntity, value);
+                                    configuration.setParameter(parameter);
+                                    Log.d(TAG, "openConfiguration: 4" + configuration);
+                                }
+                                break;
+                            }
                         }
                     }
                 }
-
+                callback.onSuccess(cfgName, configuration);
             } catch (IOException e) {
+                callback.onError(cfgName, e);
                 Log.e(TAG, "openConfiguration: Ошибка при чтении файла", e);
             }
         } catch (FileNotFoundException e) {
+            callback.onError(cfgName, e);
             Log.e(TAG, "openConfiguration: Файл не найден", e);
         }
-        Log.i(TAG, "openConfiguration() returned: " + oldConfiguration);
-        return oldConfiguration;
     }
 
-    public static interface SaveCfgCallback {
-        void onSuccess();
+    public interface SaveCfgCallback {
+        void onSuccess(String fileName);
 
-        void onError();
+        void onError(Exception e);
+    }
+
+    public interface OpenCfgCallback {
+        void onSuccess(String cfgName, Configuration configuration);
+
+        void onError(String cfgName, Exception e);
+
     }
 }
