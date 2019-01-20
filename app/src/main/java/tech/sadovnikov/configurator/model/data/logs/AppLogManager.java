@@ -51,7 +51,7 @@ public class AppLogManager implements LogManager {
     }
 
     @Override
-    public boolean getAutoScrollState() {
+    public boolean getAutoScrollMode() {
         return autoScrollMode;
     }
 

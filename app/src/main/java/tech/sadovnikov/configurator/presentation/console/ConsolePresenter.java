@@ -11,13 +11,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.DataManager;
-import tech.sadovnikov.configurator.model.entities.LogMessage;
 
 @InjectViewState
 public class ConsolePresenter extends MvpPresenter<ConsoleView> {
@@ -49,16 +47,16 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         Log.i(TAG, "onFirstViewAttach: ");
-        getViewState().setAutoScrollState(dataManager.getAutoScrollState());
+        getViewState().setAutoScrollState(dataManager.getAutoScrollMode());
         Disposable subscribe = dataManager.getObservableMainLog()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(message -> getViewState().addMessageToLogScreen(message, dataManager.getAutoScrollState()),
+                .subscribe(message -> getViewState().addMessageToLogScreen(message, dataManager.getAutoScrollMode()),
                         Throwable::printStackTrace,
                         () -> {},
                         disposable -> {
                             Log.i(TAG, "onSubscribe: ");
-                            getViewState().showMainLogs(dataManager.getMainLogList(), dataManager.getAutoScrollState());
+                            getViewState().showMainLogs(dataManager.getMainLogList(), dataManager.getAutoScrollMode());
                         });
         compositeDisposable.add(subscribe);
     }
@@ -81,7 +79,7 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
 
     void onChangeAutoScrollClick(boolean isChecked) {
         dataManager.setAutoScrollMode(isChecked);
-        getViewState().setAutoScrollState(dataManager.getAutoScrollState());
+        getViewState().setAutoScrollState(dataManager.getAutoScrollMode());
     }
 
 }

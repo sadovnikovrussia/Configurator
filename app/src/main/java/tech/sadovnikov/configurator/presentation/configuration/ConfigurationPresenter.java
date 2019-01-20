@@ -13,4 +13,17 @@ public class ConfigurationPresenter extends MvpPresenter<ConfigurationView> {
         Log.v(TAG, "ConfigurationPresenter: " + this);
     }
 
+    @Override
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    void onTabClick(String configTab) {
+
+    }
 }

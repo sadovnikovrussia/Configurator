@@ -29,13 +29,17 @@ import tech.sadovnikov.configurator.di.component.ActivityComponent;
 import tech.sadovnikov.configurator.di.component.DaggerActivityComponent;
 import tech.sadovnikov.configurator.old.SaveFileDialogFragment;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothFragment;
+import tech.sadovnikov.configurator.presentation.configuration.ConfigurationFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.BaseCfgFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.ConfigBuoyFragment;
 import tech.sadovnikov.configurator.presentation.console.ConsoleFragment;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
 public class MainActivity extends MvpAppCompatActivity implements MainView,
         SaveFileDialogFragment.Listener,
-        ConsoleFragment.Listener, BluetoothFragment.Listener {
+        ConsoleFragment.Listener, BluetoothFragment.Listener, ConfigurationFragment.Listener,
+        BaseCfgFragment.Listener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_WRITE_STORAGE = 1;
     private static final int REQUEST_READ_STORAGE = 2;
@@ -100,19 +104,17 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     public void navigateToBluetoothView() {
         Log.w(TAG, "navigateToBluetoothView: ");
         showFragment(BluetoothFragment.newInstance(), BluetoothFragment.TAG);
-        setTitle(R.string.title_bluetooth);
     }
 
     @Override
     public void navigateToConfigurationView() {
-
+        showFragment(ConfigurationFragment.newInstance(), ConfigurationFragment.TAG);
     }
 
     @Override
     public void navigateToConsoleView() {
         Log.w(TAG, "navigateToConsoleView: ");
         showFragment(ConsoleFragment.newInstance(), ConsoleFragment.TAG);
-        setTitle(R.string.title_console);
     }
 
     @Override
@@ -144,6 +146,14 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         Log.w(TAG, "setBluetoothNavigationPosition: ");
         navigationView.setOnNavigationItemSelectedListener(null);
         navigationView.setSelectedItemId(R.id.navigation_bluetooth);
+        navigationView.setOnNavigationItemSelectedListener(navigationListener);
+    }
+
+    @Override
+    public void setConfigurationNavigationPosition() {
+        Log.w(TAG, "setConfigurationNavigationPosition: ");
+        navigationView.setOnNavigationItemSelectedListener(null);
+        navigationView.setSelectedItemId(R.id.navigation_configuration);
         navigationView.setOnNavigationItemSelectedListener(navigationListener);
     }
 
@@ -248,6 +258,15 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     }
 
     @Override
+    public void navigateToCfgTab(String cfgTab) {
+        switch (cfgTab){
+            case "Буй":
+                showFragment(ConfigBuoyFragment.newInstance(), ConfigBuoyFragment.TAG);
+                break;
+        }
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_WRITE_STORAGE) {
@@ -287,7 +306,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         return super.onPrepareOptionsMenu(menu);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.w(TAG, "onOptionsItemSelected: " + item.getItemId());
@@ -313,6 +331,12 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         Log.w(TAG, "onOptionsMenuClosed: ");
         super.onOptionsMenuClosed(menu);
     }
+
+    @Override
+    public void onCfgTabClick(String cfgTab) {
+        presenter.onCfgTabClick(cfgTab);
+    }
+
 
 
     public MainActivity() {
@@ -341,7 +365,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     @Override
     protected void onStart() {
         super.onStart();
-        Log.v(TAG, "onStart: ");
+        Log.v(TAG, "onStartBaseCfgView: ");
     }
 
     @Override
@@ -358,13 +382,22 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
 
     @Override
+    public void onCreateViewBluetooth() {
+        presenter.onCreateViewBluetooth();
+    }
+
+    @Override
+    public void onCreateViewConfiguration() {
+        presenter.onCreateViewConfiguration();
+    }
+
+    @Override
     public void onCreateViewConsole() {
         presenter.onCreateViewConsole();
     }
 
     @Override
-    public void onCreateViewBluetooth() {
-        presenter.onCreateViewBluetooth();
+    public void onStartBaseCfgView() {
+        presenter.onStartBaseCfgView();
     }
-
 }

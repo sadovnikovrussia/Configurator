@@ -19,6 +19,8 @@ public interface BluetoothService {
 
     void connectToDevice(BluetoothDevice device);
 
+    void disconnectFromDevice(BluetoothDevice device);
+
     void closeAllConnections();
 
     PublishSubject<Integer> getBluetoothStateObservable();
@@ -42,6 +44,7 @@ public interface BluetoothService {
     PublishSubject<String> getInputMessagesObservable();
 
     void sendData(String data);
+
 
     interface InputStreamListener {
 

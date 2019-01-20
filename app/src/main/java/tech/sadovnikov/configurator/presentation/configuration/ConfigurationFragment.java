@@ -24,8 +24,8 @@ import tech.sadovnikov.configurator.di.component.FragmentComponent;
 import tech.sadovnikov.configurator.di.module.FragmentModule;
 
 
-public class ConfigurationFragment extends MvpAppCompatFragment implements ConfigurationView {
-    private static final String TAG = ConfigurationFragment.class.getSimpleName();
+public class ConfigurationFragment extends MvpAppCompatFragment implements ConfigurationView, ConfigTabsRvAdapter.Listener {
+    public static final String TAG = ConfigurationFragment.class.getSimpleName();
 
     // UI
     @BindView(R.id.rv_config_tabs)
@@ -39,6 +39,7 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
     @Inject
     LinearLayoutManager linearLayoutManager;
 
+    private Listener listener;
 
     public ConfigurationFragment() {
         Log.v(TAG, "onConstructor");
@@ -59,6 +60,7 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
         ButterKnife.bind(this, view);
         initDaggerAndInject();
         setUp();
+        listener.onCreateViewConfiguration();
         return view;
     }
 
@@ -71,9 +73,14 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
     }
 
     private void setUp() {
-        adapter.setListener();
+        adapter.setListener(this);
         rvConfigTabs.setLayoutManager(linearLayoutManager);
         rvConfigTabs.setAdapter(adapter);
+    }
+
+    @Override
+    public void onTabClick(String configTab) {
+        listener.onCfgTabClick(configTab);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -81,7 +88,12 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.v(TAG, "onStart");
+        if (context instanceof Listener) {
+            listener = (Listener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement CfgTabsListener");
+        }
     }
 
     @Override
@@ -99,7 +111,7 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
     @Override
     public void onStart() {
         super.onStart();
-        Log.v(TAG, "onStart");
+        Log.v(TAG, "onStartBaseCfgView");
     }
 
     @Override
@@ -137,5 +149,11 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
         super.onDetach();
     }
     // ---------------------------------------------------------------------------------------------
+
+    public interface Listener {
+        void onCfgTabClick(String cfgTab);
+
+        void onCreateViewConfiguration();
+    }
 
 }

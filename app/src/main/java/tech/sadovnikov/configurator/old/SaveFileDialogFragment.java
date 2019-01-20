@@ -48,7 +48,7 @@ public class SaveFileDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.v(TAG, "onStart");
+        Log.v(TAG, "onStartBaseCfgView");
         if (context instanceof Listener) {
             listener = (Listener) context;
         } else {

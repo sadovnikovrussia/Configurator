@@ -1,6 +1,7 @@
 package tech.sadovnikov.configurator.model.data.configuration;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class Configuration {
         //Log.d(TAG, "setParameter: " + this);
     }
 
+    @Nullable
     public Parameter getParameter(ParametersEntities parameterEntity) {
         return parametersMap.get(parameterEntity);
     }

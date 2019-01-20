@@ -13,7 +13,7 @@ public interface LogManager {
 
     PublishSubject<LogMessage> getObservableMainLog();
 
-    boolean getAutoScrollState();
+    boolean getAutoScrollMode();
 
     PublishSubject<Boolean> getAutoScrollModeObservable();
 

@@ -24,6 +24,8 @@ import tech.sadovnikov.configurator.model.FileManager;
 import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothView;
+import tech.sadovnikov.configurator.presentation.configuration.ConfigurationView;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.BaseCfgView;
 import tech.sadovnikov.configurator.presentation.console.ConsoleView;
 import tech.sadovnikov.configurator.di.WritePermission;
 
@@ -50,10 +52,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     int readPermission;
 
 
-    private String bluetoothView;
-    private String consoleView;
     private Class currentView;
-    private Stack<Class> stack;
 
     MainPresenter() {
         super();
@@ -62,9 +61,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
         presenterComponent.injectMainPresenter(this);
         cfgLoader.setBluetoothService(bluetoothService);
         cfgLoader.setDataManager(dataManager);
-        stack = new Stack<>();
-        bluetoothView = BluetoothView.class.getSimpleName();
-        consoleView = ConsoleView.class.getSimpleName();
     }
 
     private void initDaggerComponent() {
@@ -73,7 +69,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 .applicationComponent(App.getApplicationComponent())
                 .build();
     }
-
 
     @Override
     protected void onFirstViewAttach() {
@@ -90,6 +85,8 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     void onNavigateToConfiguration() {
+        if (!currentView.equals(ConfigurationView.class)) getViewState().navigateToConfigurationView();
+        currentView = ConfigurationView.class;
     }
 
     void onNavigateToConsole() {
@@ -207,10 +204,25 @@ public class MainPresenter extends MvpPresenter<MainView> {
         getViewState().setTitle(R.string.title_bluetooth);
     }
 
+    void onCreateViewConfiguration() {
+        currentView = ConfigurationView.class;
+        getViewState().setConfigurationNavigationPosition();
+        getViewState().setTitle(R.string.title_configuration);
+    }
+
     void onCreateViewConsole() {
         currentView = ConsoleView.class;
         getViewState().setConsoleNavigationPosition();
         getViewState().setTitle(R.string.title_console);
     }
 
+    void onCfgTabClick(String cfgTab) {
+        getViewState().navigateToCfgTab(cfgTab);
+    }
+
+    void onStartBaseCfgView() {
+        currentView = BaseCfgView.class;
+        getViewState().setConfigurationNavigationPosition();
+        getViewState().setTitle(R.string.title_configuration);
+    }
 }

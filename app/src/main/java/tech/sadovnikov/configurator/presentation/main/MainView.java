@@ -21,9 +21,11 @@ public interface MainView extends MvpView {
 
     void updateLoadingProcess(Float percents);
 
-    void setConsoleNavigationPosition();
-
     void setBluetoothNavigationPosition();
+
+    void setConfigurationNavigationPosition();
+
+    void setConsoleNavigationPosition();
 
     void setTitle(int title);
 
@@ -48,6 +50,9 @@ public interface MainView extends MvpView {
     void showErrorOpenCfgMessage(String cfgName, Exception e);
 
     void showSuccessOpenCfgMessage(String cfgName);
+
+    void navigateToCfgTab(String cfgTab);
+
 
 
 //        // Вывести сообщение лога в консоль

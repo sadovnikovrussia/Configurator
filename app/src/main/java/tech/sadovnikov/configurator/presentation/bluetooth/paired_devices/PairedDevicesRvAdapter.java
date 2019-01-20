@@ -21,11 +21,11 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
     private static final String TAG = PairedDevicesRvAdapter.class.getSimpleName();
 
     private Listener listener;
-    private List<BluetoothDevice> devices = new ArrayList<>();
+    private List<BluetoothDevice> devices;
 
 
     public PairedDevicesRvAdapter() {
-        //Log.d(TAG, "onConstructor: ");
+        devices = new ArrayList<>();
     }
 
     public void setListener(Listener listener) {
@@ -55,11 +55,13 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
     }
 
 
- class BluetoothDeviceViewHolder extends BaseViewHolder {
+    class BluetoothDeviceViewHolder extends BaseViewHolder {
         @BindView(R.id.tv_device_name)
         TextView tvDeviceName;
         @BindView(R.id.tv_device_address)
         TextView tvDeviceAddress;
+        @BindView(R.id.tv_device_status)
+        TextView tvDeviceStatus;
 
         BluetoothDeviceViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,6 +74,10 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
             tvDeviceName.setText(device.getName());
             tvDeviceAddress.setText(device.getAddress());
             itemView.setOnClickListener(v -> listener.onDeviceClicked(device));
+            itemView.setOnLongClickListener(v -> {
+                listener.onDeviceLongClick(device);
+                return false;
+            });
         }
 
         @Override
@@ -83,5 +89,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
 
     public interface Listener {
         void onDeviceClicked(BluetoothDevice device);
+
+        void onDeviceLongClick(BluetoothDevice device);
     }
 }

@@ -29,13 +29,14 @@ public class AppDataManager implements DataManager {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Inject
-    public AppDataManager(LogManager logManager, Configuration configuration, BluetoothService bluetoothService) {
+    AppDataManager(LogManager logManager, Configuration configuration, BluetoothService bluetoothService) {
         this.logManager = logManager;
         this.configuration = configuration;
         Disposable subscribe = bluetoothService.getLogMessageObservable()
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::addLogMessage);
+        compositeDisposable.add(subscribe);
         this.configurationObservable = PublishSubject.create();
     }
 
@@ -58,6 +59,7 @@ public class AppDataManager implements DataManager {
     public void setConfigParameter(Parameter parameter) {
         Log.d(TAG, "setConfigParameter: " + parameter);
         configuration.setParameter(parameter);
+        configurationObservable.onNext(configuration);
     }
 
     @Override
@@ -88,8 +90,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public boolean getAutoScrollState() {
-        return logManager.getAutoScrollState();
+    public boolean getAutoScrollMode() {
+        return logManager.getAutoScrollMode();
     }
 
     @Override

@@ -112,7 +112,7 @@ public class AvailableDevicesFragment extends MvpAppCompatFragment implements Av
     @Override
     public void onStart() {
         super.onStart();
-        //Log.i(TAG, "onStart");
+        //Log.i(TAG, "onStartBaseCfgView");
     }
 
     @Override

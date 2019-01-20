@@ -143,7 +143,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     public void onAttach(Context context) {
         super.onAttach(context);
         listener = (Listener) getActivity();
-        Log.v(TAG, "onStart");
+        Log.v(TAG, "onStartBaseCfgView");
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -159,7 +159,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
 
     public void onStart() {
         super.onStart();
-        Log.v(TAG, "onStart");
+        Log.v(TAG, "onStartBaseCfgView");
         swAutoScroll.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.onChangeAutoScrollClick(isChecked));
     }
 

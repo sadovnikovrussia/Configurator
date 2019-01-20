@@ -1315,9 +1315,9 @@
 //    }
 //
 //    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        LogList.v(TAG, "onStart");
+//    protected void onStartBaseCfgView() {
+//        super.onStartBaseCfgView();
+//        LogList.v(TAG, "onStartBaseCfgView");
 //    }
 //
 //    @Override

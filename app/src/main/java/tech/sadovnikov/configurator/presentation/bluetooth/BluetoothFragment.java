@@ -267,7 +267,7 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     @Override
     public void onStart() {
         super.onStart();
-        Log.v(TAG, "onStart");
+        Log.v(TAG, "onStartBaseCfgView");
     }
 
     @Override

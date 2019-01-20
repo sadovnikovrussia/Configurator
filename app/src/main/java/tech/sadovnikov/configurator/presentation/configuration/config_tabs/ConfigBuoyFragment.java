@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.presentation.config_tabs;
+package tech.sadovnikov.configurator.presentation.configuration.config_tabs;
 
 
 import android.content.Context;
@@ -12,32 +12,49 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.model.data.configuration.Configuration;
+import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
+import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 
-public class ConfigBuoyFragment extends Fragment {
-    private static final String TAG = "ConfigBuoyFragment";
+public class ConfigBuoyFragment extends BaseCfgFragment {
+    public static final String TAG = ConfigBuoyFragment.class.getSimpleName();
 
     ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener listener;
 
     // UI
-    TextView tvId;
+    @BindView(R.id.et_id)
     EditText etId;
-    TextView tvVersion;
+    @BindView(R.id.et_version)
     EditText etVersion;
+    @BindView(R.id.btn_restart)
     Button btnRestart;
+    @BindView(R.id.btn_default_settings)
     Button btnDefaultSettings;
+    @BindView(R.id.ll_id)
     LinearLayout llId;
+
     OnLlParameterClickListener onLlParameterClickListener;
+
+    OnParameterChangedListener onParameterChangedListener;
 
     public ConfigBuoyFragment() {
         // Required empty public constructor
-        Log.v(TAG, "onConstructor");
+        //Log.v(TAG, "onConstructor");
     }
 
+    public static ConfigBuoyFragment newInstance() {
+        //Log.v(TAG, "newInstance: ");
+        Bundle args = new Bundle();
+        ConfigBuoyFragment fragment = new ConfigBuoyFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -45,39 +62,30 @@ public class ConfigBuoyFragment extends Fragment {
         // Inflate the layout for this fragment
         Log.v(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_config_buoy, container, false);
-        initUi(view);
+        ButterKnife.bind(this, view);
+        setUp(view);
         return view;
     }
 
-    private void initUi(View view) {
-        onLlParameterClickListener = new OnLlParameterClickListener(getContext());
-        llId = view.findViewById(R.id.ll_id);
-        llId.setOnClickListener(onLlParameterClickListener);
-        tvId = view.findViewById(R.id.tv_id);
-        etId = view.findViewById(R.id.et_id);
+    @Override
+    void setUp(View view) {
+        //onLlParameterClickListener = new OnLlParameterClickListener(getContext());
+        //llId.setOnClickListener(onLlParameterClickListener);
         // TODO <Сделать отслеживание закрытия клавиатуры>
-        etId.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                listener.onEtIdFocusChange(hasFocus);
-            }
+        etId.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus)
+                presenter.onParameterChanged(ParametersEntities.ID, etId.getText().toString());
         });
-        tvVersion = view.findViewById(R.id.tv_version);
-        etVersion = view.findViewById(R.id.et_version);
-        btnRestart = view.findViewById(R.id.btn_restart);
-        btnRestart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onBtnRestartClick();
-            }
-        });
-        btnDefaultSettings = view.findViewById(R.id.btn_default_settings);
-        btnDefaultSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onBtnDefaultSettingsClick();
-            }
-        });
+//        btnRestart.setOnClickListener(v -> listener.onBtnRestartClick());
+//        btnDefaultSettings.setOnClickListener(v -> listener.onBtnDefaultSettingsClick());
+    }
+
+    @Override
+    public void showConfiguration(Configuration configuration) {
+        Parameter id = configuration.getParameter(ParametersEntities.ID);
+        Parameter version = configuration.getParameter(ParametersEntities.FIRMWARE_VERSION);
+        if (id != null) etId.setText(id.getValue());
+        if (version != null) etVersion.setText(version.getValue());
     }
 
 
@@ -89,20 +97,14 @@ public class ConfigBuoyFragment extends Fragment {
     // States
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        Log.v(TAG, "onCreate");
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.v(TAG, "onStart");
-        if (context instanceof ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener) {
-            listener = (ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnConfigBuoyFragmentInteractionListener");
-        }
+        Log.v(TAG, "onAttach: ");
     }
 
     @Override
@@ -114,8 +116,7 @@ public class ConfigBuoyFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.v(TAG, "onStart");
-        listener.onConfigBuoyFragmentStart();
+        Log.v(TAG, "onStartBaseCfgView");
     }
 
     @Override
@@ -153,6 +154,7 @@ public class ConfigBuoyFragment extends Fragment {
         super.onDetach();
     }
 
+
     public interface OnConfigBuoyFragmentInteractionListener {
 
         void onConfigBuoyFragmentStart();
@@ -164,6 +166,7 @@ public class ConfigBuoyFragment extends Fragment {
         void onBtnDefaultSettingsClick();
 
         void onLlBuoyParameterClick(EditText editText);
+
     }
 
 }

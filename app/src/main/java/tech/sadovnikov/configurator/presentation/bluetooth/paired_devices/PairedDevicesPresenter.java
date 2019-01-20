@@ -65,4 +65,8 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
     void onDeviceClicked(BluetoothDevice device) {
         bluetoothService.connectToDevice(device);
     }
+
+    void onDeviceLongClick(BluetoothDevice device) {
+        bluetoothService.disconnectFromDevice(device);
+    }
 }

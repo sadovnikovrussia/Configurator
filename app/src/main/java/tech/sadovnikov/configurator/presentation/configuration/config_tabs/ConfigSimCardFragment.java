@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.presentation.config_tabs;
+package tech.sadovnikov.configurator.presentation.configuration.config_tabs;
 
 
 import android.content.Context;
@@ -202,7 +202,7 @@ public class ConfigSimCardFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.v(TAG, "onStart");
+        Log.v(TAG, "onStartBaseCfgView");
         listener.onConfigSimCardFragmentStart();
     }
 

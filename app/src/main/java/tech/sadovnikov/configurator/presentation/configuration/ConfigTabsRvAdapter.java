@@ -38,8 +38,8 @@ public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapte
         return configTabs.length;
     }
 
-    void setListener() {
-
+    void setListener(ConfigurationFragment configurationFragment) {
+        listener = configurationFragment;
     }
 
     class ConfigTabsViewHolder extends RecyclerView.ViewHolder {
@@ -53,10 +53,11 @@ public class ConfigTabsRvAdapter extends RecyclerView.Adapter<ConfigTabsRvAdapte
 
         void onBind(int position) {
             tvConfigTabName.setText(configTabs[position]);
+            itemView.setOnClickListener(v -> listener.onTabClick(configTabs[position]));
         }
     }
 
     interface Listener {
-
+        void onTabClick(String configTab);
     }
 }

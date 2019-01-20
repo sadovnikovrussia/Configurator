@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,12 +57,13 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
         //Log.d(TAG, "onCreateView: " + savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_paired_devices, container, false);
         ButterKnife.bind(this, view);
-        initDaggerAndInject();
+        initDagger();
+        fragmentComponent.injectPairedDevicesFragment(this);
         setUp();
         return view;
     }
 
-    private void initDaggerAndInject() {
+    private void initDagger() {
         fragmentComponent = DaggerFragmentComponent
                 .builder()
                 .fragmentModule(new FragmentModule(this))
@@ -80,6 +80,11 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     @Override
     public void onDeviceClicked(BluetoothDevice device) {
         presenter.onDeviceClicked(device);
+    }
+
+    @Override
+    public void onDeviceLongClick(BluetoothDevice device) {
+        presenter.onDeviceLongClick(device);
     }
 
     @Override
@@ -112,7 +117,7 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     @Override
     public void onStart() {
         super.onStart();
-        //Log.d(TAG, "onStart");
+        //Log.d(TAG, "onStartBaseCfgView");
     }
 
     @Override
