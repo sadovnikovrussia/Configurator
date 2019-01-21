@@ -31,7 +31,7 @@ import tech.sadovnikov.configurator.old.SaveFileDialogFragment;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothFragment;
 import tech.sadovnikov.configurator.presentation.configuration.ConfigurationFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.BaseCfgFragment;
-import tech.sadovnikov.configurator.presentation.configuration.config_tabs.ConfigBuoyFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_buoy.ConfigBuoyFragment;
 import tech.sadovnikov.configurator.presentation.console.ConsoleFragment;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
@@ -108,6 +108,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public void navigateToConfigurationView() {
+        Log.w(TAG, "navigateToConfigurationView: ");
         showFragment(ConfigurationFragment.newInstance(), ConfigurationFragment.TAG);
     }
 
@@ -237,7 +238,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     }
 
 
-
     @Override
     public void startOpenFileManagerActivity() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -259,7 +259,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public void navigateToCfgTab(String cfgTab) {
-        switch (cfgTab){
+        Log.w(TAG, "navigateToCfgTab: " + cfgTab);
+        switch (cfgTab) {
             case "Буй":
                 showFragment(ConfigBuoyFragment.newInstance(), ConfigBuoyFragment.TAG);
                 break;
@@ -302,7 +303,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        Log.v(TAG, "onPrepareOptionsMenu: " + menu.hasVisibleItems());
+        Log.v(TAG, "onPrepareOptionsMenu: ");
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -336,7 +337,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     public void onCfgTabClick(String cfgTab) {
         presenter.onCfgTabClick(cfgTab);
     }
-
 
 
     public MainActivity() {

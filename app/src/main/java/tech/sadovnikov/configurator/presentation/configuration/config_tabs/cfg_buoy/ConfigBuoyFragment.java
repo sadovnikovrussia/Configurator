@@ -1,10 +1,9 @@
-package tech.sadovnikov.configurator.presentation.configuration.config_tabs;
+package tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_buoy;
 
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,16 +12,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.BaseCfgFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.OnParameterChangedListener;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 
-public class ConfigBuoyFragment extends BaseCfgFragment {
+public class ConfigBuoyFragment extends BaseCfgFragment implements CfgBuoyView {
     public static final String TAG = ConfigBuoyFragment.class.getSimpleName();
 
     ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener listener;
@@ -38,6 +41,9 @@ public class ConfigBuoyFragment extends BaseCfgFragment {
     Button btnDefaultSettings;
     @BindView(R.id.ll_id)
     LinearLayout llId;
+
+    @InjectPresenter
+    CfgBuoyPresenter cfgBuoyPresenter;
 
     OnLlParameterClickListener onLlParameterClickListener;
 
@@ -68,7 +74,7 @@ public class ConfigBuoyFragment extends BaseCfgFragment {
     }
 
     @Override
-    void setUp(View view) {
+    public void setUp(View view) {
         //onLlParameterClickListener = new OnLlParameterClickListener(getContext());
         //llId.setOnClickListener(onLlParameterClickListener);
         // TODO <Сделать отслеживание закрытия клавиатуры>
@@ -76,7 +82,7 @@ public class ConfigBuoyFragment extends BaseCfgFragment {
             if (!hasFocus)
                 presenter.onParameterChanged(ParametersEntities.ID, etId.getText().toString());
         });
-//        btnRestart.setOnClickListener(v -> listener.onBtnRestartClick());
+        btnRestart.setOnClickListener(v -> cfgBuoyPresenter.onRestartClick());
 //        btnDefaultSettings.setOnClickListener(v -> listener.onBtnDefaultSettingsClick());
     }
 
@@ -87,7 +93,6 @@ public class ConfigBuoyFragment extends BaseCfgFragment {
         if (id != null) etId.setText(id.getValue());
         if (version != null) etVersion.setText(version.getValue());
     }
-
 
     public String getEtIdText() {
         return etId.getText().toString();
@@ -152,6 +157,7 @@ public class ConfigBuoyFragment extends BaseCfgFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.v(TAG, "onDetach: ");
     }
 
 

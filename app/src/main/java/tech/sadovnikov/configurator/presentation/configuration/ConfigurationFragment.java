@@ -42,11 +42,11 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
     private Listener listener;
 
     public ConfigurationFragment() {
-        Log.v(TAG, "onConstructor");
+        //Log.v(TAG, "onConstructor");
     }
 
     public static ConfigurationFragment newInstance() {
-        Log.v(TAG, "newInstance: ");
+        //Log.v(TAG, "newInstance: ");
         Bundle args = new Bundle();
         ConfigurationFragment fragment = new ConfigurationFragment();
         fragment.setArguments(args);
@@ -92,7 +92,7 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
             listener = (Listener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement CfgTabsListener");
+                    + " must implement ConfigurationFragment.Listener");
         }
     }
 

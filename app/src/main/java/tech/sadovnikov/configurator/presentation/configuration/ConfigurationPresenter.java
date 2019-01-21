@@ -10,7 +10,7 @@ public class ConfigurationPresenter extends MvpPresenter<ConfigurationView> {
     private static final String TAG = ConfigurationPresenter.class.getSimpleName();
 
     ConfigurationPresenter() {
-        Log.v(TAG, "ConfigurationPresenter: " + this);
+        Log.v(TAG, "ConfigurationPresenter: ");
     }
 
     @Override

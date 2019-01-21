@@ -1,7 +1,13 @@
 package tech.sadovnikov.configurator.presentation.configuration.config_tabs;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -11,29 +17,74 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
     private static final String TAG = BaseCfgFragment.class.getSimpleName();
 
     @InjectPresenter
+    public
     BaseCfgPresenter presenter;
 
     private Listener listener;
 
-
-    abstract void setUp(View view);
-
+    @Nullable
     @Override
-    public void onStart() {
-        super.onStart();
-        presenter.onStartBaseCfgView();
-        listener.onStartBaseCfgView();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.v(TAG, "onCreateView: ");
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
+
+    public abstract void setUp(View view);
+
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.v(TAG, "onAttach: ");
         if (context instanceof Listener) {
             listener = (Listener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement BaseCfgFragment.Listener");
         }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.v(TAG, "onStart: ");
+        presenter.onStartBaseCfgView();
+        listener.onStartBaseCfgView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v(TAG, "onResume: ");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.v(TAG, "onStop: ");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.v(TAG, "onDestroyView: ");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG, "onDestroy: ");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.v(TAG, "onDetach: ");
     }
 
     public interface Listener{

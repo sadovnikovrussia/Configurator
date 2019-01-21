@@ -81,7 +81,7 @@ public class ConfigMainFragment extends BaseCfgFragment {
     }
 
     @Override
-    void setUp(View view) {
+    public void setUp(View view) {
         onBlinkerModeSelectedListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
