@@ -71,4 +71,8 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
     }
 
 
+    void onCreateViewBaseCfgView() {
+        Log.d(TAG, "onCreateViewBaseCfgView: ");
+        getViewState().showConfiguration(dataManager.getConfiguration());
+    }
 }

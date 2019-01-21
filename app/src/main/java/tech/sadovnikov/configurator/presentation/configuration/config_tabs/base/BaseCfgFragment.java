@@ -31,6 +31,8 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.v(TAG, "onCreateView: ");
+        presenter.onCreateViewBaseCfgView();
+        listener.onCreateViewBaseCfgView();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -87,8 +89,6 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart: ");
-        presenter.onStartBaseCfgView();
-        listener.onStartBaseCfgView();
     }
 
     @Override
@@ -128,6 +128,7 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
     }
 
     public interface Listener{
-        void onStartBaseCfgView();
+
+        void onCreateViewBaseCfgView();
     }
 }

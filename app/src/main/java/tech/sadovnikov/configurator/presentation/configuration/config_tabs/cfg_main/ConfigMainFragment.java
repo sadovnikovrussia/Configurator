@@ -25,8 +25,6 @@ import tech.sadovnikov.configurator.utils.ParametersEntities;
 public class ConfigMainFragment extends BaseCfgFragment {
     public static final String TAG = ConfigMainFragment.class.getSimpleName();
 
-    Listener listener;
-
     // UI
     @BindView(R.id.spin_blinker_mode)
     Spinner spinBlinkerMode;
@@ -61,21 +59,17 @@ public class ConfigMainFragment extends BaseCfgFragment {
 
     OnLlParameterClickListener onLlParameterClickListener;
 
+    Listener listener;
+
     AdapterView.OnItemSelectedListener onBlinkerModeSelectedListener;
 
-    public ConfigMainFragment() {
-        // Required empty public constructor
-        //Log.v(TAG, "onConstructor");
-    }
 
     public static ConfigMainFragment newInstance() {
         Bundle args = new Bundle();
         ConfigMainFragment fragment = new ConfigMainFragment();
         fragment.setArguments(args);
         return fragment;
-
     }
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -86,6 +80,7 @@ public class ConfigMainFragment extends BaseCfgFragment {
         View view = inflater.inflate(R.layout.fragment_config_main, container, false);
         ButterKnife.bind(this, view);
         setUp(view);
+        super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 

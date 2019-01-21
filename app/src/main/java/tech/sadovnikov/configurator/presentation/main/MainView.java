@@ -9,17 +9,13 @@ import tech.sadovnikov.configurator.presentation.AddToEndSingleByTagStateStrateg
 @StateStrategyType(SkipStrategy.class)
 public interface MainView extends MvpView {
 
-    void navigateToBluetoothView();
+    void showBluetoothView();
 
-    void navigateToConsoleView();
+    void showConsoleView();
 
-    void navigateToConfigurationView();
+    void showConfigurationView();
 
-    void showLoadingProcess();
-
-    void hideLoadingProgress();
-
-    void updateLoadingProcess(Float percents);
+    void showCfgTab(String cfgTab);
 
     void setBluetoothNavigationPosition();
 
@@ -29,29 +25,38 @@ public interface MainView extends MvpView {
 
     void setTitle(int title);
 
+
+    void showLoadingProcess();
+
+    void hideLoadingProgress();
+
+    void updateLoadingProcess(Float percents);
+
+
     @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "saveDialog")
     void showSaveDialog();
 
     @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "saveDialog")
     void hideDialogSave();
 
+
+    void showMessage(String message);
+
+
     void showSuccessSaveCfgMessage(String name);
 
     void showErrorSaveCfgMessage(Exception e);
 
-    void showMessage(String message);
-
     void requestWritePermission();
+
+
+    void showSuccessOpenCfgMessage(String cfgName);
+
+    void showErrorOpenCfgMessage(String cfgName, Exception e);
 
     void requestReadStoragePermission();
 
     void startOpenFileManagerActivity();
-
-    void showErrorOpenCfgMessage(String cfgName, Exception e);
-
-    void showSuccessOpenCfgMessage(String cfgName);
-
-    void navigateToCfgTab(String cfgTab);
 
 
 

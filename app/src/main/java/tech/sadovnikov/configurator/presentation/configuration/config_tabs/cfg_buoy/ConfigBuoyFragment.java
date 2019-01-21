@@ -45,13 +45,8 @@ public class ConfigBuoyFragment extends BaseCfgFragment implements ConfigBuoyVie
     @InjectPresenter
     ConfigBuoyPresenter configBuoyPresenter;
 
-    OnLlParameterClickListener onLlParameterClickListener;
-
-    OnParameterChangedListener onParameterChangedListener;
-
 
     public static ConfigBuoyFragment newInstance() {
-        //Log.v(TAG, "newInstance: ");
         Bundle args = new Bundle();
         ConfigBuoyFragment fragment = new ConfigBuoyFragment();
         fragment.setArguments(args);
@@ -61,11 +56,11 @@ public class ConfigBuoyFragment extends BaseCfgFragment implements ConfigBuoyVie
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         Log.v(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_config_buoy, container, false);
         ButterKnife.bind(this, view);
         setUp(view);
+        super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 

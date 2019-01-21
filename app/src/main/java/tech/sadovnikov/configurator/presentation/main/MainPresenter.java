@@ -72,26 +72,31 @@ public class MainPresenter extends MvpPresenter<MainView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         Log.w(TAG, "onFirstViewAttach: ");
-        currentView = BluetoothView.class;
-        getViewState().navigateToBluetoothView();
+        getViewState().showBluetoothView();
     }
 
     void onNavigateToBluetooth() {
         Log.d(TAG, "onNavigateToBluetooth: ");
-        if (!currentView.equals(BluetoothView.class)) getViewState().navigateToBluetoothView();
-        currentView = BluetoothView.class;
+        if (!currentView.equals(BluetoothView.class)) getViewState().showBluetoothView();
+        //currentView = BluetoothView.class;
     }
 
     void onNavigateToConfiguration() {
-        if (!currentView.equals(ConfigurationView.class)) getViewState().navigateToConfigurationView();
-        currentView = ConfigurationView.class;
+        if (!currentView.equals(ConfigurationView.class)) getViewState().showConfigurationView();
+        //currentView = ConfigurationView.class;
     }
 
     void onNavigateToConsole() {
         Log.d(TAG, "onNavigateToConsole: ");
-        if (!currentView.equals(ConsoleView.class)) getViewState().navigateToConsoleView();
-        currentView = ConsoleView.class;
+        if (!currentView.equals(ConsoleView.class)) getViewState().showConsoleView();
+        //currentView = ConsoleView.class;
     }
+
+    void onNavigateToCfgTab(String cfgTab) {
+        Log.d(TAG, "onNavigateToCfgTab: ");
+        getViewState().showCfgTab(cfgTab);
+    }
+
 
     void onReadConfiguration() {
         getViewState().showLoadingProcess();
@@ -101,7 +106,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 .subscribe(aFloat -> getViewState().updateLoadingProcess(aFloat),
                         Throwable::printStackTrace,
                         () -> getViewState().hideLoadingProgress());
-
     }
 
     void onSetConfiguration() {
@@ -196,6 +200,10 @@ public class MainPresenter extends MvpPresenter<MainView> {
         });
     }
 
+    void onCreateMainView() {
+
+    }
+
     void onCreateViewBluetooth() {
         currentView = BluetoothView.class;
         getViewState().setBluetoothNavigationPosition();
@@ -214,13 +222,10 @@ public class MainPresenter extends MvpPresenter<MainView> {
         getViewState().setTitle(R.string.title_console);
     }
 
-    void onCfgTabClick(String cfgTab) {
-        getViewState().navigateToCfgTab(cfgTab);
-    }
-
-    void onStartBaseCfgView() {
+    void onCreateViewBaseCfgView() {
         currentView = BaseCfgView.class;
         getViewState().setConfigurationNavigationPosition();
         getViewState().setTitle(R.string.title_configuration);
     }
+
 }

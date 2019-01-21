@@ -3,5 +3,5 @@ package tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgView;
 
 interface ConfigBuoyView extends BaseCfgView {
-
+    String name = "Буй";
 }

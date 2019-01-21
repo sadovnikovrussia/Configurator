@@ -2,7 +2,6 @@ package tech.sadovnikov.configurator.presentation.main;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -57,7 +56,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     private SaveFileDialogFragment saveDialog;
 
     private ActivityComponent activityComponent;
-    @InjectPresenter(type = PresenterType.GLOBAL)
+    @InjectPresenter
     MainPresenter presenter;
 
     private BottomNavigationView.OnNavigationItemSelectedListener navigationListener;
@@ -70,8 +69,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         ButterKnife.bind(this);
         initializeDaggerComponent();
         setUp();
-        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-        if (backStackEntryCount == 0) navigateToBluetoothView();
+        presenter.onCreateMainView();
     }
 
     private void setUp() {
@@ -107,26 +105,26 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     }
 
     @Override
-    public void navigateToBluetoothView() {
-        Log.w(TAG, "navigateToBluetoothView: ");
+    public void showBluetoothView() {
+        Log.w(TAG, "showBluetoothView: ");
         showFragment(BluetoothFragment.newInstance(), BluetoothFragment.TAG);
     }
 
     @Override
-    public void navigateToConfigurationView() {
-        Log.w(TAG, "navigateToConfigurationView: ");
+    public void showConfigurationView() {
+        Log.w(TAG, "showConfigurationView: ");
         showFragment(ConfigurationFragment.newInstance(), ConfigurationFragment.TAG);
     }
 
     @Override
-    public void navigateToConsoleView() {
-        Log.w(TAG, "navigateToConsoleView: ");
+    public void showConsoleView() {
+        Log.w(TAG, "showConsoleView: ");
         showFragment(ConsoleFragment.newInstance(), ConsoleFragment.TAG);
     }
 
     @Override
-    public void navigateToCfgTab(String cfgTab) {
-        Log.w(TAG, "navigateToCfgTab: " + cfgTab);
+    public void showCfgTab(String cfgTab) {
+        Log.w(TAG, "showCfgTab: " + cfgTab);
         switch (cfgTab) {
             case "Буй":
                 showFragment(ConfigBuoyFragment.newInstance(), ConfigBuoyFragment.TAG);
@@ -253,10 +251,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     @Override
     public void onBackPressed() {
         View currentFocus = getCurrentFocus();
-        if (currentFocus != null) {
+        if (currentFocus instanceof EditText) {
             Log.d(TAG, "onBackPressed: " + currentFocus);
-            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-            Objects.requireNonNull(imm).hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+//            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+//            Objects.requireNonNull(imm).hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            currentFocus.clearFocus();
         } else {
             int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
             Log.d(TAG, "onBackPressed: " + backStackEntryCount);
@@ -368,13 +367,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     }
 
     @Override
-    public void onStartBaseCfgView() {
-        presenter.onStartBaseCfgView();
+    public void onCreateViewBaseCfgView() {
+        presenter.onCreateViewBaseCfgView();
     }
 
     @Override
     public void onCfgTabClick(String cfgTab) {
-        presenter.onCfgTabClick(cfgTab);
+        presenter.onNavigateToCfgTab(cfgTab);
     }
 
 
@@ -382,7 +381,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     @Override
     protected void onStart() {
         super.onStart();
-        Log.v(TAG, "onStartBaseCfgView: ");
+        Log.v(TAG, "onStart: ");
+//        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+//        if (backStackEntryCount == 0) showBluetoothView();
     }
 
     @Override

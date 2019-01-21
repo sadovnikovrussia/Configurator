@@ -9,6 +9,7 @@ import tech.sadovnikov.configurator.presentation.AddToEndSingleByTagStateStrateg
 public interface BluetoothView extends MvpView {
     String TAG = BluetoothView.class.getSimpleName();
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void displayBluetoothState(boolean state);
 
     @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "devices")
