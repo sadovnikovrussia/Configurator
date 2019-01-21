@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -90,6 +91,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         };
         //navigationView.setOnNavigationItemReselectedListener(menuItem -> Log.w(TAG, "OnNavigationItemReselected: " + menuItem.toString()));
         navigationView.setOnNavigationItemSelectedListener(navigationListener);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     private void initializeDaggerComponent() {
