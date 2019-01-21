@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.presentation.configuration.config_tabs;
+package tech.sadovnikov.configurator.presentation.configuration.config_tabs.base;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,11 +6,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+
+import tech.sadovnikov.configurator.R;
 
 
 public abstract class BaseCfgFragment extends MvpAppCompatFragment implements BaseCfgView {
@@ -32,6 +37,8 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
     public abstract void setUp(View view);
 
 
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -45,8 +52,35 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        //Log.i(TAG, "onCreateOptionsMenu: ");
+        inflater.inflate(R.menu.menu_configuration_options, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        //Log.i(TAG, "onPrepareOptionsMenu: ");
+    }
+
+    @Override
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+        //Log.i(TAG, "onDestroyOptionsMenu: ");
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected: ");
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG, "onCreate: ");
     }
 
     @Override
@@ -61,6 +95,12 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
     public void onResume() {
         super.onResume();
         Log.v(TAG, "onResume: ");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.v(TAG, "onPause: ");
     }
 
     @Override

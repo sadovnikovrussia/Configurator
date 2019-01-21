@@ -13,15 +13,15 @@ import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
 @InjectViewState
-public class CfgBuoyPresenter extends MvpPresenter<CfgBuoyView> {
-    private static final String TAG = CfgBuoyPresenter.class.getSimpleName();
+public class ConfigBuoyPresenter extends MvpPresenter<ConfigBuoyView> {
+    private static final String TAG = ConfigBuoyPresenter.class.getSimpleName();
 
     @Inject
     BluetoothService bluetoothService;
 
-    CfgBuoyPresenter() {
+    ConfigBuoyPresenter() {
         super();
-        Log.d(TAG, "CfgBuoyPresenter: ");
+        Log.d(TAG, "ConfigBuoyPresenter: ");
         PresenterComponent presenterComponent = DaggerPresenterComponent.builder()
                 .applicationComponent(App.getApplicationComponent())
                 .build();
@@ -41,6 +41,10 @@ public class CfgBuoyPresenter extends MvpPresenter<CfgBuoyView> {
     }
 
     void onRestartClick() {
-        Log.d(TAG, "onRestartClick: ");
+        bluetoothService.sendData("@RESTART");
+    }
+
+    void onDefaultSettingsClick() {
+        bluetoothService.sendData("@RESET SETTINGS");
     }
 }

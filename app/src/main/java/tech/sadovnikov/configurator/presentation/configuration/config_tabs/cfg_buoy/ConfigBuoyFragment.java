@@ -20,12 +20,12 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
-import tech.sadovnikov.configurator.presentation.configuration.config_tabs.BaseCfgFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.OnParameterChangedListener;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 
-public class ConfigBuoyFragment extends BaseCfgFragment implements CfgBuoyView {
+public class ConfigBuoyFragment extends BaseCfgFragment implements ConfigBuoyView {
     public static final String TAG = ConfigBuoyFragment.class.getSimpleName();
 
     ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener listener;
@@ -43,16 +43,12 @@ public class ConfigBuoyFragment extends BaseCfgFragment implements CfgBuoyView {
     LinearLayout llId;
 
     @InjectPresenter
-    CfgBuoyPresenter cfgBuoyPresenter;
+    ConfigBuoyPresenter configBuoyPresenter;
 
     OnLlParameterClickListener onLlParameterClickListener;
 
     OnParameterChangedListener onParameterChangedListener;
 
-    public ConfigBuoyFragment() {
-        // Required empty public constructor
-        //Log.v(TAG, "onConstructor");
-    }
 
     public static ConfigBuoyFragment newInstance() {
         //Log.v(TAG, "newInstance: ");
@@ -75,15 +71,16 @@ public class ConfigBuoyFragment extends BaseCfgFragment implements CfgBuoyView {
 
     @Override
     public void setUp(View view) {
+        View.OnFocusChangeListener onIdChangedListener = (v, hasFocus) -> {
+            if (!hasFocus)
+                presenter.onParameterChanged(ParametersEntities.ID, etId.getText().toString());
+        };
         //onLlParameterClickListener = new OnLlParameterClickListener(getContext());
         //llId.setOnClickListener(onLlParameterClickListener);
         // TODO <Сделать отслеживание закрытия клавиатуры>
-        etId.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus)
-                presenter.onParameterChanged(ParametersEntities.ID, etId.getText().toString());
-        });
-        btnRestart.setOnClickListener(v -> cfgBuoyPresenter.onRestartClick());
-//        btnDefaultSettings.setOnClickListener(v -> listener.onBtnDefaultSettingsClick());
+        etId.setOnFocusChangeListener(onIdChangedListener);
+        btnRestart.setOnClickListener(v -> configBuoyPresenter.onRestartClick());
+        btnDefaultSettings.setOnClickListener(v -> configBuoyPresenter.onDefaultSettingsClick());
     }
 
     @Override
@@ -92,10 +89,6 @@ public class ConfigBuoyFragment extends BaseCfgFragment implements CfgBuoyView {
         Parameter version = configuration.getParameter(ParametersEntities.FIRMWARE_VERSION);
         if (id != null) etId.setText(id.getValue());
         if (version != null) etVersion.setText(version.getValue());
-    }
-
-    public String getEtIdText() {
-        return etId.getText().toString();
     }
 
     // ---------------------------------------------------------------------------------------------

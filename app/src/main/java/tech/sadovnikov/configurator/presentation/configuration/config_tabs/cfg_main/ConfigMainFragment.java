@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.presentation.configuration.config_tabs;
+package tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_main;
 
 
 import android.content.Context;
@@ -19,10 +19,11 @@ import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgFragment;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 public class ConfigMainFragment extends BaseCfgFragment {
-    private static final String TAG = ConfigMainFragment.class.getSimpleName();
+    public static final String TAG = ConfigMainFragment.class.getSimpleName();
 
     Listener listener;
 
@@ -65,6 +66,14 @@ public class ConfigMainFragment extends BaseCfgFragment {
     public ConfigMainFragment() {
         // Required empty public constructor
         //Log.v(TAG, "onConstructor");
+    }
+
+    public static ConfigMainFragment newInstance() {
+        Bundle args = new Bundle();
+        ConfigMainFragment fragment = new ConfigMainFragment();
+        fragment.setArguments(args);
+        return fragment;
+
     }
 
 
@@ -129,9 +138,9 @@ public class ConfigMainFragment extends BaseCfgFragment {
     @Override
     public void showConfiguration(Configuration configuration) {
         Parameter blinkerMode = configuration.getParameter(ParametersEntities.BLINKER_MODE);
-        if (blinkerMode!=null) {
+        if (blinkerMode != null) {
             spinBlinkerBrightness.setOnItemSelectedListener(null);
-            spinBlinkerBrightness.setSelection(Integer.valueOf(blinkerMode.getValue()));
+            spinBlinkerBrightness.setSelection(Integer.valueOf(blinkerMode.getValue()) + 1);
             spinBlinkerBrightness.setOnItemSelectedListener(onBlinkerModeSelectedListener);
         }
     }
@@ -148,13 +157,6 @@ public class ConfigMainFragment extends BaseCfgFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.v(TAG, "onAttach: ");
-//        Log.v(TAG, "onStartBaseCfgView");
-//        if (context instanceof Listener) {
-//            listener = (Listener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnConfigBuoyFragmentInteractionListener");
-//        }
     }
 
     @Override
@@ -167,7 +169,6 @@ public class ConfigMainFragment extends BaseCfgFragment {
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        //listener.onConfigMainFragmentStart();
     }
 
     @Override

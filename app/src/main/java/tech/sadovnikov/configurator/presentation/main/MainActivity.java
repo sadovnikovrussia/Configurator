@@ -2,6 +2,7 @@ package tech.sadovnikov.configurator.presentation.main;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -30,8 +33,9 @@ import tech.sadovnikov.configurator.di.component.DaggerActivityComponent;
 import tech.sadovnikov.configurator.old.SaveFileDialogFragment;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothFragment;
 import tech.sadovnikov.configurator.presentation.configuration.ConfigurationFragment;
-import tech.sadovnikov.configurator.presentation.configuration.config_tabs.BaseCfgFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_buoy.ConfigBuoyFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_main.ConfigMainFragment;
 import tech.sadovnikov.configurator.presentation.console.ConsoleFragment;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
@@ -66,6 +70,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         ButterKnife.bind(this);
         initializeDaggerComponent();
         setUp();
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        if (backStackEntryCount == 0) navigateToBluetoothView();
     }
 
     private void setUp() {
@@ -84,7 +90,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
             }
             return true;
         };
-        navigationView.setOnNavigationItemReselectedListener(menuItem -> Log.w(TAG, "OnNavigationItemReselected: " + menuItem.toString()));
+        //navigationView.setOnNavigationItemReselectedListener(menuItem -> Log.w(TAG, "OnNavigationItemReselected: " + menuItem.toString()));
         navigationView.setOnNavigationItemSelectedListener(navigationListener);
     }
 
@@ -116,6 +122,19 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     public void navigateToConsoleView() {
         Log.w(TAG, "navigateToConsoleView: ");
         showFragment(ConsoleFragment.newInstance(), ConsoleFragment.TAG);
+    }
+
+    @Override
+    public void navigateToCfgTab(String cfgTab) {
+        Log.w(TAG, "navigateToCfgTab: " + cfgTab);
+        switch (cfgTab) {
+            case "Буй":
+                showFragment(ConfigBuoyFragment.newInstance(), ConfigBuoyFragment.TAG);
+                break;
+            case "Основные":
+                showFragment(ConfigMainFragment.newInstance(), ConfigMainFragment.TAG);
+                break;
+        }
     }
 
     @Override
@@ -173,8 +192,10 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public void hideDialogSave() {
-        saveDialog.dismiss();
-        saveDialog = null;
+        if (saveDialog != null) {
+            saveDialog.dismiss();
+            saveDialog = null;
+        }
     }
 
     @Override
@@ -231,10 +252,17 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-        Log.d(TAG, "onBackPressed: " + backStackEntryCount);
-        if (backStackEntryCount < 1) finishAffinity();
+        View currentFocus = getCurrentFocus();
+        if (currentFocus != null) {
+            Log.d(TAG, "onBackPressed: " + currentFocus);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            Objects.requireNonNull(imm).hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        } else {
+            int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+            Log.d(TAG, "onBackPressed: " + backStackEntryCount);
+            if (backStackEntryCount <= 1) finishAffinity();
+            else super.onBackPressed();
+        }
     }
 
 
@@ -257,15 +285,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         showToast(cfgName + " открыта успешно");
     }
 
-    @Override
-    public void navigateToCfgTab(String cfgTab) {
-        Log.w(TAG, "navigateToCfgTab: " + cfgTab);
-        switch (cfgTab) {
-            case "Буй":
-                showFragment(ConfigBuoyFragment.newInstance(), ConfigBuoyFragment.TAG);
-                break;
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -297,13 +316,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.v(TAG, "onCreateOptionsMenu: " + menu);
+        //Log.v(TAG, "onCreateOptionsMenu: " + menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        Log.v(TAG, "onPrepareOptionsMenu: ");
+        //Log.v(TAG, "onPrepareOptionsMenu: ");
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -334,54 +353,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     }
 
     @Override
-    public void onCfgTabClick(String cfgTab) {
-        presenter.onCfgTabClick(cfgTab);
-    }
-
-
-    public MainActivity() {
-        super();
-        //Log.w(TAG, "onConstructor: ");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.v(TAG, "onDestroy: ");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.v(TAG, "onPause: ");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG, "onResume: ");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v(TAG, "onStartBaseCfgView: ");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.v(TAG, "onStop: ");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.v(TAG, "onRestart: ");
-    }
-
-
-    @Override
     public void onCreateViewBluetooth() {
         presenter.onCreateViewBluetooth();
     }
@@ -400,4 +371,50 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     public void onStartBaseCfgView() {
         presenter.onStartBaseCfgView();
     }
+
+    @Override
+    public void onCfgTabClick(String cfgTab) {
+        presenter.onCfgTabClick(cfgTab);
+    }
+
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v(TAG, "onStartBaseCfgView: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v(TAG, "onResume: ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.v(TAG, "onPause: ");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.v(TAG, "onStop: ");
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG, "onDestroy: ");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.v(TAG, "onRestart: ");
+    }
+
+
 }

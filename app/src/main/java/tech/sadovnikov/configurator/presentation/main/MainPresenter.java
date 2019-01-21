@@ -6,8 +6,6 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import java.util.Stack;
-
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -25,7 +23,7 @@ import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothView;
 import tech.sadovnikov.configurator.presentation.configuration.ConfigurationView;
-import tech.sadovnikov.configurator.presentation.configuration.config_tabs.BaseCfgView;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgView;
 import tech.sadovnikov.configurator.presentation.console.ConsoleView;
 import tech.sadovnikov.configurator.di.WritePermission;
 

@@ -6,8 +6,9 @@ import tech.sadovnikov.configurator.di.module.PermissionsModule;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothPresenter;
 import tech.sadovnikov.configurator.presentation.bluetooth.available_devices.AvailableDevicesPresenter;
 import tech.sadovnikov.configurator.presentation.bluetooth.paired_devices.PairedDevicesPresenter;
-import tech.sadovnikov.configurator.presentation.configuration.config_tabs.BaseCfgPresenter;
-import tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_buoy.CfgBuoyPresenter;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgPresenter;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_buoy.ConfigBuoyPresenter;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_main.CfgMainPresenter;
 import tech.sadovnikov.configurator.presentation.console.ConsolePresenter;
 import tech.sadovnikov.configurator.presentation.main.MainPresenter;
 
@@ -27,5 +28,7 @@ public interface PresenterComponent {
 
     void injectBaseCfgPresenter(BaseCfgPresenter baseCfgPresenter);
 
-    void injectCfgBuoyPresenter(CfgBuoyPresenter cfgBuoyPresenter);
+    void injectCfgBuoyPresenter(ConfigBuoyPresenter configBuoyPresenter);
+
+    void injectCfgMainPresenter(CfgMainPresenter cfgMainPresenter);
 }

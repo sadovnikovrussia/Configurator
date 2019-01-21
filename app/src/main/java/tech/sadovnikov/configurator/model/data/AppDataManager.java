@@ -17,6 +17,7 @@ import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.model.data.logs.LogManager;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
+import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 @Singleton
 public class AppDataManager implements DataManager {
@@ -59,6 +60,21 @@ public class AppDataManager implements DataManager {
     public void setConfigParameter(Parameter parameter) {
         Log.d(TAG, "setConfigParameter: " + parameter);
         configuration.setParameter(parameter);
+        configurationObservable.onNext(configuration);
+    }
+
+    @Override
+    public void setConfigParameter(ParametersEntities parameterEntity, String value) {
+        Parameter parameter = Parameter.of(parameterEntity, value);
+        Log.d(TAG, "setConfigParameter: " + parameter);
+        configuration.setParameter(parameter);
+        configurationObservable.onNext(configuration);
+    }
+
+    @Override
+    public void removeConfigParameter(ParametersEntities parameterEntity) {
+        Log.d(TAG, "removeConfigParameter: " + parameterEntity + "\r\n" + configuration);
+        configuration.removeParameter(parameterEntity);
         configurationObservable.onNext(configuration);
     }
 

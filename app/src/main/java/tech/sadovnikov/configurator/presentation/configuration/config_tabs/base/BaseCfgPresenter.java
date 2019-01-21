@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.presentation.configuration.config_tabs;
+package tech.sadovnikov.configurator.presentation.configuration.config_tabs.base;
 
 import android.util.Log;
 
@@ -44,6 +44,19 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
 
     public void onParameterChanged(ParametersEntities parameterEntity, String value) {
         Log.d(TAG, "onParameterChanged: ");
+        if (value.length() == 0) {
+            dataManager.removeConfigParameter(parameterEntity);
+        } else {
+            switch (parameterEntity) {
+                case BLINKER_MODE:
+                    if (value.equals("0")) dataManager.removeConfigParameter(parameterEntity);
+                    else
+                        dataManager.setConfigParameter(parameterEntity, String.valueOf(Integer.valueOf(value) - 1));
+                    break;
+                default:
+                    dataManager.setConfigParameter(parameterEntity, value);
+            }
+        }
     }
 
     public void onStartBaseCfgView() {

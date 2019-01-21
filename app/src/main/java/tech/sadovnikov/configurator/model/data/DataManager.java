@@ -7,12 +7,17 @@ import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.model.data.logs.LogManager;
 import tech.sadovnikov.configurator.model.entities.Parameter;
+import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 public interface DataManager extends LogManager {
 
     void clearSubscribes();
 
     void setConfigParameter(Parameter parameter);
+
+    void setConfigParameter(ParametersEntities parameterEntity, String value);
+
+    void removeConfigParameter(ParametersEntities parameterEntity);
 
     List<String> getCmdListForReadDeviceConfiguration();
 
@@ -23,4 +28,5 @@ public interface DataManager extends LogManager {
     Configuration getConfiguration();
 
     void setConfiguration(Configuration configuration);
+
 }
