@@ -3,10 +3,13 @@ package tech.sadovnikov.configurator.presentation.main;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,7 +23,6 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.arellomobile.mvp.presenter.PresenterType;
 
 import java.util.Objects;
 
@@ -53,6 +55,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     BottomNavigationView navigationView;
     @BindView(R.id.container)
     FrameLayout container;
+    @BindView(R.id.main_layout)
+    ConstraintLayout mainLayout;
 
     private SaveFileDialogFragment saveDialog;
 
@@ -89,9 +93,17 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
             }
             return true;
         };
-        //navigationView.setOnNavigationItemReselectedListener(menuItem -> Log.w(TAG, "OnNavigationItemReselected: " + menuItem.toString()));
         navigationView.setOnNavigationItemSelectedListener(navigationListener);
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        mainLayout.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            Rect r = new Rect();
+            mainLayout.getWindowVisibleDisplayFrame(r);
+            int heightDiff = mainLayout.getRootView().getHeight() - (r.bottom - r.top);
+            if (heightDiff < 100) {
+                View currentFocus = getCurrentFocus();
+                Log.d(TAG, "onGlobalLayout: hidden " + currentFocus);
+                if (currentFocus instanceof EditText) currentFocus.clearFocus();
+            }
+        });
     }
 
     private void initializeDaggerComponent() {
@@ -253,10 +265,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     @Override
     public void onBackPressed() {
         View currentFocus = getCurrentFocus();
+        Log.d(TAG, "onBackPressed1: " + currentFocus);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+//        Objects.requireNonNull(imm).hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        Log.d(TAG, "onBackPressed2: " + currentFocus);
         if (currentFocus instanceof EditText) {
-            Log.d(TAG, "onBackPressed: " + currentFocus);
-//            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-//            Objects.requireNonNull(imm).hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            Log.d(TAG, "onBackPressed: clearFocus");
             currentFocus.clearFocus();
         } else {
             int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
@@ -264,6 +279,25 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
             if (backStackEntryCount <= 1) finishAffinity();
             else super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.d(TAG, "onConfigurationChanged: ");
+        // Checks whether a hardware keyboard is available
+        if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
+            showToast("keyboard visible");
+        } else if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
+            showToast("keyboard hidden");
+            View currentFocus = getCurrentFocus();
+            Log.d(TAG, "onConfigurationChanged1: " + currentFocus);
+            if (currentFocus instanceof EditText) {
+                Log.d(TAG, "onConfigurationChanged2: clearFocus");
+                currentFocus.clearFocus();
+            }
+        }
+
     }
 
 
@@ -377,7 +411,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     public void onCfgTabClick(String cfgTab) {
         presenter.onNavigateToCfgTab(cfgTab);
     }
-
 
 
     @Override
