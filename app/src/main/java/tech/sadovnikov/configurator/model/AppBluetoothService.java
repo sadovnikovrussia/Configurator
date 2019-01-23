@@ -3,8 +3,9 @@ package tech.sadovnikov.configurator.model;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
 import android.bluetooth.BluetoothSocket;
-import android.os.Parcelable;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -29,19 +30,24 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     private static final String TAG = AppBluetoothService.class.getSimpleName();
 
     private static final java.util.UUID UUID = java.util.UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private static BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     private String buffer = "";
 
     private PublishSubject<String> inputMessagesObservable = PublishSubject.create();
 
     private PublishSubject<Integer> bluetoothStateObservable = PublishSubject.create();
+
     private PublishSubject<List<BluetoothDevice>> pairedDevicesObservable = PublishSubject.create();
+
     private PublishSubject<List<BluetoothDevice>> availableDevicesObservable = PublishSubject.create();
     private List<BluetoothDevice> availableDevices = new ArrayList<>();
 
     private PublishSubject<LogMessage> logMessageObservable = PublishSubject.create();
+
     private PublishSubject<Parameter> cmdObservable = PublishSubject.create();
+
+    private BluetoothDevice connectedDevice;
 
     // Потоки
     private ConnectThread mConnectThread;
@@ -66,6 +72,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 
     @Override
     public void disable() {
+        closeAllConnections();
         bluetoothAdapter.disable();
     }
 
@@ -103,12 +110,34 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
             mConnectThread.cancel();
             mConnectThread = null;
         }
-
-        // Cancel any thread currently running a connection
         if (mConnectedThread != null) {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
+        connectedDevice = null;
+    }
+
+    @Override
+    public int getState() {
+        return bluetoothAdapter.getState();
+    }
+
+    @Override
+    public int getConnectionState() {
+        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP));
+        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.GATT));
+        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.GATT_SERVER));
+        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.HEADSET));
+        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.HEALTH));
+        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.SAP));
+        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.HID_DEVICE));
+        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.HID_DEVICE));
+        return bluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP);
+    }
+
+    @Override
+    public BluetoothDevice getConnectedDevice() {
+        return connectedDevice;
     }
 
     @Override
@@ -151,7 +180,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         return new ArrayList<>(bluetoothAdapter.getBondedDevices());
     }
 
-
     @Override
     public void onStateChanged() {
         bluetoothStateObservable.onNext(bluetoothAdapter.getState());
@@ -164,13 +192,18 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     }
 
     @Override
-    public void onBondStateChanged(BluetoothDevice bluetoothDevice) {
-        pairedDevicesObservable.onNext(new ArrayList<>(bluetoothAdapter.getBondedDevices()));
+    public void onStateConnecting(BluetoothDevice device) {
+        Log.d(TAG, "onStateConnecting: " + device);
     }
 
     @Override
     public void onStateConnected(BluetoothDevice device) {
+        Log.d(TAG, "onStateConnected: " + device + ", " + getConnectionState());
+    }
 
+    @Override
+    public void onStateDisconnected(BluetoothDevice device) {
+        Log.d(TAG, "onStateDisconnected: " + device);
     }
 
     @Override
@@ -227,17 +260,14 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         return new LogMessage(logLevel, logType, originalTime, convertedTime, body);
     }
 
-
     private void analyzeMessage(LogMessage message) {
         String logType = message.getLogType();
         if (logType.equals(LOG_TYPE_CMD)) {
             boolean isCmdOk = message.getBody().contains("OK");
             if (isCmdOk) {
                 Parameter parameter = CmdAnalyzer.getParameterFromMessage(message);
-                //dataManager.setConfigParameter(parameter);
                 if (parameter != null) {
                     cmdObservable.onNext(parameter);
-                    //listener.onSetConfigParameter(parameter.getEntity());
                 }
             }
         }
@@ -266,27 +296,13 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         mConnectThread.start();
     }
 
-    private synchronized void onConnected(BluetoothSocket socket) {
-        // Cancel the thread that completed the connection
-        if (mConnectThread != null) {
-            mConnectThread.cancel();
-            mConnectThread = null;
-        }
-        // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
-        // Start the thread to manage the connection and perform transmissions
-        mConnectedThread = new ConnectedThread(socket);
-        mConnectedThread.start();
-    }
-
     private class ConnectThread extends Thread {
         private final String TAG = ConnectThread.class.getSimpleName();
         private BluetoothSocket mSocket;
+        private BluetoothDevice bluetoothDevice;
 
         ConnectThread(BluetoothDevice device) {
+            bluetoothDevice = device;
             setName(TAG);
             BluetoothSocket tmp = null;
             try {
@@ -315,7 +331,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
             synchronized (AppBluetoothService.this) {
                 mConnectThread = null;
             }
-            onConnected(mSocket);
+            onConnected(mSocket, bluetoothDevice);
         }
 
         void cancel() {
@@ -328,13 +344,31 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         }
     }
 
+    private synchronized void onConnected(BluetoothSocket socket, BluetoothDevice bluetoothDevice) {
+        // Cancel the thread that completed the connection
+        if (mConnectThread != null) {
+            mConnectThread.cancel();
+            mConnectThread = null;
+        }
+        // Cancel any thread currently running a connection
+        if (mConnectedThread != null) {
+            mConnectedThread.cancel();
+            mConnectedThread = null;
+        }
+        // Start the thread to manage the connection and perform transmissions
+        mConnectedThread = new ConnectedThread(socket, bluetoothDevice);
+        mConnectedThread.start();
+    }
+
     private class ConnectedThread extends Thread {
         private final String TAG = ConnectedThread.class.getSimpleName();
         private BluetoothSocket mmSocket;
         private final BufferedReader readerSerial;
         private final PrintWriter writerSerial;
+        private final BluetoothDevice bluetoothDevice;
 
-        ConnectedThread(BluetoothSocket socket) {
+        ConnectedThread(BluetoothSocket socket, BluetoothDevice bluetoothDevice) {
+            this.bluetoothDevice = bluetoothDevice;
             setName(TAG);
             mmSocket = socket;
             BufferedReader tmpReaderSerial = null;
@@ -358,6 +392,8 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         }
 
         public void run() {
+            connectedDevice = bluetoothDevice;
+
             String line;
             try {
                 // LogList.d(TAG, "Пытаемся прочитать из потока");

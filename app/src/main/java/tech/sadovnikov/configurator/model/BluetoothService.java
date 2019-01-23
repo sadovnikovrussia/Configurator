@@ -23,6 +23,12 @@ public interface BluetoothService {
 
     void closeAllConnections();
 
+    int getState();
+
+    int getConnectionState();
+
+    BluetoothDevice getConnectedDevice();
+
     PublishSubject<Integer> getBluetoothStateObservable();
 
     List<BluetoothDevice> getPairedDevices();
@@ -44,6 +50,7 @@ public interface BluetoothService {
     PublishSubject<String> getInputMessagesObservable();
 
     void sendData(String data);
+
 
 
     interface InputStreamListener {

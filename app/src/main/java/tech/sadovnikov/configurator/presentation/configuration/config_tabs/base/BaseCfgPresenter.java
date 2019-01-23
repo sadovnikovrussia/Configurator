@@ -7,6 +7,11 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import javax.inject.Inject;
 
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
@@ -22,11 +27,14 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
     @Inject
     DataManager dataManager;
 
+    private CompositeDisposable compositeDisposable;
+
     BaseCfgPresenter() {
         super();
-        Log.d(TAG, "BaseCfgPresenter: ");
+        Log.w(TAG, "BaseCfgPresenter: ");
         initDaggerComponent();
         presenterComponent.injectBaseCfgPresenter(this);
+        compositeDisposable = new CompositeDisposable();
     }
 
     private void initDaggerComponent() {
@@ -39,7 +47,16 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        Log.d(TAG, "onFirstViewAttach: ");
+        Log.w(TAG, "onFirstViewAttach: ");
+        Disposable subscribe = dataManager.getConfigurationObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(configuration -> getViewState().showConfiguration(configuration),
+                        Throwable::printStackTrace,
+                        () -> {
+                        },
+                        disposable -> getViewState().showConfiguration(dataManager.getConfiguration()));
+        compositeDisposable.add(subscribe);
     }
 
     public void onParameterChanged(ParametersEntities parameterEntity, String value) {
@@ -59,20 +76,17 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
         }
     }
 
-    public void onStartBaseCfgView() {
-        Log.d(TAG, "onStartBaseCfgView: ");
-        getViewState().showConfiguration(dataManager.getConfiguration());
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy: ");
+        Log.w(TAG, "onDestroy: ");
+        compositeDisposable.clear();
     }
-
 
     void onCreateViewBaseCfgView() {
-        Log.d(TAG, "onCreateViewBaseCfgView: ");
-        getViewState().showConfiguration(dataManager.getConfiguration());
+        Log.v(TAG, "onCreateViewBaseCfgView: ");
+        //getViewState().showConfiguration(dataManager.getConfiguration());
     }
+
+
 }

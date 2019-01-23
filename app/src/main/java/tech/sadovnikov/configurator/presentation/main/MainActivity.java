@@ -2,6 +2,7 @@ package tech.sadovnikov.configurator.presentation.main;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.bluetooth.BluetoothManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
@@ -100,7 +101,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
             int heightDiff = mainLayout.getRootView().getHeight() - (r.bottom - r.top);
             if (heightDiff < 100) {
                 View currentFocus = getCurrentFocus();
-                Log.d(TAG, "onGlobalLayout: hidden " + currentFocus);
                 if (currentFocus instanceof EditText) currentFocus.clearFocus();
             }
         });
@@ -263,45 +263,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     }
 
     @Override
-    public void onBackPressed() {
-        View currentFocus = getCurrentFocus();
-        Log.d(TAG, "onBackPressed1: " + currentFocus);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-//        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-//        Objects.requireNonNull(imm).hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
-        Log.d(TAG, "onBackPressed2: " + currentFocus);
-        if (currentFocus instanceof EditText) {
-            Log.d(TAG, "onBackPressed: clearFocus");
-            currentFocus.clearFocus();
-        } else {
-            int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-            Log.d(TAG, "onBackPressed: " + backStackEntryCount);
-            if (backStackEntryCount <= 1) finishAffinity();
-            else super.onBackPressed();
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Log.d(TAG, "onConfigurationChanged: ");
-        // Checks whether a hardware keyboard is available
-        if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
-            showToast("keyboard visible");
-        } else if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
-            showToast("keyboard hidden");
-            View currentFocus = getCurrentFocus();
-            Log.d(TAG, "onConfigurationChanged1: " + currentFocus);
-            if (currentFocus instanceof EditText) {
-                Log.d(TAG, "onConfigurationChanged2: clearFocus");
-                currentFocus.clearFocus();
-            }
-        }
-
-    }
-
-
-    @Override
     public void startOpenFileManagerActivity() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
@@ -349,18 +310,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //Log.v(TAG, "onCreateOptionsMenu: " + menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        //Log.v(TAG, "onPrepareOptionsMenu: ");
-        return super.onPrepareOptionsMenu(menu);
-    }
-
+    //todo Перенести к базовому фрагменту конфигурции
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.w(TAG, "onOptionsItemSelected: " + item.getItemId());
@@ -379,12 +329,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onOptionsMenuClosed(Menu menu) {
-        Log.w(TAG, "onOptionsMenuClosed: ");
-        super.onOptionsMenuClosed(menu);
     }
 
     @Override
@@ -412,13 +356,17 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         presenter.onNavigateToCfgTab(cfgTab);
     }
 
+    @Override
+    public void onBackPressed() {
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        if (backStackEntryCount <= 1) finishAffinity();
+        else super.onBackPressed();
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
         Log.v(TAG, "onStart: ");
-//        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-//        if (backStackEntryCount == 0) showBluetoothView();
     }
 
     @Override

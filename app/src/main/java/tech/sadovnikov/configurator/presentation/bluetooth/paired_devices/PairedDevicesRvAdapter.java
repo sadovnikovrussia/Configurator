@@ -22,6 +22,7 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
 
     private Listener listener;
     private List<BluetoothDevice> devices;
+    private BluetoothDevice connectedDevice;
 
 
     public PairedDevicesRvAdapter() {
@@ -49,7 +50,8 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
         return devices.size();
     }
 
-    void setDevices(List<BluetoothDevice> devices) {
+    void setDevices(List<BluetoothDevice> devices, BluetoothDevice connectedDevice) {
+        this.connectedDevice = connectedDevice;
         this.devices = devices;
         notifyDataSetChanged();
     }
@@ -73,6 +75,12 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
             final BluetoothDevice device = devices.get(position);
             tvDeviceName.setText(device.getName());
             tvDeviceAddress.setText(device.getAddress());
+            if (device.equals(connectedDevice)) {
+                tvDeviceStatus.setText("Подключено");
+                tvDeviceStatus.setVisibility(View.VISIBLE);
+            } else {
+                tvDeviceStatus.setVisibility(View.GONE);
+            }
             itemView.setOnClickListener(v -> listener.onDeviceClicked(device));
             itemView.setOnLongClickListener(v -> {
                 listener.onDeviceLongClick(device);

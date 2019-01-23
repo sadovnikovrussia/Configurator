@@ -72,7 +72,6 @@ public class ConfigBuoyFragment extends BaseCfgFragment implements ConfigBuoyVie
         };
         //onLlParameterClickListener = new OnLlParameterClickListener(getContext());
         //llId.setOnClickListener(onLlParameterClickListener);
-        // TODO <Сделать отслеживание закрытия клавиатуры>
         etId.setOnFocusChangeListener(onIdChangedListener);
         btnRestart.setOnClickListener(v -> configBuoyPresenter.onRestartClick());
         btnDefaultSettings.setOnClickListener(v -> configBuoyPresenter.onDefaultSettingsClick());

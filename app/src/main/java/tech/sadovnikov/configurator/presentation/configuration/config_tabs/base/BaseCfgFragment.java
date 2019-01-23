@@ -33,13 +33,11 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
         Log.v(TAG, "onCreateView: ");
         presenter.onCreateViewBaseCfgView();
         listener.onCreateViewBaseCfgView();
+        setHasOptionsMenu(true);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     public abstract void setUp(View view);
-
-
-
 
     @Override
     public void onAttach(Context context) {
@@ -56,27 +54,7 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        //Log.i(TAG, "onCreateOptionsMenu: ");
         inflater.inflate(R.menu.menu_configuration_options, menu);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        //Log.i(TAG, "onPrepareOptionsMenu: ");
-    }
-
-    @Override
-    public void onDestroyOptionsMenu() {
-        super.onDestroyOptionsMenu();
-        //Log.i(TAG, "onDestroyOptionsMenu: ");
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "onOptionsItemSelected: ");
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

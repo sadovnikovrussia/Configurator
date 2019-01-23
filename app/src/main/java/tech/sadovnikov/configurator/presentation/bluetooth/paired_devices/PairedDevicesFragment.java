@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -38,6 +40,8 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     PairedDevicesRvAdapter pairedDevicesRvAdapter;
     @Inject
     LinearLayoutManager linearLayoutManager;
+
+    AlertDialog alertDialog;
 
     public PairedDevicesFragment() {
         //Log.d(TAG, "onConstructor");
@@ -88,8 +92,27 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     }
 
     @Override
-    public void setPairedDevices(List<BluetoothDevice> devices) {
-        pairedDevicesRvAdapter.setDevices(devices);
+    public void setPairedDevices(List<BluetoothDevice> devices, BluetoothDevice connectedDevice) {
+        pairedDevicesRvAdapter.setDevices(devices, connectedDevice);
+    }
+
+    @Override
+    public void showCloseConnectionDialog(BluetoothDevice device) {
+        alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
+                .setTitle("Отключиться?")
+                .setMessage("Произойдет разъединение соединения с устройством " + device.getName())
+                .setPositiveButton(R.string.ok, (dialog, which) -> presenter.onCloseBtConnection())
+                .setNegativeButton(R.string.cancel, (dialog, id) -> presenter.onCancelCloseConnectionDialog())
+                .create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void hideCloseConnectionDialog() {
+        if (alertDialog != null) {
+            alertDialog.dismiss();
+            alertDialog = null;
+        }
     }
 
 
@@ -147,6 +170,10 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (alertDialog != null) {
+            alertDialog.dismiss();
+            alertDialog = null;
+        }
         //Log.d(TAG, "onDestroy");
     }
 

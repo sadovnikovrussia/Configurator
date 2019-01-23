@@ -79,8 +79,8 @@ public class ConfigMainFragment extends BaseCfgFragment {
         Log.v(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_config_main, container, false);
         ButterKnife.bind(this, view);
-        setUp(view);
         super.onCreateView(inflater, container, savedInstanceState);
+        setUp(view);
         return view;
     }
 
@@ -134,9 +134,9 @@ public class ConfigMainFragment extends BaseCfgFragment {
     public void showConfiguration(Configuration configuration) {
         Parameter blinkerMode = configuration.getParameter(ParametersEntities.BLINKER_MODE);
         if (blinkerMode != null) {
-            spinBlinkerBrightness.setOnItemSelectedListener(null);
-            spinBlinkerBrightness.setSelection(Integer.valueOf(blinkerMode.getValue()) + 1);
-            spinBlinkerBrightness.setOnItemSelectedListener(onBlinkerModeSelectedListener);
+            spinBlinkerMode.setOnItemSelectedListener(null);
+            spinBlinkerMode.setSelection(Integer.valueOf(blinkerMode.getValue()) + 1);
+            spinBlinkerMode.setOnItemSelectedListener(onBlinkerModeSelectedListener);
         }
     }
 

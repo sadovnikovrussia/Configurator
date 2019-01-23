@@ -1,7 +1,6 @@
 package tech.sadovnikov.configurator.presentation.bluetooth.available_devices;
 
 import android.bluetooth.BluetoothDevice;
-import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -49,14 +48,7 @@ public class AvailableDevicesPresenter extends MvpPresenter<AvailableDevicesView
         Disposable subscribe = bluetoothService.getAvailableDevicesObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        bluetoothDevices -> {
-                            //Log.d(TAG, "onNext: " + bluetoothDevices);
-                            getViewState().setAvailableDevices(bluetoothDevices);
-                        },
-                        throwable -> Log.w(TAG, "onError: ", throwable),
-                        () -> Log.d(TAG, "onComplete: "),
-                        disposable -> Log.d(TAG, "onSubscribe: "));
+                .subscribe(bluetoothDevices -> getViewState().setAvailableDevices(bluetoothDevices));
         compositeDisposable.add(subscribe);
     }
 

@@ -13,8 +13,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.App;
-import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
+import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 
 @InjectViewState
@@ -36,22 +36,22 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
 
     private void initDaggerComponent() {
         presenterComponent = DaggerPresenterComponent
-        .builder()
-        .applicationComponent(App.getApplicationComponent())
-        .build();
+                .builder()
+                .applicationComponent(App.getApplicationComponent())
+                .build();
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         //Log.d(TAG, "onFirstViewAttach: ");
-        getViewState().setPairedDevices(bluetoothService.getPairedDevices());
+        getViewState().setPairedDevices(bluetoothService.getPairedDevices(), bluetoothService.getConnectedDevice());
         Disposable subscribe = bluetoothService.getPairedDevicesObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bluetoothDevices -> {
                     //Log.d(TAG, "onNext: " + bluetoothDevices);
-                    getViewState().setPairedDevices(bluetoothDevices);
+                    getViewState().setPairedDevices(bluetoothDevices, bluetoothService.getConnectedDevice());
                 });
         compositeDisposable.add(subscribe);
     }
@@ -67,6 +67,19 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
     }
 
     void onDeviceLongClick(BluetoothDevice device) {
-        bluetoothService.disconnectFromDevice(device);
+        Log.d(TAG, "onDeviceLongClick: " + bluetoothService.getConnectionState());
+//        if (bluetoothService.getConnectedDevice().equals(device))
+//            getViewState().showCloseConnectionDialog(device);
+    }
+
+    void onCloseBtConnection() {
+        Log.d(TAG, "onCloseBtConnection: ");
+        bluetoothService.closeAllConnections();
+        getViewState().hideCloseConnectionDialog();
+    }
+
+    void onCancelCloseConnectionDialog() {
+        Log.d(TAG, "onCancelCloseConnectionDialog: ");
+        getViewState().hideCloseConnectionDialog();
     }
 }
