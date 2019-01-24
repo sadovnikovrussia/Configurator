@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,7 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Log.d(TAG, "onCreateView: " + savedInstanceState);
+        Log.v(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_paired_devices, container, false);
         ButterKnife.bind(this, view);
         initDagger();
@@ -92,8 +93,9 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     }
 
     @Override
-    public void setPairedDevices(List<BluetoothDevice> devices, BluetoothDevice connectedDevice) {
-        pairedDevicesRvAdapter.setDevices(devices, connectedDevice);
+    public void setPairedDevices(List<BluetoothDevice> devices, BluetoothDevice connectedDevice, Integer connectionState) {
+        Log.d(TAG, "setPairedDevices: ");
+        pairedDevicesRvAdapter.setDevices(devices, connectedDevice, connectionState);
     }
 
     @Override
@@ -121,68 +123,66 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ////Log.d(TAG, "onAttach: ");
+        Log.v(TAG, "onAttach: ");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Log.d(TAG, "onCreate: ");
-        //setRetainInstance(true);
+        Log.v(TAG, "onCreate: ");
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //Log.d(TAG, "onActivityCreated");
+        Log.v(TAG, "onActivityCreated");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        //Log.d(TAG, "onStartBaseCfgView");
+        Log.v(TAG, "onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //Log.d(TAG, "onResume");
+        Log.v(TAG, "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //Log.d(TAG, "onPause");
+        Log.v(TAG, "onPause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //Log.d(TAG, "onStop");
+        Log.v(TAG, "onStop");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        //Log.d(TAG, "onDestroyView");
+        Log.v(TAG, "onDestroyView");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.v(TAG, "onDestroy");
         if (alertDialog != null) {
             alertDialog.dismiss();
             alertDialog = null;
         }
-        //Log.d(TAG, "onDestroy");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        //Log.d(TAG, "onDetach: ");
+        Log.v(TAG, "onDetach: ");
     }
-
     // ---------------------------------------------------------------------------------------------
 
 }

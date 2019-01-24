@@ -17,12 +17,17 @@ import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.presentation.base.BaseViewHolder;
 
+import static tech.sadovnikov.configurator.model.BluetoothService.CONNECTION_STATE_CONNECTED;
+import static tech.sadovnikov.configurator.model.BluetoothService.CONNECTION_STATE_CONNECTING;
+import static tech.sadovnikov.configurator.model.BluetoothService.CONNECTION_STATE_DISCONNECTED;
+
 public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRvAdapter.BluetoothDeviceViewHolder> {
     private static final String TAG = PairedDevicesRvAdapter.class.getSimpleName();
 
     private Listener listener;
     private List<BluetoothDevice> devices;
     private BluetoothDevice connectedDevice;
+    private int connectionState;
 
 
     public PairedDevicesRvAdapter() {
@@ -50,9 +55,10 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
         return devices.size();
     }
 
-    void setDevices(List<BluetoothDevice> devices, BluetoothDevice connectedDevice) {
+    void setDevices(List<BluetoothDevice> devices, BluetoothDevice connectedDevice, Integer connectionState) {
         this.connectedDevice = connectedDevice;
         this.devices = devices;
+        this.connectionState = connectionState;
         notifyDataSetChanged();
     }
 
@@ -75,22 +81,30 @@ public class PairedDevicesRvAdapter extends RecyclerView.Adapter<PairedDevicesRv
             final BluetoothDevice device = devices.get(position);
             tvDeviceName.setText(device.getName());
             tvDeviceAddress.setText(device.getAddress());
+            clear();
             if (device.equals(connectedDevice)) {
-                tvDeviceStatus.setText("Подключено");
-                tvDeviceStatus.setVisibility(View.VISIBLE);
-            } else {
-                tvDeviceStatus.setVisibility(View.GONE);
+                switch (connectionState) {
+                    case CONNECTION_STATE_CONNECTING:
+                        tvDeviceStatus.setText("Подключение...");
+                        tvDeviceStatus.setVisibility(View.VISIBLE);
+                        break;
+                    case CONNECTION_STATE_CONNECTED:
+                        tvDeviceStatus.setText("Подключено");
+                        tvDeviceStatus.setVisibility(View.VISIBLE);
+                        break;
+                }
             }
             itemView.setOnClickListener(v -> listener.onDeviceClicked(device));
             itemView.setOnLongClickListener(v -> {
                 listener.onDeviceLongClick(device);
-                return false;
+                return true;
             });
         }
 
         @Override
         protected void clear() {
-
+            tvDeviceStatus.setText("");
+            tvDeviceStatus.setVisibility(View.GONE);
         }
 
     }

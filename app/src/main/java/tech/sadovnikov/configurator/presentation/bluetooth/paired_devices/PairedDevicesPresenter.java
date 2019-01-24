@@ -8,14 +8,13 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
+import tech.sadovnikov.configurator.utils.rx.RxTransformers;
 
 @InjectViewState
 public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
@@ -24,12 +23,12 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
     private PresenterComponent presenterComponent;
     @Inject
     BluetoothService bluetoothService;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private CompositeDisposable subscriptions = new CompositeDisposable();
 
 
     PairedDevicesPresenter() {
         super();
-        //Log.d(TAG, "onConstructor: ");
+        Log.w(TAG, "onConstructor: ");
         initDaggerComponent();
         presenterComponent.injectPairedDevicesPresenter(this);
     }
@@ -44,22 +43,29 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        //Log.d(TAG, "onFirstViewAttach: ");
-        getViewState().setPairedDevices(bluetoothService.getPairedDevices(), bluetoothService.getConnectedDevice());
-        Disposable subscribe = bluetoothService.getPairedDevicesObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(bluetoothDevices -> {
-                    //Log.d(TAG, "onNext: " + bluetoothDevices);
-                    getViewState().setPairedDevices(bluetoothDevices, bluetoothService.getConnectedDevice());
-                });
-        compositeDisposable.add(subscribe);
+        Log.w(TAG, "onFirstViewAttach: ");
+        Disposable subscriptionState = bluetoothService.getStateObservable()
+                .compose(RxTransformers.applySchedulers())
+                .subscribe(state -> getViewState().setPairedDevices(bluetoothService.getPairedDevices(), bluetoothService.getConnectedDevice(), bluetoothService.getConnectionState()),
+                        Throwable::printStackTrace,
+                        () -> {},
+                        disposable -> getViewState().setPairedDevices(bluetoothService.getPairedDevices(), bluetoothService.getConnectedDevice(), bluetoothService.getConnectionState()));
+        Disposable subscriptionPairedDevices = bluetoothService.getPairedDevicesObservable()
+                .compose(RxTransformers.applySchedulers())
+                .subscribe(bluetoothDevices -> getViewState().setPairedDevices(bluetoothDevices, bluetoothService.getConnectedDevice(), bluetoothService.getConnectionState()));
+        Disposable subscriptionConnectionState = bluetoothService.getConnectionStateObservable()
+                .compose(RxTransformers.applySchedulers())
+                .subscribe(integer -> getViewState().setPairedDevices(bluetoothService.getPairedDevices(), bluetoothService.getConnectedDevice(), integer));
+        subscriptions.add(subscriptionState);
+        subscriptions.add(subscriptionPairedDevices);
+        subscriptions.add(subscriptionConnectionState);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        compositeDisposable.clear();
+        Log.w(TAG, "onDestroy: ");
+        subscriptions.clear();
     }
 
     void onDeviceClicked(BluetoothDevice device) {
@@ -67,19 +73,16 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
     }
 
     void onDeviceLongClick(BluetoothDevice device) {
-        Log.d(TAG, "onDeviceLongClick: " + bluetoothService.getConnectionState());
-//        if (bluetoothService.getConnectedDevice().equals(device))
-//            getViewState().showCloseConnectionDialog(device);
+        if (device.equals(bluetoothService.getConnectedDevice()))
+            getViewState().showCloseConnectionDialog(device);
     }
 
     void onCloseBtConnection() {
-        Log.d(TAG, "onCloseBtConnection: ");
         bluetoothService.closeAllConnections();
         getViewState().hideCloseConnectionDialog();
     }
 
     void onCancelCloseConnectionDialog() {
-        Log.d(TAG, "onCancelCloseConnectionDialog: ");
         getViewState().hideCloseConnectionDialog();
     }
 }

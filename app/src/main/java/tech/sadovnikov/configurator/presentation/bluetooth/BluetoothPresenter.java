@@ -16,6 +16,7 @@ import tech.sadovnikov.configurator.di.BluetoothPermission;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
+import tech.sadovnikov.configurator.utils.rx.RxTransformers;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
@@ -51,7 +52,8 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         Log.w(TAG, "onFirstViewAttach: ");
-        Disposable subscription = bluetoothService.getBluetoothStateObservable()
+        Disposable subscriptionState = bluetoothService.getStateObservable()
+                .compose(RxTransformers.applySchedulers())
                 .subscribe(integer -> {
                             switch (integer) {
                                 case BluetoothAdapter.STATE_TURNING_ON:
@@ -72,8 +74,8 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
                                     break;
                             }
                         },
-                        throwable -> Log.w(TAG, "onError: ", throwable),
-                        () -> Log.i(TAG, "onComplete: Усе"),
+                        throwable -> {},
+                        () -> {},
                         disposable -> {
                             getViewState().displayBluetoothState(bluetoothService.isEnabled());
                             if (bluetoothService.isEnabled()) {
@@ -84,13 +86,12 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
                                 getViewState().hideDevices();
                             }
                         });
-        compositeDisposable.add(subscription);
+        compositeDisposable.add(subscriptionState);
     }
 
     @Override
     public void onDestroy() {
         Log.w(TAG, "onDestroy: ");
-        super.onDestroy();
         compositeDisposable.clear();
     }
 

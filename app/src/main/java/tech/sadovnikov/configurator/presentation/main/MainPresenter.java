@@ -9,11 +9,13 @@ import com.arellomobile.mvp.MvpPresenter;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.ReadPermission;
+import tech.sadovnikov.configurator.di.WritePermission;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
@@ -25,9 +27,10 @@ import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothView;
 import tech.sadovnikov.configurator.presentation.configuration.ConfigurationView;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgView;
 import tech.sadovnikov.configurator.presentation.console.ConsoleView;
-import tech.sadovnikov.configurator.di.WritePermission;
+import tech.sadovnikov.configurator.utils.rx.RxTransformers;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
+import static tech.sadovnikov.configurator.model.BluetoothService.CONNECTION_STATE_CONNECTED;
 
 @InjectViewState
 public class MainPresenter extends MvpPresenter<MainView> {
@@ -51,12 +54,14 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
 
     private Class currentView;
+    private CompositeDisposable subscriptions;
 
     MainPresenter() {
         super();
         Log.w(TAG, "onConstructor: ");
         initDaggerComponent();
         presenterComponent.injectMainPresenter(this);
+        subscriptions = new CompositeDisposable();
         cfgLoader.setBluetoothService(bluetoothService);
         cfgLoader.setDataManager(dataManager);
     }
@@ -72,24 +77,36 @@ public class MainPresenter extends MvpPresenter<MainView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         Log.w(TAG, "onFirstViewAttach: ");
+        Disposable subscriptionConnectionState = bluetoothService.getConnectionStateObservable()
+                .compose(RxTransformers.applySchedulers())
+                .subscribe(state -> {
+                    switch (state) {
+                        case CONNECTION_STATE_CONNECTED:
+                            getViewState().showMessage("Подключено устройство " + bluetoothService.getConnectedDevice().getName());
+                            break;
+                    }
+                });
         getViewState().showBluetoothView();
+        subscriptions.add(subscriptionConnectionState);
+    }
+
+    @Override
+    public void onDestroy() {
+        subscriptions.clear();
     }
 
     void onNavigateToBluetooth() {
         Log.d(TAG, "onNavigateToBluetooth: ");
         if (!currentView.equals(BluetoothView.class)) getViewState().showBluetoothView();
-        //currentView = BluetoothView.class;
     }
 
     void onNavigateToConfiguration() {
         if (!currentView.equals(ConfigurationView.class)) getViewState().showConfigurationView();
-        //currentView = ConfigurationView.class;
     }
 
     void onNavigateToConsole() {
         Log.d(TAG, "onNavigateToConsole: ");
         if (!currentView.equals(ConsoleView.class)) getViewState().showConsoleView();
-        //currentView = ConsoleView.class;
     }
 
     void onNavigateToCfgTab(String cfgTab) {
@@ -105,7 +122,9 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aFloat -> getViewState().updateLoadingProcess(aFloat),
                         Throwable::printStackTrace,
-                        () -> getViewState().hideLoadingProgress());
+                        () -> getViewState().hideLoadingProgress(),
+                        disposable -> {});
+        subscriptions.add(progressSubscription);
     }
 
     void onSetConfiguration() {
@@ -193,6 +212,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 // todo Почему отсюда не вызываются некоторые методоы во view ???
                 getViewState().showSuccessOpenCfgMessage(cfgName);
             }
+
             @Override
             public void onError(String cfgName, Exception e) {
                 getViewState().showErrorOpenCfgMessage(cfgName, e);

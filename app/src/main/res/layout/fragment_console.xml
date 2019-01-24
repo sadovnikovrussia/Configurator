@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.console.ConsoleFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
     <Switch
         android:id="@+id/sw_auto_scroll"
@@ -42,8 +44,8 @@
                 android:id="@+id/tv_log_screen"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp" />
         </LinearLayout>
     </ScrollView>
 

@@ -3,8 +3,6 @@ package tech.sadovnikov.configurator.model;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothProfile;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
@@ -53,6 +51,10 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
 
+    // todo Немного криво работает при подключении к устройству, когда уже запущен режим подключения к другому устройству
+    private int connectionState;
+    private PublishSubject<Integer> connectionStateObservable;
+
 
 //    public AppBluetoothService(OnBluetoothServiceEventsListener onBluetoothServiceEventsListener, UiHandler handler) {
 //        // LogList.v(TAG, "OnConstructor");
@@ -63,6 +65,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 //
 
     public AppBluetoothService() {
+        connectionStateObservable = PublishSubject.create();
     }
 
     @Override
@@ -93,8 +96,10 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 
     @Override
     public void connectToDevice(BluetoothDevice device) {
-        cancelDiscovery();
-        onConnecting(device);
+        if (!device.equals(connectedDevice)){
+            cancelDiscovery();
+            onConnecting(device);
+        }
     }
 
     @Override
@@ -114,7 +119,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
-        connectedDevice = null;
+        updateStatus(null, CONNECTION_STATE_DISCONNECTED);
     }
 
     @Override
@@ -124,15 +129,12 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 
     @Override
     public int getConnectionState() {
-        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP));
-        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.GATT));
-        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.GATT_SERVER));
-        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.HEADSET));
-        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.HEALTH));
-        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.SAP));
-        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.HID_DEVICE));
-        Log.d(TAG, "getConnectionState: " + bluetoothAdapter.getProfileConnectionState(BluetoothProfile.HID_DEVICE));
-        return bluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP);
+        return connectionState;
+    }
+
+    @Override
+    public PublishSubject<Integer> getConnectionStateObservable() {
+        return connectionStateObservable;
     }
 
     @Override
@@ -141,8 +143,14 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     }
 
     @Override
-    public PublishSubject<Integer> getBluetoothStateObservable() {
+    public PublishSubject<Integer> getStateObservable() {
         return bluetoothStateObservable;
+    }
+
+    @Override
+    public List<BluetoothDevice> getPairedDevices() {
+        Log.d(TAG, "getPairedDevices: " + bluetoothAdapter.getBondedDevices());
+        return new ArrayList<>(bluetoothAdapter.getBondedDevices());
     }
 
     @Override
@@ -173,11 +181,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     @Override
     public PublishSubject<Parameter> getCmdObservable() {
         return cmdObservable;
-    }
-
-    @Override
-    public List<BluetoothDevice> getPairedDevices() {
-        return new ArrayList<>(bluetoothAdapter.getBondedDevices());
     }
 
     @Override
@@ -280,6 +283,13 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         }
     }
 
+    private void updateStatus(BluetoothDevice bluetoothDevice, int state) {
+        Log.d(TAG, "updateStatus: " + bluetoothDevice + ", " + state);
+        connectionState = state;
+        connectedDevice = bluetoothDevice;
+        connectionStateObservable.onNext(connectionState);
+    }
+
     private synchronized void onConnecting(BluetoothDevice device) {
         // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {
@@ -292,6 +302,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
             mConnectedThread = null;
         }
         // Start the thread to onConnecting with the given device
+        updateStatus(device, CONNECTION_STATE_CONNECTING);
         mConnectThread = new ConnectThread(device);
         mConnectThread.start();
     }
@@ -309,6 +320,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
                 tmp = device.createRfcommSocketToServiceRecord(UUID);
             } catch (IOException e) {
                 e.printStackTrace();
+                updateStatus(null, CONNECTION_STATE_DISCONNECTED);
             }
             mSocket = tmp;
         }
@@ -320,6 +332,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
                 mSocket.connect();
                 Log.d(TAG, "run: Connected");
             } catch (IOException e) {
+                updateStatus(null, CONNECTION_STATE_DISCONNECTED);
                 e.printStackTrace();
                 try {
                     mSocket.close();
@@ -381,9 +394,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
             }
             readerSerial = tmpReaderSerial;
             try {
-                // LogList.d(TAG, "Пытаемся создать OutputStream");
                 tmpWriterSerial = new PrintWriter(socket.getOutputStream());
-                // LogList.d(TAG, "Получили OutputStream: " + tmpWriterSerial.toString());
             } catch (IOException e) {
                 Log.e(TAG, "Не удалось создать OutputStream: ", e);
             }
@@ -392,17 +403,13 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         }
 
         public void run() {
-            connectedDevice = bluetoothDevice;
-
+            updateStatus(bluetoothDevice, CONNECTION_STATE_CONNECTED);
             String line;
             try {
-                // LogList.d(TAG, "Пытаемся прочитать из потока");
                 Log.d(TAG, "ConnectedThread: run: " + readerSerial.ready());
                 while ((line = readerSerial.readLine()) != null) {
                     Log.v(TAG, line);
-                    //inputMessagesObservable.onNext(line);
                     analyzeLine(line);
-                    // messageAnalyzer.analyzeMessage(line);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Не удалось прочитать из потока", e);

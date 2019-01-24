@@ -10,6 +10,10 @@ import tech.sadovnikov.configurator.model.entities.Parameter;
 
 
 public interface BluetoothService {
+    int CONNECTION_STATE_DISCONNECTED = 0;
+    int CONNECTION_STATE_DISCONNECTING = 3;
+    int CONNECTION_STATE_CONNECTING = 1;
+    int CONNECTION_STATE_CONNECTED = 2;
 
     boolean isEnabled();
 
@@ -27,9 +31,11 @@ public interface BluetoothService {
 
     int getConnectionState();
 
+    PublishSubject<Integer> getConnectionStateObservable();
+
     BluetoothDevice getConnectedDevice();
 
-    PublishSubject<Integer> getBluetoothStateObservable();
+    PublishSubject<Integer> getStateObservable();
 
     List<BluetoothDevice> getPairedDevices();
 

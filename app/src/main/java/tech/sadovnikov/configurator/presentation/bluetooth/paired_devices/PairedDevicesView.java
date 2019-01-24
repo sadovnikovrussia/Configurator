@@ -13,7 +13,7 @@ import tech.sadovnikov.configurator.presentation.AddToEndSingleByTagStateStrateg
 public interface PairedDevicesView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void setPairedDevices(List<BluetoothDevice> pairedDevices, BluetoothDevice connectedDevice);
+    void setPairedDevices(List<BluetoothDevice> pairedDevices, BluetoothDevice connectedDevice, Integer connectionState);
 
     @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "closeConnectionDialog")
     void showCloseConnectionDialog(BluetoothDevice device);
