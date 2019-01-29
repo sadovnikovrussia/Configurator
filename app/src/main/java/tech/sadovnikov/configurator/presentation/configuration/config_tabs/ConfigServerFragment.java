@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
+import tech.sadovnikov.configurator.old.OnParameterViewGroupClickListener;
 
 
 public class ConfigServerFragment extends Fragment {
@@ -49,7 +49,7 @@ public class ConfigServerFragment extends Fragment {
     LinearLayout llCmdNumber;
     LinearLayout llAnswNumber;
     LinearLayout llPriorityChnl;
-    OnLlParameterClickListener onLlParameterClickListener;
+    OnParameterViewGroupClickListener onLlParameterClickListener;
 
     public ConfigServerFragment() {
         // Required empty public constructor
@@ -57,7 +57,7 @@ public class ConfigServerFragment extends Fragment {
     }
 
     private void initUi(View view) {
-        onLlParameterClickListener = new OnLlParameterClickListener(getContext());
+        onLlParameterClickListener = new OnParameterViewGroupClickListener(getContext());
 
         llServer = view.findViewById(R.id.ll_server);
         llServer.setOnClickListener(onLlParameterClickListener);

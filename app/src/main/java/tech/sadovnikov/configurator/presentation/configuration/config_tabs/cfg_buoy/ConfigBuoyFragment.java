@@ -14,21 +14,21 @@ import android.widget.LinearLayout;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.model.entities.Parameter;
-import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
+import tech.sadovnikov.configurator.old.OnParameterViewGroupClickListener;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgFragment;
-import tech.sadovnikov.configurator.presentation.configuration.config_tabs.OnParameterChangedListener;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 
 public class ConfigBuoyFragment extends BaseCfgFragment implements ConfigBuoyView {
     public static final String TAG = ConfigBuoyFragment.class.getSimpleName();
 
-    ConfigBuoyFragment.OnConfigBuoyFragmentInteractionListener listener;
 
     // UI
     @BindView(R.id.et_id)
@@ -70,8 +70,7 @@ public class ConfigBuoyFragment extends BaseCfgFragment implements ConfigBuoyVie
             if (!hasFocus)
                 presenter.onParameterChanged(ParametersEntities.ID, etId.getText().toString());
         };
-        //onLlParameterClickListener = new OnLlParameterClickListener(getContext());
-        //llId.setOnClickListener(onLlParameterClickListener);
+        llId.setOnClickListener(new OnParameterViewGroupClickListener(Objects.requireNonNull(getContext())));
         etId.setOnFocusChangeListener(onIdChangedListener);
         btnRestart.setOnClickListener(v -> configBuoyPresenter.onRestartClick());
         btnDefaultSettings.setOnClickListener(v -> configBuoyPresenter.onDefaultSettingsClick());
@@ -146,20 +145,7 @@ public class ConfigBuoyFragment extends BaseCfgFragment implements ConfigBuoyVie
         super.onDetach();
         Log.v(TAG, "onDetach: ");
     }
+    // ---------------------------------------------------------------------------------------------
 
-
-    public interface OnConfigBuoyFragmentInteractionListener {
-
-        void onConfigBuoyFragmentStart();
-
-        void onEtIdFocusChange(boolean hasFocus);
-
-        void onBtnRestartClick();
-
-        void onBtnDefaultSettingsClick();
-
-        void onLlBuoyParameterClick(EditText editText);
-
-    }
 
 }

@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
+import tech.sadovnikov.configurator.old.OnParameterViewGroupClickListener;
 
 public class ConfigNavigationFragment extends Fragment {
     private static final String TAG = "ConfigNavigationFragmen";
@@ -47,7 +47,7 @@ public class ConfigNavigationFragment extends Fragment {
     LinearLayout llFixDelay;
     LinearLayout llSatelliteSystem;
 
-    OnLlParameterClickListener onLlParameterClickListener;
+    OnParameterViewGroupClickListener onLlParameterClickListener;
 
     public ConfigNavigationFragment() {
         // Required empty public constructor
@@ -64,7 +64,7 @@ public class ConfigNavigationFragment extends Fragment {
     }
 
     private void initUi(View view) {
-        onLlParameterClickListener = new OnLlParameterClickListener(getContext());
+        onLlParameterClickListener = new OnParameterViewGroupClickListener(getContext());
         llBaseLatitude = view.findViewById(R.id.ll_base_latitude);
         llBaseLatitude.setOnClickListener(onLlParameterClickListener);
         llBaseLongitude = view.findViewById(R.id.ll_base_longitude);

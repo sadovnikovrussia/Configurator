@@ -10,15 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import java.util.List;
+import java.util.Objects;
+
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.model.entities.Parameter;
-import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
+import tech.sadovnikov.configurator.old.OnParameterViewGroupClickListener;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgFragment;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
@@ -47,21 +50,18 @@ public class ConfigMainFragment extends BaseCfgFragment {
     @BindView(R.id.et_upower)
     EditText etUpower;
 
-    LinearLayout llBlinkerLx;
-    LinearLayout llMaxDeviation;
-    LinearLayout llTiltAngle;
-    LinearLayout llImpactPow;
-    LinearLayout llUpowerThld;
-    LinearLayout llDeviationInt;
-    LinearLayout llMaxActive;
-    LinearLayout llBlinkerMode;
-    LinearLayout llBlinkerBrightness;
+    @BindViews({R.id.ll_blinker_mode, R.id.ll_blinker_brightness, R.id.ll_blinker_lx, R.id.ll_max_deviation, R.id.ll_tilt_angle, R.id.ll_impact_pow, R.id.ll_upower_thld, R.id.ll_deviation_int, R.id.ll_max_active})
+    List<ViewGroup> parameterViews;
 
-    OnLlParameterClickListener onLlParameterClickListener;
+    @BindViews({R.id.spin_blinker_mode, R.id.spin_blinker_brightness})
+    List<Spinner> spinnerParameterValues;
+
+    @BindViews({R.id.et_blinker_lx})
+    List<EditText> etParameterValues;
 
     Listener listener;
 
-    AdapterView.OnItemSelectedListener onBlinkerModeSelectedListener;
+    AdapterView.OnItemSelectedListener onSpinParameterListener;
 
 
     public static ConfigMainFragment newInstance() {
@@ -75,7 +75,6 @@ public class ConfigMainFragment extends BaseCfgFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        // Inflate the layout for this fragment
         Log.v(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_config_main, container, false);
         ButterKnife.bind(this, view);
@@ -86,10 +85,17 @@ public class ConfigMainFragment extends BaseCfgFragment {
 
     @Override
     public void setUp(View view) {
-        onBlinkerModeSelectedListener = new AdapterView.OnItemSelectedListener() {
+        onSpinParameterListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                presenter.onParameterChanged(ParametersEntities.BLINKER_MODE, String.valueOf(position));
+                switch (view.getId()) {
+                    case R.id.spin_blinker_mode:
+                        presenter.onParameterChanged(ParametersEntities.BLINKER_MODE, String.valueOf(position));
+                        break;
+                    case R.id.spin_blinker_brightness:
+                        presenter.onParameterChanged(ParametersEntities.BLINKER_BRIGHTNESS, String.valueOf(position));
+                        break;
+                }
             }
 
             @Override
@@ -97,47 +103,57 @@ public class ConfigMainFragment extends BaseCfgFragment {
 
             }
         };
-        spinBlinkerMode.setOnItemSelectedListener(onBlinkerModeSelectedListener);
+        View.OnFocusChangeListener onEtParameterChangedListener = (v, hasFocus) -> {
+            if (!hasFocus)
+                switch (v.getId()) {
+                    case R.id.et_blinker_lx:
+                        presenter.onParameterChanged(ParametersEntities.BLINKER_LX, etBlinkerLx.getText().toString());
+                        break;
+                    case R.id.et_max_deviation:
+                        presenter.onParameterChanged(ParametersEntities.MAX_DEVIATION, etMaxDeviation.getText().toString());
+                        break;
+                    case R.id.et_tilt_angle:
+                        presenter.onParameterChanged(ParametersEntities.TILT_ANGLE, etTiltAngle.getText().toString());
+                        break;
+                    case R.id.et_impact_pow:
+                        presenter.onParameterChanged(ParametersEntities.IMPACT_POW, etImpactPow.getText().toString());
+                        break;
+                    case R.id.et_upower_thld:
+                        presenter.onParameterChanged(ParametersEntities.UPOWER_THLD, etUpowerThld.getText().toString());
+                        break;
+                    case R.id.et_deviation_int:
+                        presenter.onParameterChanged(ParametersEntities.DEVIATION_INT, etDeviationInt.getText().toString());
+                        break;
+                }
 
-//        onLlParameterClickListener = new OnLlParameterClickListener(getContext());
-//        llBlinkerMode.setOnClickListener(onLlParameterClickListener);
-//        llBlinkerBrightness.setOnClickListener(onLlParameterClickListener);
-//        llBlinkerLx.setOnClickListener(onLlParameterClickListener);
-//        llMaxDeviation.setOnClickListener(onLlParameterClickListener);
-//        llTiltAngle.setOnClickListener(onLlParameterClickListener);
-//        llImpactPow.setOnClickListener(onLlParameterClickListener);
-//        llUpowerThld.setOnClickListener(onLlParameterClickListener);
-//        llDeviationInt.setOnClickListener(onLlParameterClickListener);
-//        llMaxActive.setOnClickListener(onLlParameterClickListener);
-//        spinBlinkerBrightness.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                Log.d(TAG, "onSpinBlinkerBrightnessItemSelected: " + position);
-//                listener.onSpinBlinkerBrightnessItemSelected(position);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
-//        etBlinkerLx.setOnFocusChangeListener((v, hasFocus) -> listener.onEtBlinkerLxFocusChange(hasFocus));
-//        etMaxDeviation.setOnFocusChangeListener((v, hasFocus) -> listener.onEtMaxDeviationFocusChange(hasFocus));
-//        etTiltAngle.setOnFocusChangeListener((v, hasFocus) -> listener.onEtTiltAngleFocusChange(hasFocus));
-//        etImpactPow.setOnFocusChangeListener((v, hasFocus) -> listener.onEtImpactPowFocusChange(hasFocus));
-//        etUpowerThld.setOnFocusChangeListener((v, hasFocus) -> listener.onEtUpowerThldFocusChange(hasFocus));
-//        etDeviationInt.setOnFocusChangeListener((v, hasFocus) -> listener.onEtDeviationIntFocusChange(hasFocus));
-//        etMaxActive.setOnFocusChangeListener((v, hasFocus) -> listener.onEtMaxActiveFocusChange(hasFocus));
+        };
+        OnParameterViewGroupClickListener onParameterViewGroupClickListener = new OnParameterViewGroupClickListener(Objects.requireNonNull(getContext()));
+
+        for (ViewGroup vg : parameterViews)
+            vg.setOnClickListener(onParameterViewGroupClickListener);
+        for (Spinner spinner : spinnerParameterValues)
+            spinner.setOnItemSelectedListener(onSpinParameterListener);
+        for (EditText editText : etParameterValues)
+            editText.setOnFocusChangeListener(onEtParameterChangedListener);
     }
 
     @Override
     public void showConfiguration(Configuration configuration) {
-        Parameter blinkerMode = configuration.getParameter(ParametersEntities.BLINKER_MODE);
-        if (blinkerMode != null) {
-            spinBlinkerMode.setOnItemSelectedListener(null);
-            spinBlinkerMode.setSelection(Integer.valueOf(blinkerMode.getValue()) + 1);
-            spinBlinkerMode.setOnItemSelectedListener(onBlinkerModeSelectedListener);
+        for (Spinner spinner : spinnerParameterValues) {
+            spinner.setOnItemSelectedListener(null);
         }
+        spinBlinkerMode.setSelection(Integer.valueOf(Objects.requireNonNull(configuration.getParameter(ParametersEntities.BLINKER_MODE)).getValue()) + 1);
+        spinBlinkerBrightness.setSelection(Integer.valueOf(Objects.requireNonNull(configuration.getParameter(ParametersEntities.BLINKER_BRIGHTNESS)).getValue()) + 1);
+        for (Spinner spinner : spinnerParameterValues) {
+            spinner.setOnItemSelectedListener(onSpinParameterListener);
+        }
+
+        etBlinkerLx.setText(Objects.requireNonNull(configuration.getParameter(ParametersEntities.BLINKER_LX)).getValue());
+        etMaxDeviation.setText(Objects.requireNonNull(configuration.getParameter(ParametersEntities.MAX_DEVIATION)).getValue());
+        etTiltAngle.setText(Objects.requireNonNull(configuration.getParameter(ParametersEntities.TILT_ANGLE)).getValue());
+        etImpactPow.setText(Objects.requireNonNull(configuration.getParameter(ParametersEntities.IMPACT_POW)).getValue());
+        etUpowerThld.setText(Objects.requireNonNull(configuration.getParameter(ParametersEntities.UPOWER_THLD)).getValue());
+        etDeviationInt.setText(Objects.requireNonNull(configuration.getParameter(ParametersEntities.DEVIATION_INT)).getValue());
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -202,32 +218,6 @@ public class ConfigMainFragment extends BaseCfgFragment {
         listener = null;
         super.onDetach();
     }
-    // ---------------------------------------------------------------------------------------------
-
-
-    public interface Listener {
-
-        void onConfigMainFragmentStart();
-
-        void onSpinBlinkerModeItemSelected(int position);
-
-        void onSpinBlinkerBrightnessItemSelected(int position);
-
-        void onEtMaxDeviationFocusChange(boolean hasFocus);
-
-        void onEtTiltAngleFocusChange(boolean hasFocus);
-
-        void onEtImpactPowFocusChange(boolean hasFocus);
-
-        void onEtUpowerThldFocusChange(boolean hasFocus);
-
-        void onEtDeviationIntFocusChange(boolean hasFocus);
-
-        void onEtMaxActiveFocusChange(boolean hasFocus);
-
-        void onEtBlinkerLxFocusChange(boolean hasFocus);
-
-        void onLlMainParameterClick(EditText etBlinkerLx);
-    }
+// ---------------------------------------------------------------------------------------------
 
 }

@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.old.OnLlParameterClickListener;
+import tech.sadovnikov.configurator.old.OnParameterViewGroupClickListener;
 
 
 public class ConfigSimCardFragment extends Fragment {
@@ -43,14 +43,14 @@ public class ConfigSimCardFragment extends Fragment {
     LinearLayout llPin;
     LinearLayout llSimAttempts;
     LinearLayout llDelivTimeOut;
-    OnLlParameterClickListener onLlParameterClickListener;
+    OnParameterViewGroupClickListener onLlParameterClickListener;
 
     public ConfigSimCardFragment() {
         // Required empty public constructor
     }
 
     private void initUi(View view) {
-        onLlParameterClickListener = new OnLlParameterClickListener(getContext());
+        onLlParameterClickListener = new OnParameterViewGroupClickListener(getContext());
 
         llApn = view.findViewById(R.id.ll_apn);
         llLogin = view.findViewById(R.id.ll_login);

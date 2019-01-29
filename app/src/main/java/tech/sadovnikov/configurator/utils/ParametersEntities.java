@@ -11,7 +11,14 @@ public enum ParametersEntities {
             return "@VERSION";
         }
     },
-    BLINKER_MODE("BLINKER MODE", true, Integer.class);
+    BLINKER_MODE("BLINKER MODE", true, Integer.class),
+    BLINKER_BRIGHTNESS("BLINKER BRIGHTNESS", true, Integer.class),
+    BLINKER_LX("BLINKER LX", true, Integer.class),
+    MAX_DEVIATION("MAX DEVIATION", true, Integer.class),
+    TILT_ANGLE("TILT ANGLE", true, Integer.class),
+    IMPACT_POW("IMPACT POW", true, Integer.class),
+    UPOWER_THLD("UPOWER THLD", true, Float.class),
+    DEVIATION_INT("DEVIATION INT", true, Integer.class);
 
     String endOfCommonReadingCommand = "?";
 
