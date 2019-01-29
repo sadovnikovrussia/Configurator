@@ -78,6 +78,7 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
         adapter.setListener(this);
         rvConfigTabs.setLayoutManager(linearLayoutManager);
         rvConfigTabs.setAdapter(adapter);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -86,14 +87,9 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        Log.d(TAG, "onCreateOptionsMenu: ");
         inflater.inflate(R.menu.menu_configuration_options, menu);
     }
 
@@ -102,6 +98,7 @@ public class ConfigurationFragment extends MvpAppCompatFragment implements Confi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.v(TAG, "onAttach: ");
         if (context instanceof Listener) {
             listener = (Listener) context;
         } else {

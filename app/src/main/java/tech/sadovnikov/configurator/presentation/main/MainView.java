@@ -26,11 +26,11 @@ public interface MainView extends MvpView {
     void setTitle(int title);
 
 
-    void showLoadingProcess();
+    @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "loadingProcess")
+    void setLoadingProcess(int progress);
 
+    @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "loadingProcess")
     void hideLoadingProgress();
-
-    void updateLoadingProcess(Float percents);
 
 
     @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "saveDialog")

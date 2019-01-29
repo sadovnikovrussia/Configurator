@@ -9,12 +9,11 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
+import tech.sadovnikov.configurator.utils.rx.RxTransformers;
 
 /**
  * Класс, отвечающий за отправку списка команд (установка и считывание параметров из устройства)
@@ -25,33 +24,24 @@ import tech.sadovnikov.configurator.utils.ParametersEntities;
 public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
     private static final String TAG = CfgLoader.class.getSimpleName();
 
-    static final int WHAT_LOADING_END = 11;
-    static final int WHAT_LOADING_START = 12;
-
-    private boolean loading = false;
-    private int commandNumber = 0;
-    private int attemptNumber = 1;
+    private int commandNumber;
+    private int attemptNumber;
     private int period = 2500;
-    private PublishSubject<Float> progress;
+    private long delay = 0;
+
+    private PublishSubject<Integer> progress;
 
     private List<String> commandList = new ArrayList<>();
 
     private Timer timer;
-    private TimerTask task;
 
-    private OnLoaderEventsListener onLoaderEventsListener;
     private BluetoothService bluetoothService;
     private DataManager dataManager;
 
     private CompositeDisposable subscriptions = new CompositeDisposable();
-    //UiHandler handler;
 
     @Inject
     public CfgLoader() {
-        progress = PublishSubject.create();
-        //handler = uiHandler;
-        //this.onLoaderEventsListener = onLoaderEventsListener;
-        //this.bluetoothService = bluetoothService;
     }
 
     public void setBluetoothService(BluetoothService bluetoothService) {
@@ -62,14 +52,14 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
         this.dataManager = dataManager;
     }
 
-    public PublishSubject<Float> setCurrentConfiguration() {
+    public PublishSubject<Integer> setCurrentConfiguration() {
         commandList = dataManager.getCmdListForSetDeviceConfiguration();
         Log.d(TAG, "setCurrentConfiguration: " + commandList);
         startLoading();
         return progress;
     }
 
-    public PublishSubject<Float> readFullConfiguration() {
+    public PublishSubject<Integer> readFullConfiguration() {
         commandList.clear();
         for (ParametersEntities entity : ParametersEntities.values()) {
             commandList.add(entity.createReadingCommand());
@@ -81,93 +71,70 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
 
     private void startLoading() {
         subscriptions.add(bluetoothService.getCmdObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(RxTransformers.applySchedulers())
                 .subscribe(parameter -> {
-                    nextCommand();
+                    onGetParameter();
                     dataManager.setConfigParameter(parameter);
                 }));
-        loading = true;
         commandNumber = 0;
-        attemptNumber = 1;
+        attemptNumber = 0;
+        progress = PublishSubject.create();
         timer = new Timer();
-        task = new Task();
-        timer.schedule(task, 0, period);
+        timer.schedule(new Task(), delay, period);
     }
 
-    public void loadCommandList(List<String> commandList) {
-        Log.d(TAG, "loadCommandList: " + commandList);
-        this.commandList = commandList;
-        loading = true;
-        commandNumber = 0;
-        attemptNumber = 1;
-        timer = new Timer();
-        task = new Task();
-        timer.schedule(task, 0, period);
-        //onLoaderEventsListener.onStartLoading(commandList.size());
-    }
-
-    private void nextCommand() {
-        if (loading) {
-            Log.d(TAG, "onNextCommand:");
-            timer.cancel();
-            timer.purge();
+    private void onGetParameter() {
+        timer.cancel();
+        timer.purge();
+        commandNumber++;
+        attemptNumber = 0;
+        int pr = commandNumber * 100 / commandList.size();
+        progress.onNext(pr);
+        if (commandNumber < commandList.size()) {
             timer = new Timer();
-            task = new Task();
-            commandNumber++;
-            attemptNumber = 1;
-            //onLoaderEventsListener.onNextCommand(commandNumber, commandList.size());
-            timer.schedule(task, 0, period);
+            timer.schedule(new Task(), delay, period);
+        } else {
+            progress.onComplete();
+            subscriptions.clear();
         }
     }
 
     @Override
     public void onSetConfigParameter(ParametersEntities parameterEntity) {
-        nextCommand();
+        onGetParameter();
     }
 
 
     private class Task extends TimerTask {
         private final String TAG = Task.class.getSimpleName();
 
+        int attempts = 3;
+
         @Override
         public void run() {
-            if (commandNumber < commandList.size()) {
-                float progr = (commandNumber / commandList.size());
-                progress.onNext(progr);
-                int attempts = 3;
-                if (attemptNumber <= attempts) {
+            if (attemptNumber < attempts) {
+                String command = commandList.get(commandNumber);
+                Log.d(TAG, "commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + command);
+                bluetoothService.sendData(command);
+                attemptNumber++;
+            } else {
+                commandNumber++;
+                attemptNumber = 0;
+                int pr = commandNumber * 100 / commandList.size();
+                progress.onNext(pr);
+                if (commandNumber < commandList.size()) {
                     String command = commandList.get(commandNumber);
-                    Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + command);
+                    Log.d(TAG, "commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + command);
                     bluetoothService.sendData(command);
                     attemptNumber++;
                 } else {
-                    commandNumber++;
-                    if (commandNumber < commandList.size()) {
-                        attemptNumber = 1;
-                        String command = commandList.get(commandNumber);
-                        Log.d(TAG, "run() called: commandNumber = " + String.valueOf(commandNumber) + ", " + "attemptNumber = " + attemptNumber + ", " + command);
-                        bluetoothService.sendData(command);
-                    }
+                    progress.onComplete();
+                    subscriptions.clear();
                 }
-            } else {
-                progress.onComplete();
-                commandNumber++;
-                timer.cancel();
-                timer.purge();
-                loading = false;
-                subscriptions.clear();
-//                Message msg = new Message();
-//                msg.what = WHAT_LOADING_END;
-//                handler.sendMessage(msg);
             }
         }
 
     }
 
-    public interface OnLoaderEventsListener {
-        void onStartLoading(int size);
 
-        void onNextCommand(int commandNumber, int size);
-    }
 }

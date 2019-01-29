@@ -8,10 +8,9 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.ReadPermission;
@@ -116,25 +115,38 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
 
     void onReadConfiguration() {
-        getViewState().showLoadingProcess();
-        Disposable progressSubscription = cfgLoader.readFullConfiguration()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aFloat -> getViewState().updateLoadingProcess(aFloat),
-                        Throwable::printStackTrace,
-                        () -> getViewState().hideLoadingProgress(),
-                        disposable -> {});
-        subscriptions.add(progressSubscription);
+        if (bluetoothService.getConnectionState() == CONNECTION_STATE_CONNECTED) {
+            Disposable progressSubscription = cfgLoader.readFullConfiguration()
+                    .compose(RxTransformers.applySchedulers())
+                    .subscribe(integer -> {
+                                Log.i(TAG, "onNext: " + integer);
+                                getViewState().setLoadingProcess(integer);
+                            }, throwable -> Log.i(TAG, "onError: " + throwable),
+                            () -> {
+                                Log.i(TAG, "onComplete: ");
+                                getViewState().hideLoadingProgress();
+                                getViewState().showMessage("Считывание конфигурации завершено");
+                            },
+                            disposable -> {
+                                Log.i(TAG, "onSubscribe: ");
+                                getViewState().setLoadingProcess(0);
+                            });
+        }
     }
 
     void onSetConfiguration() {
-        getViewState().showLoadingProcess();
-        Disposable progressSubscription = cfgLoader.setCurrentConfiguration()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aFloat -> getViewState().updateLoadingProcess(aFloat),
-                        Throwable::printStackTrace,
-                        () -> getViewState().hideLoadingProgress());
+        if (bluetoothService.getConnectionState() == CONNECTION_STATE_CONNECTED) {
+            Disposable progressSubscription = cfgLoader.setCurrentConfiguration()
+                    .compose(RxTransformers.applySchedulers())
+                    .subscribe(integer -> getViewState().setLoadingProcess(integer),
+                            Throwable::printStackTrace,
+                            () -> {
+                                getViewState().hideLoadingProgress();
+                                getViewState().showMessage("Установка конфигурации завершена");
+                            },
+                            disposable -> getViewState().setLoadingProcess(0)
+                    );
+        }
     }
 
     void onSaveConfiguration() {

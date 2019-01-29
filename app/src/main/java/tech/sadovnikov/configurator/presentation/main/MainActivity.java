@@ -2,9 +2,7 @@ package tech.sadovnikov.configurator.presentation.main;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.bluetooth.BluetoothManager;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,10 +12,8 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -150,19 +146,15 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     }
 
     @Override
-    public void showLoadingProcess() {
-        Log.d(TAG, "showLoadingProcess: ");
-
+    public void setLoadingProcess(int progress) {
+        Log.d(TAG, "setLoadingProcess: ");
+        Objects.requireNonNull(getSupportActionBar()).setSubtitle(String.valueOf(progress) + "%");
     }
 
     @Override
     public void hideLoadingProgress() {
-
-    }
-
-    @Override
-    public void updateLoadingProcess(Float percents) {
-
+        Log.d(TAG, "hideLoadingProgress: ");
+        Objects.requireNonNull(getSupportActionBar()).setSubtitle("");
     }
 
     @Override
