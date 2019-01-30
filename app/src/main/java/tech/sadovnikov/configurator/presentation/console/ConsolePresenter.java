@@ -1,5 +1,6 @@
 package tech.sadovnikov.configurator.presentation.console;
 
+import android.os.Build;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -15,7 +16,10 @@ import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
+import tech.sadovnikov.configurator.model.FileManager;
 import tech.sadovnikov.configurator.model.data.DataManager;
+
+import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
 @InjectViewState
 public class ConsolePresenter extends MvpPresenter<ConsoleView> {
@@ -30,10 +34,12 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
     @Inject
     DataManager dataManager;
 
+    private FileManager fileManager;
+
     ConsolePresenter() {
         Log.i(TAG, "ConsolePresenter: ");
         initDaggerComponent();
-        presenterComponent.injectConsolePresenter(this);
+        fileManager = presenterComponent.getFileManager();
     }
 
     private void initDaggerComponent() {
@@ -41,6 +47,7 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
                 .builder()
                 .applicationComponent(App.getApplicationComponent())
                 .build();
+        presenterComponent.injectConsolePresenter(this);
     }
 
     @Override
@@ -53,12 +60,57 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(message -> getViewState().addMessageToLogScreen(message, dataManager.getAutoScrollMode()),
                         Throwable::printStackTrace,
-                        () -> {},
+                        () -> {
+                        },
                         disposable -> {
                             Log.i(TAG, "onSubscribe: ");
                             getViewState().showMainLogs(dataManager.getMainLogList(), dataManager.getAutoScrollMode());
                         });
         compositeDisposable.add(subscribe);
+    }
+
+    void onSendCommand(String command) {
+        bluetoothService.sendData(command);
+    }
+
+    void onChangeAutoScrollClick(boolean isChecked) {
+        dataManager.setAutoScrollMode(isChecked);
+        getViewState().setAutoScrollState(dataManager.getAutoScrollMode());
+    }
+
+    void onSaveLog(int writePermission) {
+        if (fileManager.isExternalStorageWritable()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (writePermission == PERMISSION_GRANTED) {
+                    getViewState().showSaveLogDialog();
+                } else getViewState().requestWritePermission();
+            } else getViewState().showSaveLogDialog();
+        } else {
+            getViewState().showMessage("Ваше устройство не поддерживает данную функцию");
+        }
+    }
+
+    void onPositiveWriteStorageRequestResult() {
+        getViewState().showSaveLogDialog();
+    }
+
+    void onSaveDialogPositiveClick(final String fileName) {
+        fileManager.saveLog(dataManager.getMainLogList(), fileName, new FileManager.SaveLogCallback() {
+            @Override
+            public void onSuccess(final String fileName) {
+                getViewState().hideSaveLogDialog();
+                getViewState().showSuccessSaveLogMessage(fileName);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                getViewState().showErrorSaveLogMessage(e);
+            }
+        });
+    }
+
+    void onSaveDialogNegativeClick() {
+        getViewState().hideSaveLogDialog();
     }
 
 
@@ -69,17 +121,5 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
         compositeDisposable.clear();
     }
 
-    void onSendCommand(String command) {
-        bluetoothService.sendData(command);
-    }
-
-    void onSaveLogMessages() {
-
-    }
-
-    void onChangeAutoScrollClick(boolean isChecked) {
-        dataManager.setAutoScrollMode(isChecked);
-        getViewState().setAutoScrollState(dataManager.getAutoScrollMode());
-    }
 
 }

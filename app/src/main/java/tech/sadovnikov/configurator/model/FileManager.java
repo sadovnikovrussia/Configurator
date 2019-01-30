@@ -15,6 +15,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
+import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
@@ -42,19 +43,43 @@ public class FileManager {
     }
 
     // TODO <Отрефакторить код с учетом возвращаемых значений createFile() и обработать события>
-    private File getFile(String fileName) {
-        // Get the directory for the user's public download directory.
-        // File dir = Environment.getExternalStorageDirectory();
+    private File getCfgFile(String fileName) {
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        Log.d(TAG, "getFile: dir = " + dir.getAbsolutePath());
+        Log.d(TAG, "getCfgFile: dir = " + dir.getAbsolutePath());
         File file = new File(dir, fileName + ".cfg");
         if (!file.exists()) {
-            // LogList.d(TAG, "File does not exist");
             try {
                 if (file.createNewFile()) {
-                    Log.d(TAG, "getFile: Создан файл, file dir = " + file.getAbsolutePath());
+                    Log.d(TAG, "getCfgFile: Создан файл, file dir = " + file.getAbsolutePath());
                 } else {
-                    Log.d(TAG, "getFile: Данный файл уже существует и будет перезаписан, file dir = " + file.getAbsolutePath());
+                    Log.d(TAG, "getCfgFile: Данный файл уже существует и будет перезаписан, file dir = " + file.getAbsolutePath());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (!file.isFile()) {
+                file.delete();
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return file;
+    }
+
+    private File getLogFile(String fileName) {
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        Log.d(TAG, "getCfgFile: dir = " + dir.getAbsolutePath());
+        File file = new File(dir, fileName + ".txt");
+        if (!file.exists()) {
+            try {
+                if (file.createNewFile()) {
+                    Log.d(TAG, "getLogFile: Создан файл, file dir = " + file.getAbsolutePath());
+                } else {
+                    Log.d(TAG, "getLogFile: Данный файл уже существует и будет перезаписан, file dir = " + file.getAbsolutePath());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -73,7 +98,7 @@ public class FileManager {
     }
 
     public void saveConfiguration(Configuration configuration, String fileName, SaveCfgCallback callback) {
-        File file = getFile(fileName);
+        File file = getCfgFile(fileName);
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
@@ -128,8 +153,8 @@ public class FileManager {
                         String value;
                         String name;
                         name = line.substring(0, indexEquals).trim().toUpperCase();
-                        for (ParametersEntities parameterEntity : ParametersEntities.values()){
-                            if (parameterEntity.getName().equals(name)){
+                        for (ParametersEntities parameterEntity : ParametersEntities.values()) {
+                            if (parameterEntity.getName().equals(name)) {
                                 value = line.substring(indexEquals + 1).trim();
                                 if (value.length() != 0) {
                                     Parameter parameter = Parameter.of(parameterEntity, value);
@@ -151,6 +176,34 @@ public class FileManager {
         }
     }
 
+    public void saveLog(final List<LogMessage> mainLogList, final String fileName, final SaveLogCallback callback) {
+        File file = getLogFile(fileName);
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            try {
+                for (LogMessage logMessage : mainLogList) {
+                    outputStreamWriter.write(logMessage.convertToOriginal());
+                }
+                callback.onSuccess(fileName);
+            } catch (IOException e) {
+                callback.onError(e);
+                e.printStackTrace();
+            }
+            try {
+                outputStreamWriter.close();
+                fileOutputStream.close();
+            } catch (IOException e) {
+                callback.onError(e);
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            callback.onError(e);
+            e.printStackTrace();
+        }
+    }
+
+
     public interface SaveCfgCallback {
         void onSuccess(String fileName);
 
@@ -161,6 +214,11 @@ public class FileManager {
         void onSuccess(String cfgName, Configuration configuration);
 
         void onError(String cfgName, Exception e);
+    }
 
+    public interface SaveLogCallback {
+        void onSuccess(String fileName);
+
+        void onError(Exception e);
     }
 }

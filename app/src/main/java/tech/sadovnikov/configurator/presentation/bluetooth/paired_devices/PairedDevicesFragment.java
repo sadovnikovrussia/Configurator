@@ -103,8 +103,8 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
         alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
                 .setTitle("Отключиться?")
                 .setMessage("Произойдет разъединение соединения с устройством " + device.getName())
-                .setPositiveButton(R.string.ok, (dialog, which) -> presenter.onCloseBtConnection())
-                .setNegativeButton(R.string.cancel, (dialog, id) -> presenter.onCancelCloseConnectionDialog())
+                .setPositiveButton(R.string.ok_button, (dialog, which) -> presenter.onCloseBtConnection())
+                .setNegativeButton(R.string.cancel_button, (dialog, id) -> presenter.onCancelCloseConnectionDialog())
                 .create();
         alertDialog.show();
     }

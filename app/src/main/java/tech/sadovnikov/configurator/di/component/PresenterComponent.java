@@ -3,6 +3,7 @@ package tech.sadovnikov.configurator.di.component;
 import dagger.Component;
 import tech.sadovnikov.configurator.di.PresenterScope;
 import tech.sadovnikov.configurator.di.module.PermissionsModule;
+import tech.sadovnikov.configurator.model.FileManager;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothPresenter;
 import tech.sadovnikov.configurator.presentation.bluetooth.available_devices.AvailableDevicesPresenter;
 import tech.sadovnikov.configurator.presentation.bluetooth.paired_devices.PairedDevicesPresenter;
@@ -31,4 +32,6 @@ public interface PresenterComponent {
     void injectConfigBuoyPresenter(ConfigBuoyPresenter configBuoyPresenter);
 
     void injectConfigMainPresenter(ConfigMainPresenter configMainPresenter);
+
+    FileManager getFileManager();
 }

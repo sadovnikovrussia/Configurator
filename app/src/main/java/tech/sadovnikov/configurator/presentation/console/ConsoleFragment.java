@@ -1,9 +1,13 @@
 package tech.sadovnikov.configurator.presentation.console;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -28,8 +33,8 @@ import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 
-import static tech.sadovnikov.configurator.presentation.console.ConsolePresenter.*;
-import static tech.sadovnikov.configurator.presentation.console.ConsolePresenter.TAG;
+import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
+import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 
 public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView {
@@ -51,14 +56,12 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     Switch swAutoScroll;
 
     private Listener listener;
+    private SaveLogDialogFragment saveDialog;
+    private static final int REQUEST_WRITE_STORAGE = 1;
+    private static final int REQUEST_SAVE_LOG_DIALOG = 10;
 
-
-    public ConsoleFragment() {
-        //Log.v(TAG, "onConstructor");
-    }
 
     public static Fragment newInstance() {
-        //Log.v(TAG, "newInstance: ");
         Bundle args = new Bundle();
         ConsoleFragment fragment = new ConsoleFragment();
         fragment.setArguments(args);
@@ -78,10 +81,6 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
 
     private void setUp() {
         btnSendCommand.setOnClickListener(view -> presenter.onSendCommand(etCommandLine.getText().toString()));
-        tvLogs.setOnLongClickListener(view -> {
-            presenter.onSaveLogMessages();
-            return false;
-        });
         setHasOptionsMenu(true);
     }
 
@@ -110,40 +109,95 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
         swAutoScroll.setChecked(isAutoScroll);
     }
 
+    @Override
+    public void showSaveLogDialog() {
+        saveDialog = new SaveLogDialogFragment();
+        saveDialog.setTargetFragment(this, REQUEST_SAVE_LOG_DIALOG);
+        saveDialog.show(((AppCompatActivity) listener).getSupportFragmentManager(), SaveLogDialogFragment.TAG);
+    }
+
+    @Override
+    public void hideSaveLogDialog() {
+        if (saveDialog != null) {
+            saveDialog.dismiss();
+            saveDialog = null;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_SAVE_LOG_DIALOG:
+                if (resultCode == Activity.RESULT_OK) {
+                    presenter.onSaveDialogPositiveClick(data.getStringExtra("file_name"));
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    presenter.onSaveDialogNegativeClick();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void requestWritePermission() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_WRITE_STORAGE) {
+            if (permissions.length > 0 && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED)
+                    presenter.onPositiveWriteStorageRequestResult();
+            }
+        }
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showSuccessSaveLogMessage(String fileName) {
+        Toast.makeText(getContext(), "Лог-файл \"" + fileName + "\" сохранён в папку Загрузки", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showErrorSaveLogMessage(Exception e) {
+        Toast.makeText(getContext(), "Не удалось сохранить лог-файл" + "\r\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_console_options, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_save_log:
+                int writePermission = checkSelfPermission(((Activity) listener).getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                presenter.onSaveLog(writePermission);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     // ---------------------------------------------------------------------------------------------
     // States
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        //Log.i(TAG, "onCreateOptionsMenu: ");
-        inflater.inflate(R.menu.menu_configuration_options, menu);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        //Log.i(TAG, "onPrepareOptionsMenu: ");
-    }
-
-    @Override
-    public void onDestroyOptionsMenu() {
-        super.onDestroyOptionsMenu();
-        //Log.i(TAG, "onDestroyOptionsMenu: ");
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //Log.i(TAG, "onOptionsItemSelected: ");
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener = (Listener) getActivity();
-        Log.v(TAG, "onStartBaseCfgView");
+        Log.v(TAG, "onAttach: ");
+        if (context instanceof Listener) {
+            listener = (Listener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement ConsoleFragment.Listener");
+        }
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -194,7 +248,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     }
     // ---------------------------------------------------------------------------------------------
 
-    public interface Listener{
+    public interface Listener {
         void onCreateViewConsole();
     }
 }

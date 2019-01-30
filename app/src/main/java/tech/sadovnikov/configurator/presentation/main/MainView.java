@@ -10,52 +10,36 @@ import tech.sadovnikov.configurator.presentation.AddToEndSingleByTagStateStrateg
 public interface MainView extends MvpView {
 
     void showBluetoothView();
-
     void showConsoleView();
-
     void showConfigurationView();
-
     void showCfgTab(String cfgTab);
 
     void setBluetoothNavigationPosition();
-
     void setConfigurationNavigationPosition();
-
     void setConsoleNavigationPosition();
 
     void setTitle(int title);
 
-
     @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "loadingProcess")
     void setLoadingProcess(int progress);
-
     @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "loadingProcess")
     void hideLoadingProgress();
 
-
     @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "saveDialog")
     void showSaveDialog();
-
     @StateStrategyType(value = AddToEndSingleByTagStateStrategy.class, tag = "saveDialog")
     void hideDialogSave();
 
-
     void showMessage(String message);
 
-
     void showSuccessSaveCfgMessage(String name);
-
     void showErrorSaveCfgMessage(Exception e);
-
     void requestWritePermission();
 
 
     void showSuccessOpenCfgMessage(String cfgName);
-
     void showErrorOpenCfgMessage(String cfgName, Exception e);
-
     void requestReadStoragePermission();
-
     void startOpenFileManagerActivity();
 
 

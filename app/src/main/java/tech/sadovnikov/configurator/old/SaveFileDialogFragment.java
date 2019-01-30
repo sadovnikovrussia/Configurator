@@ -39,8 +39,8 @@ public class SaveFileDialogFragment extends DialogFragment {
         etFileName.setPaintFlags(View.INVISIBLE);
         builder.setView(view);
         builder.setMessage(R.string.saving_configuration)
-                .setPositiveButton(R.string.save, (dialog, id) -> listener.onSaveDialogPositiveClick(etFileName.getText().toString()))
-                .setNegativeButton(R.string.cancel, (dialog, id) -> listener.onSaveDialogNegativeClick());
+                .setPositiveButton(R.string.save_button, (dialog, id) -> listener.onSaveDialogPositiveClick(etFileName.getText().toString()))
+                .setNegativeButton(R.string.cancel_button, (dialog, id) -> listener.onSaveDialogNegativeClick());
         // Create the AlertDialog object and return it
         return builder.create();
     }

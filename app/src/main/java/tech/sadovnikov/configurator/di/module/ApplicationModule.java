@@ -14,6 +14,7 @@ import tech.sadovnikov.configurator.di.MainConfiguration;
 import tech.sadovnikov.configurator.model.AppBluetoothService;
 import tech.sadovnikov.configurator.model.BluetoothBroadcastReceiver;
 import tech.sadovnikov.configurator.model.BluetoothService;
+import tech.sadovnikov.configurator.model.FileManager;
 import tech.sadovnikov.configurator.model.MessageAnalyzer;
 import tech.sadovnikov.configurator.model.data.AppDataManager;
 import tech.sadovnikov.configurator.model.data.DataManager;
@@ -78,6 +79,11 @@ public class ApplicationModule {
     @Singleton
     MessageAnalyzer provideStreamAnalyzer(BluetoothService bluetoothService, DataManager dataManager) {
         return new MessageAnalyzer(bluetoothService, dataManager);
+    }
+
+    @Provides
+    FileManager provideFileManager(FileManager fileManager) {
+        return fileManager;
     }
 
     @BluetoothPermission
