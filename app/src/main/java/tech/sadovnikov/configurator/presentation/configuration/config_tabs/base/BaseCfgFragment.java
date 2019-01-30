@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -30,14 +29,21 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView: ");
-        presenter.onCreateViewBaseCfgView();
+        Log.v(TAG, "ON_CREATE_VIEW");
         listener.onCreateViewBaseCfgView();
         setHasOptionsMenu(true);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     public abstract void setUp(View view);
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_configuration_options, menu);
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -49,12 +55,6 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
             throw new RuntimeException(context.toString()
                     + " must implement BaseCfgFragment.Listener");
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_configuration_options, menu);
     }
 
     @Override
@@ -101,12 +101,12 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
 
     @Override
     public void onDetach() {
-        super.onDetach();
         Log.v(TAG, "onDetach: ");
+        listener = null;
+        super.onDetach();
     }
 
-    public interface Listener{
-
+    public interface Listener {
         void onCreateViewBaseCfgView();
     }
 }

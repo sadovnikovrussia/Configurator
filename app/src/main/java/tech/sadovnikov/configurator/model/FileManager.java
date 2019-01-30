@@ -110,14 +110,11 @@ public class FileManager {
         String cfgName;
         if (!path.startsWith("/storage") && path.contains("/storage")) {
             String newPath = path.substring(path.indexOf("/storage"));
-            Log.d(TAG, "openConfiguration: newPath = " + newPath);
             file = new File(newPath);
         } else {
-            Log.d(TAG, "openConfiguration: path = " + path);
             file = new File(path);
         }
         cfgName = file.getName();
-        Log.d(TAG, "openConfiguration: " + cfgName);
         try {
             fileReader = new FileReader(file);
             bufferedReader = new BufferedReader(fileReader);
@@ -125,21 +122,18 @@ public class FileManager {
             try {
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    Log.d(TAG, "openConfiguration: 1" + line);
                     line = line.toUpperCase();
                     int indexEquals = line.indexOf("=");
                     if (indexEquals != -1) {
                         String value;
                         String name;
                         name = line.substring(0, indexEquals).trim().toUpperCase();
-                        Log.d(TAG, "openConfiguration: 2" + name);
                         for (ParametersEntities parameterEntity : ParametersEntities.values()){
                             if (parameterEntity.getName().equals(name)){
                                 value = line.substring(indexEquals + 1).trim();
                                 if (value.length() != 0) {
                                     Parameter parameter = Parameter.of(parameterEntity, value);
                                     configuration.setParameter(parameter);
-                                    Log.d(TAG, "openConfiguration: 4" + configuration);
                                 }
                                 break;
                             }

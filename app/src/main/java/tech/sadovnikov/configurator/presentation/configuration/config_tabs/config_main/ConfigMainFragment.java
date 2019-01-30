@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_main;
+package tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_main;
 
 
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +27,7 @@ import tech.sadovnikov.configurator.old.OnParameterViewGroupClickListener;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgFragment;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
-public class ConfigMainFragment extends BaseCfgFragment {
+public class ConfigMainFragment extends BaseCfgFragment implements ConfigMainView {
     public static final String TAG = ConfigMainFragment.class.getSimpleName();
 
     // UI
@@ -52,12 +54,13 @@ public class ConfigMainFragment extends BaseCfgFragment {
 
     @BindViews({R.id.ll_blinker_mode, R.id.ll_blinker_brightness, R.id.ll_blinker_lx, R.id.ll_max_deviation, R.id.ll_tilt_angle, R.id.ll_impact_pow, R.id.ll_upower_thld, R.id.ll_deviation_int, R.id.ll_max_active})
     List<ViewGroup> parameterViews;
-
     @BindViews({R.id.spin_blinker_mode, R.id.spin_blinker_brightness})
     List<Spinner> spinnerParameterValues;
-
-    @BindViews({R.id.et_blinker_lx})
+    @BindViews({R.id.et_blinker_lx, R.id.et_max_deviation, R.id.et_tilt_angle, R.id.et_impact_pow, R.id.et_upower_thld, R.id.et_deviation_int, R.id.et_max_active})
     List<EditText> etParameterValues;
+
+    @InjectPresenter
+    ConfigMainPresenter configMainPresenter;
 
     Listener listener;
 
@@ -74,8 +77,7 @@ public class ConfigMainFragment extends BaseCfgFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        Log.v(TAG, "onCreateView");
+        Log.v(TAG, "ON_CREATE_VIEW");
         View view = inflater.inflate(R.layout.fragment_config_main, container, false);
         ButterKnife.bind(this, view);
         super.onCreateView(inflater, container, savedInstanceState);
@@ -88,13 +90,15 @@ public class ConfigMainFragment extends BaseCfgFragment {
         onSpinParameterListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (view.getId()) {
-                    case R.id.spin_blinker_mode:
-                        presenter.onParameterChanged(ParametersEntities.BLINKER_MODE, String.valueOf(position));
-                        break;
-                    case R.id.spin_blinker_brightness:
-                        presenter.onParameterChanged(ParametersEntities.BLINKER_BRIGHTNESS, String.valueOf(position));
-                        break;
+                if (view != null) {
+                    switch (view.getId()) {
+                        case R.id.spin_blinker_mode:
+                            presenter.onParameterChanged(ParametersEntities.BLINKER_MODE, String.valueOf(position));
+                            break;
+                        case R.id.spin_blinker_brightness:
+                            presenter.onParameterChanged(ParametersEntities.BLINKER_BRIGHTNESS, String.valueOf(position));
+                            break;
+                    }
                 }
             }
 
@@ -124,6 +128,9 @@ public class ConfigMainFragment extends BaseCfgFragment {
                     case R.id.et_deviation_int:
                         presenter.onParameterChanged(ParametersEntities.DEVIATION_INT, etDeviationInt.getText().toString());
                         break;
+                    case R.id.et_max_active:
+                        presenter.onParameterChanged(ParametersEntities.MAX_ACTIVE, etMaxActive.getText().toString());
+                        break;
                 }
 
         };
@@ -139,21 +146,36 @@ public class ConfigMainFragment extends BaseCfgFragment {
 
     @Override
     public void showConfiguration(Configuration configuration) {
+        Log.d(TAG, "showConfiguration: " + configuration);
+        Parameter blinkerMode = configuration.getParameter(ParametersEntities.BLINKER_MODE);
+        Parameter blinkerBrightness = configuration.getParameter(ParametersEntities.BLINKER_BRIGHTNESS);
+        Parameter blinkerLx = configuration.getParameter(ParametersEntities.BLINKER_LX);
+        Parameter maxDeviation = configuration.getParameter(ParametersEntities.MAX_DEVIATION);
+        Parameter tiltAngle = configuration.getParameter(ParametersEntities.TILT_ANGLE);
+        Parameter impactPow = configuration.getParameter(ParametersEntities.IMPACT_POW);
+        Parameter upowerThld = configuration.getParameter(ParametersEntities.UPOWER_THLD);
+        Parameter deviationInt = configuration.getParameter(ParametersEntities.DEVIATION_INT);
+        Parameter maxActive = configuration.getParameter(ParametersEntities.MAX_ACTIVE);
+        Parameter upower = configuration.getParameter(ParametersEntities.UPOWER);
         for (Spinner spinner : spinnerParameterValues) {
             spinner.setOnItemSelectedListener(null);
         }
-        spinBlinkerMode.setSelection(Integer.valueOf(Objects.requireNonNull(configuration.getParameter(ParametersEntities.BLINKER_MODE)).getValue()) + 1);
-        spinBlinkerBrightness.setSelection(Integer.valueOf(Objects.requireNonNull(configuration.getParameter(ParametersEntities.BLINKER_BRIGHTNESS)).getValue()) + 1);
+        if (blinkerMode != null)
+            spinBlinkerMode.setSelection(Integer.valueOf(blinkerMode.getValue()) + 1);
+        if (blinkerBrightness != null) {
+            spinBlinkerBrightness.setSelection(Integer.valueOf(blinkerBrightness.getValue()) + 1);
+        }
         for (Spinner spinner : spinnerParameterValues) {
             spinner.setOnItemSelectedListener(onSpinParameterListener);
         }
-
-        etBlinkerLx.setText(Objects.requireNonNull(configuration.getParameter(ParametersEntities.BLINKER_LX)).getValue());
-        etMaxDeviation.setText(Objects.requireNonNull(configuration.getParameter(ParametersEntities.MAX_DEVIATION)).getValue());
-        etTiltAngle.setText(Objects.requireNonNull(configuration.getParameter(ParametersEntities.TILT_ANGLE)).getValue());
-        etImpactPow.setText(Objects.requireNonNull(configuration.getParameter(ParametersEntities.IMPACT_POW)).getValue());
-        etUpowerThld.setText(Objects.requireNonNull(configuration.getParameter(ParametersEntities.UPOWER_THLD)).getValue());
-        etDeviationInt.setText(Objects.requireNonNull(configuration.getParameter(ParametersEntities.DEVIATION_INT)).getValue());
+        if (blinkerLx != null) etBlinkerLx.setText(blinkerLx.getValue());
+        if (maxDeviation != null) etMaxDeviation.setText(maxDeviation.getValue());
+        if (tiltAngle != null) etTiltAngle.setText(tiltAngle.getValue());
+        if (impactPow != null) etImpactPow.setText(impactPow.getValue());
+        if (upowerThld != null) etUpowerThld.setText(upowerThld.getValue());
+        if (deviationInt != null) etDeviationInt.setText(deviationInt.getValue());
+        if (maxActive != null) etMaxActive.setText(maxActive.getValue());
+        if (upower != null) etUpower.setText(upower.getValue());
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -214,9 +236,9 @@ public class ConfigMainFragment extends BaseCfgFragment {
 
     @Override
     public void onDetach() {
+        super.onDetach();
         Log.v(TAG, "onDetach");
         listener = null;
-        super.onDetach();
     }
 // ---------------------------------------------------------------------------------------------
 

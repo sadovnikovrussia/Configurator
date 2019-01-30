@@ -28,7 +28,7 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
 
     PairedDevicesPresenter() {
         super();
-        Log.w(TAG, "onConstructor: ");
+        //Log.w(TAG, "onConstructor: ");
         initDaggerComponent();
         presenterComponent.injectPairedDevicesPresenter(this);
     }
@@ -43,7 +43,7 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        Log.w(TAG, "onFirstViewAttach: ");
+        //Log.w(TAG, "onFirstViewAttach: ");
         Disposable subscriptionState = bluetoothService.getStateObservable()
                 .compose(RxTransformers.applySchedulers())
                 .subscribe(state -> getViewState().setPairedDevices(bluetoothService.getPairedDevices(), bluetoothService.getConnectedDevice(), bluetoothService.getConnectionState()),
@@ -64,7 +64,7 @@ public class PairedDevicesPresenter extends MvpPresenter<PairedDevicesView> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.w(TAG, "onDestroy: ");
+        //Log.w(TAG, "onDestroy: ");
         subscriptions.clear();
     }
 

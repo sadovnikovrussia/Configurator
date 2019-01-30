@@ -120,7 +120,6 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     void onUpdateDevicesClick() {
         bluetoothService.cancelDiscovery();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //Log.e(TAG, "updateDevices: " + (bluetoothPermission == PERMISSION_GRANTED));
             if (bluetoothPermission == PERMISSION_GRANTED) {
                 bluetoothService.startDiscovery();
             } else getViewState().requestBtPermission();
@@ -128,7 +127,6 @@ public class BluetoothPresenter extends MvpPresenter<BluetoothView> {
     }
 
     void onPrepareOptionsMenu() {
-        //Log.d(TAG, "onPrepareOptionsMenu: ");
         if (bluetoothService.isEnabled()) getViewState().showUpdateDevicesView();
         else getViewState().hideUpdateDevicesView();
     }

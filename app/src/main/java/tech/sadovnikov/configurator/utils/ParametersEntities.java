@@ -18,7 +18,9 @@ public enum ParametersEntities {
     TILT_ANGLE("TILT ANGLE", true, Integer.class),
     IMPACT_POW("IMPACT POW", true, Integer.class),
     UPOWER_THLD("UPOWER THLD", true, Float.class),
-    DEVIATION_INT("DEVIATION INT", true, Integer.class);
+    DEVIATION_INT("DEVIATION INT", true, Integer.class),
+    MAX_ACTIVE("MAX ACTIVE", true, Integer.class),
+    UPOWER("UPOWER", false, Float.class);
 
     String endOfCommonReadingCommand = "?";
 

@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_buoy;
+package tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_buoy;
 
 
 import android.content.Context;
@@ -29,7 +29,6 @@ import tech.sadovnikov.configurator.utils.ParametersEntities;
 public class ConfigBuoyFragment extends BaseCfgFragment implements ConfigBuoyView {
     public static final String TAG = ConfigBuoyFragment.class.getSimpleName();
 
-
     // UI
     @BindView(R.id.et_id)
     EditText etId;
@@ -56,7 +55,7 @@ public class ConfigBuoyFragment extends BaseCfgFragment implements ConfigBuoyVie
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView");
+        Log.v(TAG, "ON_CREATE_VIEW");
         View view = inflater.inflate(R.layout.fragment_config_buoy, container, false);
         ButterKnife.bind(this, view);
         setUp(view);
@@ -78,6 +77,7 @@ public class ConfigBuoyFragment extends BaseCfgFragment implements ConfigBuoyVie
 
     @Override
     public void showConfiguration(Configuration configuration) {
+        Log.d(TAG, "showConfiguration: " + configuration);
         Parameter id = configuration.getParameter(ParametersEntities.ID);
         Parameter version = configuration.getParameter(ParametersEntities.FIRMWARE_VERSION);
         if (id != null) etId.setText(id.getValue());

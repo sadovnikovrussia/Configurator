@@ -118,19 +118,13 @@ public class MainPresenter extends MvpPresenter<MainView> {
         if (bluetoothService.getConnectionState() == CONNECTION_STATE_CONNECTED) {
             Disposable progressSubscription = cfgLoader.readFullConfiguration()
                     .compose(RxTransformers.applySchedulers())
-                    .subscribe(integer -> {
-                                Log.i(TAG, "onNext: " + integer);
-                                getViewState().setLoadingProcess(integer);
-                            }, throwable -> Log.i(TAG, "onError: " + throwable),
+                    .subscribe(integer -> getViewState().setLoadingProcess(integer),
+                            throwable -> Log.i(TAG, "onError: " + throwable),
                             () -> {
-                                Log.i(TAG, "onComplete: ");
                                 getViewState().hideLoadingProgress();
                                 getViewState().showMessage("Считывание конфигурации завершено");
                             },
-                            disposable -> {
-                                Log.i(TAG, "onSubscribe: ");
-                                getViewState().setLoadingProcess(0);
-                            });
+                            disposable -> getViewState().setLoadingProcess(0));
         }
     }
 
@@ -187,20 +181,14 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     void onOpenConfiguration() {
-        Log.d(TAG, "onOpenConfiguration: 1");
         if (fileManager.isExternalStorageReadable()) {
-            Log.d(TAG, "onOpenConfiguration: 2");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Log.d(TAG, "onOpenConfiguration: 3");
                 if (readPermission == PERMISSION_GRANTED) {
-                    Log.d(TAG, "onOpenConfiguration: 4");
                     getViewState().startOpenFileManagerActivity();
                 } else {
-                    Log.d(TAG, "onOpenConfiguration: 5");
                     getViewState().requestReadStoragePermission();
                 }
             } else {
-                Log.d(TAG, "onOpenConfiguration: 6");
                 getViewState().startOpenFileManagerActivity();
             }
         } else {
@@ -209,7 +197,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     void onPositiveReadStorageRequestResult() {
-        Log.d(TAG, "onPositiveReadStorageRequestResult: ");
         readPermission = PERMISSION_GRANTED;
         getViewState().startOpenFileManagerActivity();
     }

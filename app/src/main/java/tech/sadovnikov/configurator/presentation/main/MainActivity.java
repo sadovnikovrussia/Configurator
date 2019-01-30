@@ -33,8 +33,8 @@ import tech.sadovnikov.configurator.old.SaveFileDialogFragment;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothFragment;
 import tech.sadovnikov.configurator.presentation.configuration.ConfigurationFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgFragment;
-import tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_buoy.ConfigBuoyFragment;
-import tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_main.ConfigMainFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_buoy.ConfigBuoyFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_main.ConfigMainFragment;
 import tech.sadovnikov.configurator.presentation.console.ConsoleFragment;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
@@ -69,7 +69,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         Log.w(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        initializeDaggerComponent();
+        initDaggerComponent();
         setUp();
         presenter.onCreateMainView();
     }
@@ -102,7 +102,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         });
     }
 
-    private void initializeDaggerComponent() {
+    private void initDaggerComponent() {
         activityComponent = DaggerActivityComponent
                 .builder()
                 .applicationComponent((App.getApplicationComponent()))
@@ -147,19 +147,16 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public void setLoadingProcess(int progress) {
-        Log.d(TAG, "setLoadingProcess: ");
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(String.valueOf(progress) + "%");
     }
 
     @Override
     public void hideLoadingProgress() {
-        Log.d(TAG, "hideLoadingProgress: ");
         Objects.requireNonNull(getSupportActionBar()).setSubtitle("");
     }
 
     @Override
     public void setConsoleNavigationPosition() {
-        Log.w(TAG, "setConsoleNavigationPosition: ");
         navigationView.setOnNavigationItemSelectedListener(null);
         navigationView.setSelectedItemId(R.id.navigation_console);
         navigationView.setOnNavigationItemSelectedListener(navigationListener);
@@ -167,7 +164,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public void setBluetoothNavigationPosition() {
-        Log.w(TAG, "setBluetoothNavigationPosition: ");
         navigationView.setOnNavigationItemSelectedListener(null);
         navigationView.setSelectedItemId(R.id.navigation_bluetooth);
         navigationView.setOnNavigationItemSelectedListener(navigationListener);
@@ -175,7 +171,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public void setConfigurationNavigationPosition() {
-        Log.w(TAG, "setConfigurationNavigationPosition: ");
         navigationView.setOnNavigationItemSelectedListener(null);
         navigationView.setSelectedItemId(R.id.navigation_configuration);
         navigationView.setOnNavigationItemSelectedListener(navigationListener);
@@ -183,13 +178,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public void setTitle(int title) {
-        Log.d(TAG, "setTitle: ");
         Objects.requireNonNull(getSupportActionBar()).setTitle(title);
     }
 
     @Override
     public void showSaveDialog() {
-        Log.d(TAG, "showSaveDialog: ");
         saveDialog = new SaveFileDialogFragment();
         saveDialog.show(getSupportFragmentManager(), SaveFileDialogFragment.TAG);
     }
@@ -378,7 +371,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         super.onStop();
         Log.v(TAG, "onStop: ");
     }
-
 
     @Override
     protected void onDestroy() {

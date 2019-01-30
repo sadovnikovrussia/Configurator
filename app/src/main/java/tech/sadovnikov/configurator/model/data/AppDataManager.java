@@ -18,6 +18,7 @@ import tech.sadovnikov.configurator.model.data.logs.LogManager;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
+import tech.sadovnikov.configurator.utils.rx.RxTransformers;
 
 @Singleton
 public class AppDataManager implements DataManager {
@@ -25,7 +26,7 @@ public class AppDataManager implements DataManager {
 
     private LogManager logManager;
     private Configuration configuration;
-    private PublishSubject<Configuration> configurationObservable;
+    private final PublishSubject<Configuration> configurationObservable;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -34,11 +35,11 @@ public class AppDataManager implements DataManager {
         this.logManager = logManager;
         this.configuration = configuration;
         Disposable subscribe = bluetoothService.getLogMessageObservable()
-                .observeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(RxTransformers.applySchedulers())
                 .subscribe(this::addLogMessage);
         compositeDisposable.add(subscribe);
         this.configurationObservable = PublishSubject.create();
+        Log.w(TAG, "AppDataManager: " + configurationObservable);
     }
 
     @Override
@@ -58,7 +59,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public void setConfigParameter(Parameter parameter) {
-        Log.d(TAG, "setConfigParameter: " + parameter);
+        Log.d(TAG, "setConfigParameter: " + parameter + ", " + configurationObservable);
         configuration.setParameter(parameter);
         configurationObservable.onNext(configuration);
     }
@@ -73,8 +74,8 @@ public class AppDataManager implements DataManager {
 
     @Override
     public void removeConfigParameter(ParametersEntities parameterEntity) {
-        Log.d(TAG, "removeConfigParameter: " + parameterEntity + "\r\n" + configuration);
         configuration.removeParameter(parameterEntity);
+        Log.d(TAG, "removeConfigParameter: " + parameterEntity + "\r\n" + configuration);
         configurationObservable.onNext(configuration);
     }
 

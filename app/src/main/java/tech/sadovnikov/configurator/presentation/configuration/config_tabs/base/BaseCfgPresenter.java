@@ -7,16 +7,16 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import javax.inject.Inject;
 
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.data.DataManager;
+import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
+import tech.sadovnikov.configurator.utils.rx.RxTransformers;
 
 
 @InjectViewState
@@ -32,30 +32,36 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
     BaseCfgPresenter() {
         super();
         Log.w(TAG, "BaseCfgPresenter: ");
-        initDaggerComponent();
-        presenterComponent.injectBaseCfgPresenter(this);
+        initDaggerAndInject();
         compositeDisposable = new CompositeDisposable();
     }
 
-    private void initDaggerComponent() {
+    private void initDaggerAndInject() {
         presenterComponent = DaggerPresenterComponent
                 .builder()
                 .applicationComponent(App.getApplicationComponent())
                 .build();
+        presenterComponent.injectBaseCfgPresenter(this);
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        Log.w(TAG, "onFirstViewAttach: ");
-        Disposable subscribe = dataManager.getConfigurationObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(configuration -> getViewState().showConfiguration(configuration),
+        PublishSubject<Configuration> configurationObservable = dataManager.getConfigurationObservable();
+        Log.w(TAG, "onFirstViewAttach: " + configurationObservable);
+        Disposable subscribe = configurationObservable
+                .compose(RxTransformers.applySchedulers())
+                .subscribe(configuration -> {
+                            Log.d(TAG, "onNext: onConfigurationChanged" + getAttachedViews());
+                            getViewState().showConfiguration(configuration);
+                        },
                         Throwable::printStackTrace,
                         () -> {
                         },
-                        disposable -> getViewState().showConfiguration(dataManager.getConfiguration()));
+                        disposable -> {
+                            Log.d(TAG, "onSubscribe: ToConfiguration: ");
+                            getViewState().showConfiguration(dataManager.getConfiguration());
+                        });
         compositeDisposable.add(subscribe);
     }
 
@@ -66,6 +72,11 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
         } else {
             switch (parameterEntity) {
                 case BLINKER_MODE:
+                    if (value.equals("0")) dataManager.removeConfigParameter(parameterEntity);
+                    else
+                        dataManager.setConfigParameter(parameterEntity, String.valueOf(Integer.valueOf(value) - 1));
+                    break;
+                case BLINKER_BRIGHTNESS:
                     if (value.equals("0")) dataManager.removeConfigParameter(parameterEntity);
                     else
                         dataManager.setConfigParameter(parameterEntity, String.valueOf(Integer.valueOf(value) - 1));
@@ -81,11 +92,6 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
         super.onDestroy();
         Log.w(TAG, "onDestroy: ");
         compositeDisposable.clear();
-    }
-
-    void onCreateViewBaseCfgView() {
-        Log.v(TAG, "onCreateViewBaseCfgView: ");
-        //getViewState().showConfiguration(dataManager.getConfiguration());
     }
 
 

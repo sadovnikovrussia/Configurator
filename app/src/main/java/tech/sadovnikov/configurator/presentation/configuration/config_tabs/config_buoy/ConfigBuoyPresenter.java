@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.presentation.configuration.config_tabs.cfg_buoy;
+package tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_buoy;
 
 import android.util.Log;
 
@@ -22,10 +22,14 @@ public class ConfigBuoyPresenter extends MvpPresenter<ConfigBuoyView> {
     ConfigBuoyPresenter() {
         super();
         Log.d(TAG, "ConfigBuoyPresenter: ");
+        initDaggerAndInject();
+    }
+
+    private void initDaggerAndInject() {
         PresenterComponent presenterComponent = DaggerPresenterComponent.builder()
                 .applicationComponent(App.getApplicationComponent())
                 .build();
-        presenterComponent.injectCfgBuoyPresenter(this);
+        presenterComponent.injectConfigBuoyPresenter(this);
     }
 
     @Override

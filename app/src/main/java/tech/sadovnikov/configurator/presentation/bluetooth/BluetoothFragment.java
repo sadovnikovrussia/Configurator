@@ -198,64 +198,44 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
         }
     }
 
-    // ---------------------------------------------------------------------------------------------
-    // States
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        ////Log.v(TAG, "onViewStateRestored: " + savedInstanceState);
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        //menu.clear();
         this.menu = menu;
-        Log.v(TAG, "onCreateOptionsMenu: ");
         inflater.inflate(R.menu.menu_bluetooth, menu);
-        //presenter.onCreateOptionsMenu();
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        //setMenuVisibility(false);
-        Log.v(TAG, "onPrepareOptionsMenu: ");
-        //setMenuVisibility(false);
         presenter.onPrepareOptionsMenu();
     }
 
     @Override
-    public void onDestroyOptionsMenu() {
-        super.onDestroyOptionsMenu();
-        //Log.v(TAG, "onDestroyOptionsMenu: ");
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //Log.v(TAG, "onOptionsItemSelected: " + item.getItemId());
         presenter.onUpdateDevicesClick();
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onOptionsMenuClosed(Menu menu) {
-        super.onOptionsMenuClosed(menu);
-        //Log.v(TAG, "onOptionsMenuClosed: ");
-    }
-
+    // ---------------------------------------------------------------------------------------------
+    // States
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener = (Listener)getActivity();
         Log.v(TAG, "onAttach");
+        if (context instanceof Listener) {
+            listener = (Listener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement BluetoothFragment.Listener");
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate: ");
-        //setRetainInstance(true);
     }
 
     @Override
@@ -292,77 +272,25 @@ public class BluetoothFragment extends MvpAppCompatFragment implements Bluetooth
     public void onDestroyView() {
         Log.v(TAG, "onDestroyView");
         super.onDestroyView();
-        //listener.onBluetoothFragmentDestroyView();
     }
 
     @Override
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
         super.onDestroy();
-        //listener.onBluetoothFragmentDestroy();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         Log.v(TAG, "onDetach: ");
-        //listener = null;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        //outState.putInt("pagerPage", pagerPage);
-        super.onSaveInstanceState(outState);
+        listener = null;
     }
     // ---------------------------------------------------------------------------------------------
 
     public interface Listener{
         void onCreateViewBluetooth();
     }
-//    @Override
-//    public void onPrepareOptionsMenu(Menu menu) {
-//        menu.setGroupVisible(R.menu.menu_configuration_options, false);
-//        super.onPrepareOptionsMenu(menu);
-//    }
 
-//    public boolean isAvailableDevicesFragmentResumed() {
-//        return (devicesFragmentPagerAdapter != null && devicesFragmentPagerAdapter.isAvailableDevicesFragmentResumed());
-//    }
-
-//    public int getSelectedPageOfViewPager() {
-//        // ////LogList.v(TAG, "getSelectedPageOfViewPager() returned: " + viewPager.getCurrentItem());
-//        return viewPager.getCurrentItem();
-//    }
-
-
-    public interface OnBluetoothFragmentInteractionListener {
-        void onSwitchBtStateChanged(boolean state);
-
-        void onPairedDevicesRvItemClicked(String bluetoothDeviceAddress);
-
-        void onAvailableDevicesRvItemClicked(String bluetoothDeviceAddress);
-
-        void onBluetoothFragmentCreateView();
-
-        void onBluetoothFragmentStart();
-
-        void onBluetoothFragmentDestroyView();
-
-        void onBluetoothFragmentDestroy();
-
-        void onDevicesPageSelected(int position);
-
-        int onGetItemCountOfAvailableDevicesRvAdapter();
-
-        int onGetItemCountOfPairedDevicesRvAdapter();
-
-        void onAvailableDevicesFragmentDestroyView();
-
-        void onAvailableDevicesFragmentStart();
-
-        void onAvailableDevicesFragmentPause();
-
-        void onAvailableDevicesFragmentResume();
-    }
 
 }

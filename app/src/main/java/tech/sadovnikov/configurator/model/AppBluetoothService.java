@@ -284,24 +284,20 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     }
 
     private void updateStatus(BluetoothDevice bluetoothDevice, int state) {
-        Log.d(TAG, "updateStatus: " + bluetoothDevice + ", " + state);
         connectionState = state;
         connectedDevice = bluetoothDevice;
         connectionStateObservable.onNext(connectionState);
     }
 
     private synchronized void onConnecting(BluetoothDevice device) {
-        // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {
             mConnectThread.cancel();
             mConnectThread = null;
         }
-        // Cancel any thread currently running a connection
         if (mConnectedThread != null) {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
-        // Start the thread to onConnecting with the given device
         updateStatus(device, CONNECTION_STATE_CONNECTING);
         mConnectThread = new ConnectThread(device);
         mConnectThread.start();
@@ -330,7 +326,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
             bluetoothAdapter.cancelDiscovery();
             try {
                 mSocket.connect();
-                Log.d(TAG, "run: Connected");
             } catch (IOException e) {
                 updateStatus(null, CONNECTION_STATE_DISCONNECTED);
                 e.printStackTrace();
@@ -350,7 +345,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         void cancel() {
             try {
                 mSocket.close();
-                // LogList.d(TAG, "Закрыли socket");
             } catch (IOException e) {
                 Log.e(TAG, "cancel: Не удалось закрыть socket в connectThread", e);
             }
@@ -358,17 +352,14 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     }
 
     private synchronized void onConnected(BluetoothSocket socket, BluetoothDevice bluetoothDevice) {
-        // Cancel the thread that completed the connection
         if (mConnectThread != null) {
             mConnectThread.cancel();
             mConnectThread = null;
         }
-        // Cancel any thread currently running a connection
         if (mConnectedThread != null) {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
-        // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket, bluetoothDevice);
         mConnectedThread.start();
     }
@@ -386,7 +377,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
             mmSocket = socket;
             BufferedReader tmpReaderSerial = null;
             PrintWriter tmpWriterSerial = null;
-            // Get the BluetoothSocket readerSerial and output streams
             try {
                 tmpReaderSerial = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             } catch (IOException e) {
@@ -406,7 +396,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
             updateStatus(bluetoothDevice, CONNECTION_STATE_CONNECTED);
             String line;
             try {
-                Log.d(TAG, "ConnectedThread: run: " + readerSerial.ready());
                 while ((line = readerSerial.readLine()) != null) {
                     Log.v(TAG, line);
                     analyzeLine(line);

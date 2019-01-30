@@ -59,7 +59,7 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView: ");
+        //Log.v(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_paired_devices, container, false);
         ButterKnife.bind(this, view);
         initDagger();
@@ -123,55 +123,55 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.v(TAG, "onAttach: ");
+        //Log.v(TAG, "onAttach: ");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG, "onCreate: ");
+        //Log.v(TAG, "onCreate: ");
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.v(TAG, "onActivityCreated");
+        //Log.v(TAG, "onActivityCreated");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.v(TAG, "onStart");
+        //Log.v(TAG, "onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume");
+        //Log.v(TAG, "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.v(TAG, "onPause");
+        //Log.v(TAG, "onPause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.v(TAG, "onStop");
+        //Log.v(TAG, "onStop");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.v(TAG, "onDestroyView");
+        //Log.v(TAG, "onDestroyView");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.v(TAG, "onDestroy");
+        //Log.v(TAG, "onDestroy");
         if (alertDialog != null) {
             alertDialog.dismiss();
             alertDialog = null;
@@ -181,7 +181,7 @@ public class PairedDevicesFragment extends MvpAppCompatFragment implements Paire
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.v(TAG, "onDetach: ");
+        //Log.v(TAG, "onDetach: ");
     }
     // ---------------------------------------------------------------------------------------------
 
