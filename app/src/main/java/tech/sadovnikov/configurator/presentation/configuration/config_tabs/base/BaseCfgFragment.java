@@ -10,11 +10,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 
 public abstract class BaseCfgFragment extends MvpAppCompatFragment implements BaseCfgView {
@@ -26,13 +28,43 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
 
     private Listener listener;
 
+    public AdapterView.OnItemSelectedListener spinParameterListener;
+
+    //todo Сделать inputType в зависимости от типа данных параметров
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.v(TAG, "ON_CREATE_VIEW");
         listener.onCreateViewBaseCfgView();
         setHasOptionsMenu(true);
+        init();
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    private void init() {
+//        spinParameterListener = new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                if (view != null) {
+//                    switch (view.getId()) {
+//                        case R.id.spin_blinker_mode:
+//                            presenter.onParameterChanged(ParametersEntities.BLINKER_MODE, String.valueOf(position));
+//                            break;
+//                        case R.id.spin_blinker_brightness:
+//                            presenter.onParameterChanged(ParametersEntities.BLINKER_BRIGHTNESS, String.valueOf(position));
+//                            break;
+//                        case R.id.spin_satellite_system:
+//                            presenter.onParameterChanged(ParametersEntities.SATELLITE_SYSTEM, String.valueOf(position));
+//                            break;
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        };
     }
 
     public abstract void setUp(View view);

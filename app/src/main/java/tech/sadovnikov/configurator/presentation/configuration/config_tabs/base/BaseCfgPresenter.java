@@ -5,6 +5,9 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -17,6 +20,10 @@ import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 import tech.sadovnikov.configurator.utils.rx.RxTransformers;
+
+import static tech.sadovnikov.configurator.utils.ParametersEntities.BLINKER_BRIGHTNESS;
+import static tech.sadovnikov.configurator.utils.ParametersEntities.BLINKER_MODE;
+import static tech.sadovnikov.configurator.utils.ParametersEntities.SATELLITE_SYSTEM;
 
 
 @InjectViewState
@@ -77,6 +84,11 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
                         dataManager.setConfigParameter(parameterEntity, String.valueOf(Integer.valueOf(value) - 1));
                     break;
                 case BLINKER_BRIGHTNESS:
+                    if (value.equals("0")) dataManager.removeConfigParameter(parameterEntity);
+                    else
+                        dataManager.setConfigParameter(parameterEntity, String.valueOf(Integer.valueOf(value) - 1));
+                    break;
+                case SATELLITE_SYSTEM:
                     if (value.equals("0")) dataManager.removeConfigParameter(parameterEntity);
                     else
                         dataManager.setConfigParameter(parameterEntity, String.valueOf(Integer.valueOf(value) - 1));

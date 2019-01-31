@@ -233,7 +233,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
                     buffer = buffer.substring(indexStartNewMessage);
                     LogMessage message = createMessage(nativeMessage);
                     emmitLogMessage(message);
-                    //dataManager.addLogMessage(message);
                     analyzeMessage(message);
                 } catch (Exception e) {
                     Log.w(TAG, "analyzeLine: ", e);

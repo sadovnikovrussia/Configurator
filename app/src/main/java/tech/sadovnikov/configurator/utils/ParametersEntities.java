@@ -11,6 +11,7 @@ public enum ParametersEntities {
             return "@VERSION";
         }
     },
+
     BLINKER_MODE("BLINKER MODE", true, Integer.class),
     BLINKER_BRIGHTNESS("BLINKER BRIGHTNESS", true, Integer.class),
     BLINKER_LX("BLINKER LX", true, Integer.class),
@@ -20,7 +21,16 @@ public enum ParametersEntities {
     UPOWER_THLD("UPOWER THLD", true, Float.class),
     DEVIATION_INT("DEVIATION INT", true, Integer.class),
     MAX_ACTIVE("MAX ACTIVE", true, Integer.class),
-    UPOWER("UPOWER", false, Float.class);
+    UPOWER("UPOWER", false, Float.class),
+
+    CURRENT_POS("CURRENT POS", false, String.class),
+    TRUE_POS("TRUE POS", true, Integer.class), // Логично сделать boolean?
+    BASE_POS("BASE POS", true, String.class), // List?
+    LAT_DEVIATION("LAT DEVIATION", true, Integer.class),
+    LONG_DEVIATION("LONG DEVIATION", true, Integer.class),
+    HDOP("HDOP", true, Integer.class),
+    FIX_DELAY("FIX DELAY", true, Integer.class),
+    SATELLITE_SYSTEM("SATELLITE SYSTEM", true, Integer.class);
 
     String endOfCommonReadingCommand = "?";
 

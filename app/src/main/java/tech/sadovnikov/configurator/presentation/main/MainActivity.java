@@ -29,12 +29,14 @@ import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.di.component.ActivityComponent;
 import tech.sadovnikov.configurator.di.component.DaggerActivityComponent;
-import tech.sadovnikov.configurator.old.SaveFileDialogFragment;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothFragment;
 import tech.sadovnikov.configurator.presentation.configuration.ConfigurationFragment;
+import tech.sadovnikov.configurator.presentation.configuration.SaveFileDialogFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_buoy.ConfigBuoyFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_main.ConfigMainFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_navigation.ConfigNavigationFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_navigation.ConfigNavigationView;
 import tech.sadovnikov.configurator.presentation.console.ConsoleFragment;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
@@ -109,6 +111,18 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
                 .build();
     }
 
+    private void showFragment(Fragment fragment, String tag) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment, tag)
+                .addToBackStack(tag)
+                .commit();
+    }
+
+    private void showToast(String message) {
+        Log.d(TAG, "showToast: ");
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
     @NonNull
     public ActivityComponent getActivityComponent() {
         return activityComponent;
@@ -141,6 +155,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
                 break;
             case "Основные":
                 showFragment(ConfigMainFragment.newInstance(), ConfigMainFragment.TAG);
+                break;
+            case ConfigNavigationView.name:
+                showFragment(ConfigNavigationFragment.newInstance(), ConfigNavigationFragment.TAG);
                 break;
         }
     }
@@ -229,22 +246,10 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         presenter.onSaveDialogNegativeClick();
     }
 
-    private void showFragment(Fragment fragment, String tag) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment, tag)
-                .addToBackStack(tag)
-                .commit();
-    }
-
     @Override
     public void showMessage(String message) {
         Log.d(TAG, "showMessage: ");
         showToast(message);
-    }
-
-    private void showToast(String message) {
-        Log.d(TAG, "showToast: ");
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -265,7 +270,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
         Log.d(TAG, "showSuccessOpenCfgMessage: ");
         showToast(cfgName + " открыта успешно");
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

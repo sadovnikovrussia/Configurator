@@ -74,7 +74,7 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
                 .compose(RxTransformers.applySchedulers())
                 .subscribe(parameter -> {
                     onGetParameter();
-                    dataManager.setConfigParameter(parameter);
+                    //dataManager.setConfigParameter(parameter);
                 }));
         commandNumber = 0;
         attemptNumber = 0;

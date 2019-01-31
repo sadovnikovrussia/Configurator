@@ -60,6 +60,7 @@ public class Configuration {
                 cmdList.add(parameterEntry.getValue().createSettingCommand());
             }
         }
+        Log.d(TAG, "getCmdListForSetOrSave() returned: " + cmdList);
         return cmdList;
     }
 

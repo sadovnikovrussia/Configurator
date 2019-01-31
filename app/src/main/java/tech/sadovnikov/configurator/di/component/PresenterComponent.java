@@ -3,19 +3,22 @@ package tech.sadovnikov.configurator.di.component;
 import dagger.Component;
 import tech.sadovnikov.configurator.di.PresenterScope;
 import tech.sadovnikov.configurator.di.module.PermissionsModule;
-import tech.sadovnikov.configurator.model.FileManager;
+import tech.sadovnikov.configurator.model.data.FileManager;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothPresenter;
 import tech.sadovnikov.configurator.presentation.bluetooth.available_devices.AvailableDevicesPresenter;
 import tech.sadovnikov.configurator.presentation.bluetooth.paired_devices.PairedDevicesPresenter;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgPresenter;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_buoy.ConfigBuoyPresenter;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_main.ConfigMainPresenter;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_navigation.ConfigNavigationPresenter;
 import tech.sadovnikov.configurator.presentation.console.ConsolePresenter;
 import tech.sadovnikov.configurator.presentation.main.MainPresenter;
 
 @PresenterScope
 @Component(dependencies = ApplicationComponent.class, modules = PermissionsModule.class)
 public interface PresenterComponent {
+
+    FileManager getFileManager();
 
     void injectBluetoothPresenter(BluetoothPresenter bluetoothPresenter);
 
@@ -33,5 +36,5 @@ public interface PresenterComponent {
 
     void injectConfigMainPresenter(ConfigMainPresenter configMainPresenter);
 
-    FileManager getFileManager();
+    void injectConfigMainPresenter(ConfigNavigationPresenter configNavigationPresenter);
 }

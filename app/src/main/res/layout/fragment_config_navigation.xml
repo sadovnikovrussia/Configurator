@@ -3,7 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frag_config_navigation"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
 
     <ScrollView
         android:layout_width="match_parent"

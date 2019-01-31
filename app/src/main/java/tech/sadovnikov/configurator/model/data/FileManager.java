@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.model;
+package tech.sadovnikov.configurator.model.data;
 
 import android.os.Environment;
 import android.util.Log;
