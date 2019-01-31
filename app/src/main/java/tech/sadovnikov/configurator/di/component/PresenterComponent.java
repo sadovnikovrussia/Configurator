@@ -9,6 +9,7 @@ import tech.sadovnikov.configurator.presentation.bluetooth.available_devices.Ava
 import tech.sadovnikov.configurator.presentation.bluetooth.paired_devices.PairedDevicesPresenter;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgPresenter;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_buoy.ConfigBuoyPresenter;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_events.ConfigEventsPresenter;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_main.ConfigMainPresenter;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_navigation.ConfigNavigationPresenter;
 import tech.sadovnikov.configurator.presentation.console.ConsolePresenter;
@@ -37,4 +38,6 @@ public interface PresenterComponent {
     void injectConfigMainPresenter(ConfigMainPresenter configMainPresenter);
 
     void injectConfigMainPresenter(ConfigNavigationPresenter configNavigationPresenter);
+
+    void injectConfigMainPresenter(ConfigEventsPresenter configEventsPresenter);
 }

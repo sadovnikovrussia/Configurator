@@ -34,6 +34,8 @@ import tech.sadovnikov.configurator.presentation.configuration.ConfigurationFrag
 import tech.sadovnikov.configurator.presentation.configuration.SaveFileDialogFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_buoy.ConfigBuoyFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_events.ConfigEventsFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_events.ConfigEventsView;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_main.ConfigMainFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_navigation.ConfigNavigationFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_navigation.ConfigNavigationView;
@@ -158,6 +160,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
                 break;
             case ConfigNavigationView.name:
                 showFragment(ConfigNavigationFragment.newInstance(), ConfigNavigationFragment.TAG);
+                break;
+            case ConfigEventsView.name:
+                showFragment(ConfigEventsFragment.newInstance(), ConfigEventsFragment.TAG);
                 break;
         }
     }

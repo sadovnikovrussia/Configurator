@@ -30,7 +30,10 @@ public enum ParametersEntities {
     LONG_DEVIATION("LONG DEVIATION", true, Integer.class),
     HDOP("HDOP", true, Integer.class),
     FIX_DELAY("FIX DELAY", true, Integer.class),
-    SATELLITE_SYSTEM("SATELLITE SYSTEM", true, Integer.class);
+    SATELLITE_SYSTEM("SATELLITE SYSTEM", true, Integer.class),
+
+    EVENTS_MASK("EVENTS MASK", true, String.class); //
+
 
     String endOfCommonReadingCommand = "?";
 

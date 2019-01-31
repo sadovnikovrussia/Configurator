@@ -5,9 +5,6 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -16,14 +13,11 @@ import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
+import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 import tech.sadovnikov.configurator.utils.rx.RxTransformers;
-
-import static tech.sadovnikov.configurator.utils.ParametersEntities.BLINKER_BRIGHTNESS;
-import static tech.sadovnikov.configurator.utils.ParametersEntities.BLINKER_MODE;
-import static tech.sadovnikov.configurator.utils.ParametersEntities.SATELLITE_SYSTEM;
 
 
 @InjectViewState
@@ -33,6 +27,8 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
     private PresenterComponent presenterComponent;
     @Inject
     DataManager dataManager;
+    @Inject
+    BluetoothService bluetoothService;
 
     private CompositeDisposable compositeDisposable;
 
@@ -105,6 +101,5 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
         Log.w(TAG, "onDestroy: ");
         compositeDisposable.clear();
     }
-
 
 }

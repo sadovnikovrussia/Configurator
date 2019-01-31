@@ -277,6 +277,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 
     @Override
     public void sendData(String data) {
+        Log.w(TAG, "sendData: " + data);
         if (mConnectedThread != null) {
             mConnectedThread.write(data);
         }

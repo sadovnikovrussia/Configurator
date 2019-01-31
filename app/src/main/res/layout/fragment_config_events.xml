@@ -21,57 +21,6 @@
                 style="@style/tv_subtitle"
                 android:text="@string/alarm_events" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/white"
-                android:orientation="vertical"
-                android:paddingStart="8dp"
-                android:paddingEnd="16dp">
-
-                <CheckBox
-                    android:id="@+id/cb_1"
-                    style="@style/cb_list_item"
-                    android:text="@string/event_1" />
-
-                <CheckBox
-                    android:id="@+id/cb_2"
-                    style="@style/cb_list_item"
-                    android:text="@string/event_2" />
-
-
-                <CheckBox
-                    android:id="@+id/cb_3"
-                    style="@style/cb_list_item"
-                    android:text="@string/event_3" />
-
-                <CheckBox
-                    android:id="@+id/cb_4"
-                    style="@style/cb_list_item"
-                    android:text="@string/event_4" />
-
-                <CheckBox
-                    android:id="@+id/cb_5"
-                    style="@style/cb_list_item"
-                    android:text="@string/event_5" />
-
-                <CheckBox
-                    android:id="@+id/cb_6"
-                    style="@style/cb_list_item"
-                    android:text="@string/event_6" />
-
-                <CheckBox
-                    android:id="@+id/cb_7"
-                    style="@style/cb_list_item"
-                    android:text="@string/event_7" />
-
-                <CheckBox
-                    android:id="@+id/cb_8"
-                    style="@style/cb_list_item"
-                    android:text="@string/event_8" />
-
-            </LinearLayout>
-
             <Button
                 android:id="@+id/btn_alarm_events"
                 style="@style/btn_command"

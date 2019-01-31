@@ -95,7 +95,7 @@
     <string name="event_6">Были проблемы со связью</string>
     <string name="event_7">Неисправно световое оборудование</string>
     <string name="event_8">Фонарь включен</string>
-    <string name="send_test_message">Отправить тестовое сообщение</string>
+    <string name="send_test_message">Создать тестовое сообщение</string>
     <string name="events_mask">События, передаваемые на сервер (EVENTS MASK)</string>
     <string name="subtitle_server">Сервер</string>
     <string name="ip">IP адрес : Порт</string>
@@ -144,5 +144,8 @@
     <string name="ok_button">Ок</string>
     <string name="save_log">Сохранить лог</string>
     <string name="saving_log">Сохрание лога</string>
+    <string name="alarm_event_dialog_title">Отправка тестового сообщения</string>
+    <string name="alarm_event_dialog_message">Выберите события</string>
+    <string name="send_btn">Отправить</string>
 
 </resources>
