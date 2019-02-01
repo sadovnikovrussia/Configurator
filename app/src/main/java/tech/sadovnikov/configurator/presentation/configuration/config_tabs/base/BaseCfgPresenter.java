@@ -72,7 +72,19 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
     public void onParameterChanged(ParametersEntities parameterEntity, String value) {
         Log.d(TAG, "onParameterChanged: ");
         if (value.length() == 0) {
-            dataManager.removeConfigParameter(parameterEntity);
+            switch (parameterEntity) {
+                case APN:
+                    dataManager.setConfigParameter(parameterEntity, "''");
+                    break;
+                case LOGIN:
+                    dataManager.setConfigParameter(parameterEntity, "''");
+                    break;
+                case PASSWORD:
+                    dataManager.setConfigParameter(parameterEntity, "''");
+                    break;
+                default:
+                    dataManager.removeConfigParameter(parameterEntity);
+            }
         } else {
             switch (parameterEntity) {
                 case BLINKER_MODE:

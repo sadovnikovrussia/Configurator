@@ -32,10 +32,6 @@ public class Parameter implements CommandCreatable {
         return new Parameter(parameterEntity, value);
     }
 
-    @Override
-    public String createReadingCommand() {
-        return entity.getName() + endOfCommonReadingCommand;
-    }
 
     @Override
     public String createSettingCommand() {

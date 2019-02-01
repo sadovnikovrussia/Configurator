@@ -70,7 +70,7 @@ public class DeviceManager {
         if (logType.equals(LOG_TYPE_CMD)) {
             boolean isCmdOk = message.getBody().contains("OK");
             if (isCmdOk) {
-                Parameter parameter = CmdAnalyzer.getParameterFromMessage(message);
+                Parameter parameter = CmdParser.getParameterFromMessage(message);
                 dataManager.setConfigParameter(parameter);
                 if (parameter != null) {
                     listener.onSetConfigParameter(parameter.getEntity());

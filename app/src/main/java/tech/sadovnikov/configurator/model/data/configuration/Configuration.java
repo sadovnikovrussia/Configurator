@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import tech.sadovnikov.configurator.model.CmdCreator;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
@@ -57,7 +58,7 @@ public class Configuration {
         for (Map.Entry<ParametersEntities, Parameter> parameterEntry : parametersMap.entrySet()) {
             ParametersEntities parameterEntity = parameterEntry.getKey();
             if (parameterEntity.isSettable()){
-                cmdList.add(parameterEntry.getValue().createSettingCommand());
+                cmdList.add(CmdCreator.forSetting(parameterEntry.getValue()));
             }
         }
         Log.d(TAG, "getCmdListForSetOrSave() returned: " + cmdList);

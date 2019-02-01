@@ -6,8 +6,6 @@ public interface CommandCreatable {
     String endOfCommonReadingCommand = "?";
     String eq = "=";
 
-    String createReadingCommand();
-
     String createSettingCommand() throws NoSettableParameterException;
 
 }

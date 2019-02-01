@@ -33,7 +33,7 @@
 //import tech.sadovnikov.configurator.ui.config_tabs.ConfigMainFragment;
 //import tech.sadovnikov.configurator.ui.config_tabs.ConfigNavigationFragment;
 //import tech.sadovnikov.configurator.ui.config_tabs.ConfigServerFragment;
-//import tech.sadovnikov.configurator.ui.config_tabs.ConfigSimCardFragment;
+//import tech.sadovnikov.configurator.ui.config_tabs.ConfigSimFragment;
 //import tech.sadovnikov.configurator.ui.configuration.ConfigurationFragment;
 //import tech.sadovnikov.configurator.ui.console.ConsoleFragment;
 //
@@ -86,7 +86,7 @@
 //        ConfigNavigationFragment.OnConfigNavigationFragmentInteractionListener,
 //        ConfigEventsFragment.OnConfigEventsFragmentInteractionListener,
 //        ConfigServerFragment.OnConfigServerFragmentInteractionListener,
-//        ConfigSimCardFragment.OnConfigSimCardFragmentInteractionListener,
+//        ConfigSimFragment.OnConfigSimCardFragmentInteractionListener,
 //        SaveFileDialogFragment.OnSaveFileDialogFragmentInteractionListener {
 //
 //    private static final String TAG = MainActivity.class.getSimpleName();
@@ -113,7 +113,7 @@
 //    ConfigNavigationFragment configNavigationFragment;
 //    ConfigEventsFragment configEventsFragment;
 //    ConfigServerFragment configServerFragment;
-//    ConfigSimCardFragment configSimCardFragment;
+//    ConfigSimFragment configSimCardFragment;
 //    ConsoleFragment consoleFragment;
 //
 //    public MainActivity() {
@@ -440,7 +440,7 @@
 //                navigation.setSelectedItemId(configurationFragment.getId());
 //                break;
 //            case CONFIG_SIM_CARD_FRAGMENT:
-//                configSimCardFragment = new ConfigSimCardFragment();
+//                configSimCardFragment = new ConfigSimFragment();
 //                fragmentTransaction.replace(R.id.container, configSimCardFragment);
 //                navigation.setSelectedItemId(configurationFragment.getId());
 //                break;

@@ -273,7 +273,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         if (logType.equals(LOG_TYPE_CMD)) {
             boolean isCmdOk = message.getBody().contains("OK");
             if (isCmdOk) {
-                Parameter parameter = CmdAnalyzer.getParameterFromMessage(message);
+                Parameter parameter = CmdParser.getParameterFromMessage(message);
                 if (parameter != null) {
                     cmdObservable.onNext(parameter);
                 }

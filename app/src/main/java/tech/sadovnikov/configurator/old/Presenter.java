@@ -754,7 +754,7 @@
 //
 //
 //    // ---------------------------------------------------------------------------------------------
-//    // ConfigSimCardFragment events
+//    // ConfigSimFragment events
 //    @Override
 //    public void onEtApnFocusChange(boolean hasFocus) {
 //        if (!hasFocus) repositoryConfiguration.setParameterFromUi(APN, mainView.getEtApnText());

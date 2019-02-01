@@ -53,7 +53,10 @@ public enum ParametersEntities {
 
     APN("APN", true, String.class),
     LOGIN("LOGIN", true, String.class),
-    PASSWORD("PASSWORD", true, String.class);
+    PASSWORD("PASSWORD", true, String.class),
+    PIN("PIN", false, Integer.class),
+    SIM_ATTEMPTS("SIM ATTEMPTS", true, Integer.class),
+    DELIV_TIMEOUT("DELIV TIMEOUT", true, Integer.class);
 
 
 
