@@ -96,7 +96,7 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
 
     @Override
     public void connectToDevice(BluetoothDevice device) {
-        if (!device.equals(connectedDevice)){
+        if (!device.equals(connectedDevice)) {
             cancelDiscovery();
             onConnecting(device);
         }
@@ -207,6 +207,12 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     @Override
     public void onStateDisconnected(BluetoothDevice device) {
         Log.d(TAG, "onStateDisconnected: " + device);
+    }
+
+    @Override
+    public void onAclDisconnected() {
+        connectedDevice = null;
+        connectionStateObservable.onNext(CONNECTION_STATE_DISCONNECTED);
     }
 
     @Override
@@ -406,7 +412,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         }
 
         synchronized void write(String data) {
-            Log.d(TAG, "Пишем в порт: " + data);
             writerSerial.write(data);
             writerSerial.flush();
         }

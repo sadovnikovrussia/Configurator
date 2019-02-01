@@ -68,6 +68,7 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
         compositeDisposable.add(subscribe);
     }
 
+    // todo выключать подписку на dataManager при изменении параметра из UI
     public void onParameterChanged(ParametersEntities parameterEntity, String value) {
         Log.d(TAG, "onParameterChanged: ");
         if (value.length() == 0) {

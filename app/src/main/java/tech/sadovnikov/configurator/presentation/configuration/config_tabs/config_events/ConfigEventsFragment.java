@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,8 +25,6 @@ import tech.sadovnikov.configurator.model.data.configuration.Configuration;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgFragment;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
-
-import static android.view.View.OnClickListener;
 
 public class ConfigEventsFragment extends BaseCfgFragment implements ConfigEventsView {
     public static final String TAG = ConfigEventsFragment.class.getSimpleName();
@@ -81,20 +80,33 @@ public class ConfigEventsFragment extends BaseCfgFragment implements ConfigEvent
     @Override
     public void setUp(View view) {
         btnAlarmEvents.setOnClickListener(v -> configEventsPresenter.onCreateAlarmEventsMessage());
-        OnClickListener onEventClickListener = v -> {
-            StringBuilder value = new StringBuilder();
-            if (cb9.isChecked()) value.append("1,");
-            if (cb10.isChecked()) value.append("2,");
-            if (cb11.isChecked()) value.append("3,");
-            if (cb12.isChecked()) value.append("4,");
-            if (cb13.isChecked()) value.append("5,");
-            if (cb14.isChecked()) value.append("6,");
-            if (cb15.isChecked()) value.append("7,");
-            if (cb16.isChecked()) value.append("8,");
-            if (value.length() != 0) value.deleteCharAt(value.length() - 1);
-            presenter.onParameterChanged(ParametersEntities.EVENTS_MASK, value.toString());
-        };
-        for (CheckBox checkBox : cbEvents) checkBox.setOnClickListener(onEventClickListener);
+//        OnClickListener onEventClickListener = v -> {
+//            StringBuilder value = new StringBuilder();
+//            if (cb9.isChecked()) value.append("1,");
+//            if (cb10.isChecked()) value.append("2,");
+//            if (cb11.isChecked()) value.append("3,");
+//            if (cb12.isChecked()) value.append("4,");
+//            if (cb13.isChecked()) value.append("5,");
+//            if (cb14.isChecked()) value.append("6,");
+//            if (cb15.isChecked()) value.append("7,");
+//            if (cb16.isChecked()) value.append("8,");
+//            if (value.length() != 0) value.deleteCharAt(value.length() - 1);
+//            presenter.onParameterChanged(ParametersEntities.EVENTS_MASK, value.toString());
+//        };
+        for (CheckBox checkBox : cbEvents)
+            checkBox.setOnClickListener(v -> {
+                StringBuilder value = new StringBuilder();
+                if (cb9.isChecked()) value.append("1,");
+                if (cb10.isChecked()) value.append("2,");
+                if (cb11.isChecked()) value.append("3,");
+                if (cb12.isChecked()) value.append("4,");
+                if (cb13.isChecked()) value.append("5,");
+                if (cb14.isChecked()) value.append("6,");
+                if (cb15.isChecked()) value.append("7,");
+                if (cb16.isChecked()) value.append("8,");
+                if (value.length() != 0) value.deleteCharAt(value.length() - 1);
+                presenter.onParameterChanged(ParametersEntities.EVENTS_MASK, value.toString());
+            });
     }
 
     public void uncheckAllEventsMaskCb() {
@@ -136,40 +148,53 @@ public class ConfigEventsFragment extends BaseCfgFragment implements ConfigEvent
                 break;
         }
     }
+
     @Override
     public void showConfiguration(Configuration configuration) {
+        Log.d(TAG, "showConfiguration: ");
         Parameter eventsMask = configuration.getParameter(ParametersEntities.EVENTS_MASK);
-        uncheckAllEventsMaskCb();
+        //uncheckAllEventsMaskCb();
         if (eventsMask != null) {
-            String[] positions = eventsMask.getValue().split(",");
-            for (String position : positions) {
-                switch (position) {
-                    case "1":
-                        cb9.setChecked(true);
-                        break;
-                    case "2":
-                        cb10.setChecked(true);
-                        break;
-                    case "3":
-                        cb11.setChecked(true);
-                        break;
-                    case "4":
-                        cb12.setChecked(true);
-                        break;
-                    case "5":
-                        cb13.setChecked(true);
-                        break;
-                    case "6":
-                        cb14.setChecked(true);
-                        break;
-                    case "7":
-                        cb15.setChecked(true);
-                        break;
-                    case "8":
-                        cb16.setChecked(true);
-                        break;
-                }
-            }
+//            String[] positions = eventsMask.getValue().split(",");
+            List<String> events = Arrays.asList(eventsMask.getValue().split(","));
+            cb9.setChecked(events.contains("1"));
+            cb10.setChecked(events.contains("2"));
+            cb11.setChecked(events.contains("3"));
+            cb12.setChecked(events.contains("4"));
+            cb13.setChecked(events.contains("5"));
+            cb14.setChecked(events.contains("6"));
+            cb15.setChecked(events.contains("7"));
+            cb16.setChecked(events.contains("8"));
+//            for (String position : positions) {
+//                if (position.equals("1")) {
+//                    if (cb9.isChecked())
+//                }
+//                switch (position) {
+//                    case "1":
+//                        cb9.setChecked(true);
+//                        break;
+//                    case "2":
+//                        cb10.setChecked(true);
+//                        break;
+//                    case "3":
+//                        cb11.setChecked(true);
+//                        break;
+//                    case "4":
+//                        cb12.setChecked(true);
+//                        break;
+//                    case "5":
+//                        cb13.setChecked(true);
+//                        break;
+//                    case "6":
+//                        cb14.setChecked(true);
+//                        break;
+//                    case "7":
+//                        cb15.setChecked(true);
+//                        break;
+//                    case "8":
+//                        cb16.setChecked(true);
+//                        break;
+//                }
         }
 
     }

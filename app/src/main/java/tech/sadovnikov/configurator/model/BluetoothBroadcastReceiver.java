@@ -40,6 +40,7 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                     break;
                 case BluetoothDevice.ACTION_ACL_DISCONNECTED:
                     Log.d(TAG, "ACTION_ACL_DISCONNECTED: ");
+                    listener.onAclDisconnected();
                     break;
                 case BluetoothDevice.ACTION_BOND_STATE_CHANGED:
                     Log.d(TAG, "ACTION_BOND_STATE_CHANGED: " + ((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)).getBondState());
@@ -111,6 +112,8 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
         void onStateConnecting(BluetoothDevice device);
 
         void onStateDisconnected(BluetoothDevice device);
+
+        void onAclDisconnected();
     }
 
 }

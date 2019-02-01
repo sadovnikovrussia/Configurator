@@ -24,7 +24,7 @@
             <Button
                 android:id="@+id/btn_alarm_events"
                 style="@style/btn_command"
-                android:text="@string/send_test_message" />
+                android:text="@string/create_test_message" />
 
             <TextView
                 android:id="@+id/tv_config_events_mask"
