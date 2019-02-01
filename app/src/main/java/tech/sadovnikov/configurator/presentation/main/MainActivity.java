@@ -39,6 +39,8 @@ import tech.sadovnikov.configurator.presentation.configuration.config_tabs.confi
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_main.ConfigMainFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_navigation.ConfigNavigationFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_navigation.ConfigNavigationView;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_server.ConfigServerFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_server.ConfigServerView;
 import tech.sadovnikov.configurator.presentation.console.ConsoleFragment;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
@@ -163,6 +165,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
                 break;
             case ConfigEventsView.name:
                 showFragment(ConfigEventsFragment.newInstance(), ConfigEventsFragment.TAG);
+                break;
+            case ConfigServerView.name:
+                showFragment(ConfigServerFragment.newInstance(), ConfigServerFragment.TAG);
                 break;
         }
     }

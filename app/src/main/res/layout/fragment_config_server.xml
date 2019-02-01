@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frag_config_server"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.configuration.config_tabs.ConfigServerFragment">
+
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -51,6 +54,7 @@
                     android:id="@+id/et_connect_attempts"
                     style="@style/et_parameter_value"
                     android:layout_weight="5"
+                    android:inputType="number"
                     tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
@@ -68,6 +72,7 @@
                     android:id="@+id/et_session_time"
                     style="@style/et_parameter_value"
                     android:layout_weight="5"
+                    android:inputType="number"
                     tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
@@ -85,6 +90,7 @@
                     android:id="@+id/et_packet_tout"
                     style="@style/et_parameter_value"
                     android:layout_weight="5"
+                    android:inputType="number"
                     tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
@@ -124,6 +130,7 @@
                     android:id="@+id/et_normal_int"
                     style="@style/et_parameter_value"
                     android:layout_weight="5"
+                    android:inputType="number"
                     tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>
@@ -142,6 +149,7 @@
                     android:id="@+id/et_alarm_int"
                     style="@style/et_parameter_value"
                     android:layout_weight="5"
+                    android:inputType="number"
                     tools:ignore="Autofill,LabelFor,UnusedAttribute" />
 
             </LinearLayout>

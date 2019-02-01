@@ -32,7 +32,29 @@ public enum ParametersEntities {
     FIX_DELAY("FIX DELAY", true, Integer.class),
     SATELLITE_SYSTEM("SATELLITE SYSTEM", true, Integer.class),
 
-    EVENTS_MASK("EVENTS MASK", true, String.class); //
+    EVENTS_MASK("EVENTS MASK", true, String.class), //
+
+    SERVER("SERVER", true, String.class),
+    CONNECT_ATTEMPTS("CONNECT ATTEMPTS", true, Integer.class),
+    SESSION_TIME("SESSION TIME", true, Integer.class),
+    PACKET_TOUT("PACKET TOUT", true, Integer.class),
+    PRIORITY_CHNL("PRIORITY CHNL", true, Integer.class),
+    NORMAL_INT("NORMAL INT", true, Integer.class),
+    ALARM_INT("ALARM INT", true, Integer.class),
+    SMS_CENTER("SMS CENTER", true, String.class),
+    CMD_NUMBER("CMD NUMBER", true, String.class),
+    ANSW_NUMBER("ANSW NUMBER", true, String.class),
+    PACKETS("PACKETS", false, String.class) {
+        @Override
+        public String createReadingCommand() {
+            return "@" + super.createReadingCommand();
+        }
+    },
+
+    APN("APN", true, String.class),
+    LOGIN("LOGIN", true, String.class),
+    PASSWORD("PASSWORD", true, String.class);
+
 
 
     String endOfCommonReadingCommand = "?";

@@ -12,6 +12,7 @@ import tech.sadovnikov.configurator.presentation.configuration.config_tabs.confi
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_events.ConfigEventsPresenter;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_main.ConfigMainPresenter;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_navigation.ConfigNavigationPresenter;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_server.ConfigServerPresenter;
 import tech.sadovnikov.configurator.presentation.console.ConsolePresenter;
 import tech.sadovnikov.configurator.presentation.main.MainPresenter;
 
@@ -40,4 +41,6 @@ public interface PresenterComponent {
     void injectConfigMainPresenter(ConfigNavigationPresenter configNavigationPresenter);
 
     void injectConfigMainPresenter(ConfigEventsPresenter configEventsPresenter);
+
+    void injectConfigMainPresenter(ConfigServerPresenter configServerPresenter);
 }

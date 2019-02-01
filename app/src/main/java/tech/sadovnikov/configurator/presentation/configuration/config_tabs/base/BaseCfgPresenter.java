@@ -90,6 +90,11 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
                     else
                         dataManager.setConfigParameter(parameterEntity, String.valueOf(Integer.valueOf(value) - 1));
                     break;
+                case PRIORITY_CHNL:
+                    if (value.equals("0")) dataManager.removeConfigParameter(parameterEntity);
+                    else
+                        dataManager.setConfigParameter(parameterEntity, String.valueOf(Integer.valueOf(value) - 1));
+                    break;
                 default:
                     dataManager.setConfigParameter(parameterEntity, value);
             }

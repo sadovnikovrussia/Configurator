@@ -1,12 +1,14 @@
 package tech.sadovnikov.configurator.model;
 
-import android.support.annotation.NonNull;
-
 import java.text.DecimalFormat;
 
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
+
+import static tech.sadovnikov.configurator.utils.ParametersEntities.APN;
+import static tech.sadovnikov.configurator.utils.ParametersEntities.LOGIN;
+import static tech.sadovnikov.configurator.utils.ParametersEntities.PASSWORD;
 
 class CmdAnalyzer {
     private static final String TAG = CmdAnalyzer.class.getSimpleName();
@@ -63,11 +65,73 @@ class CmdAnalyzer {
 
     private static Parameter parseMessageBody(String messageBody, ParametersEntities entity, int startIndex) {
         String value;
+        int indexEquals;
         int endIndex;
         switch (entity) {
             case FIRMWARE_VERSION:
                 endIndex = messageBody.indexOf("\r\n", startIndex);
                 value = messageBody.substring(startIndex + entity.getName().length() + 1, endIndex);
+                break;
+            case SERVER:
+                if (!messageBody.contains(LOGIN.getName()) && !messageBody.contains(APN.getName()) && !messageBody.contains(PASSWORD.getName())) {
+                    indexEquals = messageBody.indexOf("=");
+                    endIndex = messageBody.indexOf("\r\n", indexEquals);
+                    value = messageBody.substring(indexEquals + 1, endIndex).trim();
+                } else return null;
+                break;
+            case SMS_CENTER:
+                indexEquals = messageBody.indexOf("=");
+                endIndex = messageBody.indexOf("\r\n", indexEquals);
+                value = messageBody.substring(indexEquals + 1, endIndex);
+                if (messageBody.contains("\""))
+                    value = messageBody.substring(indexEquals + 1, endIndex).replaceAll("\"", "").trim();
+                break;
+            case CMD_NUMBER:
+                indexEquals = messageBody.indexOf("=");
+                endIndex = messageBody.indexOf("\r\n", indexEquals);
+                value = messageBody.substring(indexEquals + 1, endIndex);
+                if (messageBody.contains("\""))
+                    value = messageBody.substring(indexEquals + 1, endIndex).replaceAll("\"", "").trim();
+                break;
+            case ANSW_NUMBER:
+                indexEquals = messageBody.indexOf("=");
+                endIndex = messageBody.indexOf("\r\n", indexEquals);
+                value = messageBody.substring(indexEquals + 1, endIndex);
+                if (messageBody.contains("\""))
+                    value = messageBody.substring(indexEquals + 1, endIndex).replaceAll("\"", "").trim();
+                break;
+            case PACKETS:
+                //
+                int adrIndex = messageBody.indexOf("ADR:");
+                int endAdrIndex = messageBody.indexOf("\r\n", adrIndex);
+                String adr = messageBody.substring(adrIndex + 4, endAdrIndex);
+                String[] adrNums = adr.split("-");
+                int startAdr = Integer.parseInt(adrNums[0].substring(2), 16);
+                int endAdr = Integer.parseInt(adrNums[1].substring(2), 16);
+                int volAdr = endAdr - startAdr + 1;
+                //
+                int useIndex = messageBody.indexOf("USE:");
+                int endUseIndex = messageBody.indexOf("\r\n", useIndex);
+                String use = messageBody.substring(useIndex + 4, endUseIndex);
+                String[] useNums = use.split("-");
+                int startUse = Integer.parseInt(useNums[0].substring(2), 16);
+                int endUse = Integer.parseInt(useNums[1].substring(2), 16);
+                int volUse = endUse - startUse;
+                if (volUse < 0) {
+                    volUse = -volUse;
+                }
+                //
+                double doublePercents = ((double) volUse / volAdr * 100);
+                // LogList.d(TAG, "parseMessage: doublePercents = " + doublePercents);
+                String pattern = "##0.000";
+                DecimalFormat decimalFormat = new DecimalFormat(pattern);
+                String formattedPercents = decimalFormat.format(doublePercents).replace(",", ".");
+                //
+                int packetsIndex = messageBody.lastIndexOf("PACKETS:");
+                int endPacketsIndex = messageBody.indexOf("\r\n", packetsIndex);
+                String packets = messageBody.substring(packetsIndex + 8, endPacketsIndex);
+                //
+                value = packets + "," + formattedPercents;
                 break;
             default:
                 int equalsIndex = messageBody.indexOf("=");
