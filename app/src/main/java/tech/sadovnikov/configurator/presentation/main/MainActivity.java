@@ -41,6 +41,8 @@ import tech.sadovnikov.configurator.presentation.configuration.config_tabs.confi
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_navigation.ConfigNavigationView;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_server.ConfigServerFragment;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_server.ConfigServerView;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_sim.ConfigSimFragment;
+import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_sim.ConfigSimView;
 import tech.sadovnikov.configurator.presentation.console.ConsoleFragment;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
@@ -82,7 +84,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     private void setUp() {
         navigationListener = menuItem -> {
-            Log.w(TAG, "OnNavigationItemSelected: " + menuItem.toString());
             switch (menuItem.getItemId()) {
                 case R.id.navigation_bluetooth:
                     presenter.onNavigateToBluetooth();
@@ -123,7 +124,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     }
 
     private void showToast(String message) {
-        Log.d(TAG, "showToast: ");
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
@@ -133,20 +133,22 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     }
 
     @Override
+    public void showMessage(String message) {
+        showToast(message);
+    }
+
+    @Override
     public void showBluetoothView() {
-        Log.w(TAG, "showBluetoothView: ");
         showFragment(BluetoothFragment.newInstance(), BluetoothFragment.TAG);
     }
 
     @Override
     public void showConfigurationView() {
-        Log.w(TAG, "showConfigurationView: ");
         showFragment(ConfigurationFragment.newInstance(), ConfigurationFragment.TAG);
     }
 
     @Override
     public void showConsoleView() {
-        Log.w(TAG, "showConsoleView: ");
         showFragment(ConsoleFragment.newInstance(), ConsoleFragment.TAG);
     }
 
@@ -168,6 +170,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
                 break;
             case ConfigServerView.name:
                 showFragment(ConfigServerFragment.newInstance(), ConfigServerFragment.TAG);
+                break;
+            case ConfigSimView.name:
+                showFragment(ConfigSimFragment.newInstance(), ConfigSimFragment.TAG);
                 break;
         }
     }
@@ -218,19 +223,16 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     public void hideDialogSave() {
         if (saveDialog != null) {
             saveDialog.dismiss();
-            saveDialog = null;
         }
     }
 
     @Override
     public void showSuccessSaveCfgMessage(String name) {
-        Log.d(TAG, "showSuccessSaveCfgMessage: ");
         showToast("Конфигурация " + name + " сохранена в папку Загрузки");
     }
 
     @Override
     public void showErrorSaveCfgMessage(Exception e) {
-        Log.d(TAG, "showErrorSaveCfgMessage: ");
         showToast("Не удалось сохранить конфигурацию" + "\r\n" + e);
     }
 
@@ -257,12 +259,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     }
 
     @Override
-    public void showMessage(String message) {
-        Log.d(TAG, "showMessage: ");
-        showToast(message);
-    }
-
-    @Override
     public void startOpenFileManagerActivity() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
@@ -271,13 +267,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
 
     @Override
     public void showErrorOpenCfgMessage(String cfgName, Exception e) {
-        Log.d(TAG, "showErrorOpenCfgMessage: ");
         showToast("Не удалось открыть " + cfgName + "\r\n" + e.toString());
     }
 
     @Override
     public void showSuccessOpenCfgMessage(String cfgName) {
-        Log.d(TAG, "showSuccessOpenCfgMessage: ");
         showToast(cfgName + " открыта успешно");
     }
 
@@ -312,7 +306,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView,
     //todo Перенести к базовому фрагменту конфигурции
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.w(TAG, "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.item_open:
                 presenter.onOpenConfiguration();

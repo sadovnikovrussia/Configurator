@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.model.data.configuration.Configuration;
+import tech.sadovnikov.configurator.model.entities.Configuration;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.old.OnParameterViewGroupClickListener;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgFragment;

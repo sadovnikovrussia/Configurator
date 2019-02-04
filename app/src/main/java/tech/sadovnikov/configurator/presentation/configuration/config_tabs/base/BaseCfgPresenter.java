@@ -15,7 +15,7 @@ import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.DataManager;
-import tech.sadovnikov.configurator.model.data.configuration.Configuration;
+import tech.sadovnikov.configurator.model.entities.Configuration;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 import tech.sadovnikov.configurator.utils.rx.RxTransformers;
 
@@ -24,7 +24,6 @@ import tech.sadovnikov.configurator.utils.rx.RxTransformers;
 public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
     private static final String TAG = BaseCfgPresenter.class.getSimpleName();
 
-    private PresenterComponent presenterComponent;
     @Inject
     DataManager dataManager;
     @Inject
@@ -40,7 +39,7 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
     }
 
     private void initDaggerAndInject() {
-        presenterComponent = DaggerPresenterComponent
+        PresenterComponent presenterComponent = DaggerPresenterComponent
                 .builder()
                 .applicationComponent(App.getApplicationComponent())
                 .build();
@@ -51,7 +50,7 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         PublishSubject<Configuration> configurationObservable = dataManager.getConfigurationObservable();
-        Log.w(TAG, "onFirstViewAttach: " + configurationObservable);
+        Log.w(TAG, "onFirstViewAttach: ");
         Disposable subscribe = configurationObservable
                 .compose(RxTransformers.applySchedulers())
                 .subscribe(configuration -> {
@@ -70,7 +69,6 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
 
     // todo выключать подписку на dataManager при изменении параметра из UI
     public void onParameterChanged(ParametersEntities parameterEntity, String value) {
-        Log.d(TAG, "onParameterChanged: ");
         if (value.length() == 0) {
             switch (parameterEntity) {
                 case APN:
@@ -106,6 +104,15 @@ public class BaseCfgPresenter extends MvpPresenter<BaseCfgView> {
                     if (value.equals("0")) dataManager.removeConfigParameter(parameterEntity);
                     else
                         dataManager.setConfigParameter(parameterEntity, String.valueOf(Integer.valueOf(value) - 1));
+                    break;
+                case APN:
+                    dataManager.setConfigParameter(parameterEntity, "\"" + value + "\"");
+                    break;
+                case LOGIN:
+                    dataManager.setConfigParameter(parameterEntity, "\"" + value + "\"");
+                    break;
+                case PASSWORD:
+                    dataManager.setConfigParameter(parameterEntity, "\"" + value + "\"");
                     break;
                 default:
                     dataManager.setConfigParameter(parameterEntity, value);

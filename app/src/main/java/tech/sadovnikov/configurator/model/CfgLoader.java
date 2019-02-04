@@ -11,9 +11,11 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
-import tech.sadovnikov.configurator.model.data.DataManager;
+import tech.sadovnikov.configurator.model.entities.Configuration;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 import tech.sadovnikov.configurator.utils.rx.RxTransformers;
+
+import static tech.sadovnikov.configurator.utils.ParametersEntities.PIN;
 
 /**
  * Класс, отвечающий за отправку списка команд (установка и считывание параметров из устройства)
@@ -36,7 +38,6 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
     private Timer timer;
 
     private BluetoothService bluetoothService;
-    private DataManager dataManager;
 
     private CompositeDisposable subscriptions = new CompositeDisposable();
 
@@ -48,13 +49,9 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
         this.bluetoothService = bluetoothService;
     }
 
-    public void setDataManager(DataManager dataManager) {
-        this.dataManager = dataManager;
-    }
-
-    public PublishSubject<Integer> setCurrentConfiguration() {
-        commandList = dataManager.getCmdListForSetDeviceConfiguration();
-        Log.d(TAG, "setCurrentConfiguration: " + commandList);
+    public PublishSubject<Integer> setConfiguration(Configuration configuration) {
+        commandList = configuration.getCmdListForSetting();
+        Log.d(TAG, "setConfiguration: " + commandList);
         startLoading();
         return progress;
     }
@@ -64,6 +61,7 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
         for (ParametersEntities entity : ParametersEntities.values()) {
             commandList.add(entity.createReadingCommand());
         }
+        commandList.remove(PIN.createReadingCommand());
         Log.d(TAG, "readFullConfiguration: " + commandList);
         startLoading();
         return progress;
@@ -72,15 +70,12 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
     private void startLoading() {
         subscriptions.add(bluetoothService.getCmdObservable()
                 .compose(RxTransformers.applySchedulers())
-                .subscribe(parameter -> {
-                    onGetParameter();
-                    //dataManager.setConfigParameter(parameter);
-                }));
+                .subscribe(parameter -> onGetParameter()));
         commandNumber = 0;
         attemptNumber = 0;
         progress = PublishSubject.create();
         timer = new Timer();
-        timer.schedule(new Task(), delay, period);
+        timer.schedule(new CmdTask(), delay, period);
     }
 
     private void onGetParameter() {
@@ -92,7 +87,7 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
         progress.onNext(pr);
         if (commandNumber < commandList.size()) {
             timer = new Timer();
-            timer.schedule(new Task(), delay, period);
+            timer.schedule(new CmdTask(), delay, period);
         } else {
             progress.onComplete();
             subscriptions.clear();
@@ -105,8 +100,8 @@ public class CfgLoader implements MessageAnalyzer.OnSetCfgParameterListener {
     }
 
 
-    private class Task extends TimerTask {
-        private final String TAG = Task.class.getSimpleName();
+    private class CmdTask extends TimerTask {
+        private final String TAG = CmdTask.class.getSimpleName();
 
         int attempts = 3;
 

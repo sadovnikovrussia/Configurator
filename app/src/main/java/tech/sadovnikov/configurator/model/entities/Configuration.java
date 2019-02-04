@@ -1,4 +1,4 @@
-package tech.sadovnikov.configurator.model.data.configuration;
+package tech.sadovnikov.configurator.model.entities;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import tech.sadovnikov.configurator.model.CmdCreator;
-import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
 public class Configuration {
@@ -18,21 +17,8 @@ public class Configuration {
 
     private Map<ParametersEntities, Parameter> parametersMap = new LinkedHashMap<>();
 
-    public void setParameter(ParametersEntities parameterEntity, String value) {
-        Parameter parameter = Parameter.of(parameterEntity, value);
-        //parameters.remove(parameter);
-        //parameters.add(parameter);
-        parametersMap.put(parameterEntity, Parameter.of(parameterEntity, value));
-        Log.d(TAG, "setParameter: " + parameter);
-        Log.d(TAG, "setParameter: " + this);
-    }
-
     public void setParameter(Parameter parameter) {
-        //parameters.remove(parameter);
-        //parameters.add(parameter);
         parametersMap.put(parameter.getEntity(), parameter);
-        //Log.d(TAG, "setParameter: " + parameter);
-        //Log.d(TAG, "setParameter: " + this);
     }
 
     @Nullable
@@ -41,41 +27,42 @@ public class Configuration {
     }
 
     public Parameter removeParameter(ParametersEntities parametersEntity) {
-        //return parameters.remove(Parameter.of(parametersEntity));
         return parametersMap.remove(parametersEntity);
     }
 
-    public List<String> getCmdListForReadDeviceConfiguration() {
-        List<String> commandList = new ArrayList<>();
-        for (ParametersEntities entity : ParametersEntities.values()) {
-            commandList.add(entity.createReadingCommand());
-        }
-        return commandList;
-    }
-
-    public List<String> getCmdListForSetOrSave() {
+    public List<String> getCmdListForSaving() {
         List<String> cmdList = new ArrayList<>();
         for (Map.Entry<ParametersEntities, Parameter> parameterEntry : parametersMap.entrySet()) {
             ParametersEntities parameterEntity = parameterEntry.getKey();
-            if (parameterEntity.isSettable()){
+            if (parameterEntity.isSettable()) {
+                if (!parameterEntry.getValue().getValue().equals(""))
+                    cmdList.add(CmdCreator.forSaving(parameterEntry.getValue()));
+            }
+        }
+        return cmdList;
+    }
+
+    public List<String> getCmdListForSetting() {
+        List<String> cmdList = new ArrayList<>();
+        for (Map.Entry<ParametersEntities, Parameter> parameterEntry : parametersMap.entrySet()) {
+            ParametersEntities parameterEntity = parameterEntry.getKey();
+            if (parameterEntity.isSettable()) {
                 cmdList.add(CmdCreator.forSetting(parameterEntry.getValue()));
             }
         }
-        Log.d(TAG, "getCmdListForSetOrSave() returned: " + cmdList);
+        Log.d(TAG, "getCmdListForSetting() returned: " + cmdList);
         return cmdList;
     }
 
 
     public void clear() {
-        //parameters.clear();
         parametersMap.clear();
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "Configuration{" + parametersMap +
-                '}';
+        return "Configuration" + parametersMap;
     }
 
     public int getSize() {

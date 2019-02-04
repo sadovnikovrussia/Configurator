@@ -2,41 +2,24 @@ package tech.sadovnikov.configurator.model.entities;
 
 import android.support.annotation.NonNull;
 
-
 import java.util.Objects;
 
-import tech.sadovnikov.configurator.model.exception.NoSettableParameterException;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
-public class Parameter implements CommandCreatable {
+public class Parameter {
 
     @NonNull
     private ParametersEntities entity;
     @NonNull
     private String value;
 
-//    private Parameter(@NonNull ParametersEntities entity) {
-//        this.entity = entity;
-//    }
-
     private Parameter(@NonNull ParametersEntities entity, @NonNull String value) {
         this.entity = entity;
         this.value = value;
     }
 
-//    public static Parameter of(ParametersEntities parametersEntity){
-//        return new Parameter(parametersEntity);
-//    }
-
     public static Parameter of(ParametersEntities parameterEntity, String value) {
         return new Parameter(parameterEntity, value);
-    }
-
-
-    @Override
-    public String createSettingCommand() {
-        if (entity.isSettable()) return entity.getName() + eq + value;
-        return "";
     }
 
     @NonNull
@@ -54,6 +37,7 @@ public class Parameter implements CommandCreatable {
         return value;
     }
 
+    @NonNull
     public void setValue(@NonNull String value) {
         this.value = value;
     }

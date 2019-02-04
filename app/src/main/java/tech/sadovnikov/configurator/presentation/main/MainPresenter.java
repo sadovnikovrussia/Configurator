@@ -20,7 +20,7 @@ import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.CfgLoader;
 import tech.sadovnikov.configurator.model.data.FileManager;
 import tech.sadovnikov.configurator.model.data.DataManager;
-import tech.sadovnikov.configurator.model.data.configuration.Configuration;
+import tech.sadovnikov.configurator.model.entities.Configuration;
 import tech.sadovnikov.configurator.presentation.bluetooth.BluetoothView;
 import tech.sadovnikov.configurator.presentation.configuration.ConfigurationView;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgView;
@@ -61,7 +61,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
         presenterComponent.injectMainPresenter(this);
         subscriptions = new CompositeDisposable();
         cfgLoader.setBluetoothService(bluetoothService);
-        cfgLoader.setDataManager(dataManager);
     }
 
     private void initDaggerComponent() {
@@ -129,7 +128,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     void onSetConfiguration() {
         if (bluetoothService.getConnectionState() == CONNECTION_STATE_CONNECTED) {
-            Disposable progressSubscription = cfgLoader.setCurrentConfiguration()
+            Disposable progressSubscription = cfgLoader.setConfiguration(dataManager.getConfiguration())
                     .compose(RxTransformers.applySchedulers())
                     .subscribe(integer -> getViewState().setLoadingProcess(integer),
                             Throwable::printStackTrace,

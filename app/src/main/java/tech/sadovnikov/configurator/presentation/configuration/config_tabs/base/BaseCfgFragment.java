@@ -37,45 +37,16 @@ public abstract class BaseCfgFragment extends MvpAppCompatFragment implements Ba
         Log.v(TAG, "ON_CREATE_VIEW");
         listener.onCreateViewBaseCfgView();
         setHasOptionsMenu(true);
-        init();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    private void init() {
-//        spinParameterListener = new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                if (view != null) {
-//                    switch (view.getId()) {
-//                        case R.id.spin_blinker_mode:
-//                            presenter.onParameterChanged(ParametersEntities.BLINKER_MODE, String.valueOf(position));
-//                            break;
-//                        case R.id.spin_blinker_brightness:
-//                            presenter.onParameterChanged(ParametersEntities.BLINKER_BRIGHTNESS, String.valueOf(position));
-//                            break;
-//                        case R.id.spin_satellite_system:
-//                            presenter.onParameterChanged(ParametersEntities.SATELLITE_SYSTEM, String.valueOf(position));
-//                            break;
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        };
-    }
-
     public abstract void setUp(View view);
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_configuration_options, menu);
     }
-
 
     @Override
     public void onAttach(Context context) {

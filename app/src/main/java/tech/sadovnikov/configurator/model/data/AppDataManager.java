@@ -2,6 +2,7 @@ package tech.sadovnikov.configurator.model.data;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,7 +12,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.model.BluetoothService;
-import tech.sadovnikov.configurator.model.data.configuration.Configuration;
+import tech.sadovnikov.configurator.model.entities.Configuration;
 import tech.sadovnikov.configurator.model.data.logs.LogManager;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
@@ -60,7 +61,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public void setConfigParameter(Parameter parameter) {
-        Log.d(TAG, "setConfigParameter: " + parameter + ", " + configurationObservable);
+        Log.d(TAG, "setConfigParameter: " + parameter);
         configuration.setParameter(parameter);
         configurationObservable.onNext(configuration);
     }
@@ -82,12 +83,20 @@ public class AppDataManager implements DataManager {
 
     @Override
     public List<String> getCmdListForReadDeviceConfiguration() {
-        return configuration.getCmdListForReadDeviceConfiguration();
-    }
+        List<String> commandList = new ArrayList<>();
+        for (ParametersEntities entity : ParametersEntities.values()) {
+            commandList.add(entity.createReadingCommand());
+        }
+        return commandList;    }
 
     @Override
     public List<String> getCmdListForSetDeviceConfiguration() {
-        return configuration.getCmdListForSetOrSave();
+        return configuration.getCmdListForSetting();
+    }
+
+    @Override
+    public List<String> getCmdListForSaveDeviceConfiguration() {
+        return configuration.getCmdListForSaving();
     }
 
     @Override

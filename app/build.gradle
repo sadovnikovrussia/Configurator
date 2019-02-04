@@ -50,4 +50,5 @@ dependencies {
     // Binding
     implementation 'com.jakewharton:butterknife:9.0.0-rc3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc3'
+    implementation 'org.jetbrains:annotations:15.0'
 }

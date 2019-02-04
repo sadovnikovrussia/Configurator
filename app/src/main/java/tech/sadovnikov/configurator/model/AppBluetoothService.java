@@ -56,14 +56,6 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
     private PublishSubject<Integer> connectionStateObservable;
 
 
-//    public AppBluetoothService(OnBluetoothServiceEventsListener onBluetoothServiceEventsListener, UiHandler handler) {
-//        // LogList.v(TAG, "OnConstructor");
-//        listener = onBluetoothServiceEventsListener;
-//        this.handler = handler;
-//        messageAnalyzer = new MessageAnalyzer(handler);
-//    }
-//
-
     public AppBluetoothService() {
         connectionStateObservable = PublishSubject.create();
     }

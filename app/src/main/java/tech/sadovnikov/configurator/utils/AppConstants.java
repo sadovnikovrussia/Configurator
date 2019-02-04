@@ -1,6 +1,6 @@
 package tech.sadovnikov.configurator.utils;
 
 public class AppConstants {
-    public static final String PREF_NAME = "configurator_pref";
+    public static final String SIM_DEFAULTS = "\"Cellular operator defaults\"";
 
 }

@@ -15,14 +15,15 @@ import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 import tech.sadovnikov.configurator.utils.SpecialCommands;
 
+import static tech.sadovnikov.configurator.utils.AppConstants.SIM_DEFAULTS;
+import static tech.sadovnikov.configurator.utils.ParametersEntities.*;
+
 @InjectViewState
 public class ConfigSimPresenter extends MvpPresenter<ConfigSimView> {
     private static final String TAG = ConfigSimPresenter.class.getName();
 
     @Inject
     BluetoothService bluetoothService;
-    @Inject
-    DataManager dataManager;
 
     ConfigSimPresenter() {
         super();
@@ -43,7 +44,37 @@ public class ConfigSimPresenter extends MvpPresenter<ConfigSimView> {
         Log.d(TAG, "onFirstViewAttach: ");
     }
 
+    void onSetApnDefaultAction() {
+        bluetoothService.sendData(APN.getName() + "=\"\"");
+    }
 
+    void onSetLoginDefaultAction() {
+        bluetoothService.sendData(LOGIN.getName() + "=\"\"");
+    }
+
+    void onSetPasswordDefaultAction() {
+        bluetoothService.sendData(PASSWORD.getName() + "=\"\"");
+    }
+
+    void onClearApnAction() {
+        bluetoothService.sendData(APN.getName() + "=''");
+    }
+
+    void onClearLoginAction() {
+        bluetoothService.sendData(LOGIN.getName() + "=''");
+    }
+
+    void onClearPasswordAction() {
+        bluetoothService.sendData(PASSWORD.getName() + "=''");
+    }
+
+    void onEnterPinAction(String pin) {
+        bluetoothService.sendData("PIN=" + pin);
+    }
+
+    void onClearPinAction(String pin) {
+        bluetoothService.sendData("CLEAR PIN=" + pin);
+    }
 
     @Override
     public void onDestroy() {
@@ -51,27 +82,4 @@ public class ConfigSimPresenter extends MvpPresenter<ConfigSimView> {
         Log.d(TAG, "onDestroy: ");
     }
 
-    void onSetApnDefaultAction() {
-        dataManager.setConfigParameter(ParametersEntities.APN, "\"Cellular operator defaults\"");
-    }
-
-    void onSetLoginDefaultAction() {
-        dataManager.setConfigParameter(ParametersEntities.LOGIN, "\"Cellular operator defaults\"");
-    }
-
-    void onSetPasswordDefaultAction() {
-        dataManager.setConfigParameter(ParametersEntities.PASSWORD, "\"Cellular operator defaults\"");
-    }
-
-    void onClearApnAction() {
-        dataManager.setConfigParameter(ParametersEntities.APN, "''");
-    }
-
-    void onClearLoginAction() {
-        dataManager.setConfigParameter(ParametersEntities.LOGIN, "''");
-    }
-
-    void onClearPasswordAction() {
-        dataManager.setConfigParameter(ParametersEntities.PASSWORD, "''");
-    }
 }

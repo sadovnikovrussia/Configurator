@@ -14,7 +14,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import tech.sadovnikov.configurator.model.data.configuration.Configuration;
+import tech.sadovnikov.configurator.model.entities.Configuration;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
@@ -27,7 +27,6 @@ public class FileManager {
 
     @Inject
     public FileManager() {
-
     }
 
     // TODO <Добавить эти проверки при чтении/записи файла>
@@ -102,7 +101,7 @@ public class FileManager {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-            List<String> cmdListForSetOrSave = configuration.getCmdListForSetOrSave();
+            List<String> cmdListForSetOrSave = configuration.getCmdListForSaving();
             try {
                 for (String cmd : cmdListForSetOrSave) {
                     outputStreamWriter.write(cmd + "\r\n");
@@ -147,7 +146,6 @@ public class FileManager {
             try {
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    line = line.toUpperCase();
                     int indexEquals = line.indexOf("=");
                     if (indexEquals != -1) {
                         String value;
