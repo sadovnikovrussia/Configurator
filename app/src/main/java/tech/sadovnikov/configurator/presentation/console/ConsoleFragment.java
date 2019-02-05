@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,16 +46,16 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     ConsolePresenter presenter;
 
     // UI
-    @BindView(R.id.tv_log_screen)
-    TextView tvLogs;
-    @BindView(R.id.sv_log_screen)
-    ScrollView svLogs;
     @BindView(R.id.btn_send_command)
     Button btnSendCommand;
     @BindView(R.id.et_command_line)
     EditText etCommandLine;
     @BindView(R.id.sw_auto_scroll)
     Switch swAutoScroll;
+    @BindView(R.id.tabLayout_log_tabs)
+    TabLayout tabLayoutLogTabs;
+    @BindView(R.id.view_pager_devices)
+    ViewPager viewPagerLogTabs;
 
     private Listener listener;
     private SaveLogDialogFragment saveDialog;
@@ -71,7 +73,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView");
+        Log.v(TAG, "ON_CREATE_VIEW");
         View inflate = inflater.inflate(R.layout.fragment_console, container, false);
         ButterKnife.bind(this, inflate);
         setUp();
@@ -80,28 +82,47 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     }
 
     private void setUp() {
+        LogMessagesFragmentPagerAdapter pagerAdapter =  new LogMessagesFragmentPagerAdapter(getChildFragmentManager());
+        viewPagerLogTabs.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        viewPagerLogTabs.setAdapter(pagerAdapter);
+        tabLayoutLogTabs.setupWithViewPager(viewPagerLogTabs);
         btnSendCommand.setOnClickListener(view -> presenter.onSendCommand(etCommandLine.getText().toString()));
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void addMessageToLogScreen(LogMessage message, boolean autoScrollOn) {
-        tvLogs.append(message.convertToOriginal());
-        if (autoScrollOn) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
-    }
-
-    @Override
-    public void showMainLogs(List<LogMessage> mainLogMessages, boolean autoScrollOn) {
-        Log.v(TAG, "showMainLogs: ");
-        for (LogMessage message : mainLogMessages) tvLogs.append(message.convertToOriginal());
-        if (autoScrollOn) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
-    }
-
-    @Override
-    public void clearMainLogs() {
-        Log.v(TAG, "clearMainLogs: ");
-        tvLogs.setText("");
-    }
+//    @Override
+//    public void addMessageToLogScreen(LogMessage message, boolean autoScrollOn) {
+//        tvLogs.append(message.convertToOriginal());
+//        if (autoScrollOn) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
+//    }
+//
+//    @Override
+//    public void showMainLogs(List<LogMessage> mainLogMessages, boolean autoScrollOn) {
+//        Log.v(TAG, "showMainLogs: ");
+//        for (LogMessage message : mainLogMessages) tvLogs.append(message.convertToOriginal());
+//        if (autoScrollOn) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
+//    }
+//
+//    @Override
+//    public void clearMainLogs() {
+//        Log.v(TAG, "clearMainLogs: ");
+//        tvLogs.setText("");
+//    }
 
     @Override
     public void setAutoScrollState(boolean isAutoScroll) {

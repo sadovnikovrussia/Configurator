@@ -1,8 +1,8 @@
 package tech.sadovnikov.configurator.model.data.logs;
 
 
-import android.bluetooth.BluetoothDevice;
-
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +10,10 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
+import rx.internal.operators.OnSubscribeRedo;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
-
-import static tech.sadovnikov.configurator.model.entities.LogMessage.LOG_TYPE_CMD;
 
 /**
  * Класс, представляющий собой логи устройства
@@ -22,22 +22,31 @@ public class AppLogManager implements LogManager {
     private static final String TAG = AppLogManager.class.getSimpleName();
 
     private LogList mainLogList = new LogList();
-    private LogList cmdLogList = LogList.of(LOG_TYPE_CMD);
+    private LogList cmdLogList = LogList.of("CMD");
     private PublishSubject<LogMessage> observableMainLog = PublishSubject.create();
-    // private PublishSubject<LogMessage> observableCmdLog = PublishSubject.createMessage();
     private Map<String, LogList> logs = new LinkedHashMap<>();
+    private PublishSubject<Map<String, LogList>> observableLogs;
 
+
+    private PublishSubject<String> observableNewTab;
+
+    private BehaviorSubject<List<String>> observableTabs;
 
     private Analyzer analyzer;
 
     private boolean autoScrollMode;
     private PublishSubject<Boolean> autoScrollModeObservable;
 
+
     @Inject
     public AppLogManager() {
-        this.analyzer = new Analyzer();
+        analyzer = new Analyzer();
         autoScrollMode = true;
         autoScrollModeObservable = PublishSubject.create();
+        observableLogs = PublishSubject.create();
+        logs.put("MAIN", mainLogList);
+        logs.put("CMD", cmdLogList);
+        observableTabs = BehaviorSubject.createDefault(new ArrayList<>(logs.keySet()));
     }
 
     @Override
@@ -48,6 +57,16 @@ public class AppLogManager implements LogManager {
     @Override
     public PublishSubject<LogMessage> getObservableMainLog() {
         return observableMainLog;
+    }
+
+    @Override
+    public Map<String, LogList> getLogs() {
+        return logs;
+    }
+
+    @Override
+    public PublishSubject<Map<String, LogList>> getObservableLogs() {
+        return observableLogs;
     }
 
     @Override
@@ -66,6 +85,21 @@ public class AppLogManager implements LogManager {
     }
 
     @Override
+    public List<String> getLogTabs() {
+        return new ArrayList<>(logs.keySet());
+    }
+
+    @Override
+    public BehaviorSubject<List<String>> getObservableLogTabs() {
+        return observableTabs;
+    }
+
+    @Override
+    public PublishSubject<String> getObservableNewTab() {
+        return observableNewTab;
+    }
+
+    @Override
     public void addLogMessage(LogMessage message) {
         mainLogList.addMessage(message);
         observableMainLog.onNext(message);
@@ -76,19 +110,14 @@ public class AppLogManager implements LogManager {
     private final class Analyzer {
         void analyze(LogMessage message) {
             String logType = message.getLogType();
-            if (logType.equals(LOG_TYPE_CMD)) {
-                boolean isCmdOk = message.getBody().contains("OK");
-                if (isCmdOk) {
-                    cmdLogList.addMessage(message);
-                }
+            if (logs.containsKey(logType)) {
+                logs.get(logType).addMessage(message);
             } else {
-                if (logs.containsKey(logType)) {
-                    Objects.requireNonNull(logs.get(logType)).addMessage(message);
-                } else {
-                    LogList newLogList = LogList.of(logType);
-                    newLogList.addMessage(message);
-                    logs.put(logType, newLogList);
-                }
+                LogList newLogList = LogList.of(logType);
+                newLogList.addMessage(message);
+                logs.put(logType, newLogList);
+                observableNewTab.onNext(logType);
+                observableTabs.onNext(new ArrayList<>(logs.keySet()));
             }
         }
     }

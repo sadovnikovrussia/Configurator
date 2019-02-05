@@ -1,5 +1,7 @@
 package tech.sadovnikov.configurator.model.data.logs;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,7 +23,7 @@ public class LogList {
         return new LogList(logType);
     }
 
-    void addMessage(LogMessage logMessage){
+    void addMessage(@NonNull LogMessage logMessage){
         logMessageList.add(logMessage);
     }
 
@@ -29,17 +31,26 @@ public class LogList {
         return logMessageList;
     }
 
+    public String getLogType() {
+        return logType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof LogList)) return false;
         LogList logList = (LogList) o;
-        return Objects.equals(logType, logList.logType);
+        return Objects.equals(logType, logList.getLogType());
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(logType);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return logType + logMessageList;
     }
 }

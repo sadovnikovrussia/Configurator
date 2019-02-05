@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,6 +13,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.model.BluetoothService;
+import tech.sadovnikov.configurator.model.data.logs.LogList;
 import tech.sadovnikov.configurator.model.entities.Configuration;
 import tech.sadovnikov.configurator.model.data.logs.LogManager;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
@@ -57,6 +59,31 @@ public class AppDataManager implements DataManager {
     @Override
     public PublishSubject<LogMessage> getObservableMainLog() {
         return logManager.getObservableMainLog();
+    }
+
+    @Override
+    public Map<String, LogList> getLogs() {
+        return logManager.getLogs();
+    }
+
+    @Override
+    public PublishSubject<Map<String, LogList>> getObservableLogs() {
+        return logManager.getObservableLogs();
+    }
+
+    @Override
+    public PublishSubject<List<String>> getObservableLogTabs() {
+        return logManager.getObservableLogTabs();
+    }
+
+    @Override
+    public List<String> getLogTabs() {
+        return logManager.getLogTabs();
+    }
+
+    @Override
+    public PublishSubject<String> getObservableNewTab() {
+        return logManager.getObservableNewTab();
     }
 
     @Override

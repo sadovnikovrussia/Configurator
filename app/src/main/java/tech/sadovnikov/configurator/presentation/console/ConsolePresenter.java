@@ -8,16 +8,15 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
-import tech.sadovnikov.configurator.model.data.FileManager;
 import tech.sadovnikov.configurator.model.data.DataManager;
+import tech.sadovnikov.configurator.model.data.FileManager;
+import tech.sadovnikov.configurator.utils.rx.RxTransformers;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
@@ -55,18 +54,20 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
         super.onFirstViewAttach();
         Log.i(TAG, "onFirstViewAttach: ");
         getViewState().setAutoScrollState(dataManager.getAutoScrollMode());
-        Disposable subscribe = dataManager.getObservableMainLog()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(message -> getViewState().addMessageToLogScreen(message, dataManager.getAutoScrollMode()),
-                        Throwable::printStackTrace,
-                        () -> {
-                        },
-                        disposable -> {
-                            Log.i(TAG, "onSubscribe: ");
-                            getViewState().showMainLogs(dataManager.getMainLogList(), dataManager.getAutoScrollMode());
-                        });
-        compositeDisposable.add(subscribe);
+//        Disposable subscribe = dataManager.getObservableMainLog()
+//                .compose(RxTransformers.applySchedulers())
+//                .subscribe(message -> getViewState().addMessageToLogScreen(message, dataManager.getAutoScrollMode()),
+//                        Throwable::printStackTrace,
+//                        () -> {
+//                        },
+//                        disposable -> {
+//                            Log.i(TAG, "onSubscribe: ");
+//                            getViewState().showMainLogs(dataManager.getMainLogList(), dataManager.getAutoScrollMode());
+//                        });
+//        compositeDisposable.add(subscribe);
+//        Disposable subscribe1 = dataManager.getObservableNewTab()
+//                .compose(RxTransformers.applySchedulers())
+//                .subscribe(tab -> getViewState().addNewTab(tab));
     }
 
     void onSendCommand(String command) {

@@ -15,6 +15,7 @@ import tech.sadovnikov.configurator.presentation.configuration.config_tabs.confi
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_server.ConfigServerPresenter;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.config_sim.ConfigSimPresenter;
 import tech.sadovnikov.configurator.presentation.console.ConsolePresenter;
+import tech.sadovnikov.configurator.presentation.console.log_messages.LogMessagesPresenter;
 import tech.sadovnikov.configurator.presentation.main.MainPresenter;
 
 @PresenterScope
@@ -46,4 +47,6 @@ public interface PresenterComponent {
     void injectConfigMainPresenter(ConfigServerPresenter configServerPresenter);
 
     void injectConfigMainPresenter(ConfigSimPresenter configSimPresenter);
+
+    void injectLogMessagesPresenter(LogMessagesPresenter logMessagesPresenter);
 }
