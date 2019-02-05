@@ -4,6 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "tech.sadovnikov.configurator"
+        archivesBaseName="Android-configurator"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
