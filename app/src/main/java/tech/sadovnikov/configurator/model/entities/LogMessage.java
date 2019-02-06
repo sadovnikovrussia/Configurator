@@ -26,26 +26,17 @@ public class LogMessage {
         return String.format("%c%s%s [%s] %s", LOG_SYMBOL, logLevel, logType, time, body);
     }
 
-    public String getLogLevel() {
-        return logLevel;
-    }
-
     public String getLogType() {
         return logType;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public String getConvertedTime() {
-        return convertedTime;
     }
 
     public String getBody() {
         return body;
     }
 
+    public String getConverted(){
+        return String.format("[%s] %s", convertedTime, body);
+    }
     @NonNull
     @Override
     public String toString() {

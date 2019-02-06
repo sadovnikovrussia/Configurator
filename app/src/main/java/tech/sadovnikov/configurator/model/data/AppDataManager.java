@@ -11,6 +11,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.logs.LogList;
@@ -72,13 +73,18 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public PublishSubject<List<String>> getObservableLogTabs() {
+    public BehaviorSubject<List<String>> getObservableLogTabs() {
         return logManager.getObservableLogTabs();
     }
 
     @Override
     public List<String> getLogTabs() {
         return logManager.getLogTabs();
+    }
+
+    @Override
+    public LogList getLogList(String logTab) {
+        return logManager.getLogList(logTab);
     }
 
     @Override

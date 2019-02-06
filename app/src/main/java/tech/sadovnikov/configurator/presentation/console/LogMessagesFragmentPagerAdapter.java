@@ -9,6 +9,9 @@ import android.util.Log;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
+import tech.sadovnikov.configurator.App;
+import tech.sadovnikov.configurator.di.component.AdapterComponent;
+import tech.sadovnikov.configurator.di.component.DaggerAdapterComponent;
 import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.presentation.console.log_messages.LogMessagesFragment;
 import tech.sadovnikov.configurator.utils.rx.RxTransformers;
@@ -16,36 +19,40 @@ import tech.sadovnikov.configurator.utils.rx.RxTransformers;
 public class LogMessagesFragmentPagerAdapter extends FragmentPagerAdapter {
     private static final String TAG = LogMessagesFragmentPagerAdapter.class.getSimpleName();
 
+    private DataManager dataManager;
     private List<String> tabNames;
-    DataManager dataManager;
 
     LogMessagesFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
+        Log.d(TAG, "onConstructor: ");
+        AdapterComponent adapterComponent = DaggerAdapterComponent
+                .builder()
+                .applicationComponent(App.getApplicationComponent())
+                .build();
+        dataManager = adapterComponent.getDataManager();
         Disposable subscribe = dataManager.getObservableLogTabs()
                 .compose(RxTransformers.applySchedulers())
-                .subscribe(strings -> {
-                            Log.d(TAG, "onNext: " + strings);
-                            tabNames = strings;
+                .subscribe(tabs -> {
+                            tabNames = tabs;
                             notifyDataSetChanged();
                         },
                         Throwable::printStackTrace,
                         () -> {
                         },
                         disposable -> {
+                            tabNames = dataManager.getLogTabs();
                         }
                 );
     }
 
     @Override
     public int getCount() {
-        Log.d(TAG, "getCount: " + tabNames.size());
         return tabNames.size();
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        Log.d(TAG, "getPageTitle: " + position);
         return tabNames.get(position);
     }
 

@@ -27,7 +27,7 @@ public class LogList {
         logMessageList.add(logMessage);
     }
 
-    List<LogMessage> getLogMessageList() {
+    public List<LogMessage> getLogMessageList() {
         return logMessageList;
     }
 
@@ -53,4 +53,5 @@ public class LogList {
     public String toString() {
         return logType + logMessageList;
     }
+
 }

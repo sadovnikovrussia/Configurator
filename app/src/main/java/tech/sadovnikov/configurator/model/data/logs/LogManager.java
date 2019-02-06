@@ -32,4 +32,5 @@ public interface LogManager {
 
     PublishSubject<String> getObservableNewTab();
 
+    LogList getLogList(String logTab);
 }

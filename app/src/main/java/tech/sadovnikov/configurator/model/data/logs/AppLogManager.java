@@ -2,17 +2,14 @@ package tech.sadovnikov.configurator.model.data.logs;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
-import rx.internal.operators.OnSubscribeRedo;
 import tech.sadovnikov.configurator.model.entities.LogMessage;
 
 /**
@@ -45,7 +42,7 @@ public class AppLogManager implements LogManager {
         autoScrollModeObservable = PublishSubject.create();
         observableLogs = PublishSubject.create();
         logs.put("MAIN", mainLogList);
-        logs.put("CMD", cmdLogList);
+        //logs.put("CMD", cmdLogList);
         observableTabs = BehaviorSubject.createDefault(new ArrayList<>(logs.keySet()));
     }
 
@@ -100,6 +97,11 @@ public class AppLogManager implements LogManager {
     }
 
     @Override
+    public LogList getLogList(String logTab) {
+        return logs.get(logTab);
+    }
+
+    @Override
     public void addLogMessage(LogMessage message) {
         mainLogList.addMessage(message);
         observableMainLog.onNext(message);
@@ -111,12 +113,13 @@ public class AppLogManager implements LogManager {
         void analyze(LogMessage message) {
             String logType = message.getLogType();
             if (logs.containsKey(logType)) {
-                logs.get(logType).addMessage(message);
+                LogList logList = logs.get(logType);
+                if (logList != null) logList.addMessage(message);
             } else {
                 LogList newLogList = LogList.of(logType);
                 newLogList.addMessage(message);
                 logs.put(logType, newLogList);
-                observableNewTab.onNext(logType);
+                //observableNewTab.onNext(logType);
                 observableTabs.onNext(new ArrayList<>(logs.keySet()));
             }
         }

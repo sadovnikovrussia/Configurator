@@ -1,6 +1,5 @@
 package tech.sadovnikov.configurator.presentation.console.log_messages;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,27 +13,24 @@ import android.widget.TextView;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
+import tech.sadovnikov.configurator.model.data.logs.LogList;
+import tech.sadovnikov.configurator.model.entities.LogMessage;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LogMessagesFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link LogMessagesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class LogMessagesFragment extends MvpAppCompatFragment {
+
+public class LogMessagesFragment extends MvpAppCompatFragment implements LogMessagesView {
     private static final String TAG = LogMessagesFragment.class.getSimpleName();
 
     @BindView(R.id.tv_log_screen)
     TextView tvLogs;
     @BindView(R.id.sv_log_screen)
     ScrollView svLogs;
-
-    private OnFragmentInteractionListener mListener;
 
     @InjectPresenter
     LogMessagesPresenter presenter;
@@ -52,12 +48,12 @@ public class LogMessagesFragment extends MvpAppCompatFragment {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate: ");
         if (getArguments() != null) {
-            String logTab = getArguments().getString("name");
+            presenter.onCreate(getArguments().getString("name"));
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.v(TAG, "ON_CREATE_VIEW");
         View view = inflater.inflate(R.layout.fragment_log_messages, container, false);
@@ -65,36 +61,72 @@ public class LogMessagesFragment extends MvpAppCompatFragment {
         return view;
     }
 
+    @Override
+    public void addMessageToLogScreen(LogMessage logMessage, boolean autoScrollOn) {
+        tvLogs.append(logMessage.getConverted());
+        if (autoScrollOn) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
+    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public void addMessageToMainLogScreen(LogMessage logMessage, boolean autoScrollOn) {
+        tvLogs.append(logMessage.convertToOriginal());
+        if (autoScrollOn) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
+    }
+
+    @Override
+    public void showLogs(LogList logList, boolean autoScrollMode) {
+        for (LogMessage logMessage : logList.getLogMessageList())
+            tvLogs.append(logMessage.getConverted());
+        if (autoScrollMode) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
+    }
+
+    @Override
+    public void showMainLogs(List<LogMessage> mainLogList, boolean autoScrollMode) {
+        for (LogMessage logMessage : mainLogList)
+            tvLogs.append(logMessage.convertToOriginal());
+        if (autoScrollMode) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.v(TAG, "onAttach: ");
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.v(TAG, "onStart: ");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v(TAG, "onResume: ");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.v(TAG, "onStop: ");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.v(TAG, "onDestroyView: ");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG, "onDestroy: ");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         Log.v(TAG, "onDetach: ");
-        mListener = null;
     }
 
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

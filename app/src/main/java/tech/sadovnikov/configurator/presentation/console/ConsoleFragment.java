@@ -54,11 +54,12 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     Switch swAutoScroll;
     @BindView(R.id.tabLayout_log_tabs)
     TabLayout tabLayoutLogTabs;
-    @BindView(R.id.view_pager_devices)
+    @BindView(R.id.view_pager_log_tabs)
     ViewPager viewPagerLogTabs;
 
     private Listener listener;
     private SaveLogDialogFragment saveDialog;
+    LogMessagesFragmentPagerAdapter pagerAdapter;
     private static final int REQUEST_WRITE_STORAGE = 1;
     private static final int REQUEST_SAVE_LOG_DIALOG = 10;
 
@@ -82,7 +83,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     }
 
     private void setUp() {
-        LogMessagesFragmentPagerAdapter pagerAdapter =  new LogMessagesFragmentPagerAdapter(getChildFragmentManager());
+        pagerAdapter =  new LogMessagesFragmentPagerAdapter(getChildFragmentManager());
         viewPagerLogTabs.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -221,48 +222,50 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
         }
     }
 
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.v(TAG, "onActivityCreated");
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate");
     }
 
+    @Override
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStartBaseCfgView");
         swAutoScroll.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.onChangeAutoScrollClick(isChecked));
     }
 
+    @Override
     public void onResume() {
         super.onResume();
         Log.v(TAG, "onResume");
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         Log.v(TAG, "onPause");
     }
 
+    @Override
     public void onStop() {
         super.onStop();
         Log.v(TAG, "onStop");
     }
 
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         Log.v(TAG, "onDestroyView");
     }
 
+    @Override
     public void onDestroy() {
         super.onDestroy();
         Log.v(TAG, "onDestroy");
     }
 
+    @Override
     public void onDetach() {
         super.onDetach();
         Log.v(TAG, "onDetach");
