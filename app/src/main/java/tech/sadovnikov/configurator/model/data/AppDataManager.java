@@ -88,11 +88,6 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public PublishSubject<String> getObservableNewTab() {
-        return logManager.getObservableNewTab();
-    }
-
-    @Override
     public void setConfigParameter(Parameter parameter) {
         Log.d(TAG, "setConfigParameter: " + parameter);
         configuration.setParameter(parameter);

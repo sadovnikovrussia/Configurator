@@ -6,17 +6,18 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import tech.sadovnikov.configurator.App;
 import tech.sadovnikov.configurator.di.component.DaggerPresenterComponent;
 import tech.sadovnikov.configurator.di.component.PresenterComponent;
 import tech.sadovnikov.configurator.model.BluetoothService;
 import tech.sadovnikov.configurator.model.data.DataManager;
 import tech.sadovnikov.configurator.model.data.FileManager;
-import tech.sadovnikov.configurator.utils.rx.RxTransformers;
+import tech.sadovnikov.configurator.model.entities.LogMessage;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
@@ -54,20 +55,6 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
         super.onFirstViewAttach();
         Log.i(TAG, "onFirstViewAttach: ");
         getViewState().setAutoScrollState(dataManager.getAutoScrollMode());
-//        Disposable subscribe = dataManager.getObservableMainLog()
-//                .compose(RxTransformers.applySchedulers())
-//                .subscribe(message -> getViewState().addMessageToLogScreen(message, dataManager.getAutoScrollMode()),
-//                        Throwable::printStackTrace,
-//                        () -> {
-//                        },
-//                        disposable -> {
-//                            Log.i(TAG, "onSubscribe: ");
-//                            getViewState().showMainLogs(dataManager.getMainLogList(), dataManager.getAutoScrollMode());
-//                        });
-//        compositeDisposable.add(subscribe);
-//        Disposable subscribe1 = dataManager.getObservableNewTab()
-//                .compose(RxTransformers.applySchedulers())
-//                .subscribe(tab -> getViewState().addNewTab(tab));
     }
 
     void onSendCommand(String command) {
@@ -95,8 +82,9 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
         getViewState().showSaveLogDialog();
     }
 
-    void onSaveDialogPositiveClick(final String fileName) {
-        fileManager.saveLog(dataManager.getMainLogList(), fileName, new FileManager.SaveLogCallback() {
+    void onSaveDialogPositiveClick(final String fileName, String logTabName) {
+        List<LogMessage> logMessageList = dataManager.getLogList(logTabName).getLogMessageList();
+        fileManager.saveLog(logMessageList, fileName, new FileManager.SaveLogCallback() {
             @Override
             public void onSuccess(final String fileName) {
                 getViewState().hideSaveLogDialog();

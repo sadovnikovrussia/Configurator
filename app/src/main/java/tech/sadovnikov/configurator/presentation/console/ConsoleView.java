@@ -13,13 +13,6 @@ import tech.sadovnikov.configurator.presentation.AddToEndSingleByTagStateStrateg
 @StateStrategyType(SkipStrategy.class)
 public interface ConsoleView extends MvpView {
 
-//    @StateStrategyType(SkipStrategy.class)
-//    void addMessageToLogScreen(LogMessage message, boolean autoScrollOn);
-//    @StateStrategyType(AddToEndSingleStrategy.class)
-//    void showMainLogs(List<LogMessage> mainLogMessages, boolean autoScrollOn);
-//    @StateStrategyType(SkipStrategy.class)
-//    void clearMainLogs();
-
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setAutoScrollState(boolean isAutoScroll);
 

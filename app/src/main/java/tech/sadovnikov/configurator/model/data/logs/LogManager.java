@@ -30,7 +30,5 @@ public interface LogManager {
 
     BehaviorSubject<List<String>> getObservableLogTabs();
 
-    PublishSubject<String> getObservableNewTab();
-
     LogList getLogList(String logTab);
 }

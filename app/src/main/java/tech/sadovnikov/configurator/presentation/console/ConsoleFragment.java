@@ -19,24 +19,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.PresenterType;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
-import tech.sadovnikov.configurator.model.entities.LogMessage;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
+import static tech.sadovnikov.configurator.presentation.console.SaveLogDialogFragment.EXTRA_FILE_NAME;
 
 
 public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView {
@@ -83,7 +79,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     }
 
     private void setUp() {
-        pagerAdapter =  new LogMessagesFragmentPagerAdapter(getChildFragmentManager());
+        pagerAdapter = new LogMessagesFragmentPagerAdapter(getChildFragmentManager());
         viewPagerLogTabs.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -106,28 +102,8 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
         setHasOptionsMenu(true);
     }
 
-//    @Override
-//    public void addMessageToLogScreen(LogMessage message, boolean autoScrollOn) {
-//        tvLogs.append(message.convertToOriginal());
-//        if (autoScrollOn) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
-//    }
-//
-//    @Override
-//    public void showMainLogs(List<LogMessage> mainLogMessages, boolean autoScrollOn) {
-//        Log.v(TAG, "showMainLogs: ");
-//        for (LogMessage message : mainLogMessages) tvLogs.append(message.convertToOriginal());
-//        if (autoScrollOn) svLogs.fullScroll(ScrollView.FOCUS_DOWN);
-//    }
-//
-//    @Override
-//    public void clearMainLogs() {
-//        Log.v(TAG, "clearMainLogs: ");
-//        tvLogs.setText("");
-//    }
-
     @Override
     public void setAutoScrollState(boolean isAutoScroll) {
-        Log.v(TAG, "setAutoScrollState: " + isAutoScroll);
         swAutoScroll.setChecked(isAutoScroll);
     }
 
@@ -151,7 +127,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
         switch (requestCode) {
             case REQUEST_SAVE_LOG_DIALOG:
                 if (resultCode == Activity.RESULT_OK) {
-                    presenter.onSaveDialogPositiveClick(data.getStringExtra("file_name"));
+                    presenter.onSaveDialogPositiveClick(data.getStringExtra(EXTRA_FILE_NAME), (String) pagerAdapter.getPageTitle(tabLayoutLogTabs.getSelectedTabPosition()));
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     presenter.onSaveDialogNegativeClick();
                 }
@@ -231,7 +207,7 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     @Override
     public void onStart() {
         super.onStart();
-        Log.v(TAG, "onStartBaseCfgView");
+        Log.v(TAG, "onStart: ");
         swAutoScroll.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.onChangeAutoScrollClick(isChecked));
     }
 
@@ -256,13 +232,13 @@ public class ConsoleFragment extends MvpAppCompatFragment implements ConsoleView
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.v(TAG, "onDestroyView");
+        Log.v(TAG, "onDestroyView: ");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.v(TAG, "onDestroy");
+        Log.v(TAG, "onDestroy: ");
     }
 
     @Override

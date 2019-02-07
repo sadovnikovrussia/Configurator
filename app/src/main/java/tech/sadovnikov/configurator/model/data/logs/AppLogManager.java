@@ -16,16 +16,12 @@ import tech.sadovnikov.configurator.model.entities.LogMessage;
  * Класс, представляющий собой логи устройства
  */
 public class AppLogManager implements LogManager {
-    private static final String TAG = AppLogManager.class.getSimpleName();
+    //private static final String TAG = AppLogManager.class.getSimpleName();
 
     private LogList mainLogList = new LogList();
-    private LogList cmdLogList = LogList.of("CMD");
     private PublishSubject<LogMessage> observableMainLog = PublishSubject.create();
     private Map<String, LogList> logs = new LinkedHashMap<>();
     private PublishSubject<Map<String, LogList>> observableLogs;
-
-
-    private PublishSubject<String> observableNewTab;
 
     private BehaviorSubject<List<String>> observableTabs;
 
@@ -42,7 +38,6 @@ public class AppLogManager implements LogManager {
         autoScrollModeObservable = PublishSubject.create();
         observableLogs = PublishSubject.create();
         logs.put("MAIN", mainLogList);
-        //logs.put("CMD", cmdLogList);
         observableTabs = BehaviorSubject.createDefault(new ArrayList<>(logs.keySet()));
     }
 
@@ -92,11 +87,6 @@ public class AppLogManager implements LogManager {
     }
 
     @Override
-    public PublishSubject<String> getObservableNewTab() {
-        return observableNewTab;
-    }
-
-    @Override
     public LogList getLogList(String logTab) {
         return logs.get(logTab);
     }
@@ -119,7 +109,6 @@ public class AppLogManager implements LogManager {
                 LogList newLogList = LogList.of(logType);
                 newLogList.addMessage(message);
                 logs.put(logType, newLogList);
-                //observableNewTab.onNext(logType);
                 observableTabs.onNext(new ArrayList<>(logs.keySet()));
             }
         }

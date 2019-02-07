@@ -20,6 +20,8 @@ public class SaveLogDialogFragment extends DialogFragment {
     // UI
     EditText etFileName;
 
+    public static final String EXTRA_FILE_NAME = "file name";
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public class SaveLogDialogFragment extends DialogFragment {
                         (dialog, whichButton) -> {
                             if (getTargetFragment() != null) {
                                 getTargetFragment()
-                                        .onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra("file_name", etFileName.getText().toString()));
+                                        .onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_FILE_NAME, etFileName.getText().toString()));
                             }
                         })
                 .setNegativeButton(R.string.cancel_button,
