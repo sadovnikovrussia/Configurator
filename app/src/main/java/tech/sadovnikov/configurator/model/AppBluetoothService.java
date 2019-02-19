@@ -254,8 +254,12 @@ public class AppBluetoothService implements BluetoothService, BluetoothBroadcast
         int hours = timeInSeconds / 3600;
         int minutes = (timeInSeconds - hours * 3600) / 60;
         int seconds = (timeInSeconds - hours * 3600 - minutes * 60);
-        int mSeconds = time % 100;
-        @SuppressLint("DefaultLocale") String convertedTime = String.format("%d:%d:%d.%d", hours, minutes, seconds, mSeconds);
+        int milliSeconds = time % 100;
+        String sMilliSeconds;
+        if (milliSeconds < 10) sMilliSeconds = String.valueOf(milliSeconds) + "00";
+        else sMilliSeconds = String.valueOf(milliSeconds) + "0";
+        @SuppressLint("DefaultLocale")
+        String convertedTime = String.format("%02d:%02d:%02d.%s", hours, minutes, seconds, sMilliSeconds);
         String body = nativeMessage.substring(endIndexOfTime + 2);
         return new LogMessage(logLevel, logType, originalTime, convertedTime, body);
     }
