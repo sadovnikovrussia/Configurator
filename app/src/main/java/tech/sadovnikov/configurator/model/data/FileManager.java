@@ -15,7 +15,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import tech.sadovnikov.configurator.model.entities.Configuration;
-import tech.sadovnikov.configurator.model.entities.LogMessage;
 import tech.sadovnikov.configurator.model.entities.Parameter;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
@@ -174,15 +173,13 @@ public class FileManager {
         }
     }
 
-    public void saveLog(final List<LogMessage> mainLogList, final String fileName, final SaveLogCallback callback) {
+    public void saveLog(final String log, final String fileName, final SaveLogCallback callback) {
         File file = getLogFile(fileName);
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
             try {
-                for (LogMessage logMessage : mainLogList) {
-                    outputStreamWriter.write(logMessage.convertToOriginal());
-                }
+                outputStreamWriter.write(log);
                 callback.onSuccess(fileName);
             } catch (IOException e) {
                 callback.onError(e);

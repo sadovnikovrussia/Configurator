@@ -84,7 +84,17 @@ public class ConsolePresenter extends MvpPresenter<ConsoleView> {
 
     void onSaveDialogPositiveClick(final String fileName, String logTabName) {
         List<LogMessage> logMessageList = dataManager.getLogList(logTabName).getLogMessageList();
-        fileManager.saveLog(logMessageList, fileName, new FileManager.SaveLogCallback() {
+        StringBuilder log = new StringBuilder();
+        if (logTabName.equals("MAIN")) {
+            for (LogMessage logMessage : logMessageList) {
+                log.append(logMessage.convertToOriginal());
+            }
+        } else {
+            for (LogMessage logMessage : logMessageList) {
+                log.append(logMessage.getConverted());
+            }
+        }
+        fileManager.saveLog(log.toString(), fileName, new FileManager.SaveLogCallback() {
             @Override
             public void onSuccess(final String fileName) {
                 getViewState().hideSaveLogDialog();
