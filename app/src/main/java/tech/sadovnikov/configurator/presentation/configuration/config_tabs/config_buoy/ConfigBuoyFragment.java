@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 import tech.sadovnikov.configurator.R;
 import tech.sadovnikov.configurator.model.entities.Configuration;
 import tech.sadovnikov.configurator.model.entities.Parameter;
-import tech.sadovnikov.configurator.old.OnParameterViewGroupClickListener;
+import tech.sadovnikov.configurator.presentation.base.OnParameterViewGroupClickListener;
 import tech.sadovnikov.configurator.presentation.configuration.config_tabs.base.BaseCfgFragment;
 import tech.sadovnikov.configurator.utils.ParametersEntities;
 
